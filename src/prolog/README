@@ -1,0 +1,53 @@
+
+attached is the current version. It should now work in either SWI or
+SICStus Prolog (I work in SICStus, but SWI is free so I guess that will be
+more suitable for others - mind you, I've not done much testing under SWI,
+so if you find problems let me know). It's a combination of several
+'working' versions that we've been experimenting with over the last 6
+months or more, so let me know if particular phenomena you're interested
+in don't seem to work properly. I know there are some problems with
+auxiliary verbs at the moment, because we've been playing with questions -
+this may well mean that I've affected some VP ellipsis phenomena so again,
+let me know.
+
+It should do, for both parsing & generation: long-distance dependencies
+(left-dislocation), restrictive & non-restrictive relatives, anaphora
+(strict & sloppy), VP ellipsis (strict & sloppy), bare answers to
+wh-questions, some alignment phenomena (e.g.  mirroring ditransitive verb
+usage). But the lexicon is very small! It basically contains simple
+intransitives, transitives, ditransitives, propositional attitude verbs
+(proposition & question-embedding) and that's about it. It does know about
+quantified NPs, but doesn't try to compile out quantifiers, rather keeps
+everything as epsilon terms.
+
+To use it, consult the ds.pl file (Udo - start Prolog and then type
+"[ds]." at the Prolog query prompt, without the quotes). Then start it by
+querying the ds/0 predicate (type "ds."). You should then get a ds> prompt
+at which you can type in single words or multiple words - as it's
+incremental you can just type in a single word and see the resulting
+partial trees, or type in the whole sentence at once and see the resulting
+complete tree. This means that to go from one sentence to the next, you
+need to tell it you're not just trying to incrementally add some more
+words to the last sentence, so you need to type "next" first - this
+updates the dialogue context and starts a new sentence. As the generation
+process goes from a DS semantic tree to a string, the easiest way is to
+first parse a sentence (giving a tree) then type "gen" at the ds> prompt,
+which generates from that tree to a string. Type "exit" to stop the DS
+process. I'm afraid the tree display is a bit noddy - the spacing of nodes
+is fixed, so if the decorating formulae get too long, it gets very hard to
+read.
+
+There are lots of settable flags (look in dsflags.pl) - for instance, if
+you want to change to display only complete trees, you can type
+"setflag(print,complete).", or to display all trees at each stage,
+"setflag(print,all)." (the default is to display only complete trees if
+there are any, otherwise up to 4 partial trees). You can also change
+context length, generation search method etc.
+
+Notation: in the tree display, <> is supposed to be the pointer, and nodes
+are displayed on three lines: first the node name (+pointer as required),
+third the type and formula labels, second any other labels. Unfixed nodes
+are displayed as horizontal ---- branches, LINKed nodes as ===== branches
+(note that LINKed nodes are actually represented as '2-daughters').  In
+the lexical/computational action specifications, /\ and \/ are supposed to
+be the up- and down-arrows respectively.

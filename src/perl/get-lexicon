@@ -1,0 +1,82 @@
+#!/usr/bin/perl -w
+
+while (<>) {
+
+    /\S/ or next;
+    @f = split( /\'?,?\s+\'?-?/ );
+
+    if ( $f[0] =~ /noun/ ) {
+	( undef, $pred, $sing, $plur, $type, $class, undef ) = @f;
+	@type = ( $type eq 'both' ? ( 'mass', 'count' ) : ( $type ) );
+	for $type ( @type ) {
+	    $sing and printf( "%-30s%-30s%-30s%-30s%s\n", $sing, $type, $pred, 's3', $class );
+	    $plur and printf( "%-30s%-30s%-30s%-30s%s\n", $plur, $type, $pred, 'plur', $class );
+	}
+    } elsif( $f[0] =~ /verb/ ) {
+	( undef, $pred, $inf, $s3, $ing, $ed, $en, $type, undef ) = @f;
+	# ignore that type & use subcat list
+	@type = ();
+	if ( grep( /\b(2A)\b/, @f ) ) {
+	    push( @type, 'intran' );
+	}
+	if ( grep( /\b(6A|6B)\b/, @f ) ) {
+	    push( @type, 'tran' );
+	}
+	if ( grep( /\b(12A|12B|12C)\b/, @f ) ) {
+	    push( @type, 'ditran' );
+	}
+	if ( grep( /\b(9)\b/, @f ) ) {
+	    push( @type, 'p_stran' );
+	}
+	if ( grep( /\b(10)\b/, @f ) ) {
+	    push( @type, 'q_stran' );
+	}
+	if ( grep( /\b(3A)\b/, @f ) ) {
+	    push( @type, 'pp_to' );
+	}
+	if ( grep( /\b(3A)\b/, @f ) ) {
+	    push( @type, 'pp_for' );
+	}
+	if ( grep( /\b(4E)\b/, @f ) ) {
+	    push( @type, 'subjraise' );
+	}
+	if ( grep( /\b(7A)\b/, @f ) ) {
+	    push( @type, 'subjcon' );
+	}
+	if ( grep( /\b(5)\b/, @f ) ) {
+	    push( @type, 'aux' );
+	}
+	if ( grep( /\b(1)\b/, @f ) ) {
+	    push( @type, 'be' );
+	}
+
+	for $type ( @type ) {
+	    $inf and printf( "%-30s%-30s%-30s%-30s%s\n", $inf, "v_${type}_inf", $pred, 'inf', 'per' );
+	    $inf and printf( "%-30s%-30s%-30s%-30s%s\n", $inf, "v_${type}_fin", $pred, 'pres', 'nons3' );
+	    $s3 and printf( "%-30s%-30s%-30s%-30s%s\n", $s3, "v_${type}_fin", $pred, 'pres', 's3' );
+	    $ing and printf( "%-30s%-30s%-30s%-30s%s\n", $ing, "v_${type}_ing", $pred, 'ing', 'per' );
+	    $ed and printf( "%-30s%-30s%-30s%-30s%s\n", $ed, "v_${type}_fin", $pred, 'past', 'per' );
+	    $en and printf( "%-30s%-30s%-30s%-30s%s\n", $en, "v_${type}_pas", $pred, 'inf', 'per' );
+	}
+
+    } elsif ( $f[0] =~ /pron/ ) {
+	( undef, $pron, $case, $type, $class, undef ) = @f;
+	if ( $type eq 'whq' ) {
+	    printf( "%-30s%-30s%s\n", $pron, 'pron_whq', $class );
+	} elsif ( $type eq 'whrel' ) {
+	    printf( "%-30s%-30s%s\n", $pron, 'pron_whrel', $class );
+	} elsif ( $type eq 'whmod' ) {
+	    printf( "%-30s%-30s%s\n", $pron, 'pron_whmod', $class );
+	} elsif ( $type eq 'det' ) {
+	    printf( "%-30s%-30s%s\n", $pron, 'pron_det', $class );
+	} else {
+	    ( $case eq nom ) and printf( "%-30s%-30s%-30s%s\n", $pron, 'pron_nom', $type, $class );
+	    ( $case eq acc ) and printf( "%-30s%-30s%-30s%s\n", $pron, 'pron_acc', $type, $class );
+	}
+    } elsif ( $f[0] =~ /det/ ) {
+	( undef, $det, $type, $quant, undef ) = @f;
+	printf( "%-30s%-30s%s\n", $det, "det_$type", $quant );
+    }
+
+
+}
