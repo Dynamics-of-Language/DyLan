@@ -1,0 +1,6382 @@
+[0.7322654462242565,0]
+dashes:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(dash))
+      put(!)
+ELSE  abort
+
+[0.13386727688787178,0]
+dashes:
+IF    ?Ty(e)
+THEN  put(Fo(intercession))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.06693363844393588,0]
+dashes:
+IF    ?Ty(e)
+THEN  put(Fo(intercession))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.24479740915562964,0]
+lawn:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, lawn(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.2411464388310689,0]
+lawn:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, lawn(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.06130793666472844,0]
+lawn:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, lawn(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.780036451351729,0]
+skimmed-milk:
+IF    ?Ty(e)
+THEN  put(Fo(skimmed-milk))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.10998177432413533,0]
+skimmed-milk:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(beer))
+      put(!)
+ELSE  abort
+
+[0.05499088716206766,0]
+skimmed-milk:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(beer))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.9082338089868845,0]
+obsequiousness:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(obsequiousness))
+      put(!)
+ELSE  abort
+
+[0.06954741758466815,0]
+obsequiousness:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(obsequiousness))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.010546456971779833,0]
+obsequiousness:
+IF    ?Ty(e)
+THEN  put(Fo(freedom))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.82290028324453,0]
+dislocations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dislocation))
+ELSE  abort
+
+[0.09834086369355223,0]
+dislocations:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^smuggle(X,Y)))
+ELSE  abort
+
+[0.07046840657993358,0]
+dislocations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dislocation))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.47825163352041467,0]
+emulated:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^emulate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.18627610246639137,0]
+emulated:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^emulate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.10830106728171453,0]
+emulated:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(montrose))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.6830920280691168,0]
+vietnamese:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(vietnamese))
+      put(!)
+ELSE  abort
+
+[0.12999999748941715,0]
+vietnamese:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.07092104839904198,0]
+vietnamese:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(vietnamese))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.5860497472944423,0]
+halibut:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(halibut))
+ELSE  abort
+
+[0.24999999999999994,0]
+halibut:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^graduate(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.04723600647594432,0]
+halibut:
+IF    ?Ty(e)
+THEN  put(Fo(judaism))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.572516231460457,0]
+bannockburn:
+IF    ?Ty(e)
+THEN  put(Fo(bannockburn))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.3620934033435531,0]
+bannockburn:
+IF    ?Ty(e)
+THEN  put(Fo(bannockburn))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.010777924584743612,0]
+bannockburn:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(mutilation))
+ELSE  abort
+
+[0.9999999999999883,0]
+deprivations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(deprivation))
+      put(!)
+ELSE  abort
+
+[0.47137412586236094,0]
+executant:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, executant(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.46655307441536303,0]
+executant:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, executant(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.01840436996910557,0]
+executant:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^allure(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.3471632237356336,0]
+warthog:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(!)
+      put(Fo(X^X, warthog(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.34637283592206647,0]
+warthog:
+IF    ?Ty(e>cn)
+THEN  put(!)
+      put(Fo(X^X, warthog(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.05189652545077403,0]
+warthog:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(!)
+      put(Fo(X^X, warthog(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[1.0,0]
+astrakhan:
+IF    ?Ty(e)
+THEN  put(Fo(astrakhan))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.521289461307425,0]
+parcel:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(Fo(Y^X^parcel(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.312906655303728,0]
+parcel:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(Fo(Y^X^parcel(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.07949388756462449,0]
+parcel:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(Fo(Y^X^parcel(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.20000000000000007,0]
+commotions:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.20000000000000007,0]
+commotions:
+IF    ?Ty(cn>e)
+THEN  put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.20000000000000007,0]
+commotions:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, commotion(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.5698923195567106,0]
+precognition:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(precognition))
+ELSE  abort
+
+[0.06989231955671056,0]
+precognition:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(precognition))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05764616834709079,0]
+precognition:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      put(Ty(e))
+      put(!)
+      put(Fo(precognition))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.7962453016602331,0]
+presumptions:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(presumption))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.1408606270154743,0]
+presumptions:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(presumption))
+      put(!)
+ELSE  abort
+
+[0.023580853283207175,0]
+presumptions:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(mutilation))
+ELSE  abort
+
+[0.20446305092611267,0]
+sword-dance:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, sword-dance(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.19050535137406405,0]
+sword-dance:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, sword-dance(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.13630870061740843,0]
+sword-dance:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, sword-dance(X)))
+      put(Ty(e>cn))
+      put(!)
+ELSE  abort
+
+[0.9225079665392345,0]
+syrups:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(syrup))
+      put(!)
+ELSE  abort
+
+[0.017350255684183986,0]
+syrups:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(syrup))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+ELSE  abort
+
+[0.010410153410510393,0]
+syrups:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.31019796134750877,0]
+clunks:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, clunk(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.31019796134750743,0]
+clunks:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, clunk(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.061602300668089534,0]
+clunks:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.806670803477529,0]
+thermodynamics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(thermodynamics))
+ELSE  abort
+
+[0.11085889049583494,0]
+thermodynamics:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^repeal(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.018476481749305815,0]
+thermodynamics:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^repeal(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.24430808293048745,0]
+breath:
+IF    ?Ty(e)
+THEN  put(Fo(breath))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.17704221082129462,0]
+breath:
+IF    ?Ty(e)
+THEN  put(Fo(invalidity))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.09839250457307647,0]
+breath:
+IF    ?Ty(e)
+THEN  put(Fo(breath))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.5721020770503358,0]
+invalidity:
+IF    ?Ty(e)
+THEN  put(Fo(invalidity))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.12503239216467865,0]
+invalidity:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(breath))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.12503239216467865,0]
+invalidity:
+IF    ?Ty(e)
+THEN  put(Fo(breath))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.4591340141582887,0]
+looped:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^loop(X,Y)))
+ELSE  abort
+
+[0.2425812393215757,0]
+looped:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^loop(X,Y)))
+ELSE  abort
+
+[0.10106797678185817,0]
+looped:
+IF    ?Ty(e)
+THEN  put(Fo(dogmatism))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.4150180933140404,0]
+ring:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, ring(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.4150180933140384,0]
+ring:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, ring(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.024451794037368763,0]
+ring:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, ring(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.4413045507887543,0]
+culled:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^cull(X,Y)))
+ELSE  abort
+
+[0.21917672103980754,0]
+culled:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^cull(X,Y)))
+ELSE  abort
+
+[0.17693980805426202,0]
+culled:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^cull(X,Y)))
+ELSE  abort
+
+[0.4713873345015576,0]
+heroics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(heroics))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.17789319527658393,0]
+heroics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(heroics))
+ELSE  abort
+
+[0.08333333333333337,0]
+heroics:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(Fo(Y^X^knead(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.8588383702491669,0]
+bengalis:
+IF    ?Ty(e)
+THEN  put(Fo(bengali))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.08584906831252961,0]
+bengalis:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.014308178052088236,0]
+bengalis:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.6990964555908153,0]
+allure:
+IF    ?Ty(e)
+THEN  put(Fo(allure))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.05243286116162767,0]
+allure:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^allure(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.04884510743430646,0]
+allure:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^allure(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.5234838757365589,0]
+realizes:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(Fo(Y^X^realize(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.15740740740740744,0]
+realizes:
+IF    ?Ty(e)
+THEN  put(Fo(steven))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.15453425998769924,0]
+realizes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(Fo(Y^X^realize(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.5418023129757218,0]
+distribution:
+IF    ?Ty(e)
+THEN  put(Fo(distribution))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.4171921802506614,0]
+distribution:
+IF    ?Ty(e)
+THEN  put(Fo(distribution))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.019727166350894585,0]
+distribution:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^excel(X,Y)))
+ELSE  abort
+
+[0.35979069665066465,0]
+roll-calls:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, roll-call(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.3597906966506634,0]
+roll-calls:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, roll-call(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.09409312326460015,0]
+roll-calls:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^cull(X,Y)))
+ELSE  abort
+
+[0.30662393162393187,0]
+hunger:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.1666666666666668,0]
+hunger:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^overreach(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.07884615384615383,0]
+hunger:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.4476226798881261,0]
+intercessions:
+IF    ?Ty(e)
+THEN  put(Fo(intercession))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.15166539537248933,0]
+intercessions:
+IF    ?Ty(e)
+THEN  put(Fo(intercession))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05555555555555559,0]
+intercessions:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.6028601317903864,0]
+mousses:
+IF    ?Ty(e)
+THEN  put(Fo(mousse))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.19856993410480667,0]
+mousses:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(orthopaedics))
+ELSE  abort
+
+[0.09928496705240332,0]
+mousses:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(orthopaedics))
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.8649529148463591,0]
+tax:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(tax))
+      put(!)
+ELSE  abort
+
+[0.05339645204617407,0]
+tax:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(tax))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05339645204617407,0]
+tax:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(tax))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.7009022366184225,0]
+efflorescence:
+IF    ?Ty(e)
+THEN  put(Fo(efflorescence))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.14423076923076927,0]
+efflorescence:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.07211538461538462,0]
+efflorescence:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.6182608259761043,0]
+montrose:
+IF    ?Ty(e)
+THEN  put(Fo(montrose))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.17306211906436494,0]
+montrose:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^emulate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.08334665956190762,0]
+montrose:
+IF    ?Ty(e)
+THEN  put(Fo(cross-stitch))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.7414650635012063,0]
+incision:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(incision))
+      put(!)
+ELSE  abort
+
+[0.05555555555555559,0]
+incision:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(incision))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05555555555555554,0]
+incision:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(steven))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.9982694638576548,0]
+timothy:
+IF    ?Ty(e)
+THEN  put(Fo(timothy))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.0017305361423475556,0]
+timothy:
+IF    ?Ty(e)
+THEN  put(Fo(tipple))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.5082153751255987,0]
+bitter:
+IF    ?Ty(e)
+THEN  put(Fo(bitter))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.17198638543997766,0]
+bitter:
+IF    ?Ty(e)
+THEN  put(Fo(bitter))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.17198638543997766,0]
+bitter:
+IF    ?Ty(e)
+THEN  put(Fo(bitter))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.36544287884615734,0]
+overreaches:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^overreach(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.1824833517989916,0]
+overreaches:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^overreach(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.1388901537255453,0]
+overreaches:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^overreach(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.3614316134531307,0]
+some:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.36087550709745364,0]
+some:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+      delete(?Ty(cn>e))
+      go(</\>)
+      go(<\/0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+ELSE  abort
+
+[0.023008641053975258,0]
+some:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(maghull))
+      put(!)
+ELSE  abort
+
+[0.9136914926187482,0]
+stock-in-trade:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(stock-in-trade))
+      put(!)
+ELSE  abort
+
+[0.04315425369062584,0]
+stock-in-trade:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dominance))
+ELSE  abort
+
+[0.021577126845312926,0]
+stock-in-trade:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dominance))
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.7764677160194534,0]
+queer:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^queer(X,Y)))
+ELSE  abort
+
+[0.09087286504937218,0]
+queer:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Ty(e))
+      put(!)
+      put(Fo(dominance))
+ELSE  abort
+
+[0.06521992870590163,0]
+queer:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^queer(X,Y)))
+ELSE  abort
+
+[0.4871622569697222,0]
+inequities:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, inequity(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.48629111831311667,0]
+inequities:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, inequity(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.011205012470632787,0]
+inequities:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.3228423909899626,0]
+dogmatism:
+IF    ?Ty(e)
+THEN  put(Fo(dogmatism))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.2295798405285751,0]
+dogmatism:
+IF    ?Ty(e)
+THEN  put(Fo(tipple))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.17972043861809855,0]
+dogmatism:
+IF    ?Ty(e)
+THEN  put(Fo(dogmatism))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.9908432330771569,0]
+disabilities:
+IF    ?Ty(e)
+THEN  put(Fo(disability))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.009156766922848582,0]
+disabilities:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^excel(X,Y)))
+ELSE  abort
+
+[0.7108256546298322,0]
+madrid:
+IF    ?Ty(e)
+THEN  put(Fo(madrid))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.07595297971092922,0]
+madrid:
+IF    ?Ty(e)
+THEN  put(Fo(madrid))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+ELSE  abort
+
+[0.06714631798975518,0]
+madrid:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.8213063567392863,0]
+tenability:
+IF    ?Ty(e)
+THEN  put(Fo(tenability))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.1428978810869042,0]
+tenability:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^mildew(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.017897881086904332,0]
+tenability:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^mildew(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.3939538220201789,0]
+flange:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, flange(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.378402928248438,0]
+flange:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, flange(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05399424860838063,0]
+flange:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, flange(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.46857579403984106,0]
+expurgate:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^expurgate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.23949114967576954,0]
+expurgate:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^expurgate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.14366477022795954,0]
+expurgate:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^expurgate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.8712256192914213,0]
+retrieval:
+IF    ?Ty(e)
+THEN  put(Fo(retrieval))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.025663278646368724,0]
+retrieval:
+IF    ?Ty(e)
+THEN  put(Fo(retrieval))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.01937361622745793,0]
+retrieval:
+IF    ?Ty(e)
+THEN  put(Fo(tipple))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.0,0]
+ivy:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(ivy))
+      put(!)
+ELSE  abort
+
+[0.533086742245627,0]
+drinking-water:
+IF    ?Ty(e)
+THEN  put(Fo(drinking-water))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.21925268064322084,0]
+drinking-water:
+IF    ?Ty(e)
+THEN  put(Fo(drinking-water))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05811708654677879,0]
+drinking-water:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(cotton-cake))
+ELSE  abort
+
+[0.9898669891199507,0]
+willed:
+IF    ?Ty(e>t)
+THEN  put(Fo(X^will(X)))
+      put(Ty(e>t))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.0033525116523561087,0]
+willed:
+IF    ?Ty(e>t)
+THEN  put(Fo(X^will(X)))
+      put(Ty(e>t))
+      put(+per)
+      put(!)
+      delete(?Ty(e>t))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(t))
+      go(</\>)
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.002552121700757386,0]
+willed:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(incision))
+      put(!)
+ELSE  abort
+
+[0.46134906200273745,0]
+sustained:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.21417677031146265,0]
+sustained:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.08442270587039707,0]
+sustained:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Ty(e))
+      put(Fo(vietnamese))
+      put(!)
+ELSE  abort
+
+[0.40000000000000036,0]
+mange:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(mange))
+      put(!)
+ELSE  abort
+
+[0.30000000000000004,0]
+mange:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.15,0]
+mange:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.2742200842498691,0]
+transport:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(equivocation))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.2742200842498691,0]
+transport:
+IF    ?Ty(e)
+THEN  put(Fo(equivocation))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.15733372874310855,0]
+transport:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^thumb(X,Y)))
+ELSE  abort
+
+[0.7477150290408842,0]
+angled:
+IF    ?Ty(e>t)
+THEN  put(Fo(X^angle(X)))
+      put(Ty(e>t))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.1710334421602971,0]
+angled:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^angle(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.02103643049306864,0]
+angled:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^angle(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.12089345852787521,0]
+embezzlement:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+      delete(?Ty(cn>e))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.12089345852787521,0]
+embezzlement:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+      delete(?Ty(cn>e))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.12089345852787521,0]
+embezzlement:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+      delete(?Ty(cn>e))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.7494894706764976,0]
+dowsing:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dowsing))
+ELSE  abort
+
+[0.1933294707397362,0]
+dowsing:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dowsing))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.030833409466045535,0]
+dowsing:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.20439021000738689,0]
+uss:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^wake(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.08560992679465784,0]
+uss:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^wake(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.07640059093751063,0]
+uss:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, uss(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.44408140590302014,0]
+bookworm:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, bookworm(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.4440782757179367,0]
+bookworm:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, bookworm(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.04517402384069503,0]
+bookworm:
+IF    ?Ty(cn>e)
+THEN  put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.5332370258916603,0]
+infinitudes:
+IF    ?Ty(e)
+THEN  put(Fo(infinitude))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.10570435475735693,0]
+infinitudes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(vehemence))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.10570435475735693,0]
+infinitudes:
+IF    ?Ty(e)
+THEN  put(Fo(vehemence))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.8866028781723105,0]
+judaism:
+IF    ?Ty(e)
+THEN  put(Fo(judaism))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.04533327290131213,0]
+judaism:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^queer(X,Y)))
+ELSE  abort
+
+[0.04533327290131213,0]
+judaism:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^queer(X,Y)))
+ELSE  abort
+
+[0.7008740903234948,0]
+diversity:
+IF    ?Ty(e)
+THEN  put(Fo(diversity))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.06977186845234208,0]
+diversity:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^enlist(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.06977186845234208,0]
+diversity:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^enlist(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.26432633000630273,0]
+ms:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, ms(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.25969559946152376,0]
+ms:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, ms(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.09975811318850898,0]
+ms:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, ms(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.3700518115849588,0]
+a:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.37000980462504224,0]
+a:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+      delete(?Ty(cn>e))
+      go(</\>)
+      go(<\/0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+ELSE  abort
+
+[0.02486749186578223,0]
+a:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.7241885999880305,0]
+excel:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^excel(X,Y)))
+ELSE  abort
+
+[0.11020050888732108,0]
+excel:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^excel(X,Y)))
+ELSE  abort
+
+[0.10250221350708515,0]
+excel:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^excel(X,Y)))
+ELSE  abort
+
+[0.6838496005054968,0]
+chronologies:
+IF    ?Ty(e)
+THEN  put(Fo(chronology))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.14030060454173715,0]
+chronologies:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^enlist(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.1139303420378906,0]
+chronologies:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^expurgate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.8796774204233746,0]
+graduates:
+IF    ?Ty(e>t)
+THEN  put(+s3)
+      put(Ty(e>t))
+      put(!)
+      put(Fo(X^graduate(X)))
+ELSE  abort
+
+[0.03207768878821801,0]
+graduates:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^graduate(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.022834929263216477,0]
+graduates:
+IF    ?Ty(e)
+THEN  put(Fo(equivocation))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.6657686315791248,0]
+enlists:
+IF    ?Ty(e>t)
+THEN  put(+s3)
+      put(Ty(e>t))
+      put(!)
+      put(Fo(X^enlist(X)))
+ELSE  abort
+
+[0.21050378985471813,0]
+enlists:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^enlist(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.0401589409143324,0]
+enlists:
+IF    ?Ty(e)
+THEN  put(Fo(allure))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.3879293577426659,0]
+point:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(point))
+      put(!)
+ELSE  abort
+
+[0.25042861066502126,0]
+point:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^wake(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.1390829140186517,0]
+point:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(point))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.3350970058025633,0]
+shakes:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, shake(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.33509700580256235,0]
+shakes:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, shake(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.12311039610605577,0]
+shakes:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.3215209099469524,0]
+rustling:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, rustling(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.3214123892674503,0]
+rustling:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, rustling(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.08917841718897573,0]
+rustling:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, rustling(X)))
+      put(Ty(e>cn))
+      put(!)
+ELSE  abort
+
+[0.4224964374451057,0]
+scurry:
+IF    ?Ty(e)
+THEN  put(Fo(scurry))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.20244699667307692,0]
+scurry:
+IF    ?Ty(e)
+THEN  put(Fo(scurry))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.13369826728876186,0]
+scurry:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^graduate(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.19768174047416584,0]
+what:
+IF    ?Ty(e)
+THEN  copy_content(</\0/\L>)
+      put(!)
+ELSE  abort
+
+[0.19768174047416584,0]
+what:
+IF    ?Ty(e)
+THEN  copy_content(</\*/\L>)
+      put(!)
+ELSE  abort
+
+[0.19278562255939846,0]
+what:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(ivy))
+      put(!)
+ELSE  abort
+
+[0.6927371678146531,0]
+sheffield:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(sheffield))
+ELSE  abort
+
+[0.10290443323203671,0]
+sheffield:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(sheffield))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.041280432390522565,0]
+sheffield:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(sheffield))
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+ELSE  abort
+
+[0.33333333333333354,0]
+corroboration:
+IF    ?Ty(e)
+THEN  put(Fo(intercession))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.33333333333333354,0]
+corroboration:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(corroboration))
+ELSE  abort
+
+[0.16666666666666674,0]
+corroboration:
+IF    ?Ty(e)
+THEN  put(Fo(intercession))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.6431469962278709,0]
+mildew:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^mildew(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.11257603421139903,0]
+mildew:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^mildew(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.03863935878292656,0]
+mildew:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(tenability))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[1.0,0]
+method:
+IF    ?Ty(e)
+THEN  put(Fo(method))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.76653682521268,0]
+therapeutics:
+IF    ?Ty(e)
+THEN  put(Fo(therapeutics))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.06666666666666672,0]
+therapeutics:
+IF    ?Ty(e)
+THEN  put(Fo(bengali))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.03571421188653086,0]
+therapeutics:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.32248098753349497,0]
+segmentations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(segmentation))
+ELSE  abort
+
+[0.2499999999999995,0]
+segmentations:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^allure(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.1666666666666668,0]
+segmentations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(heroics))
+ELSE  abort
+
+[0.08892128279883402,0]
+hedgehog:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, hedgehog(X)))
+      put(Ty(e>cn))
+      put(!)
+ELSE  abort
+
+[0.08892128279883402,0]
+hedgehog:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, hedgehog(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.08892128279883402,0]
+hedgehog:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, hedgehog(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.46057873501697827,0]
+attend:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^attend(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.46057873501697666,0]
+attend:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^attend(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.05581618762486263,0]
+attend:
+IF    ?Ty(e)
+THEN  put(Fo(drinking-water))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.36805257530652724,0]
+internalizes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.29907185133386394,0]
+internalizes:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.0862068361520383,0]
+internalizes:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(orthopaedics))
+ELSE  abort
+
+[0.24523337948099522,0]
+hiker:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, hiker(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.24523337948099522,0]
+hiker:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, hiker(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.13669580518833183,0]
+hiker:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.4111810129501068,0]
+handicraft:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, handicraft(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.410055081108508,0]
+handicraft:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, handicraft(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.06059712827711241,0]
+handicraft:
+IF    ?Ty(cn>e)
+THEN  put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.3074112502564559,0]
+stele:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, stele(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.2990223696090222,0]
+stele:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, stele(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.10801781131902105,0]
+stele:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.4291198832149674,0]
+bernard:
+IF    ?Ty(e)
+THEN  put(Fo(bernard))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.25932577614801394,0]
+bernard:
+IF    ?Ty(e)
+THEN  put(Fo(bernard))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.04513009557328757,0]
+bernard:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.6263085808632778,0]
+sausage-meat:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(sausage-meat))
+ELSE  abort
+
+[0.034994107370601456,0]
+sausage-meat:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.030931509715670658,0]
+sausage-meat:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(sausage-meat))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.3367802447198992,0]
+who:
+IF    ?Ty(e)
+THEN  copy_content(</\*/\L>)
+      put(!)
+ELSE  abort
+
+[0.1305951521590249,0]
+who:
+IF    ?Ty(e)
+THEN  copy_content(</\0/\L>)
+      put(!)
+ELSE  abort
+
+[0.06916866834938953,0]
+who:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(obsequiousness))
+ELSE  abort
+
+[0.5324580130927652,0]
+mass:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(mass))
+      put(!)
+ELSE  abort
+
+[0.32062498490587943,0]
+mass:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(mass))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.04166666666666671,0]
+mass:
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      put(+per)
+      put(!)
+      put(Fo(X^tramp(X)))
+ELSE  abort
+
+[0.6015201964971763,0]
+thumbed:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^thumb(X,Y)))
+ELSE  abort
+
+[0.19412597709265927,0]
+thumbed:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^thumb(X,Y)))
+ELSE  abort
+
+[0.059836042560988956,0]
+thumbed:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^thumb(X,Y)))
+ELSE  abort
+
+[0.2619767858155535,0]
+level:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(level))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.14499665077605978,0]
+level:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(level))
+      put(!)
+ELSE  abort
+
+[0.08336185687886069,0]
+level:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(Fo(Y^X^realize(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.44942656792835795,0]
+beer:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(beer))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.14980885597611926,0]
+beer:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Fo(skimmed-milk))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.14980885597611926,0]
+beer:
+IF    ?Ty(e)
+THEN  put(Fo(skimmed-milk))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.42767287702670387,0]
+affairs:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(!)
+      put(Fo(X^X, affair(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.4276728770267031,0]
+affairs:
+IF    ?Ty(e>cn)
+THEN  put(!)
+      put(Fo(X^X, affair(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.036575374794429065,0]
+affairs:
+IF    ?Ty(cn>e)
+THEN  put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.8086234472861381,0]
+cross-stitch:
+IF    ?Ty(e)
+THEN  put(Fo(cross-stitch))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.03618679593500467,0]
+cross-stitch:
+IF    ?Ty(e)
+THEN  put(Fo(cross-stitch))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.033540731836270384,0]
+cross-stitch:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^enlist(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.6275608418359381,0]
+archery:
+IF    ?Ty(e)
+THEN  put(Fo(archery))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.06378042091796961,0]
+archery:
+IF    ?Ty(e)
+THEN  put(Fo(archery))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.06378042091796937,0]
+archery:
+IF    ?Ty(e)
+THEN  put(Fo(archery))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.07692307692307689,0]
+forelock:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.07692307692307689,0]
+forelock:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.07692307692307689,0]
+forelock:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.6173879264729456,0]
+ranged:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^range(X,Y)))
+ELSE  abort
+
+[0.129897945761838,0]
+ranged:
+IF    ?Ty(e)
+THEN  put(Fo(equivocation))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.08129841414496491,0]
+ranged:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^range(X,Y)))
+ELSE  abort
+
+[0.4272524762983014,0]
+disingenuousness:
+IF    ?Ty(e)
+THEN  put(Fo(disingenuousness))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.21042020049225535,0]
+disingenuousness:
+IF    ?Ty(e)
+THEN  put(Fo(disingenuousness))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.21042020049225535,0]
+disingenuousness:
+IF    ?Ty(e)
+THEN  put(Fo(disingenuousness))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.38908577891742563,0]
+sets:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, set(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.3883352263277441,0]
+sets:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, set(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.05716323547778675,0]
+sets:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, set(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.6226707950374635,0]
+childhood:
+IF    ?Ty(e)
+THEN  put(Fo(childhood))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.0949562006020645,0]
+childhood:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^graduate(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.0949562006020645,0]
+childhood:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^graduate(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.28361517729606195,0]
+tragedian:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, tragedian(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.2827939398761639,0]
+tragedian:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, tragedian(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.11972604059491258,0]
+tragedian:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, tragedian(X)))
+      put(!)
+ELSE  abort
+
+[0.48476985476404544,0]
+revolt:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, revolt(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.484423576172419,0]
+revolt:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, revolt(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.013569562973953533,0]
+revolt:
+IF    ?Ty(cn>e)
+THEN  put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.6231114500458197,0]
+plucks:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.2823832998436798,0]
+plucks:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(pluck))
+      put(!)
+ELSE  abort
+
+[0.04725262505525025,0]
+plucks:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(Fo(Y^X^sustain(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.13854087687504385,0]
+drains:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, drain(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.1385408768750436,0]
+drains:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, drain(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.13854087687504335,0]
+drains:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, drain(X)))
+      put(!)
+ELSE  abort
+
+[0.1485776653350164,0]
+equivocations:
+IF    ?Ty(e)
+THEN  put(Fo(equivocation))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.1446711939874606,0]
+equivocations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(maghull))
+      put(!)
+ELSE  abort
+
+[0.14385127099765915,0]
+equivocations:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(transport))
+      put(!)
+ELSE  abort
+
+[0.19854227994492005,0]
+relapses:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(Fo(X^X, relapse(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.19854227994492005,0]
+relapses:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(Fo(X^X, relapse(X)))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.10005696409263672,0]
+relapses:
+IF    ?Ty(cn)
+THEN  make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      go(<\/1>)
+      put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.4494801909094631,0]
+that:
+IF    ?Ty(e)
+THEN  copy_content(</\*/\L>)
+      put(!)
+ELSE  abort
+
+[0.07671293251290451,0]
+that:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dislocation))
+ELSE  abort
+
+[0.06891354731108355,0]
+that:
+IF    ?Ty(e)
+THEN  put(Fo(tipple))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.5768903533642122,0]
+babbles:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^babble(X,Y)))
+ELSE  abort
+
+[0.18418130262606974,0]
+babbles:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^babble(X,Y)))
+ELSE  abort
+
+[0.10406308714842855,0]
+babbles:
+IF    ?Ty(e)
+THEN  put(Fo(allure))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.25294371153082057,0]
+maghull:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(maghull))
+      put(!)
+ELSE  abort
+
+[0.12042401141526284,0]
+maghull:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^emulate(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.06866767946564623,0]
+maghull:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(maghull))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.2582243715751406,0]
+balks:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, balk(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.25822437157513956,0]
+balks:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, balk(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.1133004584401582,0]
+balks:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, balk(X)))
+ELSE  abort
+
+[0.3696463830199288,0]
+aesthetics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(aesthetics))
+ELSE  abort
+
+[0.26312669981736975,0]
+aesthetics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(aesthetics))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.14321563867360126,0]
+aesthetics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(aesthetics))
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.4730390261517337,0]
+whom:
+IF    ?Ty(e)
+THEN  copy_content(</\*/\L>)
+      put(!)
+ELSE  abort
+
+[0.16477535768565432,0]
+whom:
+IF    ?Ty(e)
+THEN  copy_content(</\0/\L>)
+      put(!)
+ELSE  abort
+
+[0.052050683412573295,0]
+whom:
+IF    ?Ty(e)
+THEN  put(Fo(allure))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.2455446426369539,0]
+orthopaedics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(calibre))
+      put(!)
+ELSE  abort
+
+[0.12277232131847694,0]
+orthopaedics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(calibre))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.12277232131847694,0]
+orthopaedics:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(calibre))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.749060139379134,0]
+subdivision:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(subdivision))
+ELSE  abort
+
+[0.07270231348763087,0]
+subdivision:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^mildew(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.0672745847429551,0]
+subdivision:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^overreach(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.5848576062458481,0]
+pauperizes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^pauperize(X,Y)))
+ELSE  abort
+
+[0.3076876031801462,0]
+pauperizes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^pauperize(X,Y)))
+ELSE  abort
+
+[0.077939429928741,0]
+pauperizes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Ty(e))
+      put(Fo(mamie))
+      put(!)
+ELSE  abort
+
+[0.2814996118538526,0]
+roll-on:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(!)
+      put(Fo(X^X, roll-on(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.2640743804344911,0]
+roll-on:
+IF    ?Ty(e>cn)
+THEN  put(!)
+      put(Fo(X^X, roll-on(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.20360382977846359,0]
+roll-on:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(!)
+      put(Fo(X^X, roll-on(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.28080666939239496,0]
+pulley:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, pulley(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.28074030714498444,0]
+pulley:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, pulley(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.037650573533303956,0]
+pulley:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, pulley(X)))
+      put(Ty(e>cn))
+      put(!)
+ELSE  abort
+
+[1.0,0]
+tutelage:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(tutelage))
+      put(!)
+ELSE  abort
+
+[0.4758596844504742,0]
+repeals:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^repeal(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.29590404644521034,0]
+repeals:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^repeal(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.06354765713879491,0]
+repeals:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^repeal(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.35913916559295334,0]
+dominance:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dominance))
+ELSE  abort
+
+[0.25296597333978543,0]
+dominance:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(dominance))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.24999999999999928,0]
+dominance:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+      put(Fo(Y^X^queer(X,Y)))
+ELSE  abort
+
+[0.34164879620061134,0]
+realties:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, realty(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.332792893283677,0]
+realties:
+IF    ?Ty(e>cn)
+THEN  put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, realty(X)))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.0707923799810817,0]
+realties:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Ty(e>cn))
+      put(!)
+      put(Fo(X^X, realty(X)))
+ELSE  abort
+
+[0.2919688355496505,0]
+calibres:
+IF    ?Ty(e)
+THEN  put(Fo(freedom))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.19120874803584825,0]
+calibres:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(calibre))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.15055672218263003,0]
+calibres:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.6097738565508888,0]
+knead:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+nons3)
+      put(Fo(Y^X^knead(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.11111111111111119,0]
+knead:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(segmentation))
+ELSE  abort
+
+[0.06496832289732453,0]
+knead:
+IF    ?Ty(e)
+THEN  put(Fo(vehemence))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.39730107870621945,0]
+smuggled:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^smuggle(X,Y)))
+ELSE  abort
+
+[0.2628464136396678,0]
+smuggled:
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+      put(Fo(Y^X^smuggle(X,Y)))
+ELSE  abort
+
+[0.16695740912075407,0]
+smuggled:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      put(Ty(e))
+      put(!)
+      put(Fo(dislocation))
+ELSE  abort
+
+[0.9943481426968838,0]
+conveniences:
+IF    ?Ty(e)
+THEN  put(Fo(convenience))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.00565185730311479,0]
+conveniences:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(tax))
+      put(!)
+ELSE  abort
+
+[0.4801219004826618,0]
+oasthouse:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(!)
+      put(Fo(X^X, oasthouse(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.4800202871265323,0]
+oasthouse:
+IF    ?Ty(e>cn)
+THEN  put(!)
+      put(Fo(X^X, oasthouse(X)))
+      put(Ty(e>cn))
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.00701118870983492,0]
+oasthouse:
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      put(Fo(X^(eps, X)))
+      put(!)
+ELSE  abort
+
+[0.45514490906815397,0]
+steven:
+IF    ?Ty(e)
+THEN  put(Fo(steven))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.12345679012345671,0]
+steven:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(incision))
+      put(!)
+ELSE  abort
+
+[0.11111111111111119,0]
+steven:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(level))
+      put(!)
+ELSE  abort
+
+[0.5040283170197666,0]
+tipple:
+IF    ?Ty(e)
+THEN  put(Fo(tipple))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.24160185038384896,0]
+tipple:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.06366308064880562,0]
+tipple:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.2406471917456618,0]
+breaston:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.18923755969064177,0]
+breaston:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(breaston))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.18923755969064177,0]
+breaston:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(breaston))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.38068954593617516,0]
+dust-sheet:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, dust-sheet(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.38046262468408315,0]
+dust-sheet:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, dust-sheet(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+      go(</\>)
+      beta-reduce
+      delete(?Ty(cn))
+      go(</\>)
+      beta-reduce
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.06721051564226657,0]
+dust-sheet:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, dust-sheet(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.5521545364202516,0]
+wake:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^wake(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.11335013646336145,0]
+wake:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^wake(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.033710592238487956,0]
+wake:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(vietnamese))
+      put(!)
+ELSE  abort
+
+[0.49253065822258096,0]
+solemnness:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(solemnness))
+ELSE  abort
+
+[0.24234104495876957,0]
+solemnness:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(subdivision))
+ELSE  abort
+
+[0.13256414840932462,0]
+solemnness:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(solemnness))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.8607482185273153,0]
+mamie:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(mamie))
+      put(!)
+ELSE  abort
+
+[0.12975059382422788,0]
+mamie:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^pauperize(X,Y)))
+ELSE  abort
+
+[0.004750593824228026,0]
+mamie:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^pauperize(X,Y)))
+ELSE  abort
+
+[0.5883204763361158,0]
+electrocutes:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^electrocute(X,Y)))
+ELSE  abort
+
+[0.08975916335381362,0]
+electrocutes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^electrocute(X,Y)))
+ELSE  abort
+
+[0.08871062516759785,0]
+electrocutes:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^electrocute(X,Y)))
+ELSE  abort
+
+[0.7584074324491099,0]
+vehemence:
+IF    ?Ty(e)
+THEN  put(Fo(vehemence))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.06771894636778124,0]
+vehemence:
+IF    ?Ty(e)
+THEN  put(Fo(infinitude))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.04534945587770301,0]
+vehemence:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^tipple(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+nons3)
+      put(!)
+ELSE  abort
+
+[0.7677743312529852,0]
+cotton-cake:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(cotton-cake))
+ELSE  abort
+
+[0.06666666666666672,0]
+cotton-cake:
+IF    ?Ty(e)
+THEN  put(Fo(hunger))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.059929870427308365,0]
+cotton-cake:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(cotton-cake))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.555363321799308,0]
+judo:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.22145328719723192,0]
+judo:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(judo))
+      put(!)
+ELSE  abort
+
+[0.11159169550173005,0]
+judo:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+      put(Fo(Y^X^internalize(X,Y)))
+ELSE  abort
+
+[0.4155097697115141,0]
+the:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.41550684091858114,0]
+the:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/1>)
+      put(!)
+      put(Fo(X^(iota, X)))
+      put(Ty(cn>e))
+      delete(?Ty(cn>e))
+      go(</\>)
+      go(<\/0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+ELSE  abort
+
+[0.016180882973191518,0]
+the:
+IF    ?Ty(e)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      go(<\/0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, commotion(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.6649391361194467,0]
+freedoms:
+IF    ?Ty(e)
+THEN  put(Fo(freedom))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.14894501635968915,0]
+freedoms:
+IF    ?Ty(e>(e>t))
+THEN  put(Fo(Y^X^overreach(X,Y)))
+      put(+s3)
+      put(Ty(e>(e>t)))
+      put(!)
+ELSE  abort
+
+[0.0650747546337188,0]
+freedoms:
+IF    ?Ty(e>(e>t))
+THEN  put(+s3)
+      put(Ty(e>(e>t)))
+      put(Fo(Y^X^realize(X,Y)))
+      put(!)
+ELSE  abort
+
+[0.12753848790380126,0]
+masthead:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, masthead(X)))
+      put(Ty(e>cn))
+      put(!)
+ELSE  abort
+
+[0.12753848790380126,0]
+masthead:
+IF    ?Ty(cn)
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>cn))
+      put(Fo(X^X, masthead(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.12753848790380126,0]
+masthead:
+IF    ?Ty(e>cn)
+THEN  put(Fo(X^X, masthead(X)))
+      put(Ty(e>cn))
+      put(!)
+      delete(?Ty(e>cn))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(Ty(e))
+      freshput(S,entity)
+      put(!)
+ELSE  abort
+
+[0.9834902547099014,0]
+mutilation:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(mutilation))
+ELSE  abort
+
+[0.004871854969562265,0]
+mutilation:
+IF    ?Ty(e)
+THEN  put(Fo(bengali))
+      put(Ty(e))
+      put(!)
+ELSE  abort
+
+[0.003362962784629425,0]
+mutilation:
+IF    ?Ty(e)
+THEN  put(Fo(bengali))
+      put(Ty(e))
+      put(!)
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.42402132251753377,0]
+desecration:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(desecration))
+      delete(?Ty(e))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.42402132251753377,0]
+desecration:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(desecration))
+      delete(?Ty(e))
+      go(</\>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>t))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+ELSE  abort
+
+[0.15195735496492774,0]
+desecration:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(!)
+      put(Fo(desecration))
+ELSE  abort
+
+[0.3084738015453517,0]
+which:
+IF    ?Ty(e)
+THEN  copy_content(</\*/\L>)
+      put(!)
+ELSE  abort
+
+[0.19808851761972168,0]
+which:
+IF    ?Ty(e)
+THEN  copy_content(</\0/\L>)
+      put(!)
+ELSE  abort
+
+[0.09015761630151185,0]
+which:
+IF    ?Ty(e)
+THEN  put(Ty(e))
+      put(Fo(mass))
+      put(!)
+ELSE  abort
+
+[0.9033917291300467,0]
+tramped:
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      put(+per)
+      put(!)
+      put(Fo(X^tramp(X)))
+ELSE  abort
+
+[0.0244855544830652,0]
+tramped:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/1>)
+      put(Fo(Y^X^tramp(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+
+[0.0244855544830652,0]
+tramped:
+IF    ?Ty(e>t)
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      go(<\/0>)
+      merge(</\0/\1\/*>)
+      delete(?Ty(e))
+      delete(?Ex.Tn(x))
+      go(</\>)
+      go(<\/1>)
+      put(Fo(Y^X^tramp(X,Y)))
+      put(Ty(e>(e>t)))
+      put(+per)
+      put(!)
+ELSE  abort
+

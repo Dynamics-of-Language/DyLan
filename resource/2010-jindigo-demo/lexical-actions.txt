@@ -1,0 +1,477 @@
+// Lexical actions for English (TTR version)
+// as per Jindigo Implementation, 2010
+
+// Rule metavariables: uppercase rule spec arguments
+// Formula metavariables: A,B,C
+// Bottom requirement: !
+
+proper(NAME,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        put(fo([x:NAME]))
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+pron_loc(DUMMY)
+IF      ?ty(e)
+THEN   	put(ty(e))
+        put(?Ex.fo(x))
+        put(?</\0/\1/\L/\0>?ty(t))
+        put(class(loc))
+        put(!)
+ELSE    abort
+
+pron_loc_inv(PRED)
+IF		?ty(t)
+THEN    make(\/L)
+		go(\/L)
+		put(?ty(t))
+		make(\/0)
+		go(\/0)
+		put(?ty(es))
+        build_event_term(bare)
+        put(+restrictor)
+        go(/\1/\1/\0/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(es>t))
+        make(\/1)
+        go(\/1)
+        put(fo(Y^X^[e:PRED(X,Y)]))
+        put(ty(e>(es>t)))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(ty(e))
+        put(?Ex.fo(x))
+        put(class(loc))
+        go(/\0/\1/\L)
+ELSE	abort
+
+mass(NAME,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        put(fo([x:NAME]))
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+count(PRED,PERSON,CLASS)
+IF      ?ty(cn)
+THEN    make(\/0)
+        go(\/0)
+        put(fo([x:e]))
+        put(ty(e))      
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+        go(/\0)
+        go(/\0)
+        put(+CLASS)
+        go(\/0)
+        make(\/1)
+        go(\/1)
+        put(fo(X^[p:PRED(X)]))
+        put(ty(e>cn))
+        put(!)
+        go(/\1)
+        go(\/0)
+ELSE    abort
+
+adj(PRED)
+IF      ?ty(cn)
+THEN    make(\/1)
+        go(\/1)
+        put(fo(X^[x:PRED(X)]))
+        put(ty(cn>cn))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    abort
+
+pron_nom(PERSON,CLASS)
+IF      ?ty(e)
+        [/\]?ty(t)
+THEN    put(ty(e))
+        //* put(fo([A:])) // formula metavariables not working with generation *//
+        put(?Ex.fo(x))
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+pron_acc(PERSON,CLASS)
+IF      ?ty(e)
+        [/\]?ty(e>X)
+THEN    put(ty(e))
+        //* put(fo([A:])) // formula metavariables not working with generation *//
+        //*putc*//
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+pron_whrel(CLASS)
+IF      ?ty(e)
+        [/\*/\L]fo(X)
+        //* [/\*/\L]fo(+CLASS) // need a semantic class hierarchy *//
+THEN    put(ty(e))
+        put(fo(X))
+ELSE    abort
+
+det_quant(QUANT)
+IF      ?ty(e)
+THEN    make(\/1)
+        go(\/1)
+        put(fo(X^[x:QUANT(X)]))
+        put(ty(cn>e))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    abort
+
+
+//*
+temporal_adverb(PRED)
+IF		ty(t)
+		<\/0\/0\/0>fo(X)
+THEN	go(<\/0\/0\/0>)
+		conjoin(fo([e:PRED]))
+ELSE	abort
+*//
+
+v_intran_fin(PRED,TENSE,PERSON)
+IF      ?ty(t)
+		tn(X)
+        <\/U>Ex.x
+        <\/U>ty(e)
+        ¬<\/1>Ex.x
+		¬<\/0>Ex.x      
+THEN    make(\/0)
+		go(\/0)
+		put(?ty(es))
+		build_event_term(TENSE)
+		go(</\1/\1/\0/\0>)
+		make(\/1)
+		go(\/1)
+		put(?ty(es>t))
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(ty(e>(es>t)))
+		v_intran_content(PRED)
+		go(/\1\/0)
+		merge(</\0/\1\/U>)
+ELSE    abort
+
+
+v_intran_inf(PRED,TENSE,PERSON)
+IF      ty(e>(es>t))
+        ?Ex.fo(x)
+        </\1/\1\/U>Ex.x
+        </\1/\1\/U>ty(e)
+        </\1/\1>tn(Z)
+THEN    go(</\1/\1\/0\/0\/1\/1>)
+		conjoin(X^Y^[p:(Y subset X)])
+		go(</\1/\1/\0/\0\/1\/1>)
+		v_intran_content(PRED)
+		go(/\1\/0)
+		merge(/\0/\1\/U)		
+ELSE    abort
+
+v_tran_fin(PRED,TENSE,PERSON)
+IF      ?ty(t)
+		tn(X)
+        <\/U>Ex.x
+        <\/U>ty(e)
+        ¬<\/1>Ex.x
+		¬<\/0>Ex.x      
+THEN    make(\/0)
+		go(\/0)
+		put(?ty(es))
+		build_event_term(TENSE)
+		go(</\1/\1/\0/\0>)
+		make(\/1)
+		go(\/1)
+		put(?ty(es>t))
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>(es>t)))
+		v_tran_content(PRED)
+		go(/\0/\1\/0)
+		merge(</\0/\1\/U>)
+ELSE    abort
+
+v_tran_inf(PRED,TENSE,PERSON)
+IF      ty(e>(es>t))
+        ?Ex.fo(x)
+        </\1/\1\/U>Ex.x
+        </\1/\1\/U>ty(e)
+        </\1/\1>tn(Z)
+THEN    go(</\1/\1\/0\/0\/1\/1>)
+		conjoin(X^Y^[p:(Y subset X)])
+		go(</\1/\1/\0/\0\/1\/1>)
+		delete(ty(e>(es>t)))
+		put(?ty(e>(es>t)))
+		v_tran_content(PRED)
+		go(/\0/\1\/0)
+		merge(/\0/\1\/U)		
+ELSE    abort
+
+
+//* for prepositions modifying events *//
+prep_event(PRED)
+IF		ty(t)
+		<\/0>ty(es)
+		<\/0>fo(X)
+		¬<\/0\/0\/1\/1>+state
+THEN    go(\/0)
+		make(\/L)
+		go(\/L)
+		put(?ty(t))
+		make(\/0)
+		go(\/0)
+		put(ty(es))
+        put(fo(X))
+		go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(es>t))
+        make(\/1)
+        go(\/1)
+        put(fo(Y^X^[p:PRED(X,Y)]))
+        put(ty(e>(es>t)))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(e))
+ELSE	abort
+
+//* for prepositions modifying entities *//
+prep_entity(PRED)
+IF		ty(e)
+        fo(X)
+        !
+        ¬<\/L>Ex.x
+THEN    make(\/L)
+		go(\/L)
+		put(?ty(t))
+		make(\/0)
+		go(\/0)
+		put(ty(e))
+        put(fo(X))
+		go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>t))
+        make(\/1)
+        go(\/1)
+        put(fo(Y^X^[p:PRED(X,Y)]))
+        put(ty(e>(e>t)))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(e))
+ELSE	abort
+
+pron_location(PRED)
+IF		ty(t)
+		¬<\/0\/0\/1\/1>+state
+		<\/0\/0\/1\/1>fo(X)
+		<\/0\/0\/0>fo(Y)
+		<\/0\/0\/1\/0>fo(Z)
+		//*<\/1>+TENSE  tense metavariables not working atm
+		not copying whole event variable yet*//
+THEN    go(\/0)
+		make(\/L)
+		go(\/L)
+		put(?ty(t))
+		make(\/0)
+		go(\/0)
+		put(?ty(es))
+        build_event_term(bare)
+        put(+restrictor)
+        put(fo(X))
+        go(/\1\/0)
+        put(fo(Z))
+        go(/\0/\1\/0)
+        delete(fo(W))
+        put(fo(Y))
+        go(/\0\/1\/1)
+        go(/\1/\1/\0/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(es>t))
+        make(\/1)
+        go(\/1)
+        put(fo(Y^X^[p:PRED(X,Y)]))
+        put(ty(e>(es>t)))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(ty(e))
+        put(?Ex.fo(x))
+        go(/\0/\1\/0\/0\/1\/0)
+ELSE	abort
+
+
+v_aux_fin(PRED,TENSE,PERSON)
+IF		?ty(t)
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
+		<\/U>Ex.x
+THEN	aux_content(TENSE)
+		put(tense(TENSE))
+ELSE	abort
+
+v_aux_invertfin(PRED,TENSE,PERSON)
+IF		?ty(t)
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
+		¬<\/U>Ex.x
+THEN	put(+Q)
+		aux_content(TENSE)
+		go(</\1/\1>)
+		make(\/U)
+		go(\/U)
+		put(?ty(e))
+		put(?Ex.tn(x))
+ELSE	abort
+
+comp(PRED)
+IF		?ty(e>(es>t))
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
+THEN	put(ty(e>(es>t)))
+		put(?Ex.fo(x))
+ELSE 	abort
+
+v_tran_fin_subjcon(PRED,TENSE,PERSON)
+IF		?ty(t)
+		<\/U>Ex.x
+		<\/U>fo(X)
+		tn(Z)
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
+THEN	make(\/0)
+		go(\/0)
+		put(?ty(es))
+		build_event_term(TENSE)
+		put(+state)
+		go(</\1/\1/\0/\0>)
+		make(\/1)
+		go(\/1)
+		put(?ty(es>t))
+		put(tense(TENSE))
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>(es>t)))
+        v_tran_con_content(PRED)
+		go(/\1/\1\/0\/0\/1\/1)
+		inf_event_restrictor(TENSE)	
+		go(/\1/\1/\0/\0)
+		make(\/U)
+		go(\/U)
+		put(ty(e))
+		put(?Ex.tn(x))
+		put(fo(X))
+ELSE	abort		
+
+v_tran_inf_subjcon(PRED,TENSE,PERSON)
+IF		ty(e>(es>t))
+        ?Ex.fo(x)
+       	</\1/\1>tn(Z)
+        </\1/\1\/U>Ex.x
+		</\1/\1\/U>fo(W)
+THEN    go(</\1/\1\/0\/0\/1\/1>)
+		conjoin(X^Y^[p:(Y subset X)])
+		put(+inf_restrictor)
+		put(+state)
+		go(</\1/\1/\0/\0\/1\/1>)
+		delete(ty(e>(es>t)))
+		put(?ty(e>(es>t)))
+		v_tran_con_content(PRED)
+		go(/\1/\1\/0\/0\/1\/1)
+		inf_event_restrictor(future)	
+		go(/\1/\1/\0/\0)
+		make(\/U)
+		go(\/U)
+		put(ty(e))
+		put(?Ex.tn(x))
+		put(fo(W))
+
+v_tran_fin_objcon(PRED,TENSE,PERSON)
+IF		?ty(t)
+		<\/U>Ex.x
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
+THEN	make(\/0)
+		go(\/0)
+		put(?ty(es))
+		build_event_term(TENSE)
+		put(+state)
+		go(</\1/\1/\0/\0>)
+		make(\/1)
+		go(\/1)
+		put(?ty(es>t))
+		put(tense(TENSE))
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>(es>t)))
+        v_tran_con_content(PRED)
+		go(/\1/\1\/0\/0\/1\/1)
+		inf_event_restrictor(TENSE)	
+		go(/\1/\1/\0/\0)
+		make(\/U)
+		go(\/U)
+		put(?ty(e))
+		put(?Ex.tn(x))
+ELSE 	abort
+
+v_tran_inf_objcon(PRED,TENSE,PERSON)
+IF		ty(e>(es>t))
+        ?Ex.fo(x)
+       	</\1/\1>tn(Z)
+        </\1/\1\/U>Ex.x
+THEN    go(</\1/\1\/0\/0\/1\/1>)
+		conjoin(X^Y^[p:(Y subset X)])
+		put(+inf_restrictor)
+		put(+state)
+		go(</\1/\1/\0/\0\/1\/1>)
+		delete(ty(e>(es>t)))
+		put(?ty(e>(es>t)))
+		v_tran_con_content(PRED)
+		go(/\1/\1\/0\/0\/1\/1)
+		inf_event_restrictor(future)	
+		go(/\1/\1/\0/\0)
+		make(\/U)
+		go(\/U)
+		put(?ty(e))
+		put(?Ex.tn(x))
+ELSE	abort

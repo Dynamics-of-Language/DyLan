@@ -1,0 +1,64 @@
+Sent : there
+Sem : [head : es|p==there(head) : t]
+File : 1
+
+Sent : you go
+Sem : [x==you : e|e1==go : es|p1==subj(e1, x) : t|head==e1 : es]
+File : 1
+
+Sent : more
+Sem : [r : [x : e|p2==juice(x) : t|head==x : e]|x1==more(r.head, r) : e|head==x1 : e]
+File : 1
+
+Sent : where 's your juice
+Sem : [r : [x1 : e|p5==juice(x1) : t|head==x1 : e]|x2==your(r.head, r) : e|e1==eqloc : es|x==where: e|p2==subj(e1, x) : t|p3==obj(e1, x2) : t|head==e1 : es]
+File : 1
+
+Sent : that 's the stool
+Sem : [r : [x : e|p3==stool(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 1
+
+Sent : where 's your cup
+Sem : [r : [x1 : e|p4==cup(x1) : t|head==x1 : e]|x2==your(r.head, r) : e|e1==eqloc : es|p3==obj(e1, x2) : t|x==where : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 1
+
+Sent : it 's a baby
+Sem : [r : [x : e|p3==baby(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==it : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 1
+
+Sent : I took it there
+Sem : [x1==it : e|x==i : e|e1==take : es|p1==past_feature(e1) : t|p2==subj(e1, x) : t|p3==obj(e1, x1) : t|p5==there(e1):t|head==e1 : es]
+File : 1
+
+Sent : what 's her name
+Sem : [r : [x1 : e|p4==name(x1) : t|head==x1 : e]|x2==her(r.head, r) : e|e1==eq : es|p3==obj(e1, x2) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 1
+
+Sent : where 's the top
+Sem : [r : [x1 : e|p4==top(x1) : t|head==x1 : e]|x2==iota(r.head, r) : e|e1==eqloc : es|p3==obj(e1, x2) : t|x==where : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 1
+
+Sent : that 's it
+Sem : [x1==it : e|x==that : e|e1==eq : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t|head==e1 : es]
+File : 1
+
+Sent : that 's the fireplace
+Sem : [r : [x : e|p3==fireplace(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 1
+
+Sent : that 's Cromer
+Sem : [x1==cromer : e|x==that : e|e1==eq : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t|head==e1 : es]
+File : 1
+
+Sent : the coffee 's coming
+Sem : [r : [x : e|p6==coffee(x) : t|head==x : e]|x1==iota(r.head, r) : e|e1==come : es|p2==be_aux_feature(e1) : t|p5==subj(e1, x1) : t|head==e1 : es]
+File : 1
+
+Sent : are you saying Fraser
+Sem : [x1==fraser : e|x==you : e|e1==say : es|p2==pres_feature(e1) : t|p3==be_aux_feature(e1) : t|p5==prog_feature(e1) : t|p6==subj(e1, x) : t|p7==obj(e1, x1) : t|head==e1 : es]
+File : 1
+
+END_OF_CORPUS
+
+
+

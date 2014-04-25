@@ -1,0 +1,15 @@
+%%%%%%%%% CORPUS INFO 
+ Types and Tokens (target types, target tokens, actual types, actual tokens,) 
+verb : 33,229,29,263,
+determiner : 3,85,3,56,
+pronoun : 15,300,5,62,
+noun : 149,186,119,362,
+ 
+ %%%%%%%%% Statistics (types, tokens) %%%%%%%%
+verb : 18.589745, 35.397038, 
+determiner : 1.923077, 7.5370116, 
+pronoun : 3.2051284, 8.344549, 
+noun : 76.28205, 48.7214, 
+
+ mean sentence length = 3.7011902
+ average word repetition = 4.013423

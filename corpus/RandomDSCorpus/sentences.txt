@@ -1,0 +1,21 @@
+mutilation who hunger orthopaedics underline
+//john who likes mary snores
+//bill who snores hates matt
+//matt likes ali who arrives
+//sophie who ruth hates begins
+//ruth who john likes flies
+//arash who ruth hates leaves
+//matt who arash likes flies
+
+//mary likes the boy
+//mary bill likes
+//the girl likes bill
+//a girl arrives
+//a man snores
+//john hates the boy
+//a boy hates matt
+//the girl likes mary
+//the man hates bill
+//john hates a woman
+//a man likes mary
+//the woman reads matt

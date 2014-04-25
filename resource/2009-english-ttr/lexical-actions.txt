@@ -1,0 +1,251 @@
+// Lexical actions for English (TTR version)
+// as per Dynamics of Conversational Dialogue project, 2009
+
+// Rule metavariables: uppercase rule spec arguments
+// Formula metavariables: A,B,C
+// Bottom requirement: !
+
+proper(NAME,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        put(fo([x:NAME]))
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+mass(NAME,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        put(fo([x:NAME]))
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+count(PRED,PERSON,CLASS)
+IF      ?ty(cn)
+THEN    make(\/0)
+        go(\/0)
+        put(fo([x:]))
+        put(ty(e))      
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+        go(/\0)
+        go(/\0)
+        put(+CLASS)
+        go(\/0)
+        make(\/1)
+        go(\/1)
+        put(fo(X^[X:PRED]))
+        put(ty(e>cn))
+        put(!)
+        go(/\1)
+        go(\/0)
+ELSE    abort
+
+adj(PRED)
+IF      ?ty(cn)
+THEN    make(\/1)
+        go(\/1)
+        put(fo(X^[x:PRED(X)]))
+        put(ty(cn>cn))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    abort
+
+pron_nom(PERSON,CLASS)
+IF      ?ty(e)
+        [/\]?ty(t)
+THEN    put(ty(e))
+        //* put(fo([A:])) // formula metavariables not working with generation *//
+        put(?Ex.fo(x))
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+pron_acc(PERSON,CLASS)
+IF      ?ty(e)
+        [/\]?ty(e>X)
+THEN    put(ty(e))
+        //* put(fo([A:])) // formula metavariables not working with generation *//
+        //*putc*//
+        put(+PERSON)
+        put(+CLASS)
+        put(!)
+ELSE    abort
+
+pron_whrel(CLASS)
+IF      ?ty(e)
+        [/\*/\L]fo(X)
+        //* [/\*/\L]fo(+CLASS) // need a semantic class hierarchy *//
+THEN    put(ty(e))
+        put(fo(X))
+ELSE    abort
+
+det_quant(QUANT)
+IF      ?ty(e)
+THEN    make(\/1)
+        go(\/1)
+        put(fo(X^[x:QUANT(X)]))
+        put(ty(cn>e))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    abort
+
+//*ORIGINAL VERSIONS of verbs:*//
+
+//* original version-
+v_intran_inf(PRED,TENSE,PERSON)
+IF      ?ty(e>t)
+        Ex.?fo(x)
+THEN    put(fo(X^[p:PRED(X)]))
+        put(!)
+ELSE    abort*//
+
+//* original version-
+v_tran_inf(PRED,TENSE,PERSON)
+IF      ?ty(e>t)
+        Ex.?fo(x)
+THEN    make(\/1)
+        go(\/1)
+        put(fo(Y^X^[p:PRED(X,Y)]))
+        put(ty(e>(e>t)))
+        put(!)
+        go(/\)
+        make(\/0)
+        go(\/0)
+        put(?ty(e))
+ELSE    abort
+*//
+
+//*NEW versions of VERBS to check with Matt, with +INF features*//
+
+v_intran_inf(PRED,TENSE,PERSON)
+IF      ?ty(e>t)
+        +inf
+THEN    put(fo(X^[p:PRED(X)]))
+		put(ty(e>t))
+        put(!)
+ELSE    abort
+
+v_intran_fin(PRED,TENSE,PERSON)
+IF      ?ty(e>t)
+        //*     [/\1\/0]+PERSON // case-matching not working yet *//
+        ¬+inf
+        ¬?+inf
+THEN    go(/\1)
+        put(+TENSE)
+        go(\/1)
+        put(+PERSON)
+        put(fo(X^[p:PRED(X)]))
+        put(ty(e>t))
+        put(!)
+ELSE    abort
+
+v_tran_fin(PRED,TENSE,PERSON)
+IF      ?ty(e>t)
+        //*     [/\1\/0]+PERSON // case-matching not working yet *//
+        ¬+inf
+        ¬?+inf
+THEN    go(/\1)
+        put(+TENSE)
+        go(\/1)
+        make(\/1)
+        go(\/1)
+        put(+PERSON)
+        put(fo(Y^X^[p:PRED(X,Y)]))
+        put(ty(e>(e>t)))
+        put(!)
+        go(/\)
+        make(\/0)
+        go(\/0)
+        put(?ty(e))
+ELSE    abort
+
+
+v_tran_inf(PRED,TENSE,PERSON)
+IF      ?ty(e>t)
+        +inf
+THEN    make(\/1)
+        go(\/1)
+        put(fo(Y^X^[p:PRED(X,Y)]))
+        put(ty(e>(e>t)))
+        put(!)
+        go(/\)
+        make(\/0)
+        go(\/0)
+        put(?ty(e))
+ELSE    abort
+
+
+//* NEW SUBJECT CONTROL AND OBJECT CONTROL VERBS. TWO more versions of the below two verb types are needed (i.e. the infinitive versions), These are
+the two finite versions:*//
+
+v_tran_fin_subjcon(PRED,TENSE,PERSON)
+IF	    ?ty(e>t)
+		</\*\/0>fo(Z)
+THEN 	go(/\1)
+		put(+TENSE)
+		go(\/1)
+		make(\/1)
+		go(\/1)
+		put(+PERSON)
+		put(fo(Y^X^[p:PRED(X,Y)]))
+		put(ty(t>(e>t)))
+		put(!)
+		go(/\)
+		make(\/0)
+		go(\/0)
+		put(?ty(t))
+		make(\/1)
+		go(\/1)
+		put(?ty(e>t))
+		put(?+inf)
+		go(/\)
+		make(\/0)
+		go(\/0)
+		put(fo(Z))
+		put(ty(e))
+		put(!)
+ELSE 	abort
+
+v_tran_fin_objcon(PRED,TENSE,PERSON)
+IF	    ?ty(e>t)
+THEN 	go(/\1)
+		put(+TENSE)
+		go(\/1)
+		make(\/1)
+		go(\/1)
+		put(+PERSON)
+		put(fo(Y^X^[p:PRED(X,Y)]))
+		put(ty(t>(e>t)))
+		put(!)
+		go(/\)
+		make(\/0)
+		go(\/0)
+		put(?ty(t))
+		make(\/1)
+		go(\/1)
+		put(?ty(e>t))
+		put(?+inf)
+		go(/\)
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+ELSE 	abort
+
+//* INFINITIVAL COMPLEMENT 'TO' *//
+prep_inf_comp(PRED)
+IF		?+inf
+		//*<\/1>?ty(e>t)*//
+THEN    put(+inf)
+ELSE	abort

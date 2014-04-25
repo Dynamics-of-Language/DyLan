@@ -1,0 +1,413 @@
+Sent : where is Papa
+Sem : [x1==papa : e|e1==eqloc : es|p3==obj(e1, x1) : t|x==where : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : you drinking your milk
+Sem : [r : [x : e|p5==milk(x) : t|head==x : e]|x2==your(r.head, r) : e|x1==you : e|e1==drink : es|p3==subj(e1, x1) : t|p4==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : Eve
+Sem : [x==eve : e|head==x : e]
+File : 2
+
+Sent : that 's a girl
+Sem : [r : [x : e|p3==girl(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : you want more soup
+Sem : [r : [x : e|p4==soup(x) : t|head==x : e]|x2==more(r.head, r) : e|x1==you : e|e1==want : es|p2==subj(e1, x1) : t|p3==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : what is that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what is that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what
+Sem : [x==what : e|head==x : e]
+File : 2
+
+Sent : Eve
+Sem : [x==eve : e|head==x : e]
+File : 2
+
+Sent : are you finished
+Sem : [x==you : e|e1==finish : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : she
+Sem : [x==she : e|head==x : e]
+File : 2
+
+Sent : we go
+Sem : [x==we : e|e1==go : es|p1==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : Mommy 'll move your chair
+Sem : [r : [x : e|p5==chair(x) : t|head==x : e]|x2==your(r.head, r) : e|x1==mommy : e|e1==move : es|p1==will_aux_feature(e1) : t|p3==subj(e1, x1) : t|p4==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : what do you want
+Sem : [x1==you : e|e1==want : es|p2==do_aux_feature(e1) : t|p4==subj(e1, x1) : t|x==what : e|p5==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : I 'm gonna cook it
+Sem : [x2==it : e|x==i : e|e2==cook : es|p6==subj(e2, x) : t|p7==obj(e2, x2) : t|p8==go(e2) : t|p2==be_aux_feature(e2) : t|head==e2 : es]
+File : 2
+
+Sent : I 'm gonna cook it
+Sem : [x2==it : e|x==i : e|e2==cook : es|p6==subj(e2, x) : t|p7==obj(e2, x2) : t|p8==go(e2) : t|p2==be_aux_feature(e2) : t|head==e2 : es]
+File : 2
+
+Sent : that 's right
+Sem : [x==that : e|e1 : es|p1==right(e1) : t|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 're you doing
+Sem : [x1==you : e|e1==do : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x1) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 're you doing on the table
+Sem : [x3==you : e|r : [x1 : e|p4==table(x1) : t|head==x1 : e]|x2==iota(r.head, r) : e|e1==do : es|p3==on(e1, x2) : t|p6==be_aux_feature(e1) : t|p9==subj(e1, x3) : t|x==what : e|p10==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : that 's not Papa
+Sem : [x1==papa : e|x==that : e|e1==eq : es|p1==not_feature(e1) : t|p2==subj(e1, x) : t|p3==obj(e1, x1) : t|head==e1 : es]
+File : 2
+
+Sent : a letter
+Sem : [r : [x : e|p==letter(x) : t|head==x : e]|x1==epsilon(r.head, r) : e|head==x1 : e]
+File : 2
+
+Sent : Eve has a letter
+Sem : [r : [x : e|p4==letter(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==eve : e|e1==have : es|p2==subj(e1, x1) : t|p3==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : I 'm going_to cook it
+Sem : [x2==it : e|x==i : e|e2==cook : es|p6==subj(e2, x) : t|p7==obj(e2, x2) : t|p8==go(e2) : t|p2==be_aux_feature(e2) : t|head==e2 : es]
+File : 2
+
+Sent : more grape juice
+Sem : [r : [x : e|p1==juice(x) : t|p==grape(x) : t|head==x : e]|x1==more(r.head, r) : e|head==x1 : e]
+File : 2
+
+Sent : it 's allgone
+Sem : [x==it : e|e1 : es|p1==all_gone(e1) : t|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : are you alright
+Sem : [x==you : e|e1 : es|p2==alright(e1) : t|p3==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : Eve
+Sem : [x==eve : e|head==x : e]
+File : 2
+
+Sent : what do you see
+Sem : [x1==you : e|e1==see : es|p2==do_aux_feature(e1) : t|p4==subj(e1, x1) : t|x==what : e|p5==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what are you doing
+Sem : [x1==you : e|e1==do : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x1) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : it 's your horsie
+Sem : [r : [x : e|p3==horse_dim(x) : t|head==x : e]|x2==your(r.head, r) : e|x1==it : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : Mommy 's sitting on the stool
+Sem : [x2==mommy : e|r : [x : e|p3==stool(x) : t|head==x : e]|x1==iota(r.head, r) : e|e1==sit : es|p2==on(e1, x1) : t|p5==be_aux_feature(e1) : t|p8==subj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : here
+Sem : [head : es|p1==here(head) : t]
+File : 2
+
+Sent : I get it
+Sem : [x1==it : e|x==i : e|e1==get : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t|head==e1 : es]
+File : 2
+
+Sent : Mommy 's busy
+Sem : [x==mommy : e|e1 : es|p1==busy(e1) : t|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what are you doing
+Sem : [x1==you : e|e1==do : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x1) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : who 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==who : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what shall I do with it
+Sem : [x3==i : e|x1==it : e|e1==do : es|p3==with(e1, x1) : t|p4==shall_aux_feature(e1) : t|p6==subj(e1, x3) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what shall I do with it
+Sem : [x3==i : e|x1==it : e|e1==do : es|p3==with(e1, x1) : t|p4==shall_aux_feature(e1) : t|p6==subj(e1, x3) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what shall I do with it
+Sem : [x3==i : e|x1==it : e|e1==do : es|p3==with(e1, x1) : t|p4==shall_aux_feature(e1) : t|p6==subj(e1, x3) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : there
+Sem : [head : es|p1==there(head) : t]
+File : 2
+
+Sent : that 's it
+Sem : [x1==it : e|x==that : e|e1==eq : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t|head==e1 : es]
+File : 2
+
+Sent : Fraser 's not going
+Sem : [x==fraser : e|e1==go : es|p1==not_feature(e1) : t|p3==be_aux_feature(e1) : t|p6==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : he 's going_to sit on the chair
+Sem : [r : [x : e|p8==chair(x) : t|head==x : e]|x3==iota(r.head, r) : e|x1==he : e|e2==sit : es|p6==subj(e2, x1) : t|p7==on(e2, x3) : t|p9==go(e2) : t|p2==be_aux_feature(e2) : t|head==e2 : es]
+File : 2
+
+Sent : I 'm going upstairs
+Sem : [x==i : e|e1==go : es|p2==upstairs(e1) : t|p4==be_aux_feature(e1) : t|p7==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : I have a book
+Sem : [r : [x : e|p3==book(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==i : e|e1==have : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : that 's the telephone
+Sem : [r : [x : e|p3==telephone(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : that was the telephone
+Sem : [r : [x : e|p3==telephone(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : it was Papa
+Sem : [x1==papa : e|x==it : e|e1==eq : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t|head==e1 : es]
+File : 2
+
+Sent : that 's the ball
+Sem : [r : [x : e|p3==ball(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : what 's this book called
+Sem : [r : [x1 : e|p8==book(x1) : t|head==x1 : e]|x2==this(r.head, r) : e|e1==call : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x2) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : you tell me about the book
+Sem : [x3==me : e|x2==you : e|r : [x : e|p3==book(x) : t|head==x : e]|x1==iota(r.head, r) : e|e1==tell : es|p2==about(e1, x1) : t|p4==subj(e1, x2) : t|p5==obj(e1, x3) : t|head==e1 : es]
+File : 2
+
+Sent : you tell Fraser about the book
+Sem : [x3==fraser : e|x2==you : e|r : [x : e|p3==book(x) : t|head==x : e]|x1==iota(r.head, r) : e|e1==tell : es|p2==about(e1, x1) : t|p4==subj(e1, x2) : t|p5==obj(e1, x3) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : who 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==who : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : who 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==who : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : would you shut the door
+Sem : [r : [x : e|p7==door(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==you : e|e1==shut : es|p2==will_aux_feature(e1) : t|p5==subj(e1, x1) : t|p6==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : what did you say
+Sem : [x1==you : e|e1==say : es|p3==do_aux_feature(e1) : t|p5==subj(e1, x1) : t|x==what : e|p6==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : who 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==who : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : more cracker
+Sem : [r : [x : e|p2==cracker(x) : t|head==x : e]|x1==more(r.head, r) : e|head==x1 : e]
+File : 2
+
+Sent : what are those
+Sem : [x1==those : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : you may have it
+Sem : [x1==it : e|x==you : e|e1==have : es|p1==may_aux_feature(e1) : t|p3==subj(e1, x) : t|p4==obj(e1, x1) : t|head==e1 : es]
+File : 2
+
+Sent : there
+Sem : [head : es|p1==there(head) : t]
+File : 2
+
+Sent : there
+Sem : [head : es|p1==there(head) : t]
+File : 2
+
+Sent : what 's this
+Sem : [x1==this : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : shall I change your diaper
+Sem : [r : [x : e|p6==diaper(x) : t|head==x : e]|x2==your(r.head, r) : e|x1==i : e|e1==change : es|p2==shall_aux_feature(e1) : t|p4==subj(e1, x1) : t|p5==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : you lay there
+Sem : [x==you : e|e1==lay : es|p2==there(e1) : t|p3==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : that 's a good girl
+Sem : [r : [x : e|p4==girl(x) : t|p3==good(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what 's that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what is that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what are they doing
+Sem : [x1==they : e|e1==do : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x1) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what are they doing
+Sem : [x1==they : e|e1==do : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x1) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : your mouth
+Sem : [r : [x : e|p2==mouth(x) : t|head==x : e]|x1==your(r.head, r) : e|head==x1 : e]
+File : 2
+
+Sent : where is your celery
+Sem : [r : [x1 : e|p4==celery(x1) : t|head==x1 : e]|x2==your(r.head, r) : e|e1==eqloc : es|p3==obj(e1, x2) : t|x==where : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : where is your celery
+Sem : [r : [x1 : e|p4==celery(x1) : t|head==x1 : e]|x2==your(r.head, r) : e|e1==eqloc : es|p3==obj(e1, x2) : t|x==where : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : you bring the celery here
+Sem : [r : [x : e|p5==celery(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==you : e|e1==bring : es|p2==here(e1) : t|p3==subj(e1, x1) : t|p4==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : you droped the celery
+Sem : [r : [x : e|p4==celery(x) : t|head==x : e]|x2==iota(r.head, r) : e|x1==you : e|e1==drop : es|p2==subj(e1, x1) : t|p3==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : your foot
+Sem : [r : [x : e|p2==foot(x) : t|head==x : e]|x1==your(r.head, r) : e|head==x1 : e]
+File : 2
+
+Sent : where is your foot
+Sem : [r : [x1 : e|p4==foot(x1) : t|head==x1 : e]|x2==your(r.head, r) : e|e1==eqloc : es|p3==obj(e1, x2) : t|x==where : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : what are you doing
+Sem : [x1==you : e|e1==do : es|p3==be_aux_feature(e1) : t|p6==subj(e1, x1) : t|x==what : e|p7==obj(e1, x) : t|head==e1 : es]
+File : 2
+
+Sent : your bibbie
+Sem : [r : [x : e|p2==bib_dim(x) : t|head==x : e]|x1==your(r.head, r) : e|head==x1 : e]
+File : 2
+
+Sent : me
+Sem : [x==me : e|head==x : e]
+File : 2
+
+Sent : Mommy 's going_to have some soup
+Sem : [r : [x : e|p8==soup(x) : t|head==x : e]|x3==some(r.head, r) : e|x1==mommy : e|e2==have : es|p6==subj(e2, x1) : t|p7==obj(e2, x3) : t|p9==go(e2) : t|p2==be_aux_feature(e2) : t|head==e2 : es]
+File : 2
+
+Sent : that 's it
+Sem : [x1==it : e|x==that : e|e1==eq : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t|head==e1 : es]
+File : 2
+
+Sent : that 's a girl
+Sem : [r : [x : e|p3==girl(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==that : e|e1==eq : es|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : she has a bibbie on
+Sem : [r : [x : e|p6==bib_dim(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==she : e|e1==have : es|p2==on(e1) : t|p4==subj(e1, x1) : t|p5==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : Eve has a bibbie
+Sem : [r : [x : e|p4==bib_dim(x) : t|head==x : e]|x2==epsilon(r.head, r) : e|x1==eve : e|e1==have : es|p2==subj(e1, x1) : t|p3==obj(e1, x2) : t|head==e1 : es]
+File : 2
+
+Sent : you go
+Sem : [x==you : e|e1==go : es|p1==subj(e1, x) : t|head==e1 : es]
+File : 2
+
+END_OF_CORPUS
+
+100
+
+UTTERANCE LENGTH STATS : 
+min sentence length = 1
+max sentence length = 7
+mean sentence length = 3.5
+
+WORD OCCURENCE STATS: 
+Tokens = 350
+Types = 91
+Type/Token ratio = 3.8461537

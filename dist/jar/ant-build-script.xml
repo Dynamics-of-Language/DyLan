@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+    Copyright (c) 2001, 2010 Matthew Purver
+    All Rights Reserved.  Use is subject to license terms.
+   
+    See the file "LICENSE" for information on usage and
+    redistribution of this file, and for a DISCLAIMER OF ALL
+    WARRANTIES.
+ -->
+
+<project default="create_run_jar" name="Create Runnable Jar for Project ds with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="ds.jar">
+            <manifest>
+                <attribute name="Main-Class" value="qmul.ds.gui.ParserGUI"/>
+                <attribute name="Class-Path" value=". stanford-parser-2010-08-20.jar log4j-1.2.16.jar"/>
+            </manifest>
+            <fileset dir="../../../ds/bin" excludes="*.out,*.log,log*"/>
+            <fileset dir="../../../util/bin" excludes="*.out,*.log,log*"/>
+        </jar>    	<copy file="../../../util/lib/stanford-parser-2010-08-20/stanford-parser-2010-08-20.jar" todir="."/>    	<copy file="../../../util/lib/stanford-parser-2010-08-20/LICENSE.txt" tofile="stanford-parser-2010-08-20-LICENSE.txt"/>    	<copy file="../../../util/lib/stanford-parser-2010-08-20/README.txt" tofile="stanford-parser-2010-08-20-README.txt"/>        <copy file="../../../util/lib/apache-log4j-1.2.16/log4j-1.2.16.jar" todir="."/>        <copy file="../../../util/lib/apache-log4j-1.2.16/LICENSE" tofile="apache-log4j-1.2.16-LICENSE"/>        <copy file="../../../util/lib/apache-log4j-1.2.16/NOTICE" tofile="apache-log4j-1.2.16-NOTICE"/>    </target>
+</project>

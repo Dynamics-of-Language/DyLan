@@ -1,0 +1,112 @@
+// Computational actions for induction
+// as per RISER project, 2012
+
+// Rules prefixed with * are non-optional
+// Rules prefixed with + will be applied exhaustively (will backtrack on metas even if successful on first application)
+// Rule metavariables: X,Y,Z
+// Formula metavariables: A,B,C
+
+
+intro-pred
+IF      ?ty(t)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/0)
+        go(\/0)
+        put(?ty(e))
+        go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>t))
+        go(/\1)
+        go(\/0)
+ELSE    abort
+
+
+anticipation0
+IF      <\/0>Ex.?x
+THEN    go(\/0)
+ELSE    abort
+
+anticipation1
+IF      <\/1>Ex.?x
+THEN    go(\/1)
+ELSE    abort
+
+*thinning
+IF      ?X
+        X
+THEN    delete(?X)
+ELSE    abort
+
+
+completion
+IF      ty(X)
+		¬?ty(X)
+        </\>Ex.x
+THEN    go(/\)
+ELSE    abort
+
+*elimination
+IF      ?ty(X)
+        ¬Ex.fo(x)
+        <\/1>ty(Y>X)
+        <\/0>ty(Y)
+        <\/1>Ex.fo(x)
+        <\/0>Ex.fo(x)
+        ¬<\/1>Ex.?x
+        ¬<\/0>Ex.?x
+THEN    beta-reduce
+ELSE    abort
+
+
+
+star-adjunction
+IF      ?ty(t)
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+        ¬<\/*>Ex.x
+        ¬<\/U>Ex.x
+THEN    make(\/*)
+        go(\/*)
+        put(?ty(e))
+        put(?Ex.tn(x))
+ELSE    abort
+
++merge
+IF      Ex.tn(x)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+		<Y>?Ex.tn(x)
+		subsumes(Y)
+		?ty(V)		
+		<Y>ty(V)		           
+THEN    merge(Y)
+		delete(?ty(V))
+		delete(?Ex.tn(x))
+ELSE    abort
+
+link-adjunction
+IF      ty(e)
+        fo(X)
+        ¬<\/L>Ex.x
+THEN    make(\/L)
+        go(\/L)
+        put(?ty(t))
+        put(?<\/*>fo(X))
+ELSE    abort
+
+//*
+
+local-star-adjunction
+IF		?ty(t)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+		¬<\/U>Ex.x
+THEN	make(\/U)
+		go(\/U)
+		put(?ty(e))
+		put(?Ex.tn(x))	
+ELSE	abort
+
+*//

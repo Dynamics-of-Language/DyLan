@@ -1,0 +1,114 @@
+<html>
+<head>
+
+  <title>Dynamic Syntax</title>
+
+  <META NAME="author" CONTENT="Matthew Purver">
+  <META NAME="description" CONTENT="Dynamic Syntax implementation">
+  <META NAME="keywords" CONTENT="dynamic, syntax">
+
+</head>
+<body>
+
+<h3>A Prolog Implementation of <a href="http://www.kcl.ac.uk/research/groups/ds/">Dynamic Syntax</a></h3>
+
+Dynamic Syntax: the Flow of Language Understanding (Kempson, Meyer-Viol, Gabbay, 2001)
+
+<p></p>
+<p></p>
+<form action="ds.cgi" method="POST">
+<table>
+<tr>
+<td colspan="2" nowrap>
+Enter text to parse: 
+<input name="sent" size=30></input>
+<input type="submit" name="search" value="Parse">
+<input type="reset">
+</td>
+</tr><tr>
+<td><b>Context:</b></td>
+<td><b>Trees to display:</b></td>
+<td><b>Tree printing:</b></td>
+</tr><tr>
+<td><input type="radio" name="context" value="none"> None<br>
+    <input type="radio" name="context" value="one" checked> Previous sentence only<br>
+    <input type="radio" name="context" value="all"> Entire history</td>
+<td><input type="radio" name="trees" value="all"> Show all trees<br>
+    <input type="radio" name="trees" value="some" checked> Show complete trees when available, otherwise a selection<br>
+    <input type="radio" name="trees" value="complete"> Show only complete trees<br>
+    <input type="radio" name="trees" value="best"> Show only the most likely tree</td>
+<td><input type="radio" name="format" value="html"> Display plain text trees<br>
+    <input type="radio" name="format" value="php" checked> Display graphical trees</td>
+</tr>
+</table>
+</form>
+
+<br>
+You can enter full sentences, fragments or individual words. You will be able to add more 
+text incrementally later (the parse trees stay in memory).
+<br>
+You will also be able to generate strings from the parse trees (with any luck, getting back
+what you originally put in ...)
+<br>
+
+<br>
+<table cellspacing=10><tr>
+<td>
+The lexicon currently includes:
+
+<table border=1>
+<tr><td>Names</td><td>Nouns</td><td>Verbs</td><td>Pronouns</td><td>Misc</td></tr>
+<tr valign=top><td>
+john<br>bill<br>mary<br>london<br>paris<br>europe<br>january<br>february<br>
+</td><td>
+aeroplane<br>airplane<br>boat<br>car<br>plane<br>train<br>
+book<br>hotel<br>room<br>table<br>ticket<br>trip<br>
+boy<br>girl<br>student<br>sugar<br>travel<br>
+</td><td>
+arrive<br>begin<br>book<br>dislike<br>fly<br>hate<br>leave<br>like<br>sneeze<br>snore<br>
+start<br>stay<br>think<br>travel<br>want<br>wonder<br>
+</td><td>
+i<br>he<br>her<br>him<br>it<br>me<br>she<br>you<br>
+</td><td>
+what<br>who<br>which<br>that<br>a<br>an<br>the<br>every<br>no<br>some<br>
+</td></tr>
+</table>
+
+</td><td>
+Some example sentences that work:
+
+<br>"john snores"
+<br>"john likes mary"
+<br>"mary john likes"
+<br>"john thinks mary likes bill"
+<br>"john who snores sneezed"
+<br>"john who hates bill thinks mary likes him"
+<br>"a student who hates travel thinks mary likes the hotel"
+<br>"a boy who hates a hotel thinks mary likes the hotel that he hates"
+<br>
+<br>and remember, DS is incremental! You can start with "john", or just "the",
+and see how the trees are built up as you go on. Turn on "show all trees" if
+you're really interested.
+<br>
+<br>I'm afraid the tree printing display is very primitive - it works fine for
+simple sentences, but for more complex ones the nodes start nudging each other
+across the page.
+<br>
+<br>Multiple trees will be given for many of the more complex examples, due to
+ambiguity caused by (a) restrictive vs. non-restrictive relative readings, and 
+(b) rather weak attempts at pronoun resolution.
+
+</td>
+</tr></table>
+
+<HR>
+
+<table width=100%>
+<tr>
+<td width=50% align=left><i>This implementation &copy; <a href="http://www.dcs.qmul.ac.uk/~mpurver/">Matthew Purver</a>, 2002-9</i></td>
+<td width=50% align=right><i>Problems, comments, suggestions: <a href=mailto:mpurver_AT_dcs.qmul.ac.uk>mpurver AT dcs.qmul.ac.uk</a></i></td>
+</tr>
+</table>
+
+</body>
+</html>

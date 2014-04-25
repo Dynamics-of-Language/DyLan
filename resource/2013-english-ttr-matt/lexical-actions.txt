@@ -1,0 +1,190 @@
+// Lexical actions for English
+// Matt version with no event nodes & TTR 2013
+
+// Rule metavariables: uppercase rule spec arguments
+// Formula metavariables: A,B,C
+// Bottom requirement: !
+
+proper(NAME,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(person(PERSON))
+        put(class(CLASS))
+        put(ty(e))
+        ttrput([x==NAME:e|head==x:e])
+        put(!)
+ELSE    abort
+
+det_quant(QUANT)
+IF      ?ty(e)
+THEN   	make(\/1)
+        go(\/1)
+        ttrput(R^[r:R | x1==(QUANT, r.head, r):e | head:x1])
+        put(ty(cn>e))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    abort
+
+
+mass(NAME,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        ttrput([x==NAME:e])
+        put(person(PERSON))
+        put(class(CLASS))
+        put(!)
+ELSE    abort
+
+count(PRED,PERSON,CLASS)
+IF      ?ty(cn)
+THEN    make(\/1)
+        go(\/1)
+        ttrput(R^(R ++ [p==PRED(R.head):t]))
+        put(ty(e>cn))      
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        ttrput([x:e|head:x])
+        put(ty(e))
+        put(!)
+ELSE    abort
+
+adj(PRED)
+IF      ?ty(cn)
+THEN    make(\/1)
+        go(\/1)
+        ttrput(R^(R ++ [p3==PRED(R.head):t]))
+        put(ty(cn>cn))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    abort
+
+pron_nom(PERSON,CLASS)
+IF      ?ty(e)
+        </\U>?ty(t)
+THEN    put(ty(e))
+        ttrput([x:e])
+        put(?Ex.fo(x))
+        put(person(PERSON))
+        put(class(CLASS))
+        put(!)
+ELSE    abort
+
+pron_acc(PERSON,CLASS)
+IF      ?ty(e)
+        </\0>?ty(e>X)
+THEN    put(ty(e))
+        ttrput([x:e])
+        put(?Ex.fo(x))
+        put(person(PERSON))
+        put(class(CLASS))
+        put(!)
+ELSE    abort
+
+pron_ref(PERSON,CLASS)
+IF		?ty(e)
+		¬</\0>?ty(es>t)
+		</\0/\*\/0>(ty(e)& fo(X)& class(CLASS)& person(PERSON))
+THEN	put(fo(X))
+		put(ty(e))
+		put(person(PERSON))
+		put(class(CLASS))
+		put(!)
+ELSE	abort
+
+pron_whrel(CLASS)
+IF      ?ty(e)
+        </\*/\L>fo(X)
+THEN    put(ty(e))
+        put(fo(X))
+ELSE    abort
+
+//*
+pron_whq(CLASS)
+IF		?ty(e)
+		</\*>?ty(t)
+THEN	put(ty(e))
+		put(fo(A))
+		put(class(CLASS))
+ELSE	abort
+*//
+
+
+
+v_intran_inf(PRED,TENSE,PERSON)
+IF      ty(e>(es>t))
+        ?Ex.fo(x)
+        </\1/\1\/U>Ex.x
+        </\1/\1\/U>ty(e)
+        ¬<\/0>Ex.x
+        ¬<\/1>Ex.x        
+THEN    delete(?Ex.fo(x))
+		go(</\1\/0>)
+		merge(</\0/\1\/U>)
+		delete(?ty(e))
+		delete(?Ex.tn(x))
+		go(</\0\/1>)
+		v_intran_content(PRED,(head subset reftime))
+		go(</\1/\1\/0\/0>)
+		conjoin([p3==(head subset reftime):t])
+		put(ty(cn))
+ELSE    abort
+
+
+v_intran_fin(PRED,TENSE,PERSON)
+IF		?ty(e>t)
+THEN	put(+PERSON)
+		v_intran_content(PRED,TENSE)
+		put(ty(e>t))		
+ELSE	abort  
+
+
+v_tran_inf(PRED,TENSE,PERSON)
+IF      ty(e>(es>t))
+        ?Ex.fo(x)
+        </\1/\1\/U>Ex.x
+        </\1/\1\/U>ty(e)
+        ¬<\/0>Ex.x
+        ¬<\/1>Ex.x      
+THEN    delete(?Ex.fo(x))
+		delete(ty(e>(es>t)))
+		put(?ty(e>(es>t)))
+		go(</\1/\1\/0\/0>)
+		conjoin([p3==(head subset reftime):t])
+		put(ty(cn))
+		go(</\0/\0\/1\/0>)
+		merge(</\0/\1\/U>)
+		delete(?ty(e))
+		delete(?Ex.tn(x))
+		go(/\0)
+		v_tran_content(PRED,(head subset reftime))		
+ELSE    abort
+
+v_tran_fin(PRED,TENSE,PERSON)
+IF		?ty(e>t)
+THEN	put(+PERSON)
+		v_tran_content(PRED,TENSE)
+ELSE    abort
+
+v_aux_inf(PRED,TENSE,PERSON)
+IF		?ty(t)
+THEN	IF 		<\/1>Ex.x
+		   		<\/0>Ex.x
+		THEN	abort
+		ELSE	IF		<\/U>Ex.x
+				THEN 	aux_content(PRED)
+				ELSE	put(+Q)
+						aux_content(PRED)
+						go(</\1/\1>)
+						make(\/U)
+						go(\/U)
+						put(?ty(e))
+						put(?Ex.tn(x))
+ELSE	abort
+

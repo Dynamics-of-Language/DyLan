@@ -1,0 +1,22 @@
+go							  v_intran_fin					go							  pres							nons3
+to 							  prep_inf_comp					to							  							
+to   						  prep_location_time			to_location					  loc	
+from						  prep_location_time			from_location				  loc
+on							  prep_location_time			on_date						  temp			
+by							  prep_location_time			by_method					  trans	
+Monday						  proper						monday						  s3							temp
+April					      proper						april						  s3                            temp
+london                        proper                   	    london                        s3                            loc
+paris                         proper                        paris                         s3                            loc
+Tuesday						  proper						Tuesday						  s3                            temp
+where						  pron_wh_location_time_inv		unknown		  				  loc
+where						  pron_wh_location_time     	unknown		  				  loc
+when						  pron_wh_location_time_inv     on_date						  temp
+i                             proper                        system						  s1                            nons3							
+you							  proper						user						  s2							nons3
+wants   			          v_tran_fin_subjcon			want						  pres                          s3
+wanted  			          v_tran_fin_subjcon			want						  past                          s3
+want    			          v_tran_fin_subjcon			want						  pres                          nons3
+want    			          v_tran_inf_subjcon			want						  inf                           per				
+go                            v_intran_inf                  go                            inf                           per
+leave                         v_intran_inf                  leave                         inf                           per

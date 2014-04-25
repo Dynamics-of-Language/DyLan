@@ -1,0 +1,309 @@
+you going to on that stool ?
+ : lambda $0_{ev}.Q(and(part|go-PROG(pro|you,$0),prep|on(det|that($1,n|stool($1)),$0)),$0)
+ :1
+
+which one ?
+ : lambda $0_{ev}.Q(pro:indef|one,$0)
+ :1
+
+not you eat
+ : lambda $0_{ev}.not(v|eat(pro|you,$0),$0)
+ :2
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :4
+
+would you put them for me .
+ : lambda $0_{ev}.and(aux|will&COND(v|put&ZERO(pro|you,pro|them,$0),$0),prep|for(pro|me,$0))
+ :4
+
+whose hat is that
+ : lambda $0_{ev}.Q(n|hat(pro:dem|that),$0)
+ :4
+
+whose pencil is this
+ : lambda $0_{ev}.Q(n|pencil(pro:dem|this),$0)
+ :6
+
+whose pencil is that
+ : lambda $0_{ev}.Q(n|pencil(pro:dem|that),$0)
+ :6
+
+whose pencil is that
+ : lambda $0_{ev}.Q(n|pencil(pro:dem|that),$0)
+ :6
+
+is your grape juice allgone ?
+ : lambda $0_{ev}.Q(eq(pro:poss:det|your($1,and(n|grape($1),n|juice($1))),adj|allgone,$0),$0)
+ :7
+
+whose is that
+ : lambda $0_{ev}.Q(pro:dem|that,$0)
+ :7
+
+whose cup is that
+ : lambda $0_{ev}.Q(n|cup(pro:dem|that),$0)
+ :7
+
+whose spoon is this
+ : lambda $0_{ev}.Q(n|spoon(pro:dem|this),$0)
+ :7
+
+whose spoon is this
+ : lambda $0_{ev}.Q(n|spoon(pro:dem|this),$0)
+ :7
+
+whose spoon is this
+ : lambda $0_{ev}.Q(n|spoon(pro:dem|this),$0)
+ :7
+
+whose spoon is this
+ : lambda $0_{ev}.Q(n|spoon(pro:dem|this),$0)
+ :7
+
+whose is this
+ : lambda $0_{ev}.Q(pro:dem|this,$0)
+ :7
+
+whose icecream is it
+ : lambda $0_{ev}.Q(n|+n|ice+n|cream(pro|it),$0)
+ :7
+
+whose icecream is it
+ : lambda $0_{ev}.Q(n|+n|ice+n|cream(pro|it),$0)
+ :7
+
+whose icecream is it
+ : lambda $0_{ev}.Q(n|+n|ice+n|cream(pro|it),$0)
+ :7
+
+what this ?
+ : lambda $0_{e}.pro:wh|what
+ :8
+
+would you put it for Mommy ?
+ : lambda $0_{ev}.Q(and(aux|will&COND(v|put&ZERO(pro|you,pro|it,$0),$0),prep|for(n:prop|Mommy,$0)),$0)
+ :8
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :8
+
+I put them just for a minute .
+ : lambda $0_{ev}.and(v|put&ZERO(pro|I,pro|them,$0),prep|for(det|a($1,n|minute($1)),$0),adv:int|just($0))
+ :8
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :10
+
+you didn 't spill your pure cream
+ : lambda $0_{ev}.not($0,)
+ :11
+
+will you put them instead ?
+ : lambda $0_{ev}.Q(and(aux|will(v|put&ZERO(pro|you,pro|them,$0),$0),adv|instead($0)),$0)
+ :12
+
+you don 't have an envelope to_put them in .
+ : lambda $0_{ev}.not(and(aux|do(and(v|have(pro|you,det|a($1,n|envelope($1)),$0),v|put&ZERO(pro|you,pro|them,$0)),$0),adv:loc|in($0)),$0)
+ :12
+
+are you putting Jim on ?
+ : lambda $0_{ev}.Q(and(aux|be&PRES(part|put-PROG(pro|you,n:prop|Jim,$0),$0),adv:loc|on($0)),$0)
+ :12
+
+you didn 't buy it
+ : lambda $0_{ev}.not($0,)
+ :13
+
+may I have it to_eat ?
+ : lambda $0_{ev}.Q(aux|may(and(v|have(pro|I,pro|it,$0),v|eat(pro|I,pro|it,$0)),$0),$0)
+ :14
+
+we could put a doorway .
+ : lambda $0_{ev}.aux|could(v|put&ZERO(pro|we,det|a($1,n|doorway($1)),$0),$0)
+ :14
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :14
+
+should we put a window ?
+ : lambda $0_{ev}.Q(aux|should(v|put&ZERO(pro|we,det|a($1,n|window($1)),$0),$0),$0)
+ :14
+
+and who ?
+ : lambda $0_{e}.and($0)
+ :14
+
+and who ?
+ : lambda $0_{e}.and($0)
+ :14
+
+what 's that got_to do with the birthday cake ?
+ : lambda $0_{e}.lambda $1_{ev}.and(aux|have&3S(and(part|get&PERF(pro:dem|that,$0,$1),v|do(pro:dem|that,$1)),$1),prep|with(det|the($2,and(n|birthday($2),n|cake($2))),$1))
+ :15
+
+what 's that got to_do with it ?
+ : lambda $0_{e}.lambda $1_{ev}.and(aux|have&3S(and(part|get&PERF(pro:dem|that,$0,$1),v|do(pro:dem|that,$1)),$1),prep|with(pro|it,$1))
+ :15
+
+it didn 't cut your chin
+ : lambda $0_{ev}.not($0,)
+ :16
+
+and who ?
+ : lambda $0_{e}.and($0)
+ :16
+
+not me and Cromer
+ : lambda $0_{ev}.not(and(pro|me,,$0)
+ :16
+
+they didn 't say a thing
+ : lambda $0_{ev}.not($0,)
+ :16
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :17
+
+you didn 't forget it
+ : lambda $0_{ev}.not($0,)
+ :17
+
+you didn 't forget it
+ : lambda $0_{ev}.not($0,)
+ :17
+
+he didn 't hear you
+ : lambda $0_{ev}.not($0,)
+ :18
+
+but he didn 't hear you
+ : lambda $0_{ev}.not($0,)
+ :18
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :18
+
+whose is this
+ : lambda $0_{ev}.Q(pro:dem|this,$0)
+ :18
+
+he didn 't buy us a new house
+ : lambda $0_{ev}.not($0,)
+ :19
+
+you didn 't buy some salt
+ : lambda $0_{ev}.not($0,)
+ :19
+
+I want something to_eat .
+ : lambda $0_{ev}.and(v|want(pro|I,pro:indef|something,$0),v|eat(pro|I,pro:indef|something,$0))
+ :19
+
+I wouldn 't put that .
+ : lambda $0_{ev}.not(aux|will&COND(v|put&ZERO(pro|I,pro:dem|that,$0),$0),$0)
+ :20
+
+and what ?
+ : lambda $0_{e}.and($0)
+ :20
+
+I didn 't hear you
+ : lambda $0_{ev}.not($0,)
+ :20
+
+you want me to_have it
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|have(pro|me,pro|it,$0)),$0)
+ :1
+
+you want Mommy to_have a letter
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|have(n:prop|Mommy,det|a($1,n|letter($1)),$0)),$0)
+ :1
+
+you want me to_get her
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|get(pro|me,pro|her,$0)),$0)
+ :1
+
+you want me to_open it
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|open(pro|me,pro|it,$0)),$0)
+ :2
+
+you want me to_turn
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|turn(pro|me,$0)),$0)
+ :2
+
+you want me to_open the toy box
+ : lambda $0_{ev}.and(v|want(pro|you,$0),v|open(pro|me,det|the($1,and(n|toy($1),n|box($1))),$0))
+ :3
+
+do you want me to_have a letter
+ : lambda $0_{ev}.Q(aux|do(and(v|want(pro|you,$0),v|have(pro|me,det|a($1,n|letter($1)),$0)),$0),$0)
+ :4
+
+you want me to_cover you
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|cover(pro|me,pro|you,$0)),$0)
+ :6
+
+you want me to_play
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|play(pro|me,$0)),$0)
+ :6
+
+do you want me to_help you
+ : lambda $0_{ev}.Q(aux|do(and(v|want(pro|you,$0),v|help(pro|me,pro|you,$0)),$0),$0)
+ :6
+
+you want me to smack your fingers
+ : lambda $0_{ev}.Q(and(v|want(pro|you,$0),v|smack(pro|me,pro:poss:det|your($1,n|finger-PL($1)),$0)),$0)
+ :7
+
+do you want me to_help you
+ : lambda $0_{ev}.Q(aux|do(and(v|want(pro|you,$0),v|help(pro|me,pro|you,$0)),$0),$0)
+ :8
+
+do you want me to_sit there
+ : lambda $0_{ev}.Q(and(aux|do(and(v|want(pro|you,$0),v|sit(pro|me,$0)),$0),adv:loc|there($0)),$0)
+ :10
+
+do you want me to_put it on
+ : lambda $0_{ev}.Q(and(aux|do(and(v|want(pro|you,$0),v|put&ZERO(pro|me,pro|it,$0)),$0),adv|on($0)),$0)
+ :10
+
+you 'd like him to_have a mustache
+ : lambda $0_{ev}.aux|will&COND(and(v|like(pro|you,$0),v|have(pro|him,det|a($1,n|mustache($1)),$0)),$0)
+ :13
+
+don 't you want me to_bang your highchair
+ : lambda $0_{ev}.Q(not(aux|do(and(v|want(pro|you,$0),v|bang(pro|me,pro:poss:det|your($1,n|+adj|high+n|chair($1)),$0)),$0),$0),$0)
+ :15
+
+you don 't want me to_go away
+ : lambda $0_{ev}.Q(not(and(aux|do(and(v|want(pro|you,$0),v|go(pro|me,$0)),$0),adv|away($0)),$0),$0)
+ :15
+
+you don 't just tell him to_move
+ : lambda $0_{ev}.not(and(aux|do(and(v|tell(pro|you,pro|him,$0),v|move(pro|him,$0)),$0),adv:int|just($0)),$0)
+ :16
+
+STRING PUNCT!what 's this  camera spool ?
+ : lambda $0_{e}.lambda $1_{ev}.eq($0,pro:dem|this,$1)
+ :17
+
+Fraser doesn 't want you to_shoot him
+ : lambda $0_{ev}.not(aux|do&3S(and(v|want(n:prop|Fraser,$0),v|shoot(pro|you,pro|him,$0)),$0),$0)
+ :18
+
+I don 't want you to_trip on your shoelace
+ : lambda $0_{ev}.not(and(aux|do(and(v|want(pro|I,$0),v|trip(pro|you,$0)),$0),prep|on(pro:poss:det|your($1,n|shoelace($1)),$0)),$0)
+ :19
+
+would you like me to_wipe your hands
+ : lambda $0_{ev}.Q(aux|will&COND(and(v|like(pro|you,$0),v|wipe(pro|me,pro:poss:det|your($1,n|hand-PL($1)),$0)),$0),$0)
+ :19
+
+77

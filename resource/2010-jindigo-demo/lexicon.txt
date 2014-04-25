@@ -1,0 +1,151 @@
+book                          v_tran_inf                    book                          inf                           per
+booked                        v_tran_fin                    book                          past                          per
+can                           v_tran_fin                    can                           pres                          nons3
+can                           v_tran_fin                    can                           pres                          s3
+could                         v_tran_fin                    can                           past                          per
+can                           v_aux_inf                     can                           inf                           per
+can                           v_aux_fin                     can                           pres                          nons3
+can                           v_aux_fin                     can                           pres                          s3
+could                         v_aux_fin                     can                           past                          per
+do                            v_aux_fin                     do                            pres                          nons3
+do                            v_aux_invertfin               do                            pres                          nons3
+does                          v_aux_fin                     do                            pres                          s3
+does                          v_aux_invertfin               do                            pres                          s3
+did                           v_aux_fin                     do                            past                          per
+did                           v_aux_invertfin               do                            past                          per
+doing                         v_aux_ing                     do                            ing                           per
+done                          v_aux_pas                     do                            inf                           per
+flies                         v_intran_fin                  fly                           pres                          s3
+flew						  v_intran_fin					fly							  past							s3
+fly                           v_intran_inf                  fly                           pres                          per
+fly                           v_intran_fin                  fly                           pres                          nons3
+fly                           v_tran_inf                    fly                           inf                           per
+fly                           v_tran_fin                    fly                           pres                          nons3
+go                            v_intran_inf                  go                            inf                           per
+went						  v_intran_fin					go							  past							per
+goes						  v_intran_fin					go							  pres							s3
+go							  v_intran_fin					go							  pres							nons3
+leave                         v_intran_inf                  leave                         inf                           per
+leave                         v_intran_fin                  leave                         pres                          nons3
+leave                         v_tran_inf                    leave                         inf                           per
+leave                         v_tran_fin                    leave                         pres                          nons3
+leave                         v_pp_to_inf                   leave                         inf                           per
+leave                         v_pp_to_fin                   leave                         pres                          nons3
+leave                         v_pp_for_inf                  leave                         inf                           per
+leave                         v_pp_for_fin                  leave                         pres                          nons3
+like                          v_tran_inf                    like                          inf                           per
+like                          v_tran_fin                    like                          pres                          nons3
+like                          v_subjcon_inf                 like                          inf                           per
+like                          v_subjcon_fin                 like                          pres                          nons3
+likes						  v_tran_fin					like						  pres							s3
+travel                        v_intran_inf                  travel                        inf                           per
+travel                        v_pp_to_inf                   travel                        inf                           per
+travel                        v_pp_to_fin                   travel                        pres                          nons3
+travel                        v_pp_for_inf                  travel                        inf                           per
+travel                        v_pp_for_fin                  travel                        pres                          nons3
+want                          v_tran_inf                    want                          inf                           per
+want                          v_tran_fin                    want                          pres                          nons3
+wants   			          v_tran_fin_subjcon			want						  pres                          s3
+wanted  			          v_tran_fin_subjcon			want						  past                          s3
+want    			          v_tran_fin_subjcon			want						  pres                          nons3
+//want    			          v_tran_inf_subjcon			want						  inf    						per                      
+//want     		         	  v_tran_fin_objcon				want						  pres                          per
+//wants   			          v_tran_fin_objcon				want						  pres                          s3
+//wanted  			          v_tran_fin_objcon				want						  past                          s3
+//want    			          v_tran_inf_objcon				want						  inf    						per                      
+to 							  comp							to							  							
+to   						  prep_event					to_location
+to   						  prep_entity					to_location
+from						  prep_event					from_location
+on							  prep_event					date
+by							  prep_event					by_method		
+in							  prep_event					date		
+would                         v_tran_inf                    would                         inf                           per
+would                         v_tran_fin                    would                         pres                          nons3
+would                         v_tran_fin                    would                         pres                          s3
+would                         v_tran_fin                    would                         past                          per
+would                         v_aux_inf                     would                         inf                           per
+would                         v_aux_fin                     would                         pres                          nons3
+would                         v_aux_fin                     would                         pres                          s3
+would                         v_aux_fin                     would                         past                          per
+bill                          proper                        bill                          s3                            male
+john                          proper                        john                          s3                            male
+mary                          proper                        mary                          s3                            female
+jill						  proper						jill						  s3							female
+monday						  proper						mon							  s3							time
+tuesday						  proper						tue							  s3							time
+wednesday					  proper						wed							  s3							time
+thursday					  proper						thu							  s3							time
+friday						  proper						fri							  s3							time
+saturday					  proper						sat							  s3							time
+sunday						  proper						sun							  s3							time
+january						  proper						jan							  s3							time
+february					  proper						feb							  s3							time
+march						  proper						mar							  s3							time
+april						  proper						apr							  s3							time
+may							  proper						may							  s3							time
+june						  proper						jun							  s3							time
+july						  proper						jul							  s3							time
+august						  proper						aug							  s3							time
+september					  proper						sep							  s3							time
+october						  proper						oct							  s3							time
+november					  proper						nov							  s3							time
+december					  proper						dec							  s3							time
+Monday						  proper						mon							  s3							time
+Tuesday						  proper						tue							  s3							time
+Wednesday					  proper						wed							  s3							time
+Thursday					  proper						thu							  s3							time
+Friday						  proper						fri							  s3							time
+Saturday					  proper						sat							  s3							time
+Sunday						  proper						sun							  s3							time
+January						  proper						jan							  s3							time
+February					  proper						feb							  s3							time
+March						  proper						mar							  s3							time
+April						  proper						apr							  s3							time
+May							  proper						may							  s3							time
+June						  proper						jun							  s3							time
+July						  proper						jul							  s3							time
+August						  proper						aug							  s3							time
+September					  proper						sep							  s3							time
+October						  proper						oct							  s3							time
+November					  proper						nov							  s3							time
+December					  proper						dec							  s3							time
+europe                        proper                        europe                        s3                            loc
+london                        proper                   	    london                        s3                            loc
+paris                         proper                        paris                         s3                            loc
+where						  pron_loc						dummy		              			
+where						  pron_loc_inv					dummy					  
+plane                         mass                          plane                         s3                            trans
+plane                         count                         plane                         s3                            trans
+train                         mass                          train                         s3                            trans
+train                         count                         train                         s3                            trans
+ticket                        count                         ticket                        s3                            obj
+tickets                       count                         ticket                        plur                          obj
+trip                          count                         trip                          s3                            obj
+trips                         count                         trip                          plur                          obj
+will                          v_aux_fin                     will                          future                       	per
+will						  v_aux_invertfin				will						  future	  				    per
+i                             proper                        speaker						  s1                            per							
+you							  proper						add							  s2							per					  							
+he                            pron_nom                      s3                            male
+her                           pron_acc                      s3                            female
+him                           pron_acc                      s3                            male
+me                            pron_acc                      s1                            spkr
+she                           pron_nom                      s3                            female
+what                          pron_whq                      obj
+what                          pron_whrel                    obj
+which                         pron_whrel                    obj
+that                          pron_whrel                    obj
+who                           pron_whq                      per
+who                           pron_whrel                    per
+them                          pron_acc                      plur                          per
+they                          pron_nom                      plur                          per
+how                           pron_whmod                    trans
+when                          pron_whmod                    time
+a                             det_quant                     exists
+an                            det_quant                     exists
+the                           det_quant                     the
+every                         det_quant                     forall
+no                            det_quant                     notexists
+some                          det_quant                     exists
+which                         det_whq                       _

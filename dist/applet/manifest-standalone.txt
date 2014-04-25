@@ -1,0 +1,2 @@
+Main-Class: qmul.ds.gui.ParserGUI
+Class-Path:  stanford-parser-2008-10-26.jar

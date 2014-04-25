@@ -1,0 +1,249 @@
+// Computational actions for English (TTR version)
+// as per Jindigo Implementation, 2010
+
+// Rules prefixed with * are non-optional
+// Rule metavariables: X,Y,Z
+// Formula metavariables: A,B,C
+
+//*
+introduction
+IF      ?ty(t)
+THEN    put(?<\/0>ty(es))
+        put(?<\/1>ty(es>t))
+ELSE    abort
+*//
+
+//*
+prediction
+IF      ?ty(t)
+        ?<\/0>ty(es)
+        ?<\/1>ty(es>t)
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/0)
+        go(\/0)
+        put(?ty(es))
+        go(/\)
+        make(\/1)
+        go(\/1)
+        put(?ty(es>t))
+        make(\/0)
+        go(\/0)
+        put(?ty(e))
+        go(/\)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>(es>t)))
+        go(/\1)
+        go(/\1)
+        go(\/0)
+        make(\/1)
+		go(\/1)
+		put(?ty(cn>es))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(cn))
+		make(\/0)
+		go(\/0)
+		put(?ty(es))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(es>cn))
+		make(\/0)
+		go(\/0)
+		put(?ty(es))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(es>(es>cn)))
+		go(/\1/\1/\0/\0)
+ELSE    abort
+*//
+
+anticipation0
+IF      <\/0>Ex.?x
+THEN    go(\/0)
+ELSE    abort
+
+anticipation1
+IF      <\/1>Ex.?x
+THEN    go(\/1)
+ELSE    abort
+
+*thinning
+IF      ?X
+        X
+THEN    delete(?X)
+ELSE    abort
+
+*thinningM
+IF      ?<Y>X
+        <Y>X
+THEN    delete(?<Y>X)
+ELSE    abort
+
+//*
+movereq(X,Y)
+IF      ?<Y>ty(X)
+        <Y>Ex.tn(X)
+THEN    go(Y)
+        put(?ty(X))
+        go(Y-1)
+ELSE    abort
+*//
+
+completion
+IF      ty(X)
+		¬?ty(X)
+        </\>Ex.x
+THEN    go(/\)
+ELSE    abort
+
+*elimination
+IF      ?ty(X)
+        ¬Ex.fo(x)
+        <\/1>ty(Y>X)
+        <\/0>ty(Y)
+        ¬<\/1>Ex.?x
+        ¬<\/0>Ex.?x
+THEN    beta-reduce
+ELSE    abort
+
+star-adjunction
+IF      ?ty(t)
+        ¬?<\/0>ty(e)
+        ¬?<\/1>ty(e>t)
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+        ¬<\/*>Ex.x
+THEN    make(\/*)
+        go(\/*)
+        put(?ty(e))
+        put(?Ex.tn(x))
+ELSE    abort
+
+local-star-adjunction
+IF		?ty(t)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+		¬<\/U>Ex.x
+THEN	make(\/U)
+		go(\/U)
+		put(?ty(e))
+		put(?Ex.tn(x))	
+ELSE	abort
+
+//*
+link-adjunction
+IF      ty(e)
+        fo(X)
+        ¬<\/L>Ex.x
+THEN    make(\/L)
+        go(\/L)
+        put(?ty(t))
+        put(?<\/*>fo(X))
+ELSE    abort
+*//
+
+*link-evalSameType
+IF      </\L>Ex.x
+        </\L>ty(Y)
+        ¬Ex.?x
+        ty(Y)
+        fo(X)                
+THEN    go(/\L)
+        conjoin(X)
+ELSE    abort
+
+//*
+merge
+IF      Ex.tn(x)
+        <Y>?Ex.tn(x)
+THEN    merge(Y)
+ELSE    abort
+*//
+
+merge
+IF      Ex.tn(x)
+		<Y>?Ex.tn(x)
+		subsumes(Y)
+		?ty(V)		
+		<Y>ty(V)		           
+THEN    merge(Y)
+		delete(?ty(V))
+		delete(?Ex.tn(x))
+		go(/\)		
+ELSE    abort
+
+*link-evaluation
+IF      ¬Ex.?x
+        ¬+linked
+        <\/0\/L>fo(X)
+        ¬Ex.<\/0\/L>?x
+THEN    conjoin(X)
+        put(+linked)
+ELSE    abort
+
+empty-complementiser
+IF      ?ty(e)
+        ¬Ex.tn(x)
+        </\*/\L>fo(X)
+	    </\*/\L/\0>?ty(cn)
+THEN    put(ty(e))
+        put(fo(X))
+ELSE    abort
+
+late-star-adjunction
+IF      </\*>tn(0)
+        ¬!
+        ty(X)  // could restrict this to e/t but no way to do disjunction here yet
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+        ¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
+        Ex.tn(x)
+THEN    make(\/*)
+        go(\/*)
+        put(?ty(X))
+        put(?Ex.tn(x))
+ELSE    abort
+
+//*
+local-substitution
+IF      ty(X) //this will only work for pronouns. 
+        ?Ex.fo(x)
+        class(V)
+        person(W)
+        <Y>ty(X)
+        <Y>fo(Z) // should also check +CLASS, +PERSON compatibility here. Yep. Done.
+        <Y>class(V)
+        <Y>person(W)
+        ¬</\0/\*\/0>fo(Z)      
+THEN    put(fo(Z))
+ELSE    abort
+
+context-substitution-pron
+IF		ty(e)
+		person(X)
+		class(Z)
+		?Ex.fo(x)
+		context_tree(ty(e)& person(X)& class(Z)& fo(Y))	
+THEN	put(fo(Y))
+ELSE	abort
+
+context-substitution-other
+IF		¬ty(e)
+		ty(X)
+		?Ex.fo(x)
+		context_tree(ty(X)& fo(Y))	
+THEN	put(fo(Y))
+ELSE	abort
+
+regeneration
+IF		ty(X)
+		?Ex.fo(x)
+		triggered_by(Y, ty(X))
+THEN	do(Y)
+ELSE	abort
+*//

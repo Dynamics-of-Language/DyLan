@@ -1,0 +1,178 @@
+// Computational actions for induction
+// as per RISER project, 2012
+
+// Rules prefixed with * are non-optional
+// Rules prefixed with + will be applied exhaustively (will backtrack on metas even if successful on first application)
+// Rules starting with hyp are not computational actions, strictly speaking. They are wrapped as lexical 
+// hypotheses for tree building
+// Rule metavariables: X,Y,Z
+// Formula metavariables: A,B,C 
+
+
+
+//General tree building hyps (including modal copying):
+
++hyp-copy
+IF		?ty(X)
+		<Y>ty(X)
+THEN	copy_content(Y)
+		put(!)
+ELSE	ABORT
+
+
+hyp-build-t
+IF      ?ty(X)
+		¬?ty(cn)
+		¬?ty(e)
+		¬?ty(cn>e)
+		¬?ty(t)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/0)
+        go(\/0)
+        put(?ty(e))
+        go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>X))
+        go(/\1)
+ELSE    abort
+
+hyp-build-e
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/0)
+        go(\/0)
+        put(?ty(cn))
+        go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(cn>e))
+        go(/\1)
+ELSE    abort
+
+//this assumes that ty(es) nodes have no internal structure, i.e. no event subtree
+
+hyp-build-cn-1
+IF      ?ty(cn)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/1)
+        go(\/1)
+        put(?ty(e>cn))
+ELSE    abort
+
+hyp-build-cn-2
+IF 		?ty(cn)
+   		<\/1>Ex.x
+THEN	make(\/0)
+		go(\/0)
+		put(ty(e))
+		freshput(S,entity)
+		put(!)
+ELSE	abort
+
+//////END OF GENERAL TREE BUILDING HYPS
+
+intro-pred
+IF      ?ty(t)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/0)
+        go(\/0)
+        put(?ty(e))
+        go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>t))
+        go(/\1)
+        go(\/0)
+ELSE    abort
+
+
+anticipation0
+IF      <\/0>Ex.?x
+THEN    go(\/0)
+ELSE    abort
+
+anticipation1
+IF      <\/1>Ex.?x
+THEN    go(\/1)
+ELSE    abort
+
+*thinning
+IF      ?X
+        X
+THEN    delete(?X)
+ELSE    abort
+
+
+completion
+IF      ty(X)
+		¬?ty(X)
+        </\>Ex.x
+THEN    go(/\)
+ELSE    abort
+
+*elimination
+IF      ?ty(X)
+        ¬Ex.fo(x)
+        <\/1>ty(Y>X)
+        <\/0>ty(Y)
+        <\/1>Ex.fo(x)
+        <\/0>Ex.fo(x)
+        ¬<\/1>Ex.?x
+        ¬<\/0>Ex.?x
+THEN    beta-reduce
+ELSE    abort
+
+star-adjunction
+IF      ?ty(t)
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+        ¬<\/*>Ex.x
+        ¬<\/U>Ex.x
+THEN    make(\/*)
+        go(\/*)
+        put(?ty(e))
+        put(?Ex.tn(x))
+ELSE    abort
+
++merge
+IF      <Y>?Ex.tn(x)
+		Ex.tn(x)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x		
+		subsumes(Y)
+		?ty(V)		
+		<Y>ty(V)		           
+THEN    merge(Y)
+		delete(?ty(V))
+		delete(?Ex.tn(x))
+ELSE    abort
+
+link-adjunction
+IF      ty(e)
+        fo(X)
+        ¬<\/L>Ex.x
+THEN    make(\/L)
+        go(\/L)
+        put(?ty(t))
+        put(?<\/*>fo(X))
+ELSE    abort
+
+//*
+
+local-star-adjunction
+IF		?ty(t)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+		¬<\/U>Ex.x
+THEN	make(\/U)
+		go(\/U)
+		put(?ty(e))
+		put(?Ex.tn(x))	
+ELSE	abort
+
+*//

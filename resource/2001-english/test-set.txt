@@ -1,0 +1,14 @@
+john snores
+snore(john)
+--
+john likes mary
+like(john,mary)
+--
+mary john likes
+like(john,mary)
+--
+*likes mary john
+--
+john thinks mary likes bill
+think(john,like(mary,bill))
+--

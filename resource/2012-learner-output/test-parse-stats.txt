@@ -1,0 +1,9 @@
+Top 1:
+parsed:0.25714287
+same formula:0.7777778
+Top 2:
+parsed:0.77
+same formula: 0.79
+Top 3:
+parsed: 1.0 (100%)
+same formula: 0.80

@@ -1,0 +1,7 @@
+In the lexicon, need data for the corpus :(:
+
+Ambiguous count:10; Ambiguous percentage:0.055555556
+The words were: 
+pats=[v_tran_fin, v_intran_fin], 
+rearm=[v_intran_fin, v_tran_fin], 
+shot=[v_intran_fin, v_tran_fin]

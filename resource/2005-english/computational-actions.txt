@@ -1,0 +1,145 @@
+// Computational actions for English
+// following (Cann, Kempson & Marten, 2005)
+
+// Rules prefixed with * are non-optional
+// Rule metavariables: X,Y,Z
+// Formula metavariables: A,B,C
+
+introduction
+IF      ?ty(t)
+THEN    put(?<\/0>ty(e))
+        put(?<\/1>ty(e>t))
+ELSE    abort
+
+prediction
+IF      ?ty(t)
+        ?<\/0>ty(e)
+        ?<\/1>ty(e>t)
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    make(\/0)
+        go(\/0)
+        put(?ty(e))
+        go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>t))
+        go(/\1)
+        go(\/0)
+ELSE    abort
+
+anticipation0
+IF      <\/0>Ex.?x
+THEN    go(\/0)
+ELSE    abort
+
+anticipation1
+IF      <\/1>Ex.?x
+THEN    go(\/1)
+ELSE    abort
+
+*thinning
+IF      ?X
+        X
+THEN    delete(?X)
+ELSE    abort
+
+*thinningM
+IF      ?<Y>X
+        <Y>X
+THEN    delete(?<Y>X)
+ELSE    abort
+
+//*
+movereq(X,Y)
+IF      ?<Y>ty(X)
+        <Y>Ex.tn(X)
+THEN    go(Y)
+        put(?ty(X))
+        go(Y-1)
+ELSE    abort
+*//
+
+completion
+IF      Ex.ty(x)
+        </\>Ex.x
+THEN    go(/\)
+ELSE    abort
+
+*elimination
+IF      ?ty(X)
+        ¬Ex.fo(x)
+        <\/1>ty(Y>X)
+        <\/0>ty(Y)
+        ¬<\/1>Ex.?x
+        ¬<\/0>Ex.?x
+THEN    beta-reduce
+ELSE    abort
+
+star-adjunction
+IF      ?ty(t)
+        ¬?<\/0>ty(e)
+        ¬?<\/1>ty(e>t)
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+        ¬<\/*>Ex.x
+THEN    make(\/*)
+        go(\/*)
+        put(?ty(e))
+        put(?Ex.tn(x))
+ELSE    abort
+
+link-adjunction
+IF      ty(e)
+        fo(X)
+        ¬<\/L>Ex.x
+THEN    make(\/L)
+        go(\/L)
+        put(?ty(t))
+        put(?<\/*>fo(X))
+ELSE    abort
+
+merge
+IF      Ex.tn(x)
+        <Y>?Ex.tn(x)
+THEN    merge(Y)
+ELSE    abort
+
+*link-evaluation
+IF      ¬Ex.?x
+        ¬+linked
+        <\/0\/L>fo(X)
+        ¬Ex.<\/0\/L>?x
+THEN    conjoin(X)
+        put(+linked)
+ELSE    abort
+
+empty-complementiser
+IF      ?ty(e)
+        ¬Ex.tn(x)
+        </\*/\L>fo(X)
+	    </\*/\L/\0>?ty(cn)
+THEN    put(ty(e))
+        put(fo(X))
+ELSE    abort
+
+late-star-adjunction
+IF      </\*>tn(0)
+        ty(X)  // could restrict this to e/t but no way to do disjunction here yet
+        ¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+        ¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
+        Ex.tn(x)
+THEN    make(\/*)
+        go(\/*)
+        put(?ty(X))
+        put(?Ex.tn(x))
+ELSE    abort
+
+substitution
+IF      ty(X)
+        ?Ex.fo(x)
+        <Y>ty(X)
+        <Y>fo(Z) // should also check +CLASS, +PERSON compatibility here
+THEN    put(fo(Z))
+ELSE    abort
