@@ -1,0 +1,296 @@
+nimm						  v_tran_fin_imperative         take                          pres                          s2
+nehme						  v_tran_fin_imperative         take                          pres                          s2
+nehmen						  v_tran_fin_imperative         take                          pres                          s2
+waehle						  v_tran_fin_imperative         take                          pres                          s2
+waehlen                       v_tran_fin_imperative         take                          pres                          s2
+markiere					  v_tran_fin_imperative         take                          pres                          s2
+markieren					  v_tran_fin_imperative         take                          pres                          s2
+loesch						  v_tran_fin_imperative         delete                        pres                          s2
+loesche						  v_tran_fin_imperative         delete                        pres                          s2
+loeschen					  v_tran_fin_imperative         delete                        pres                          s2
+leg							  v_tran_fin_imperative			put							  pres							s2
+lege						  v_tran_fin_imperative			put							  pres							s2
+legen						  v_tran_fin_imperative			put							  pres							s2
+beweg						  v_tran_fin_imperative         put                           pres                          s2				
+bewege						  v_tran_fin_imperative         put                           pres                          s2				
+bewegen						  v_tran_fin_imperative         put                           pres                          s2				
+vershieb					  v_tran_fin_imperative         put                           pres                          s2				
+vershiebe					  v_tran_fin_imperative         put                           pres                          s2				
+vershieben					  v_tran_fin_imperative         put                           pres                          s2				
+setz						  v_tran_fin_imperative         put                           pres                          s2				
+setze						  v_tran_fin_imperative         put                           pres                          s2				
+setzen						  v_tran_fin_imperative         put                           pres                          s2				
+pack						  v_tran_fin_imperative         put                           pres                          s2				
+packe						  v_tran_fin_imperative         put                           pres                          s2				
+packen						  v_tran_fin_imperative         put                           pres                          s2				
+ablegen						  v_tran_fin_imperative         put                           pres                          s2				
+fueg						  v_tran_fin_imperative         put                           pres                          s2									
+fuege                         v_tran_fin_imperative         put                           pres                          s2				
+einfuegen					  v_tran_fin_imperative         put                           pres                          s2									
+tu							  v_tran_fin_imperative         put                           pres                          s2				
+tue                           v_tran_fin_imperative         put                           pres                          s2				
+tun                           v_tran_fin_imperative         put                           pres                          s2				
+dreh						  v_tran_fin_imperative         turn                          pres                          s2				
+drehe						  v_tran_fin_imperative         turn                          pres                          s2				
+drehen						  v_tran_fin_imperative         turn                          pres                          s2				
+rotier						  v_tran_fin_imperative         turn                          pres                          s2				
+rotiere  					  v_tran_fin_imperative         turn                          pres                          s2				
+rotieren					  v_tran_fin_imperative         turn                          pres                          s2				
+spiegel	 					  v_tran_fin_imperative			reflect						  pres							s2
+spiegle						  v_tran_fin_imperative			reflect						  pres							s2
+spiegele					  v_tran_fin_imperative			reflect						  pres							s2
+spiegeln					  v_tran_fin_imperative			reflect						  pres							s2
+liegt						  v_intran_fin					lie 						  pres							s2
+//liegende					  adj_gerund					lie-down					  pres							per						  			
+der							  det_quant                     iota
+die							  det_quant                     iota
+das							  det_quant                     iota
+den							  det_quant                     iota
+dem							  det_quant                     iota
+dieser						  det_quant                     iota						
+diese						  det_quant                     iota
+diesen						  det_quant                     iota
+dieses						  det_quant                     iota
+welcher						  pron_whrel                    per		
+welches						  pron_whrel                    per		
+welche						  pron_whrel                    per		
+er							  pron_nom                      s3                            male
+sie							  pron_nom                      s3                            neuter
+es							  pron_nom                      s3                            neuter
+ihn							  pron_acc                      s3                            male
+ihr							  adj							s3
+ihm							  pron_acc                      s3                            male
+rote                          adj                           red
+roten                         adj                           red
+gelbe                         adj                           yellow
+gelben                        adj                           yellow
+gruene                        adj                           green
+gruenen                       adj                           green
+blaue                         adj                           blue
+blauen                        adj                           blue
+graue                         adj                           gray
+grauen                        adj                           gray
+linke						  adj							left
+linken						  adj							left
+linkes						  adj							left
+linkeste					  adj							left
+linkesten					  adj							left
+rechte						  adj							right
+rechten						  adj							right
+rechtes						  adj							right
+rechteste					  adj							right
+rechtesten					  adj							right
+mittlere					  adj							middle
+mittleren					  adj							middle
+mittleres					  adj							middle
+obere						  adj						    upper
+oberen						  adj						    upper
+obereste					  adj						    upper
+oberesten					  adj						    upper
+untere						  adj						    bottom
+untereren					  adj						    bottom
+untererste					  adj						    bottom
+unteresten					  adj						    bottom
+erste						  adj							first
+ersten                        adj                           first
+zweite			              adj                           second
+zweiten                       adj                           second
+dritte                        adj                           third
+dritten                       adj                           third
+letzte                        adj                           third
+letzten                       adj                           third
+teil						  count							piece							s3                          obj
+ding	                      count							piece							s3                          obj
+objekt	                      count							piece							s3                          obj
+feld						  count							box  							s3                          obj
+kaestchen					  count							box  							s3                          obj
+ecke						  count							corner							s3                          obj
+zeile						  count							line							s3                          obj
+//# reihen = zeilen oder spalten?
+reihe						  count							row  							s3                          obj
+spalte						  count							column							s3                          obj
+position					  count							column							s3                          obj
+seite						  count							column							s3                          obj
+uhrzeigersinn				  count							clockwise_direction				s3                          obj
+//#mitte	tag:nn, lemma:mitte #see adv
+mitte						  count							middle
+y							  count							crutch							s3                          obj
+kruecke						  count							crutch							s3                          obj
+u							  count							bridge							s3                          obj
+bruecke						  count							bridge							s3                          obj
+v							  count							angle							s3                          obj
+winkel						  count							angle							s3                          obj
+dreieck						  count							angle							s3                          obj
+f							  count							pistol 							s3                          obj
+pistole						  count							pistol 							s3                          obj
+kreuz						  count							cross							s3                          obj
+plus						  count							cross							s3                          obj
+t							  count							mast							s3                          obj
+mast	                      count							mast							s3                          obj
+balken						  count							beam							s3                          obj
+eins						  count							beam   							s3                          obj
+l							  count							seven							s3                          obj
+sieben						  count							seven							s3                          obj
+z							  count							snake							s3                          obj
+schlange					  count							snake							s3                          obj
+gewehr						  count							rifle							s3                          obj	
+bajonett					  count							rifle							s3                          obj
+w							  count							staircase						s3                          obj
+treppe						  count							staircase						s3                          obj
+handy						  count							mobile_phone					s3                          obj
+hand	                      count							mobile_phone					s3                          obj
+matrix						  count							game_board						s3                          obj					  
+spielfeld					  count							game_baord						s3                          obj
+spielfeldes					  count							game_board						s3                          obj
+quadrat						  count							game_board						s3                          obj
+quadrates					  count							game_board						s3                          obj
+nach						  adv							to
+oben						  adv							over
+unten						  adv							under
+links						  adv							left
+rechts						  adv							right
+mitte						  adv							middle
+links						  count							left
+rechts						  count							right
+mitte						  count							middle
+vertikal					  adv							vertical
+horizontal					  adv							horizontal
+einmal						  adv							once				  
+zweimal						  adv							twice
+nochmal						  adv							again
+aus							  prep							out
+auf							  prep							in
+in							  prep							in
+neben						  prep							next_to
+//gegen	tag:appr, lemma:gegen
+ueber						  prep							over
+unter						  prep							under
+ausm						  prep							out
+aufs						  prep							in
+ins							  prep							in
+im							  prep							in
+und							  conj							and
+ah							  filler
+aha							  filler
+aeh							  filler
+aehm						  filler
+eh							  filler
+ehm							  filler
+oh							  filler
+hm							  filler
+mhm							  filler
+ach							  filler
+achso						  filler
+bitte						  filler
+dann						  filler
+nun							  filler
+noch						  filler
+jetzt						  filler
+ganz						  filler
+moment						  filler
+okay						  filler
+ok							  filler
+gut							  filler
+ja							  filler
+genau						  filler
+richtig						  filler
+nein						  filler
+ne							  filler
+nee							  filler
+falsch						  filler
+stop						  filler
+stopp						  filler
+abbrechen					  filler
+halt						  filler
+//ENGLISH
+take						  v_tran_fin_imperative         take                          pres                          s2				
+select						  v_tran_fin_imperative         take                          pres                          s2				
+highlight					  v_tran_fin_imperative         take                          pres                          s2				
+delete						  v_tran_fin_imperative         delete                        pres                          s2				
+put 						  v_tran_fin_imperative         put                           pres                          s2				
+move						  v_tran_fin_imperative         put                           pres                          s2				
+place						  v_tran_fin_imperative         put                           pres                          s2				
+drop						  v_tran_fin_imperative         put                           pres                          s2				
+add							  v_tran_fin_imperative         put                           pres                          s2				
+addup						  v_tran_fin_imperative         put                           pres                          s2				
+do							  v_tran_fin_imperative         put                           pres                          s2				
+turn						  v_tran_fin_imperative         turn                          pres                          s2				
+rotate						  v_tran_fin_imperative         turn                          pres                          s2				
+reflect 					  v_tran_fin_imperative			reflect						  pres							s2
+lies						  v_intran_fin					be_situated 				  pres							s2
+lies						  v_intran_fin					be_situated					  pres							s2
+the                           det_quant                     iota
+these                         det_quant                     iota
+this                          det_quant                     iota
+which                         pron_whrel                    obj
+that                          pron_whrel                    obj
+it							  pron_nom                      s3                            neuter
+it							  pron_acc                      s3                            neuter
+red                           adj                           red
+yellow                        adj                           yellow
+green                         adj                           green
+blue                          adj                           blue
+gray                          adj                           gray
+left 						  adj							left
+right						  adj							right
+middle   					  adj							middle
+upper 						  adj						    upper
+bottom						  adj						    bottom
+first						  adj							first
+second			              adj                           second
+third                         adj                           third
+last                          adj                           third
+piece						  count							piece							s3                          obj
+object	                      count							piece							s3                          obj
+box			 				  count							box  							s3                          obj
+corner						  count							corner							s3                          obj
+line						  count							line							s3                          obj
+row 						  count							row  							s3                          obj
+column						  count							column							s3                          obj
+position					  count							column							s3                          obj
+side						  count							column							s3                          obj
+clockwise					  adj							clockwise_direction
+y							  count							crutch							s3                          obj
+cructh						  count							crutch							s3                          obj
+u							  count							bridge							s3                          obj
+bridge						  count							bridge							s3                          obj
+v							  count							angle							s3                          obj
+angle						  count							angle							s3                          obj
+triangle					  count							angle							s3                          obj
+f							  count							pistol 							s3                          obj
+pistol						  count							pistol 							s3                          obj
+cross 						  count							cross							s3                          obj
+plus						  count							cross							s3                          obj
+t							  count							mast							s3                          obj
+mast	                      count							mast							s3                          obj
+beam						  count							beam							s3                          obj
+one							  count							beam   							s3                          obj
+l							  count							seven							s3                          obj
+seven						  count							seven							s3                          obj
+z							  count							snake							s3                          obj
+snake						  count							snake							s3                          obj
+rifle						  count							rifle							s3                          obj	
+bayonett					  count							rifle							s3                          obj
+w							  count							staircase						s3                          obj
+staircase					  count							staircase						s3                          obj
+mobile						  count							mobile_phone					s3                          obj
+matrix						  count							game_board						s3                          obj					  
+gameabord					  count							game_baord						s3                          obj
+board						  count							game_board						s3                          obj
+square						  count							game_board						s3                          obj
+squares						  count							game_board						s3                          obj
+over						  adv							over
+under						  adv							under
+left						  adv							left
+right						  adv							right
+middle						  adv							middle
+vertically					  adv							vertical
+horizontally				  adv							horizontal
+once						  adv							once				  
+twice   					  adv							twice
+again    					  adv							again
+over						  prep							over
+under						  prep							under
+out							  prep							out
+in							  prep							in
+and							  conj							and
