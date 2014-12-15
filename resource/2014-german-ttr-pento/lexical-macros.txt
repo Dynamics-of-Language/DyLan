@@ -12,6 +12,7 @@ event_restrictor(future)
 	ttrput([head:es|p1==future(head):t])
 
 v_intran_content(PRED)
+    put(ty(e>t))
 	ttrput(R1^(R1 ++ [e1==PRED:es|head==e1:es|p2==subj(e1, R1.head):t]))
 	put(!)
 
