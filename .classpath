@@ -9,5 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jung-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava-13.0.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Julian/Documents/Ptolemy/ptolemy/ptsupport.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

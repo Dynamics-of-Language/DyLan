@@ -16,6 +16,8 @@ import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
@@ -752,12 +754,14 @@ public class TTRRecordType extends TTRFormula {
 
 	public static void main(String[] a) {
 
-		TTRRecordType target =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|head==snore : es|p1==subj(head, x4) : t]");
-		TTRRecordType r =       TTRRecordType.parse("[r : [x : e|p1==fat(x) : t|p==man(x) : t|head==x : e]|x2==(eps, r.head, r) : e|e1==snore : es|p3==subj(e1, x2) : t]");
-		System.out.println("target: "+target.toUniqueInt());
-		System.out.println("r: "+r.toUniqueInt());
-		
-		
+		//TTRRecordType target =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|head==snore : es|p1==subj(head, x4) : t]");
+		//TTRRecordType r =       TTRRecordType.parse("[r : [x : e|p1==fat(x) : t|p==man(x) : t|head==x : e]|x2==(eps, r.head, r) : e|e1==snore : es|p3==subj(e1, x2) : t]");
+		//System.out.println("target: "+target.toUniqueInt());
+		//System.out.println("r: "+r.toUniqueInt());
+		TTRRecordType target =	TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==circle(x) : t]");
+		TTRRecordType r =       TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==square(x) : t]");
+		System.out.println(target.minimumCommonSuperTypeBasic(r, new HashMap<Variable,Variable>()));
+		System.out.println(target.minus(r));
 	}
 
 	public List<Tree> getEmptyAbstractions(NodeAddress prefix) {
@@ -1101,7 +1105,124 @@ public class TTRRecordType extends TTRFormula {
 		}
 		return result;
 	}
-
 	
+	
+	public TTRRecordType minimumCommonSuperTypeBasic(TTRRecordType o, HashMap<Variable,Variable> map) {
+	/**
+	 * Simple version returns the most specific common supertype to comparator ttr
+	 * In a syntactic fashion maps all possible fields and only returns those with a mapping from one to the other
+	 * with strict label matching and the higher type in those cases. Recurses for embedded record types
+	 */
+		logger.debug("----------------------------");
+		logger.debug("getting minimum common super type of " + this + " and " + o);
+		logger.debug("with map " + map);
+	
+		TTRRecordType myttr = new TTRRecordType();
+		//o.removeHead(); 
+		if (this.equals(o))
+			return this;
+		if (isEmpty())
+			return this;
+		if (!(o instanceof TTRRecordType)){
+			logger.error("NOT RECORD TYPE!");
+			return this;			
+		}	
+		TTRRecordType other = (TTRRecordType) o;
+		//simple n x m iteration over all fields
+		for (int i = this.fields.size()-1; i>=0; i--)
+		{
+			TTRField last = fields.get(i);
+			logger.debug("testing subsumption for field:" + last);
+			for (int j = other.fields.size() - 1; j >= 0; j--) {
+				TTRField otherField = other.fields.get(j);
+				HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
+				if (!last.getLabel().equals(otherField.getLabel())){
+					continue;
+				}
+				//TODO simple assumption of label mapping, gets much more complex without this
+				if (last.subsumesMapped(otherField, map)) {
+					//add this field as its the most general
+					logger.debug("Subsumed " + otherField);
+					logger.debug("map is now:" + map);
+					myttr.add(last);
+				} else if (otherField.subsumesMapped(last, map)){
+					//we add the otherField
+					myttr.add(otherField);
+				} 
+				else if (last.getDSType() == otherField.getDSType()){
+					if (last.getType() instanceof TTRRecordType &
+							otherField.getType() instanceof TTRRecordType){
+						//recursively find the minimal common supertype of the embedded record type
+						myttr.add(new TTRField(otherField.getLabel(),
+								((TTRRecordType)otherField.getType()).minimumCommonSuperTypeBasic(((TTRRecordType)last.getType()), map)));
+					}
+					else {
+						//just add the abstract ds type if not record type
+						myttr.add(new TTRField(otherField.getLabel(),last.getDSType()));			
+					}
+				}		
+			}
+		}
+		return myttr;
+	}
+	
+	public Pair<TTRRecordType,TTRRecordType> minus(TTRRecordType ttr){
+		/**
+		 * Simple difference between this record type and the argument record type ttr
+		 * Returns a simple pair of the fields in this and not in ttr (addition)
+		 * and the fields in ttr but not in this one (subtraction)
+		 */
+		TTRRecordType addition = parse("[]");
+		TTRRecordType subtract = parse("[]");
+		List<TTRLabel> matched = new ArrayList<TTRLabel>();
+		for (TTRField f : this.fields){
+			for (TTRField fother : ttr.fields){
+				if (!f.getLabel().equals(fother.getLabel())){
+					continue;
+				}
+				if (this.get(f.getLabel()) instanceof TTRRecordType){
+					if (f.getType().equals(fother.getType())){
+						matched.add(f.getLabel());
+					} else {
+						addition.add(f);
+						subtract.add(fother);
+						matched.add(f.getLabel());
+					}
+					continue;
+				}
+				if (!f.getDSType().equals(fother.getDSType())||
+						(!f.isManifest()&fother.isManifest())||
+						(f.isManifest()&!fother.isManifest())){
+					addition.add(f);
+					subtract.add(fother);
+					matched.add(f.getLabel());
+				} else if (f.isManifest()&&fother.isManifest()){
+				
+					  if (!f.getType().equals(fother.getType())){
+						addition.add(f);
+						subtract.add(fother);
+						matched.add(f.getLabel());
+					
+					  } else {
+						 matched.add(f.getLabel());
+					  }
+				} else {
+						matched.add(f.getLabel());
+				}
+				
+			}
+			if (!matched.contains(f.getLabel())){
+				addition.add(f);
+			}
+		}
+		for (TTRField fother : ttr.fields){
+			if (!matched.contains(fother.getLabel())){
+				subtract.add(fother);
+			}
+		}
+		
+		return new Pair<>(addition,subtract);
+	}
+
 
 }
