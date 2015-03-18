@@ -1,0 +1,93 @@
+
+//ENGLISH
+take						  v_tran_fin_imperative         take                          pres                          s2				
+select						  v_tran_fin_imperative         take                          pres                          s2				
+highlight					  v_tran_fin_imperative         take                          pres                          s2				
+delete						  v_tran_fin_imperative         delete                        pres                          s2				
+put 						  v_tran_fin_imperative         put                           pres                          s2				
+move						  v_tran_fin_imperative         put                           pres                          s2				
+place						  v_tran_fin_imperative         put                           pres                          s2				
+drop						  v_tran_fin_imperative         put                           pres                          s2				
+add							  v_tran_fin_imperative         put                           pres                          s2				
+addup						  v_tran_fin_imperative         put                           pres                          s2				
+do							  v_tran_fin_imperative         put                           pres                          s2				
+turn						  v_tran_fin_imperative         turn                          pres                          s2				
+rotate						  v_tran_fin_imperative         turn                          pres                          s2				
+reflect 					  v_tran_fin_imperative			reflect						  pres							s2
+lies						  v_intran_fin					be_situated 				  pres							s2
+lies						  v_intran_fin					be_situated					  pres							s2
+the                           det_quant                     iota
+these                         det_quant                     iota
+this                          det_quant                     iota
+which                         pron_whrel                    obj
+that                          pron_whrel                    obj
+it							  pron_nom                      s3                            neuter
+it							  pron_acc                      s3                            neuter
+red                           adj                           red
+yellow                        adj                           yellow
+green                         adj                           green
+blue                          adj                           blue
+gray                          adj                           gray
+left 						  adj							left
+right						  adj							right
+middle   					  adj							middle
+upper 						  adj						    upper
+bottom						  adj						    bottom
+first						  adj							first
+second			              adj                           second
+third                         adj                           third
+last                          adj                           third
+piece						  count							piece							s3                          obj
+object	                      count							piece							s3                          obj
+box			 				  count							box  							s3                          obj
+corner						  count							corner							s3                          obj
+line						  count							line							s3                          obj
+row 						  count							row  							s3                          obj
+column						  count							column							s3                          obj
+position					  count							column							s3                          obj
+side						  count							column							s3                          obj
+clockwise					  adj							clockwise_direction
+y							  count							crutch							s3                          obj
+cructh						  count							crutch							s3                          obj
+u							  count							bridge							s3                          obj
+bridge						  count							bridge							s3                          obj
+v							  count							angle							s3                          obj
+angle						  count							angle							s3                          obj
+triangle					  count							angle							s3                          obj
+f							  count							pistol 							s3                          obj
+pistol						  count							pistol 							s3                          obj
+cross 						  count							cross							s3                          obj
+plus						  count							cross							s3                          obj
+t							  count							mast							s3                          obj
+mast	                      count							mast							s3                          obj
+beam						  count							beam							s3                          obj
+one							  count							beam   							s3                          obj
+l							  count							seven							s3                          obj
+seven						  count							seven							s3                          obj
+z							  count							snake							s3                          obj
+snake						  count							snake							s3                          obj
+rifle						  count							rifle							s3                          obj	
+bayonett					  count							rifle							s3                          obj
+w							  count							staircase						s3                          obj
+staircase					  count							staircase						s3                          obj
+mobile						  count							mobile_phone					s3                          obj
+matrix						  count							game_board						s3                          obj					  
+gameabord					  count							game_baord						s3                          obj
+board						  count							game_board						s3                          obj
+square						  count							game_board						s3                          obj
+squares						  count							game_board						s3                          obj
+over						  adv							over
+under						  adv							under
+left						  adv							left
+right						  adv							right
+middle						  adv							middle
+vertically					  adv							vertical
+horizontally				  adv							horizontal
+once						  adv							once				  
+twice   					  adv							twice
+again    					  adv							again
+over						  prep							over
+under						  prep							under
+out							  prep							out
+in							  prep							in
+and							  conj							and
