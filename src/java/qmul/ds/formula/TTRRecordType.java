@@ -752,17 +752,6 @@ public class TTRRecordType extends TTRFormula {
 		return s/* .substring(0, s.length()-TTR_LINE_BREAK.length()) */+ TTR_CLOSE;
 	}
 
-	public static void main(String[] a) {
-
-		//TTRRecordType target =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|head==snore : es|p1==subj(head, x4) : t]");
-		//TTRRecordType r =       TTRRecordType.parse("[r : [x : e|p1==fat(x) : t|p==man(x) : t|head==x : e]|x2==(eps, r.head, r) : e|e1==snore : es|p3==subj(e1, x2) : t]");
-		//System.out.println("target: "+target.toUniqueInt());
-		//System.out.println("r: "+r.toUniqueInt());
-		TTRRecordType target =	TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==circle(x) : t]");
-		TTRRecordType r =       TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==square(x) : t]");
-		System.out.println(target.minimumCommonSuperTypeBasic(r, new HashMap<Variable,Variable>()));
-		System.out.println(target.minus(r));
-	}
 
 	public List<Tree> getEmptyAbstractions(NodeAddress prefix) {
 		List<Tree> result = new ArrayList<Tree>();
@@ -1168,60 +1157,63 @@ public class TTRRecordType extends TTRFormula {
 	
 	public Pair<TTRRecordType,TTRRecordType> minus(TTRRecordType ttr){
 		/**
+		 * As in Hough 2015 Thesis. Chapter 6. 
 		 * Simple difference between this record type and the argument record type ttr
-		 * Returns a simple pair of the fields in this and not in ttr (addition)
-		 * and the fields in ttr but not in this one (subtraction)
+		 * Returns a simple pair (conjunction) of :
+		 * addition: the fields in @this and not in @ttr
+		 * and, subtraction: the fields in @ttr but not in @this
 		 */
-		TTRRecordType addition = parse("[]");
+		TTRRecordType addition = parse("[]"); //initialise the difference conjuncts
 		TTRRecordType subtract = parse("[]");
 		List<TTRLabel> matched = new ArrayList<TTRLabel>();
-		for (TTRField f : this.fields){
-			for (TTRField fother : ttr.fields){
-				if (!f.getLabel().equals(fother.getLabel())){
+		for (TTRField f : this.fields){ //check each field in @this against all in @ttr
+			for (TTRField fother : ttr.fields){ 
+				if (!f.getLabel().equals(fother.getLabel())){ //not matched? carry on
 					continue;
 				}
-				if (this.get(f.getLabel()) instanceof TTRRecordType){
-					if (f.getType().equals(fother.getType())){
-						matched.add(f.getLabel());
-					} else {
-						addition.add(f);
+				matched.add(f.getLabel()); //matched field names
+				if (this.get(f.getLabel()) instanceof TTRRecordType){//one of them is a record type
+					if (!f.getType().equals(fother.getType())){ //not the same record type
+						addition.add(f); //add to appropriate conjunct
 						subtract.add(fother);
-						matched.add(f.getLabel());
 					}
-					continue;
 				}
-				if (!f.getDSType().equals(fother.getDSType())||
+				else if (!f.getDSType().equals(fother.getDSType())||
 						(!f.isManifest()&fother.isManifest())||
-						(f.isManifest()&!fother.isManifest())){
+						(f.isManifest()&!fother.isManifest())){ //difference in either DS type or manifestness
 					addition.add(f);
 					subtract.add(fother);
-					matched.add(f.getLabel());
-				} else if (f.isManifest()&&fother.isManifest()){
-				
-					  if (!f.getType().equals(fother.getType())){
+				} else if (f.isManifest()&&fother.isManifest()){ //otherwise both of right type and manifestness
+					  if (!f.getType().equals(fother.getType())){ //manifest fields are different
 						addition.add(f);
 						subtract.add(fother);
-						matched.add(f.getLabel());
-					
-					  } else {
-						 matched.add(f.getLabel());
 					  }
-				} else {
-						matched.add(f.getLabel());
 				}
 				
 			}
-			if (!matched.contains(f.getLabel())){
+			if (!matched.contains(f.getLabel())){ //no match for this label, must be addition
 				addition.add(f);
 			}
 		}
-		for (TTRField fother : ttr.fields){
+		for (TTRField fother : ttr.fields){  //final pass to add unmatched fields in other to subtract conjunct
 			if (!matched.contains(fother.getLabel())){
 				subtract.add(fother);
 			}
 		}
-		
+		//return difference conjuncts
 		return new Pair<>(addition,subtract);
+	}
+	
+	public static void main(String[] a) {
+
+		//TTRRecordType target =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|head==snore : es|p1==subj(head, x4) : t]");
+		//TTRRecordType r =       TTRRecordType.parse("[r : [x : e|p1==fat(x) : t|p==man(x) : t|head==x : e]|x2==(eps, r.head, r) : e|e1==snore : es|p3==subj(e1, x2) : t]");
+		//System.out.println("target: "+target.toUniqueInt());
+		//System.out.println("r: "+r.toUniqueInt());
+		TTRRecordType target =	TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==circle(x) : t]");
+		TTRRecordType r =       TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==square(x) : t]");
+		System.out.println(target.minimumCommonSuperTypeBasic(r, new HashMap<Variable,Variable>()));
+		System.out.println(target.minus(r));
 	}
 
 
