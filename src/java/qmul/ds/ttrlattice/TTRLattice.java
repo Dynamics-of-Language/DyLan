@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import edu.stanford.nlp.util.ArrayUtils;
 import ptolemy.graph.DirectedAcyclicGraph;
 import ptolemy.graph.Node;
 import qmul.ds.formula.TTRRecordType;
