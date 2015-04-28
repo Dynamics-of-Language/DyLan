@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="src" path="log"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/dylan_util"/>
-	<classpathentry exported="true" kind="lib" path="lib/collections-generic-4.01.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/colt-1.2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/concurrent-1.3.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jung-2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="dist/jar/ds.jar"/>
+	<classpathentry kind="lib" path="dist/jar/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="dist/jar/stanford-parser-2010-08-20.jar"/>
+	<classpathentry kind="lib" path="lib/collections-generic-4.01.jar"/>
+	<classpathentry kind="lib" path="lib/colt-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/concurrent-1.3.4.jar"/>
+	<classpathentry kind="lib" path="lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jung-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/ptsupport.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dylan_util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
