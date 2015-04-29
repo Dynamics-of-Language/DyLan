@@ -30,7 +30,8 @@ public class TTRLatticeNode {
 	public String toString() {
 		if (bottom == true)
 			return "bottom";
-		return "TTRLatticeNode [ttr=" + ttr + ", props=" + props.toString() + "]";
+		//return "TTRLatticeNode [ttr=" + ttr + ", props=" + props.toString() + "]";
+		return "TTRLatticeNode [ttr=" + ttr + "]";
 	}
 
 	public TTRRecordType getTtr() {

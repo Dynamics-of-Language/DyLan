@@ -105,9 +105,18 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					System.out.println(this.nodeFromTTRRecordType(nweight.ttr));
 					this.nodeFromTTRRecordType(nweight.ttr).setWeight(nweight);
 					//need to search to order.. i.e. go up as high as possible
+					if (this.reachableNodes(this.nodeFromTTRRecordType(nweight.ttr)).contains(node(obj))){
+						continue;
+					}
+					
 					if (!node(obj).equals(this.nodeFromTTRRecordType(nweight.ttr))){
 						addEdge(this.nodeFromTTRRecordType(nweight.ttr),node(obj));
 					}
+					
+					if (this.reachableNodes(this.nodeFromTTRRecordType(nweight.ttr)).contains(node(ttrLat))){
+						continue;
+					}
+					
 					if (!node(ttrLat).equals(this.nodeFromTTRRecordType(nweight.ttr))){
 						addEdge(this.nodeFromTTRRecordType(nweight.ttr),node(ttrLat));
 					}
