@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import ptolemy.graph.DirectedAcyclicGraph;
+import ptolemy.graph.GraphActionException;
 import ptolemy.graph.Node;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
@@ -57,6 +58,49 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		return false;
 	}
 	
+	/***
+	 * The main ordering relation computation for two record type nodes that are already in the lattice
+	 * @param node1
+	 * @param node2
+	 */
+	public void order(Node node1, Node node2){
+		//TODO need the most efficient way of ordering two nodes
+		//make it recursive..
+		//case 1- it's a proper supertype (not the same) as current node- order it in the subtype relation
+		//find the supertypes it is a subtype of (if any) and order
+		TTRLatticeNode ttrLat = (TTRLatticeNode) agenda.get(0);
+		if (node2.getWeight()) {
+			
+		}
+		//case 2- it's not a type of current node- just return (should stop the recursion)
+		//case 3- it's a proper subtype of 
+		return;
+	}
+	
+	/***
+	 * The ordering operation for a new node which hasn't been ordered yet to other nodes in the lattice
+	 * @param node1
+	 * @throws GraphActionException 
+	 */
+	public void orderNode(Node node1) throws GraphActionException{
+		//TODO should be top down search
+		//Go from top then downward path retuning upon hitting bottom
+		//recurse and also keep list of checked nodes, only need to order this one node with each node once
+		//List<Object> obs = this.topologicalSort(this.nodes());
+		
+		order((Node)this.bottom(), (Node) node1); //recurse from bottom??
+		
+		//for (Object node : obs){
+			//TODO
+		//	order((Node) node, node1);
+			
+		//}
+		
+		
+	}
+
+
+	
 	public void constructFromAtoms(List<TTRRecordType> myttr, List<Set<TTRAustinianProp>> myprops){
 		/*
 		 * Constructs the TTR lattice from the bottom up as in Hough and Purver 2014 TTNLS
@@ -105,6 +149,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					System.out.println(this.nodeFromTTRRecordType(nweight.ttr));
 					this.nodeFromTTRRecordType(nweight.ttr).setWeight(nweight);
 					//need to search to order.. i.e. go up as high as possible
+					order(this.nodeFromTTRRecordType(nweight.ttr),node(obj));
+					
 					if (this.reachableNodes(this.nodeFromTTRRecordType(nweight.ttr)).contains(node(obj))){
 						continue;
 					}

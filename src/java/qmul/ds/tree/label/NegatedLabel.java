@@ -16,7 +16,7 @@ import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.tree.Tree;
 
 /**
- * A negated label ¬L
+ * A negated label ï¿½L
  * 
  * @author mpurver
  */
@@ -26,7 +26,7 @@ public class NegatedLabel extends EmbeddedLabel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final String FUNCTOR = "¬";
+	public static final String FUNCTOR = "Â¬";
 
 	/**
 	 * @param label
@@ -47,7 +47,7 @@ public class NegatedLabel extends EmbeddedLabel {
 
 	/**
 	 * @param string
-	 *            a {@link String} representation of a negated label, e.g. ¬Ex.Ty(x) as used in lexicon specs
+	 *            a {@link String} representation of a negated label, e.g. ï¿½Ex.Ty(x) as used in lexicon specs
 	 */
 	public NegatedLabel(String string, IfThenElse ite) {
 		super(ite);
