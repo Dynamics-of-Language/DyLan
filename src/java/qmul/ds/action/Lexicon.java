@@ -146,12 +146,12 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			} else {
 				reader1 = new BufferedReader(new FileReader(file));
 			}
-
 			initMacroTemplates(reader1);
+			
 			file = new File(dir, ACTION_FILE_NAME);
-
 			BufferedReader macroReader = new BufferedReader(new FileReader(file));
-			initMacroTemplates(macroReader);
+			initLexicalTemplates(macroReader);
+			
 			file = new File(dir, WORD_FILE_NAME);
 			BufferedReader reader2 = new BufferedReader(new FileReader(file));
 			readWords(reader2);
