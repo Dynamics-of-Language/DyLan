@@ -1200,8 +1200,8 @@ public class TTRRecordType extends TTRFormula {
 				subtract.add(fother);
 			}
 		}
-		//return difference conjuncts
-		return new Pair<>(addition,subtract);
+		// return difference conjuncts
+		return new Pair<TTRRecordType, TTRRecordType>(addition, subtract);
 	}
 	
 	public static void main(String[] a) {
