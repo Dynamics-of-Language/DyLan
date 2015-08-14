@@ -144,7 +144,7 @@ public class TestParser extends ContextParser {
 		int count = 0;
 		corpusLoop: while (corpusIt.hasNext()) {
 			Pair<Sentence<Word>, TTRRecordType> entry = corpusIt.next();
-			String ID = testCorpus.getIndexNumber(count);
+			String ID = (hasUtteranceIndices ? testCorpus.getIndexNumber(count) : "" + count);
 			count += 1;
 			try {
 				containsUnknown(entry.first);
@@ -343,11 +343,17 @@ public class TestParser extends ContextParser {
 	}
 
 	public static void main(String a[]) {
-		TestParser tp = new TestParser("resource/2014-german-ttr-pento");
-		// pause();
-		tp.loadTestCorpus("corpus\\Pento\\PENTO_gold-1.transcript.txt", false);
-		tp.parseCorpusToFile("C:\\users\\julian\\TestTTRPentoCorpusErrors.txt",
-				"C:\\users\\julian\\TestTTRPentoCorpusRTs.txt", 30, true);
+		if (a.length > 0 && a[0].toLowerCase().startsWith("en")) {
+			TestParser tp = new TestParser("resource/2013-english-ttr".replaceAll("/", File.separator));
+			// pause();
+			tp.loadTestCorpus("corpus/CHILDES/eveTrainPairs/CHILDESconversion.txt".replaceAll("/", File.separator),
+					true);
+			tp.parseCorpusToFile("TestCHILDESErrors.txt", "TestCHILDESRTs.txt", 30, false);
+		} else {
+			TestParser tp = new TestParser("resource/2014-german-ttr-pento".replaceAll("/", File.separator));
+			// pause();
+			tp.loadTestCorpus("corpus/Pento/PENTO_gold-1.transcript.txt".replaceAll("/", File.separator), false);
+			tp.parseCorpusToFile("TestTTRPentoCorpusErrors.txt", "TestTTRPentoCorpusRTs.txt", 30, true);
+		}
 	}
-
 }
