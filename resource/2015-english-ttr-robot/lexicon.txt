@@ -43,10 +43,10 @@ last                          adj                           third
 ball						  count							ball							s3                          obj
 object	                      count							piece							s3                          obj
 box			 				  count							box  							s3                          obj
-banana			 				  count							banana  							s3                          obj
-apple			 				  count							apple  							s3                          obj
-basket			 				  count							basket  							s3                          obj
-block			 				  count							block  							s3                          obj
+banana			 			  count							banana  						s3                          obj
+apple			 			  count							apple  							s3                          obj
+basket			 			  count							basket  						s3                          obj
+block			 			 count							block  							s3                          obj
 corner						  count							corner							s3                          obj
 line						  count							line							s3                          obj
 row 						  count							row  							s3                          obj
@@ -68,7 +68,7 @@ plus						  count							cross							s3                          obj
 t							  count							mast							s3                          obj
 mast	                      count							mast							s3                          obj
 beam						  count							beam							s3                          obj
-one							  count							beam   							s3                          obj
+one							  count							one   							s3                          obj
 l							  count							seven							s3                          obj
 seven						  count							seven							s3                          obj
 z							  count							snake							s3                          obj
@@ -93,10 +93,10 @@ horizontally				  adv							horizontal
 once						  adv							once				  
 twice   					  adv							twice
 again    					  adv							again
-over						  prep_mod							over
-under						  prep_mod							under
-out							  prep_mod							out
-near							  prep_mod							near
-in							  prep_mod							in
-into							  prep_mod							into
+over						  prep_mod						over
+under						  prep_mod						under
+out							  prep_mod						out
+near						  prep_mod						near
+in							  prep_mod						in
+into						  prep_mod						into
 and							  conj							and

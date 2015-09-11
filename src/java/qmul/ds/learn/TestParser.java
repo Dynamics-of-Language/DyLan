@@ -363,7 +363,7 @@ public class TestParser extends ContextParser {
 			TestParser tp = new TestParser("resource/2015-english-ttr-robot".replaceAll("/", File.separator));
 			// pause();
 			tp.loadTestCorpus("corpus/Robot/Famula.txt".replaceAll("/", File.separator), false);
-			tp.parseCorpusToFile("TestTTRRobotCorpusRTs.txt", "TestTTRRobotCorpusErrors.txt", 30, true, false);
+			tp.parseCorpusToFile("TestTTRRobotCorpusRTsIncremental.txt", "TestTTRRobotCorpusErrors.txt", 30, true, true);
 		}
 	}
 }
