@@ -123,8 +123,10 @@ public class TestParser extends ContextParser {
 	 *            the number of parses to maintain in the parse state after each word, puts ceiling on decoding time
 	 * @param hasUtteranceIndices
 	 *            boolean as to whether this file has an utterance index at the end of each line or not
+	 * @param incrementalOutput
+	 * 			  boolean of whether to produce incremental output file or just final record type
 	 **/
-	public void parseCorpusToFile(String outputFile, String errorFile, int beam, boolean hasUtteranceIndices) {
+	public void parseCorpusToFile(String outputFile, String errorFile, int beam, boolean hasUtteranceIndices, boolean incrementalOutput) {
 
 		// set the file up
 		FileWriter errorFileStream = null;
@@ -216,14 +218,22 @@ public class TestParser extends ContextParser {
 					notParsed++;
 				}
 				TTRRecordType currentTTRrec = TTRRecordType.parse("[]");
-				for (int r = 0; r < wordTTRoutput.length; r++) {
+				int start = incrementalOutput == true ? 0 : wordTTRoutput.length-1;
+				for (int r = start; r < wordTTRoutput.length; r++) {
 					try {
 						out = new BufferedWriter(outputFileStream);
 						out.write(ID + "\t");
-						out.write(entry.first.get(r).toString() + "\t");
+						if (incrementalOutput==true){
+							out.write(entry.first.get(r).toString() + "\t");
+						}
+						else{ //Write the whole utt in non-incremental version
+							out.write(successfulPrefix + "\t");
+						}
 						out.write(wordTTRoutput[r].toString() + "\t");
-						// get the diff
-						out.write(wordTTRoutput[r].minus(currentTTRrec).first.toString());
+						// get the diff if incremental
+						if (incrementalOutput==true){
+							out.write(wordTTRoutput[r].minus(currentTTRrec).first.toString());
+						}
 						currentTTRrec = wordTTRoutput[r];
 						out.newLine();
 						out.flush();
@@ -348,12 +358,12 @@ public class TestParser extends ContextParser {
 			// pause();
 			tp.loadTestCorpus("corpus/CHILDES/eveTrainPairs/CHILDESconversion.txt".replaceAll("/", File.separator),
 					true);
-			tp.parseCorpusToFile("TestCHILDESErrors.txt", "TestCHILDESRTs.txt", 30, false);
+			tp.parseCorpusToFile("TestCHILDESErrors.txt", "TestCHILDESRTs.txt", 30, false, false);
 		} else {
-			TestParser tp = new TestParser("resource/2014-german-ttr-pento".replaceAll("/", File.separator));
+			TestParser tp = new TestParser("resource/2015-english-ttr-robot".replaceAll("/", File.separator));
 			// pause();
-			tp.loadTestCorpus("corpus/Pento/PENTO_gold-1.transcript.txt".replaceAll("/", File.separator), false);
-			tp.parseCorpusToFile("TestTTRPentoCorpusErrors.txt", "TestTTRPentoCorpusRTs.txt", 30, true);
+			tp.loadTestCorpus("corpus/Robot/Famula.txt".replaceAll("/", File.separator), false);
+			tp.parseCorpusToFile("TestTTRRobotCorpusRTs.txt", "TestTTRRobotCorpusErrors.txt", 30, true, false);
 		}
 	}
 }
