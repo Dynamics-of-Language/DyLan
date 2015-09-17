@@ -195,9 +195,20 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	}
 
 	/**
-	 * The AddIntent Algorithm from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
+	 * The AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
 	 */
 	public void AddIntent(){
+		
+		
+		
+	}
+	
+	/**
+	 * The createLatticeIncrementally using the AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
+	 */
+	public void createLatticeIncrementally(){
+		
+		
 		
 	}
 	
