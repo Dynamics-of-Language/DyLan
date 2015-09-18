@@ -2,6 +2,7 @@ package qmul.ds.ttrlattice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -193,12 +194,61 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		}
 
 	}
+	
+	/**
+	 * 
+	 * @param oldnode the node to add the new judgement(s) to
+	 * @param props the new judgements
+	 */
+	public void addAustinianJudgements(Node oldnode, Set<TTRAustinianProp> props){
+		Set<TTRAustinianProp> newweight = ((TTRLatticeNode) this.node(oldnode).getWeight()).getProps();
+		newweight.addAll(props);
+		TTRRecordType ttr = ((TTRLatticeNode) this.node(oldnode).getWeight()).getTtr();
+		this.node(oldnode).setWeight(new TTRLatticeNode(ttr,newweight));
+	}
 
 	/**
-	 * The AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
+	 * Function inspired by Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'.
+	 * Adds the intent (Record Type) and the extents (objects, which are Austinian propositions which are judgements of situations being of that type with a given probability)
 	 */
-	public void AddIntent(){
+	public TTRLattice addTypeJudgement(TTRRecordType ttrSit,Set<TTRAustinianProp> propAtoms, Node node, TTRLattice frontierLattice){
+		//Inherently changing the lattice, no need to recursively generate
 		
+		//Check to see if it's in the lattice if so return, if not, add
+		Node n = new Node(new TTRLatticeNode(ttrSit,propAtoms));
+		this.addNode(n);
+		this.addEdge(n, node);
+		this.addAustinianJudgements(node,propAtoms);
+		//Propogate through and remove parents of this node from frontier
+		
+		frontierLattice.removeNode(node);
+	
+		if (((TTRLatticeNode) node.getWeight()).top==true){ //if a top node and no nodes left to search return
+			if (frontierLattice.nodes().size()==1){ // if only bottom concept left in frontier, return
+				return frontierLattice;
+			} else {
+				//
+				//addTypeJudgement();
+			}
+		}
+		//Now upwards search for propogation up the lattice
+		//Store the nodes that have been accounted for/create a list of the search graph remaining
+		//this has to be a recursive function, will return when it reaches the top node
+		//Node currentnode = add
+		
+		
+		Collection<Node> parents = this.predecessors(node); 
+		parents.retainAll(this.neighbors(node));//gets immediate parents
+		Node parent = ((Node[]) parents.toArray())[0]; //get random parent
+		//IF WE GET A SPLIT HERE, THEN REMOVE ALL PREDECESSORS OF PARENT
+		//ELSE KEEP GOING
+		//Check for split
+		if (((TTRLatticeNode) parent.getWeight()).getTtr().subsumes(ttrSit)){
+			
+			
+			
+		}
+		return addTypeJudgement(ttrSit, propAtoms, parent, frontierLattice); //add type judgement to parent
 		
 		
 	}
@@ -206,9 +256,29 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	/**
 	 * The createLatticeIncrementally using the AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
 	 */
-	public void createLatticeIncrementally(){
-		
-		
+	public void createLatticeIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
+
+		//Initialize by making a top and bottom which are the empty record type (which contains every type) and the absurdity
+		TTRLatticeNode abottom = new TTRLatticeNode();
+		abottom.setBottom();
+		Node bottom = new Node(abottom);
+		this.addNode(bottom);
+		TTRLatticeNode mytop = new TTRLatticeNode();
+		mytop.setTop();
+		mytop.setTtr(TTRRecordType.parse("[]"));//the empty record type at the top
+		Node top = new Node(mytop);
+		this.addNode(top);
+		this.addEdge(top, bottom);
+
+		// atoms and all the supertypes..
+		// done incrementally atom by atom, so it is generalizable to a general addTypeJudgementIntent
+		// Will be bottom up
+		TTRLattice frontierLattice = (TTRLattice) this.clone();
+		for (int i = 0; i < ttrAtoms.size(); i++) {
+			//Add prop atom to the extent of newSuperType and all its supertypes
+			//The AddIntent should add all the above concepts
+			frontierLattice = addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), (Node) this.bottom(), frontierLattice);
+		}
 		
 	}
 	

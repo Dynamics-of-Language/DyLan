@@ -9,6 +9,7 @@ public class TTRLatticeNode {
 	TTRRecordType ttr = null;
 	Set<TTRAustinianProp> props = null;
 	boolean bottom = false;
+	boolean top = false;
 	
 	public TTRLatticeNode(TTRRecordType ttr, Set<TTRAustinianProp> props) {
 		this.ttr = ttr;
@@ -56,6 +57,10 @@ public class TTRLatticeNode {
 	
 	public void setBottom(){
 		this.bottom = true;
+	}
+	
+	public void setTop(){
+		this.top = true;
 	}
 
 	/**
