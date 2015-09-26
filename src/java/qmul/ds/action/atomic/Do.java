@@ -40,7 +40,7 @@ public class Do extends Effect {
 	}
 
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 
 		logger.debug("rerunning actions from context");
 		logger.debug("getting metasequence named:" + this.metaActionSequenceName);
@@ -52,7 +52,7 @@ public class Do extends Effect {
 		while (i.hasNext()) {
 			Action a = i.next();
 			logger.debug("rerunning: " + a);
-			a.exec(tree, context);
+			a.execTupleContext(tree, context);
 			if (tree == null) {
 				logger.debug("Action in do failed:" + a);
 			} else {

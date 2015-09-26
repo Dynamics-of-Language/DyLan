@@ -22,7 +22,7 @@ import qmul.ds.tree.label.TypeLabel;
 /**
  * The <tt>put</tt> action
  * 
- * @author mpurver
+ * @author arash
  */
 public class CopyContent extends Effect {
 
@@ -42,11 +42,13 @@ public class CopyContent extends Effect {
 		this.mod = mod;
 	}
 
-	private static final Pattern PUT_PATTERN = Pattern.compile("(?i)" + FUNCTOR + "\\((.+)\\)");
+	private static final Pattern PUT_PATTERN = Pattern.compile("(?i)" + FUNCTOR
+			+ "\\((.+)\\)");
 
 	/**
 	 * @param string
-	 *            a {@link String} representation e.g. put(ty(t)) as used in lexicon specs
+	 *            a {@link String} representation e.g. put(ty(t)) as used in
+	 *            lexicon specs
 	 */
 	public CopyContent(String string) {
 		Matcher m = PUT_PATTERN.matcher(string);
@@ -60,10 +62,11 @@ public class CopyContent extends Effect {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
+	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree,
+	 * qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		// logger.debug("putting " + label.instantiate());
 		Node n = tree.getNode(this.mod.instantiate());
 		if (!n.hasType())

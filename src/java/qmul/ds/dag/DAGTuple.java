@@ -2,11 +2,17 @@ package qmul.ds.dag;
 
 import java.util.List;
 
+import org.apache.commons.collections15.Transformer;
 import org.apache.log4j.Logger;
 
 import qmul.ds.ParserTuple;
 import qmul.ds.learn.DAGInductionTuple;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.Requirement;
+import qmul.ds.tree.label.TypeLabel;
+
 /**
  * 
  * @author arash
@@ -16,75 +22,29 @@ public class DAGTuple extends ParserTuple {
 
 	private static Logger logger = Logger.getLogger(DAGTuple.class);
 
-	protected Long id = 0L;	
-	private long depth=0;
-	
-	
-	public static DAGTuple getNewTuple(List<Long> idPool) {
+	protected Long id = 0L;
+	private long depth = 0;
 
-		long newID = idPool.size() + 1;
-		DAGTuple result = new DAGTuple(idPool.size() + 1);
-		idPool.add(newID);
-		return result;
+	/*
+	 * public static Transformer<DAGTuple, String> getVertexLabelTransformer() {
+	 * return new Transformer<DAGTuple, String>() { public String
+	 * transform(DAGTuple ts) { // return "type";
+	 * 
+	 * return ""; } }; }
+	 */
+	public void setDepth(long d) {
+		depth = d;
 	}
 
-	public static DAGInductionTuple getNewInductionTuple(List<Long> idPool) {
-
-		long newID = idPool.size() + 1;
-		DAGInductionTuple result = new DAGInductionTuple(idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-	}
-	
-	public static DAGTuple getNewTuple(List<Long> idPool, ParserTuple t) {
-		long newID = idPool.size() + 1;
-		DAGTuple result = new DAGTuple(t, idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-		
-	}
-	public static DAGInductionTuple getNewInductionTuple(List<Long> idPool, ParserTuple t) {
-		long newID = idPool.size() + 1;
-		DAGInductionTuple result = new DAGInductionTuple(t, idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-		
-	}
-
-
-	public static DAGTuple getNewTuple(List<Long> idPool, Tree t) {
-		long newID = idPool.size() + 1;
-		DAGTuple result = new DAGTuple(t, idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-
-	}
-	
-	public static DAGInductionTuple getNewInductionTuple(List<Long> idPool, Tree t) {
-		long newID = idPool.size() + 1;
-		DAGInductionTuple result = new DAGInductionTuple(t, idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-
-	}
-	
-	public void setDepth(long d)
-	{
-		depth=d;
-	}
-	public long getDepth()
-	{
+	public long getDepth() {
 		return depth;
 	}
-	
-	
-	
 
-	public DAGTuple(ParserTuple p, long id)
-	{
+	public DAGTuple(ParserTuple p, long id) {
 		super(p.getTree());
-		this.id=id;
+		this.id = id;
 	}
+
 	public DAGTuple(Tree t, long id) {
 		super(t);
 		this.id = id;
@@ -124,6 +84,10 @@ public class DAGTuple extends ParserTuple {
 		return "{" + this.id + " : " + super.toString() + "}";
 
 	}
-
 	
+	public String transform() {
+		
+		return id+"";
+	}
+
 }

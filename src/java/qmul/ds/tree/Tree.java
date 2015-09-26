@@ -34,7 +34,8 @@ import edu.stanford.nlp.trees.TreeFactory;
  * 
  * @author mpurver
  */
-public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Serializable {
+public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
+		Serializable {
 
 	private final String ENTITY_VARIABLE_ROOT = "x";
 	private final String EVENT_VARIABLE_ROOT = "e";
@@ -114,7 +115,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * A fresh entity variable x1, x2 etc
 	 */
 	public Variable getFreshEntityVariable() {
-		Variable v = new Variable(ENTITY_VARIABLE_ROOT + (entityPool.size() + 1));
+		Variable v = new Variable(ENTITY_VARIABLE_ROOT
+				+ (entityPool.size() + 1));
 		entityPool.add(v);
 		return v;
 	}
@@ -132,7 +134,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * A fresh proposition variable p1, p2 etc
 	 */
 	public Variable getFreshPropositionVariable() {
-		Variable v = new Variable(PROPOSITION_VARIABLE_ROOT + (propositionPool.size() + 1));
+		Variable v = new Variable(PROPOSITION_VARIABLE_ROOT
+				+ (propositionPool.size() + 1));
 		propositionPool.add(v);
 		return v;
 	}
@@ -141,13 +144,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * A fresh record type variable r1, r2 etc
 	 */
 	public Variable getFreshRecTypeVariable() {
-		Variable v = new Variable(REC_TYPE_VARIABLE_ROOT + (recordTypePool.size() + 1));
+		Variable v = new Variable(REC_TYPE_VARIABLE_ROOT
+				+ (recordTypePool.size() + 1));
 		recordTypePool.add(v);
 		return v;
 	}
 
 	public Variable getFreshPredicateVariable() {
-		Variable v = new Variable(PREDICATE_VARIABLE_ROOT + (predicatePool.size() + 1));
+		Variable v = new Variable(PREDICATE_VARIABLE_ROOT
+				+ (predicatePool.size() + 1));
 		predicatePool.add(v);
 		return v;
 
@@ -226,7 +231,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	/**
 	 * @param modality
-	 * @return the {@link Node} we arrive at by going via modality, or null if none exists
+	 * @return the {@link Node} we arrive at by going via modality, or null if
+	 *         none exists
 	 */
 	public Node getNode(Modality modality) {
 		return get(getPointer().go(modality));
@@ -295,11 +301,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * @param from
 	 * @param to
 	 */
-	private void moveDaughters(ArrayList<Node> dtrs, NodeAddress from, NodeAddress to) {
+	private void moveDaughters(ArrayList<Node> dtrs, NodeAddress from,
+			NodeAddress to) {
 		for (Node dtr : dtrs) {
 			moveDaughters(getDaughters(dtr), from, to);
-			NodeAddress newAddr = new NodeAddress(dtr.getAddress().getAddress()
-					.replaceFirst(Pattern.quote(from.getAddress()), to.getAddress()));
+			NodeAddress newAddr = new NodeAddress(dtr
+					.getAddress()
+					.getAddress()
+					.replaceFirst(Pattern.quote(from.getAddress()),
+							to.getAddress()));
 			Node newDtr = new Node(newAddr);
 			newDtr.addAll(dtr);
 			put(newAddr, newDtr);
@@ -385,7 +395,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	}
 
 	/**
-	 * @return true if this tree is complete i.e. no outstanding requirements at any node AND pointer at root node
+	 * @return true if this tree is complete i.e. no outstanding requirements at
+	 *         any node AND pointer at root node
 	 */
 	public boolean isComplete() {
 		if (!pointer.isRoot()) {
@@ -413,8 +424,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	}
 
 	/**
-	 * @return the number of unsatisfied {@link Requirement}s. NOT A RELIABLE COUNT - just for tree ordering in
-	 *         displays. Use isComplete() for a reliable check.
+	 * @return the number of unsatisfied {@link Requirement}s. NOT A RELIABLE
+	 *         COUNT - just for tree ordering in displays. Use isComplete() for
+	 *         a reliable check.
 	 */
 	public int numRequirements() {
 		return numRequirements;
@@ -430,7 +442,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		node: for (Node thisNode : values()) {
 			for (Node otherNode : other.values()) {
 				if (thisNode.subsumes(otherNode)) {
-					if (thisNode.hasType() && otherTyCMatched.contains(otherNode)) {
+					if (thisNode.hasType()
+							&& otherTyCMatched.contains(otherNode)) {
 						logger.info("Node in other already used: " + otherNode);
 						continue;
 					}
@@ -440,22 +453,26 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 					continue node;
 				}
 			}
-			logger.info("susbume fail for node " + thisNode.getAddress() + " No node found in other");
+			logger.info("susbume fail for node " + thisNode.getAddress()
+					+ " No node found in other");
 			return false;
 		}
 		return true;
 
 		/*
-		 * if (!thisNode.isLocallyFixed()) { System.out.println("subsume pass for node " + thisNode.getAddress());
+		 * if (!thisNode.isLocallyFixed()) {
+		 * System.out.println("subsume pass for node " + thisNode.getAddress());
 		 * System.out.println("against other node:"+otherNode); }
 		 */
 	}
 
 	/**
-	 * Checks tree subsumption depth first, recursively instantiating unfixed addresses by hypothesising merge points in
-	 * the other tree and then checking as fixed... it also keeps track of already used (matched) nodes, so that not
-	 * more than one type complete node in this tree is matched to a single type complete node in the other. Merge
-	 * points are also controlled in this manner.
+	 * Checks tree subsumption depth first, recursively instantiating unfixed
+	 * addresses by hypothesising merge points in the other tree and then
+	 * checking as fixed... it also keeps track of already used (matched) nodes,
+	 * so that not more than one type complete node in this tree is matched to a
+	 * single type complete node in the other. Merge points are also controlled
+	 * in this manner.
 	 * 
 	 * @param other
 	 * @return true if this tree subsumes the other tree
@@ -463,20 +480,26 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	public boolean subsumes(Tree other) {
 
-		return subsumes(other, get(new NodeAddress("0")), other.get(new NodeAddress("0")), new HashSet<Node>()) != null;
+		return subsumes(other, get(new NodeAddress("0")),
+				other.get(new NodeAddress("0")), new HashSet<Node>()) != null;
 
 	}
 
-	private Set<Node> subsumes(Tree other, Node thisSubtreeRoot, Node otherSubtreeRoot, Set<Node> usedNodes) {
+	private Set<Node> subsumes(Tree other, Node thisSubtreeRoot,
+			Node otherSubtreeRoot, Set<Node> usedNodes) {
 		if (usedNodes.contains(otherSubtreeRoot))
 			return null;
 		if (!thisSubtreeRoot.subsumes(otherSubtreeRoot)) {
-			logger.debug("failed Subsumption, this Root:" + thisSubtreeRoot + " vs. " + otherSubtreeRoot);
-			logger.debug("but this root on this tree:" + get(thisSubtreeRoot.getAddress()));
+			logger.debug("failed Subsumption, this Root:" + thisSubtreeRoot
+					+ " vs. " + otherSubtreeRoot);
+			logger.debug("but this root on this tree:"
+					+ get(thisSubtreeRoot.getAddress()));
 			return null;
 		}
-		logger.debug("subsumed, this root:" + thisSubtreeRoot + " vs. " + otherSubtreeRoot);
-		logger.debug("but this root on this tree:" + get(thisSubtreeRoot.getAddress()));
+		logger.debug("subsumed, this root:" + thisSubtreeRoot + " vs. "
+				+ otherSubtreeRoot);
+		logger.debug("but this root on this tree:"
+				+ get(thisSubtreeRoot.getAddress()));
 		Set<Node> used = new HashSet<Node>(usedNodes);
 		if (thisSubtreeRoot.hasType())
 			used.add(otherSubtreeRoot);
@@ -485,11 +508,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 		for (Node fixedDaughter : getDaughters(thisSubtreeRoot, "01L")) {
 			String daughterAddress = fixedDaughter.getAddress().getAddress();
-			String suffix = daughterAddress.substring(daughterAddress.length() - 1, daughterAddress.length());
-			NodeAddress otherAddress = new NodeAddress(otherSubtreeRoot.getAddress().getAddress() + suffix);
+			String suffix = daughterAddress.substring(
+					daughterAddress.length() - 1, daughterAddress.length());
+			NodeAddress otherAddress = new NodeAddress(otherSubtreeRoot
+					.getAddress().getAddress() + suffix);
 			if (!other.containsKey(otherAddress))
 				return null;
-			Set<Node> daughterUsed = subsumes(other, fixedDaughter, other.get(otherAddress), used);
+			Set<Node> daughterUsed = subsumes(other, fixedDaughter,
+					other.get(otherAddress), used);
 			if (daughterUsed == null)
 				return null;
 			used.addAll(daughterUsed);
@@ -499,8 +525,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			for (Node otherNode : other.values()) {
 				if (used.contains(otherNode))
 					continue;
-				if (otherNode.getAddress().getAddress().startsWith(otherSubtreeRoot.getAddress().getAddress())) {
-					Set<Node> unfixedDaughterUsed = subsumes(other, unfixedDaughter, otherNode, used);
+				if (otherNode.getAddress().getAddress()
+						.startsWith(otherSubtreeRoot.getAddress().getAddress())) {
+					Set<Node> unfixedDaughterUsed = subsumes(other,
+							unfixedDaughter, otherNode, used);
 					if (unfixedDaughterUsed != null) {
 						used.addAll(unfixedDaughterUsed);
 						continue outer;
@@ -579,7 +607,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		String label = node.toUnicodeString();
 
 		if (node.getAddress().equals(pointer)) {
-			label = label.replaceAll("(" + Pattern.quote(node.getAddress() + Node.ADDRESS_SEPARATOR) + ")",
+			label = label.replaceAll(
+					"("
+							+ Pattern.quote(node.getAddress()
+									+ Node.ADDRESS_SEPARATOR) + ")",
 					UNICODE_POINTER + "$1");
 		}
 		edu.stanford.nlp.trees.Tree t = tf.newTreeNode(label, kids);
@@ -590,8 +621,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	}
 
 	/**
-	 * returns the node that is the root of this tree, that may not neccessarily be the matrix tree (i.e. could be
-	 * linked tree) TODO only assumes linked trees have complex structure, in line with DS theory
+	 * returns the node that is the root of this tree, that may not neccessarily
+	 * be the matrix tree (i.e. could be linked tree) TODO only assumes linked
+	 * trees have complex structure, in line with DS theory
 	 * 
 	 * 
 	 * @param node
@@ -600,8 +632,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public Node getLocalRoot(Node node) {
 		String root = "0";
 		if (node.getAddress().toString().contains("L")) {
-			String linkModality = node.getAddress().toString()
-					.substring(0, node.getAddress().toString().lastIndexOf('L') + 1);
+			String linkModality = node
+					.getAddress()
+					.toString()
+					.substring(0,
+							node.getAddress().toString().lastIndexOf('L') + 1);
 			root = linkModality;
 
 		}
@@ -611,10 +646,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	public static void main(String args[]) {
 
-		Tree t=new Tree();
+		Tree t = new Tree();
 		t.make(BasicOperator.DOWN_1);
-		
-		Tree t1=new Tree();
+
+		Tree t1 = new Tree();
 		t1.make(BasicOperator.DOWN_1);
 		t1.go(BasicOperator.DOWN_1);
 		System.out.println(t.subsumes(t1));
@@ -624,8 +659,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * 
 	 * Assumes grammar with event terms... @see{resource/2013-english-ttr}
 	 * 
-	 * Should make sure that, when doing induction, the getMaximalSemantics method is only called after decorating a new
-	 * node with a new hypothesis, and not immediately after the node is created.... (?) maybe not TODO
+	 * Should make sure that, when doing induction, the getMaximalSemantics
+	 * method is only called after decorating a new node with a new hypothesis,
+	 * and not immediately after the node is created.... (?) maybe not TODO
 	 * 
 	 * @param t
 	 * @return
@@ -634,36 +670,42 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
 		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
 		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
-		//typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]").freshenVars(this));
-		typeMap.put(DSType.cn, Formula.create("[]"));
+		// typeMap.put(DSType.cn,
+		// Formula.create("[x:e|head==x:e]").freshenVars(this));
+		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
 		// typeMap.put(DSType.t, Formula.create("[p:t]"));
 		// for underspec VP
-		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		typeMap.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
-		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
+		typeMap.put(DSType.parse("e>(es>cn)"),
+				Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
+		typeMap.put(DSType.parse("es>cn"),
+				Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		typeMap.put(DSType.parse("e>cn"),
+				Formula.create("R1^(R1 ++ [head==R1.head:e])"));
 		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));
-		typeMap.put(DSType.parse("e>(e>t)"), Formula
-				.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
-//		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
-//				.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula
-				.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
-				.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		typeMap.put(DSType.parse("e>(e>t)"),
+				Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
+		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
+		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		typeMap.put(DSType.parse("es>(e>(e>t))"),
+				Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		typeMap.put(DSType.parse("e>(e>(e>t))"),
+				Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
 		// for underspec adjunct e>t, see below, special case
-		
-		typeMap.put(DSType.parse("cn>e"), Formula
-				.create("R1^[r:R1|x:e|head==x:e]"));
-		typeMap.put(DSType.parse("cn>es"), Formula
-				.create("R1^[r:R1|e1:es|head==e1:es]"));
+
+		typeMap.put(DSType.parse("cn>e"),
+				Formula.create("R1^[r:R1|x:e|head==x:e]"));
+		typeMap.put(DSType.parse("cn>es"),
+				Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
 		for (Node n : values()) {
 			if (!getDaughters(n, "01").isEmpty())
 				continue;
-			DSType dsType = n.getRequiredType() != null ? n.getRequiredType() : n.getType();
+			DSType dsType = n.getRequiredType() != null ? n.getRequiredType()
+					: n.getType();
 			Formula f = n.getFormula();
 			if (dsType != null && f == null) {
 				if (typeMap.containsKey(dsType)) {
-					n.addLabel(new FormulaLabel(typeMap.get(dsType).freshenVars(this)));
+					n.addLabel(new FormulaLabel(typeMap.get(dsType)
+							.freshenVars(this)));
 				} else if (!dsType.equals(DSType.t))
 					logger.warn("could not add underspecified formula to node; ds type is not listed as underspecifiable:"
 							+ n);
@@ -675,7 +717,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public Set<Node> getUnfixedNodes() {
 		Set<Node> result = new HashSet<Node>();
 		for (Node n : values())
-			if (n.getAddress().isStarUnfixed() || n.getAddress().isStarUnfixed())
+			if (n.getAddress().isStarUnfixed()
+					|| n.getAddress().isStarUnfixed())
 				result.add(n);
 
 		return result;
@@ -690,12 +733,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				if (!mergePoint.isLocallyFixed()) {
 					continue;
 				}
-				DSType mergePointType = mergePoint.getType() == null ? mergePoint.getRequiredType() : mergePoint
-						.getType();
-				DSType unfixedType = unfixed.getType() == null ? unfixed.getRequiredType() : unfixed.getType();
+				DSType mergePointType = mergePoint.getType() == null ? mergePoint
+						.getRequiredType() : mergePoint.getType();
+				DSType unfixedType = unfixed.getType() == null ? unfixed
+						.getRequiredType() : unfixed.getType();
 				Formula mergePointF = mergePoint.getFormula();
-				if (getDaughters(mergePoint, "01").isEmpty() && unfixed.getAddress().subsumes(mergePoint.getAddress())
-						&& mergePointF == null && mergePointType.equals(unfixedType)) {
+				if (getDaughters(mergePoint, "01").isEmpty()
+						&& unfixed.getAddress().subsumes(
+								mergePoint.getAddress()) && mergePointF == null
+						&& mergePointType.equals(unfixedType)) {
 					Tree t = clone();
 					t.setPointer(mergePoint.getAddress());
 					t.merge(unfixed);
@@ -712,44 +758,45 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	}
 
-	
 	/**
-	 * Semantic Node Decorations in TTR - otherwise should return empty set, or throw pointer exception!
+	 * Semantic Node Decorations in TTR - otherwise should return empty set, or
+	 * throw pointer exception!
 	 * 
 	 * The maximal semantics will not contain a head field.
 	 * 
 	 * @return the maximal semantics of this tree
 	 */
 	public TTRFormula getMaximalSemantics() {
-		
 
 		List<Tree> merged = mergeUnfixed();
 		if (merged.isEmpty())
 			return null;
 		if (merged.size() < 2) {
 			merged.get(0).addUnderspecifiedFormulae();
-			TTRRecordType f = (TTRRecordType) merged.get(0).getMaximalSemantics(merged.get(0).getRootNode());
-//			if (f.head()!=null && f.head().getType()!=null)
-//				f.remove(TTRRecordType.HEAD);
+			logger.debug("After adding underspecified formulae, tree is:"
+					+ merged.get(0));
+			TTRFormula f = merged.get(0).getMaximalSemantics(
+					merged.get(0).getRootNode());
+
 			return f;
 		}
 		merged.get(0).addUnderspecifiedFormulae();
 		merged.get(1).addUnderspecifiedFormulae();
-		TTRRecordType first = (TTRRecordType) merged.get(0).getMaximalSemantics();
-		TTRRecordType second = (TTRRecordType) merged.get(1).getMaximalSemantics();
-//		if (first.head()!=null &&first.head().getType()!=null)
-//			first.remove(TTRRecordType.HEAD);
-//		if (second.head()!=null &&second.head().getType()!=null)
-//			second.remove(TTRRecordType.HEAD);
-		
-		TTRInfixExpression disjunction = new TTRInfixExpression(TTRInfixExpression.TTR_DISJUNTION_FUNCTOR, first, second);
+		TTRRecordType first = (TTRRecordType) merged.get(0)
+				.getMaximalSemantics();
+		TTRRecordType second = (TTRRecordType) merged.get(1)
+				.getMaximalSemantics();
+
+		TTRInfixExpression disjunction = new TTRInfixExpression(
+				TTRInfixExpression.TTR_DISJUNTION_FUNCTOR, first, second);
 
 		for (int i = 2; i < merged.size(); i++) {
 			merged.get(i).addUnderspecifiedFormulae();
-			TTRRecordType cur = (TTRRecordType) merged.get(i).getMaximalSemantics();
-//			if (cur.head()!=null &&cur.head().getType()!=null)
-//				cur.remove(TTRRecordType.HEAD);
-			disjunction = new TTRInfixExpression(TTRInfixExpression.TTR_DISJUNTION_FUNCTOR, disjunction, cur);
+			TTRRecordType cur = (TTRRecordType) merged.get(i)
+					.getMaximalSemantics();
+
+			disjunction = new TTRInfixExpression(
+					TTRInfixExpression.TTR_DISJUNTION_FUNCTOR, disjunction, cur);
 		}
 
 		return disjunction;
@@ -766,53 +813,63 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			logger.error("node with only one fixed daughter.." + root);
 			return null;
 		}
+		logger.debug("getting semantics of tree rooted at:" + root);
 		Node unfixed = get(root.getAddress().downStar());
 		Node localUnfixed = get(root.getAddress().downLocalUnfixed());
-		TTRRecordType unfixedReduced = null;
+		TTRFormula unfixedReduced = null;
 		if (unfixed != null) {
-			unfixedReduced = ((TTRRecordType) getMaximalSemantics(unfixed));
+			unfixedReduced = getMaximalSemantics(unfixed);
 
 		}
-		TTRRecordType localUnfixedReduced = null;
+		TTRFormula localUnfixedReduced = null;
 		if (localUnfixed != null) {
-			localUnfixedReduced = ((TTRRecordType) getMaximalSemantics(localUnfixed));
+			localUnfixedReduced = getMaximalSemantics(localUnfixed);
 
 		}
 		TTRFormula rootReduced = null;
 		// if (getDaughters(root).isEmpty())
-		rootReduced = root.getFormula() == null ? new TTRRecordType() : (TTRFormula) root.getFormula();
+		rootReduced = root.getFormula() == null ? new TTRRecordType()
+				: (TTRFormula) root.getFormula();
 
 		if (getDaughters(root, "01").size() == 2) {
 			// at local root
 
-			TTRFormula argMax = getMaximalSemantics(get(root.getAddress().down0()));
-			TTRLambdaAbstract functMax = (TTRLambdaAbstract) getMaximalSemantics(get(root.getAddress().down1()));
-
+			TTRFormula argMax = getMaximalSemantics(get(root.getAddress()
+					.down0()));
+			TTRLambdaAbstract functMax = (TTRLambdaAbstract) getMaximalSemantics(get(root
+					.getAddress().down1()));
+			logger.debug("beta-reducing. Funct:" + functMax);
+			logger.debug("beta-reducing. Arg:" + argMax);
 			rootReduced = functMax.betaReduce(argMax);
 
 			if (unfixedReduced != null) {
 
 				rootReduced = rootReduced.conjoin(unfixedReduced);
+
 			}
 			if (localUnfixedReduced != null) {
 				rootReduced = rootReduced.conjoin(localUnfixedReduced);
 			}
 		}
-		// no fixed daughters.. only happens when we are at root of tree with unfixed nodes
+		// no fixed daughters.. only happens when we are at root of tree with
+		// unfixed nodes
 		if (unfixedReduced != null && localUnfixedReduced != null)
-			rootReduced = rootReduced.conjoin(unfixedReduced.conjoin(localUnfixedReduced));
+			rootReduced = unfixedReduced
+					.conjoin(localUnfixedReduced);
 
 		else if (unfixedReduced != null && localUnfixedReduced == null)
-			rootReduced = rootReduced.conjoin(unfixedReduced);
+			rootReduced = unfixedReduced;
 		else if (localUnfixedReduced != null)
-			rootReduced = rootReduced.conjoin(localUnfixedReduced);
+			rootReduced = localUnfixedReduced;
 
 		if (!getDaughters(root, "L").isEmpty()) {
 
-			Formula maxSemL = getMaximalSemantics(get(root.getAddress().downLink()));
+			Formula maxSemL = getMaximalSemantics(get(root.getAddress()
+					.downLink()));
 
 			rootReduced = rootReduced.conjoin(maxSemL);
 		}
+		logger.debug("done: " + rootReduced);
 		return rootReduced;
 
 	}
@@ -831,21 +888,26 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	}
 
 	/**
-	 * attaches other onto this tree at pointer the pointer, if pointed node of this tree has the same address as the
-	 * root of the other..
+	 * attaches other onto this tree at pointer the pointer, if pointed node of
+	 * this tree has the same address as the root of the other..
 	 * 
 	 * @param other
 	 * @return
 	 */
 	public Tree merge(Tree other) {
 		Tree copy = new Tree(this);
-//		if (!other.getRootNode().getAddress().equals(copy.getPointer())) {
-//			logger.warn("trees are not mergeable... address mismatch. This tree:" + this + "\nother tree:" + other);
-//			return null;
-//		}
+		// if (!other.getRootNode().getAddress().equals(copy.getPointer())) {
+		// logger.warn("trees are not mergeable... address mismatch. This tree:"
+		// + this + "\nother tree:" + other);
+		// return null;
+		// }
 		copy.putAll(other);
 
 		return copy;
+	}
+
+	public boolean isAxiom() {
+		return equals(new Tree());
 	}
 
 }

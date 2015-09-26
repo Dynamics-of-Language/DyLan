@@ -40,8 +40,8 @@ public class EpsilonTerm extends PredicateArgumentFormula {
 	/**
 	 * @return the ordered pair (or maybe variable) argument
 	 */
-	public Formula getOrderedPair() {
-		return getArguments().get(0);
+	public CNOrderedPair getOrderedPair() {
+		return (CNOrderedPair)getArguments().get(0);
 	}
 
 	/*
@@ -85,6 +85,15 @@ public class EpsilonTerm extends PredicateArgumentFormula {
 		return this;
 	}
 
+	public Variable getVariable()
+	{
+		return getOrderedPair().getVariable();
+	}
+	
+	public Formula getRestrictor()
+	{
+		return getOrderedPair().getRestrictor();
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -109,5 +118,15 @@ public class EpsilonTerm extends PredicateArgumentFormula {
 
 		System.out.println(abs.betaReduce(rec));
 
+	}
+
+	public void setOrderedPair(CNOrderedPair orderedPair) {
+		getArguments().set(0, orderedPair);
+		
+	}
+	
+	public EpsilonTerm instantiate()
+	{
+		return this;
 	}
 }

@@ -74,6 +74,12 @@ public class CNOrderedPair extends PredicateArgumentFormula {
 		return getArguments().get(1);
 	}
 
+	public Formula getRestrictor()
+	{
+		
+		
+		return getFormula();
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -18,6 +18,7 @@ import qmul.ds.action.atomic.Abort;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.DAGTupleSet;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
@@ -31,7 +32,7 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 /**
  * This class represents the intersection of two or more candidate sequences ({@link CandidateSequence}), as required in
  * hypothesis generalisation and refinement, as per Eshghi et al. (2012). This is represented as a tree, whose nodes are
- * sets of {@link ParserTuple}'s, and whose edges are DAGEdges, containing DS {@link Action}s. Branching reflects
+ * sets of {@link ParserTuple}'s, and whose edges are {@link DAGEdge}s, containing DS {@link Action}s. Branching reflects
  * differences between the {@link CandidateSequence}s that are intersected. The class supports the sequence intersection
  * operation ({@link intersectInto}). This is used incrementally as new candidate sequences for the same word become
  * available from the {@link Hypothesiser}. So this class represents the generalisation over candidate sequence
@@ -149,7 +150,7 @@ public class WordHypothesis extends DelegateTree<DAGTupleSet, DAGEdge> {
 			for (int i = cs.size() - 1; i >= 0; i--) {
 				Action a = cs.get(i);
 				DAGTupleSet cur = DAGTupleSet.getNewTupleSet(idPoolNodes);
-				DAGEdge childEdge = DAGEdge.getNewEdge(idPoolEdges, a);
+				DAGEdge childEdge = getNewEdge(a);
 				addChild(childEdge, tuple, cur, EdgeType.DIRECTED);
 
 				tuple = cur;
@@ -191,7 +192,7 @@ public class WordHypothesis extends DelegateTree<DAGTupleSet, DAGEdge> {
 			if (i < firstLexicalIndex && !hasNonComputationalDescendant(curTuple)) {
 				// here we b
 				DAGTupleSet newVertex = DAGTupleSet.getNewTupleSet(idPoolNodes);
-				DAGEdge newEdge = DAGEdge.getNewEdge(idPoolEdges, curAction);
+				DAGEdge newEdge = getNewEdge(curAction);
 				addChild(newEdge, curTuple, newVertex, EdgeType.DIRECTED);
 				logger.debug("Branching with " + newEdge.getAction() + "and going forward");
 				curTuple = newVertex;
@@ -249,7 +250,7 @@ public class WordHypothesis extends DelegateTree<DAGTupleSet, DAGEdge> {
 		while (getParent(cur) != null) {
 			DAGTupleSet parent = getParent(cur);
 			Action parentAction = getParentEdge(cur).getAction();
-			Tree result = parentAction.exec(curt.getTree().clone(), curt);
+			Tree result = parentAction.execTupleContext(curt.getTree().clone(), curt);
 			logger.debug("Action:" + parentAction.getName());
 			logger.debug("on tree:" + curt);
 			logger.debug("result:" + result);
@@ -337,5 +338,14 @@ public class WordHypothesis extends DelegateTree<DAGTupleSet, DAGEdge> {
 			return 0;
 
 		return Math.exp(logProb);
+	}
+	
+	
+	public DAGEdge getNewEdge(Action a) {
+		long newID = idPoolEdges.size() + 1;
+		DAGEdge result = new DAGEdge(a, null, newID);
+		idPoolEdges.add(newID);
+		return result;
+
 	}
 }

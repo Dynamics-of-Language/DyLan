@@ -9,12 +9,14 @@
 package qmul.ds.tree;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 import qmul.ds.tree.label.ExistentialLabelConjunction;
 import qmul.ds.tree.label.FeatureLabel;
 import qmul.ds.tree.label.FormulaLabel;
@@ -389,12 +391,7 @@ public class Node extends TreeSet<Label> {
 	 *         incompatible {@link DSType} or {@link Formula} labels TODO add semantic feature checks too
 	 */
 	public boolean isUnifiable(Node other) {
-		/*
-		if (!other.address.subsumes(address) && !address.subsumes(other.address)) {
-			
-			logger.debug("unification failed due to address subsumption");
-			return false;
-		}*/
+		
 		DSType t = getType();
 		if (t == null)
 			t = getRequiredType();
@@ -406,26 +403,49 @@ public class Node extends TreeSet<Label> {
 				return false;
 			}
 		}
+		
 		Formula f = getFormula();
 		if (f == null)
 			f = getRequiredFormula();
+		
 		if (f != null) {
 			Formula of = other.getFormula();
 			if (of == null)
 				of = other.getRequiredFormula();
-			if ((of != null) && !f.equals(of)) {
+			if ((of != null) && !f.subsumes(of)) {
 				return false;
 			}
 		}
 		return true;
 	}
-
+	public TypeLabel getTypeLabel()
+	{
+		for(Label l:this)
+		{
+			if (l instanceof TypeLabel)
+				return (TypeLabel)l;
+		}
+		return null;
+	}
+	
+	public FormulaLabel getFormulaLabel()
+	{
+		for(Label l:this)
+		{
+			if (l instanceof FormulaLabel)
+				return (FormulaLabel)l;
+		}
+		return null;
+	}
 	/**
 	 * Merge this node with other, i.e. add all its labels
 	 * 
 	 * @param other
 	 */
 	public void merge(Node other) {
+		
+		
+		
 		addAll(other);
 	}
 
@@ -499,10 +519,6 @@ public class Node extends TreeSet<Label> {
 		return prefix + address + ADDRESS_SEPARATOR + str;
 	}
 
-	public static void main(String args[]) {
-		NodeAddress ad1 = new NodeAddress("00*");
-		NodeAddress ad2 = new NodeAddress("001");
-		System.out.println(ad1.subsumes(ad2));
-	}
+	
 
 }

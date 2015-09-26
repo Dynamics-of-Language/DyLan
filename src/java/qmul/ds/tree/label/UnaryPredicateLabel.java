@@ -24,7 +24,7 @@ public class UnaryPredicateLabel extends Label implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public final static Pattern FUNCTOR = Pattern.compile("([Tt]ense|[Cc]lass|[pP]erson)");
+	public final static Pattern FUNCTOR = Pattern.compile("([Tt]ense|[Cc]lass|[pP]erson|[aA]ccept)");
 	public final static Pattern UNARY_PREDICATE_PATTERN = Pattern.compile(FUNCTOR.pattern() + "\\((.+)\\)");
 
 	private PredicateArgument arg;
@@ -195,6 +195,10 @@ public class UnaryPredicateLabel extends Label implements Serializable {
 	@Override
 	public String toUnicodeString() {
 		return predicate + "(" + arg.toUnicodeString() + ")";
+	}
+
+	public String getPredicate() {
+		return predicate;
 	}
 
 }

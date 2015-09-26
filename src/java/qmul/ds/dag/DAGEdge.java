@@ -1,71 +1,151 @@
 package qmul.ds.dag;
 
+import java.awt.BasicStroke;
+import java.awt.Stroke;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.Action;
 
+/**
+ * A generic Edge in a context DAG. Can be subclassed to include more contextual info.
+ * 
+ * @author Arash
+ *
+ */
 public class DAGEdge implements Comparable<DAGEdge> {
 
 	private static Logger logger = Logger.getLogger(DAGEdge.class);
-
-	public static DAGEdge getNewEdge(List<Long> idPool, Action a, String w) {
-		long newID = idPool.size() + 1;
-		DAGEdge result = new DAGEdge(a, w, idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-
-	}
-
-	public static DAGEdge getNewEdge(List<Long> idPool, Action a) {
-		long newID = idPool.size() + 1;
-		DAGEdge result = new DAGEdge(a, null, idPool.size() + 1);
-		idPool.add(newID);
-		return result;
-	}
+	
+	public static final int SEEN = 1;
+	public static final int REPAIRED = 2;
+	public static final int IN_CONTEXT = 3;
 
 	protected Long id = 0L;
-	protected Action action;
-	protected String word;
-	protected boolean seen = false;
+	protected Long pid = -1L;
+	protected List<Action> actions = null;
+	protected UtteredWord word = null;
+	// protected boolean seen = false;
 	protected double weight = 0.5;
+	// no longer dealing with a tree, but a graph, with multiple incident edges.
+	// We order them by recency
+	// so we can backtrack accordingly. This number is used there.
+	protected int incidenceNumber = 0;
+	protected Set<Integer> edge_properties = new HashSet<Integer>();
+	
+	protected boolean replayable=true;
 
-	public DAGEdge(Action a, String w) {
-		this.word = w;
-		this.action = a;
+	public DAGEdge() {
+		this.actions = new ArrayList<Action>();
 	}
 
-	public DAGEdge(Action a, String w, long id) {
+	public DAGEdge(Action a, UtteredWord w) {
+		this.word = w;
+		this.actions = new ArrayList<Action>();
+		this.actions.add(a);
+	}
+
+	public DAGEdge(Action a, UtteredWord w, long id) {
 		this(a, w);
 		this.id = id;
 	}
 
 	public DAGEdge(Action a) {
-		action = a;
-		word = null;
+		this(a, null);
+	}
+
+	public DAGEdge(List<Action> a, UtteredWord w) {
+		this.word = w;
+		this.actions = a;
+	}
+
+	public DAGEdge(List<Action> a, UtteredWord w, long id) {
+		this(a, w);
+		this.id = id;
+	}
+
+	
+	public DAGEdge(List<Action> a) {
+		this(a, null);
 	}
 
 	public void setID(long id) {
 		this.id = id;
 	}
 
+	public void setParentEdgeId(long id)
+	{
+		this.pid=id;
+	}
+	/**
+	 * WARNING: only valid of DAGEdge contains one action only - e.g. doesn't
+	 * work with ContextualWordEdge
+	 * 
+	 * @return
+	 */
 	public Action getAction() {
-		return this.action;
+		return this.actions.get(0);
+	}
+
+	public List<Action> getActions() {
+		return actions;
 	}
 
 	public boolean hasBeenSeen() {
-		return seen;
+		return edge_properties.contains(SEEN);
 	}
 
-	public String word() {
+	// public boolean hasBeenBacktracked(){
+	// return edge_properties.contains(BACKTRACKED);
+	// }
+
+	public UtteredWord word() {
 		return this.word;
 	}
 
 	public void setSeen(boolean b) {
-		seen = b;
+		if (b) {
+			edge_properties.add(SEEN);
+		} else if (edge_properties.contains(SEEN))
+			edge_properties.remove(SEEN);
 	}
+
+	public void setRepaired(boolean b) {
+		if (b)
+			edge_properties.add(REPAIRED);
+		else if (edge_properties.contains(REPAIRED))
+			edge_properties.remove(REPAIRED);
+
+	}
+
+	public void setInContext(boolean b) {
+		if (b)
+			edge_properties.add(IN_CONTEXT);
+		else if (edge_properties.contains(IN_CONTEXT))
+			edge_properties.remove(IN_CONTEXT);
+
+	}
+
+	public boolean inContext() {
+		return edge_properties.contains(IN_CONTEXT);
+	}
+
+	public boolean isRepaired() {
+		return edge_properties.contains(REPAIRED);
+	}
+
+	/*
+	 * public void setBacktracked(boolean b) { if (b)
+	 * edge_properties.add(BACKTRACKED); else if
+	 * (edge_properties.contains(BACKTRACKED))
+	 * edge_properties.remove(BACKTRACKED);
+	 * 
+	 * }
+	 */
 
 	public boolean equals(Object o) {
 		if (this == o)
@@ -77,7 +157,7 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	}
 
 	public int hashCode() {
-		
+
 		return id.hashCode();
 	}
 
@@ -88,15 +168,57 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	@Override
 	public int compareTo(DAGEdge other) {
 		if (this.weight > other.weight)
-			return 1;
-		else if (this.weight < other.weight)
 			return -1;
+		else if (this.weight < other.weight)
+			return 1;
 
 		return this.hashCode() - other.hashCode();
 	}
 
 	public String toString() {
-		return "[" + action.getName() + ":" + word + "]";
+		String res = "[";
+		for (int i = 0; i < actions.size(); i++)
+			res += actions.get(i).getName() + ";";
+
+		return res + "]";
+	}
+
+	/**
+	 * 
+	 * @param t
+	 * @return the label for this edge when visualised using Jung
+	 *         VisualizationViewer. Subclasses can override this method.
+	 */
+	public String getEdgeLabel() {
+		return word!=null?word.toString():toString();
+	}
+
+	public Stroke getEdgeStroke() {
+
+		if (isRepaired()) {
+			float dash[] = { 10.0f };
+			final Stroke edgeStroke = new BasicStroke(1.0f,
+					BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash,
+					0.0f);
+			return edgeStroke;
+		} else
+			return new BasicStroke();
+
+	}
+	
+	public void setActions(List<Action> actions)
+	{
+		this.actions=actions;
+	}
+	
+	public boolean isReplayable()
+	{
+		return replayable;
+	}
+	
+	public void setReplayable(boolean b)
+	{
+		this.replayable=b;
 	}
 
 }

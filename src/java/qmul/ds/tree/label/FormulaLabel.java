@@ -175,7 +175,7 @@ public class FormulaLabel extends Label implements Serializable {
 	 *            (can be null)
 	 * @return true if the pointed node is decorated with this label
 	 */
-	public boolean check(Tree tree, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple context) {
 		return check(tree.getPointedNode());
 	}
 

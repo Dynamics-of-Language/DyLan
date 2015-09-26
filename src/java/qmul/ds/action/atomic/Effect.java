@@ -12,7 +12,10 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 
 /**
@@ -28,10 +31,15 @@ public abstract class Effect implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected static Logger logger = Logger.getLogger(Effect.class);
 
-	public abstract <T extends Tree> T exec(T tree, ParserTuple context);
+	public abstract <T extends Tree> T execTupleContext(T tree, ParserTuple context);
 
 	public abstract Effect instantiate();
 
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
+	{
+		//by default assume null context
+		return execTupleContext(tree, null);
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

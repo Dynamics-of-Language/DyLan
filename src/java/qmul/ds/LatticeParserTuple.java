@@ -126,7 +126,7 @@ public class LatticeParserTuple extends ScoredParserTuple {
 	 */
 	@Override
 	public LatticeParserTuple execAction(Action action, String word) {
-		Tree result = action.exec(getTree().clone(), this);
+		Tree result = action.execTupleContext(getTree().clone(), this);
 		logger.trace("execd action " + action);
 		logger.trace("result " + result);
 		if (result == null) {

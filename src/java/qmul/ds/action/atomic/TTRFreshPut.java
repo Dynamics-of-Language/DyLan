@@ -68,7 +68,7 @@ public class TTRFreshPut extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		Node node = tree.getPointedNode();
 		FormulaLabel l = null;
 		for (Label label : node) {
@@ -89,7 +89,7 @@ public class TTRFreshPut extends Effect {
 		 * 
 		 * } else { conjoined = new FormulaLabel(fresh); }
 		 */
-		node.add(new FormulaLabel(fresh));
+		node.add(new FormulaLabel(fresh.instantiate()));
 		return tree;
 	}
 
@@ -132,8 +132,8 @@ public class TTRFreshPut extends Effect {
 	
 	public static void main(String a[])
 	{
-		Formula e=Formula.create("(R2 ++ (R1 ++ [e1==eq : es|p2==subj(e1, R1.head) : t|head==e1 : es|p3==obj(e1, R2.head) : t]))");
-		Formula e1=Formula.create("(R2 ++ (R1 ++ [e2==eq : es|p2==subj(e2, R1.head) : t|p3==obj(e2, R2.head) : t|head==e2 : es]))");
-		System.out.println(e.subsumes(e1)&&e1.subsumes(e));
+		Formula e=Formula.create("[x==X:e|head==x:e]");
+		
+		System.out.println(e); 
 	}
 }

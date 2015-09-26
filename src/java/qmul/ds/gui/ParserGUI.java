@@ -36,16 +36,12 @@ package qmul.ds.gui;
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
-
 /**
- * A simple GUI app for Parsing. Allows a user to load a parser created using lexparser.LexicalizedParser, load a text
- * data file or type in text, parse sentences within the input text, and view the resultant parse tree.
- * <p/>
- * Usage: <code>java edu.stanford.nlp.parser.ui.ParserPanel [parserFilename] [textFilename]</code>
  * 
- * @author Huy Nguyen (htnguyen@cs.stanford.edu)
- * @see ParserPanel
+ * @author Arash, Matt
+ *
  */
+
 @SuppressWarnings("serial")
 public class ParserGUI extends JFrame {
 

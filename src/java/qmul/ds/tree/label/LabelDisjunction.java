@@ -68,7 +68,7 @@ public class LabelDisjunction extends EmbeddedLabelGroup {
 		return super.checkLabelsDisj(n);
 	}
 
-	public boolean check(Tree t, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree t, ParserTuple context) {
 		return super.checkLabelsDisj(t, context);
 	}
 

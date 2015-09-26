@@ -13,10 +13,13 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaLabel;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 
@@ -61,10 +64,26 @@ public abstract class Label implements Comparable<Label>, Serializable {
 	 *            (can be null)
 	 * @return true if the pointed node is decorated with this label
 	 */
-	public boolean check(Tree tree, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple context) {
 		return check(tree.getPointedNode());
 	}
 
+
+	/**
+	 * @param tree
+	 * @param context (now a DAG). By default, check with null context, using old tuple context methods.
+	 *            
+	 * @return true if the pointed node is decorated with this label
+	 */
+	public <E extends DAGEdge, U extends DAGTuple> boolean check(Tree t, Context<U,E> context)
+	{
+		return checkWithTupleAsContext(t, null);
+		
+	}
+	
+	
+	
+	
 	/**
 	 * @param node
 	 * @return true if the node is decorated with this label

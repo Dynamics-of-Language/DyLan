@@ -98,7 +98,7 @@ public abstract class DepthFirstRecursiveParser<T extends ParserTuple> {
 			T t0 = execAction(tuple, lexAction, lexAction.getWord());
 
 			if (t0 == null) {
-				for (ComputationalAction ca : grammar) {
+				for (ComputationalAction ca : grammar.values()) {
 					T t1 = execAction(tuple, ca, null);
 					logger.info("Executed Comp Action: " + ca.getName() + " on tree: " + tuple.getTree());
 					logger.info("Resulting Tree: " + t1);
@@ -208,7 +208,7 @@ public abstract class DepthFirstRecursiveParser<T extends ParserTuple> {
 	 */
 	private TreeSet<T> getNextComputationalTuples(T t0) {
 		TreeSet<T> result = new TreeSet<T>();
-		for (ComputationalAction ca : grammar) {
+		for (ComputationalAction ca : grammar.values()) {
 			T compTuple = execAction(t0, ca, null);
 			if (compTuple != null)
 				result.add(compTuple);

@@ -168,7 +168,7 @@ public class TTRInfixExpression extends TTRFormula {
 	 */
 	public void setParentRecType(TTRRecordType r) {
 
-		System.out.println("setting parent rectype of " + this + " to " + r);
+		//System.out.println("setting parent rectype of " + this + " to " + r);
 		this.parentRecType = r;
 		predicate.parentRecType = r;
 
@@ -313,9 +313,9 @@ public class TTRInfixExpression extends TTRFormula {
 	}
 
 	public static void main(String a[]) {
-		TTRInfixExpression f = TTRInfixExpression.parse("(R ++ [x==john:e|e1:es|p==run(e1):t|p1==subj(e1,x):t])");
+		TTRInfixExpression f = TTRInfixExpression.parse("(R ++ [p==here(R.head):t])");
 
-		System.out.println(f.getTypes());
+		System.out.println(f);
 
 		// TTRRecordType rec=TTRRecordType.parse("[y==mary:e|e5:es|p5==run(e5):t|p10==obj(e5,y):t]");
 		// HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
@@ -389,5 +389,10 @@ public class TTRInfixExpression extends TTRFormula {
 		throw new UnsupportedOperationException("Shouldn't need to turn infix expressions to integers for now. They only appear in lambda abstracts");
 		
 		
+	}
+
+	@Override
+	public TTRFormula asymmetricMergeSameType(TTRFormula f) {
+		throw new UnsupportedOperationException();
 	}
 }

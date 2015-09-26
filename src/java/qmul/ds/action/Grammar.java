@@ -17,8 +17,8 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  * 
  * @author mpurver
  */
-public class Grammar extends TreeSet<ComputationalAction> implements Serializable {
+public class Grammar extends HashMap<String, ComputationalAction> implements Serializable {
 
 	private static Logger logger = Logger.getLogger(Grammar.class);
 
@@ -84,6 +84,10 @@ public class Grammar extends TreeSet<ComputationalAction> implements Serializabl
 		super();
 	}
 
+	public Grammar(Grammar nonoptionalGrammar) {
+		super(nonoptionalGrammar);
+	}
+
 	/**
 	 * Read a set of {@link ComputationalAction}s from file
 	 * 
@@ -106,7 +110,7 @@ public class Grammar extends TreeSet<ComputationalAction> implements Serializabl
 					ComputationalAction action = new ComputationalAction(name, lines);
 					action.setAlwaysGood(alwaysGood);
 					action.setBacktrackOnSuccess(backtrackOnSuccess);
-					add(action);
+					put(name,action);
 					logger.debug("Added as: " + action);
 					lines.clear();
 					name = null;
@@ -129,7 +133,7 @@ public class Grammar extends TreeSet<ComputationalAction> implements Serializabl
 			}
 			if (!lines.isEmpty()) {
 				ComputationalAction action = new ComputationalAction(name, lines);
-				add(action);
+				put(name,action);
 				action.setAlwaysGood(alwaysGood);
 				action.setBacktrackOnSuccess(backtrackOnSuccess);
 				logger.debug("Added as: " + action + "(always good:" + action.isAlwaysGood() + ", exhaustive:"

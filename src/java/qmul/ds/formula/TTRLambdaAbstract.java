@@ -140,7 +140,7 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	 */
 	@Override
 	protected boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
-		if (!(other instanceof FOLLambdaAbstract)) {
+		if (!(other instanceof TTRLambdaAbstract)) {
 			return false;
 		}
 		TTRLambdaAbstract eps = (TTRLambdaAbstract) other;
@@ -280,6 +280,21 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	public int toUniqueInt() {
 		throw new UnsupportedOperationException("Shouldn't need to turn lambda abstracts to integers for now. They don't appear within record types.");
 		
+	}
+
+	public TTRLambdaAbstract instantiate()
+	{
+		return new TTRLambdaAbstract(new Variable(variable), this.formula.instantiate());
+	}
+	@Override
+	public TTRFormula asymmetricMergeSameType(TTRFormula f) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public static void main(String args[]) {
+		TTRLambdaAbstract l=(TTRLambdaAbstract)Formula.create("R2^(R2 ++ [head==R2.head : e])");
+		TTRLambdaAbstract l2=(TTRLambdaAbstract)Formula.create("R2^(R2 ++ [head==R2.head : e|p1==boat(head) : t])");
+		System.out.println(l.subsumesMapped(l2,new HashMap<Variable, Variable>()));
 	}
 
 }

@@ -85,7 +85,7 @@ public class ScoredParserTuple extends ParserTuple {
 	 */
 	@Override
 	public ScoredParserTuple execAction(Action action, String word) {
-		Tree result = action.exec(getTree().clone(), this);
+		Tree result = action.execTupleContext(getTree().clone(), this);
 		if (result == null) {
 			return null;
 		}

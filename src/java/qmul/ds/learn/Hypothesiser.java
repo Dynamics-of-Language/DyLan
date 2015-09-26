@@ -22,6 +22,7 @@ import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGState;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.NodeAddress;
@@ -74,14 +75,15 @@ public class Hypothesiser {
 
 	}
 
+	
 	public void loadTrainingExample(String sentence, Tree target) {
 		if (this.seedLexicon == null || this.optionalGrammar == null || this.nonoptionalGrammar == null) {
 			throw new IllegalStateException("Hypothesiser not initialised");
 		}
 
-		String[] sent = sentence.trim().split("\\s");
+		
 
-		this.state = new DAGInductionState(Arrays.asList(sent));
+		this.state = new DAGInductionState(UtteredWord.getAsUtteredWords(sentence));
 		this.target = target;
 		this.curUnknownSubstring = "";
 		this.hypotheses.clear();
@@ -103,9 +105,9 @@ public class Hypothesiser {
 		this.nonoptionalGrammar = new Grammar();
 		this.optionalGrammar = new Grammar();
 		this.targetIndependentHyps = new HashSet<LexicalHypothesis>();
-		for (ComputationalAction a : grammar) {
+		for (ComputationalAction a : grammar.values()) {
 			if (a.isAlwaysGood())
-				this.nonoptionalGrammar.add(a);
+				this.nonoptionalGrammar.put(a.getName(),a);
 			else if (a.getName().startsWith(HYP_ACTION_PREFIX)) {
 				if (a.getName().contains("copy"))
 					this.copyHyp = new LexicalHypothesis(a, true);
@@ -115,16 +117,16 @@ public class Hypothesiser {
 					
 				} else if(a.getName().startsWith(HYP_ADJUNCTION_PREFIX)&&!a.getName().startsWith(HYP_ADJ_T_PREFIX))
 				{
-					this.optionalGrammar.add(a);						
+					this.optionalGrammar.put(a.getName(),a);						
 				}
 				else
 					this.targetIndependentHyps.add(new LexicalHypothesis(a, false));
 			} else
-				this.optionalGrammar.add(a);
+				this.optionalGrammar.put(a.getName(),a);
 
 		}
-		grammar.addAll(optionalGrammar);
-		grammar.addAll(nonoptionalGrammar);
+		grammar.putAll(optionalGrammar);
+		grammar.putAll(nonoptionalGrammar);
 		logger.info("loaded non-optional grammar:" + this.nonoptionalGrammar.size() + " entries");
 		logger.info("loaded optional grammar:" + this.optionalGrammar.size() + " entries");
 		logger.info("loaded target independent hypotheses:" + this.targetIndependentHyps.size() + " entries");
@@ -137,14 +139,14 @@ public class Hypothesiser {
 	public Hypothesiser(String resourceDirOrURL, Tree start, Tree target, List<String> sent) {
 		this.seedLexicon = new Lexicon(resourceDirOrURL);
 		separateGrammars(new Grammar(resourceDirOrURL));
-		this.state = new DAGInductionState(start, sent);
+		this.state = new DAGInductionState(start, UtteredWord.getAsUtteredWords(sent));
 		this.target = target;
 	}
 
 	public Hypothesiser(String resourceDir, Tree target, List<String> sent) {
 		this.seedLexicon = new Lexicon(resourceDir);
 		separateGrammars(new Grammar(resourceDir));
-		this.state = new DAGInductionState(sent);
+		this.state = new DAGInductionState(UtteredWord.getAsUtteredWords(sent));
 		this.target = target;
 
 	}
@@ -195,9 +197,9 @@ public class Hypothesiser {
 				curHypWords = "";
 			}
 
-			if ((state.getParentAction(current) instanceof ComputationalAction && !state.getPrevWord(current)
+			if ((state.getParentAction(current) instanceof ComputationalAction && !state.getPrevWord(current).word()
 					.equals("")) || (state.getParentAction(current) instanceof LexicalHypothesis)) {
-				curHypWords = state.getPrevWord(current);
+				curHypWords = state.getPrevWord(current).word();
 				curHypActions.add(0, state.getParentAction(current));
 
 			}
@@ -291,7 +293,7 @@ public class Hypothesiser {
 			// on this node
 			DAGTuple cur = state.getCurrentTuple();
 			Tree t = cur.getTree();
-			Tree result = a.exec(t.clone(), cur);
+			Tree result = a.execTupleContext(t.clone(), cur);
 
 			if (result == null) {
 				logger.debug("Action " + a + " failed at tree: " + cur.getTree());
@@ -329,20 +331,20 @@ public class Hypothesiser {
 				if (!this.curUnknownSubstring.isEmpty()) {
 					String[] words = this.curUnknownSubstring.split("\\s");
 					for (int i = words.length - 1; i >= 0; i--) {
-						state.wordStack().push(words[i]);
+						state.wordStack().push(new UtteredWord(words[i]));
 					}
 				}
-				state.wordStack().push(((LexicalAction) backAlong).getWord());
+				state.wordStack().push(new UtteredWord(((LexicalAction) backAlong).getWord()));
 				logger.debug("adding words to stack, now:" + state.wordStack());
 			} else if (backAlong instanceof ComputationalAction || backAlong instanceof LexicalHypothesis) {
 				// if backtracking into hypothesis space, set unknown words.
-				this.curUnknownSubstring = state.getParentEdge().word();
+				this.curUnknownSubstring = state.getParentEdge().word().word();
 
 			}
 
 			DAGEdge backOver = this.state.goUpOnce();
 			// mark edge that we're back over as seen (already explored)...
-			this.state.markOutEdgeAsSeen(backOver);
+			this.state.markEdgeAsSeenAndBelowItUnseen(backOver);
 
 		}
 		logger.info("Backtrack succeeded");
@@ -352,10 +354,10 @@ public class Hypothesiser {
 
 	public void applyNonOptionalGrammar(Tree target) {
 		do {
-			for (Action a : this.nonoptionalGrammar) {
+			for (Action a : this.nonoptionalGrammar.values()) {
 				DAGTuple cur = this.state.getCurrentTuple();
 				Tree t = cur.getTree();
-				Tree result = a.exec(t.clone(), cur);
+				Tree result = a.execTupleContext(t.clone(), cur);
 				if (result == null) {
 					logger.debug("Action " + a.getName() + " failed at tree: " + cur.getTree());
 
@@ -366,7 +368,7 @@ public class Hypothesiser {
 				} else {
 					logger.debug("applied action " + a + " to " + t);
 					logger.debug("result was:" + result);
-					state.addChild(result, a.instantiate(), this.curUnknownSubstring);
+					state.addChild(result, a.instantiate(), new UtteredWord(this.curUnknownSubstring));
 					break;
 				}
 			}
@@ -388,7 +390,7 @@ public class Hypothesiser {
 				logger.debug("Action " + a + "(exhaustive) to " + t);
 
 			} else {
-				Tree result = a.exec(t.clone(), cur);
+				Tree result = a.execTupleContext(t.clone(), cur);
 				logger.debug("Action " + a + " to " + t);
 				if (result != null) {
 					results = new ArrayList<Pair<? extends Action, Tree>>();
@@ -411,7 +413,7 @@ public class Hypothesiser {
 
 						logger.debug("Success, result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first());
-						state.addChild(pair.second(), pair.first(), this.curUnknownSubstring);
+						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
 
 					}
 				}
@@ -432,7 +434,7 @@ public class Hypothesiser {
 
 	public void applyOptionalGrammar(Tree target) {
 		// this.state.getCurrentTuple().getChildren().clear();
-		for (ComputationalAction a : this.optionalGrammar) {
+		for (ComputationalAction a : this.optionalGrammar.values()) {
 			// if a non-optional action can be carried out, it has to be, with
 			// no other computational possibilities
 			// on this node
@@ -445,7 +447,7 @@ public class Hypothesiser {
 				logger.debug("Action " + a + "(exhaustive) to " + t);
 
 			} else {
-				Tree result = a.exec(t.clone(), cur);
+				Tree result = a.execTupleContext(t.clone(), cur);
 				logger.debug("Action " + a + " to " + t);
 				if (result != null) {
 					results = new ArrayList<Pair<? extends Action, Tree>>();
@@ -467,7 +469,7 @@ public class Hypothesiser {
 
 						logger.debug("Success, result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first());
-						state.addChild(pair.second(), pair.first(), this.curUnknownSubstring);
+						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
 
 					}
 				}

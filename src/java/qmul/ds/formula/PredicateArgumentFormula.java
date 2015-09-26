@@ -224,10 +224,8 @@ public class PredicateArgumentFormula extends Formula {
 	}
 
 	public static void main(String a[]) {
-		Formula et = Formula.create("eps(r.head, r)");
-		List<TTRPath> paths=et.getTTRPaths();
-		System.out.println(et);
-		System.out.println(paths);
+		Formula f=Formula.create("[r:[x:e|p==arash(x):t|head==x:e]|x1==(iota,r.head,r):e|head==x1:e]");
+		System.out.println(f+":"+f.getClass());
 
 	}
 
@@ -243,4 +241,19 @@ public class PredicateArgumentFormula extends Formula {
 		
 		return result+predicate.toUniqueInt();
 	}
+	
+	public PredicateArgumentFormula instantiate()
+	{
+		//System.out.println("instantiate called in paform");
+		
+		ArrayList<Formula> insArgs=new ArrayList<Formula>();
+		for(Formula f: this.arguments)
+		{
+			insArgs.add(f.instantiate());
+		}
+		return new PredicateArgumentFormula(new Predicate(this.predicate), insArgs);
+		
+	}
+	
+	
 }

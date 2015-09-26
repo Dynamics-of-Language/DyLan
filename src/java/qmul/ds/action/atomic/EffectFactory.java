@@ -72,7 +72,17 @@ public class EffectFactory {
 	public static Effect create(String line) {
 		if (line.toLowerCase().startsWith(Abort.FUNCTOR.toLowerCase())) {
 			return new Abort();
-		} else if (line.toLowerCase().startsWith(Make.FUNCTOR.toLowerCase())) {
+		}else if (line.toLowerCase().startsWith(SetAccPointer.FUNCTOR.toLowerCase())) {
+			return new SetAccPointer();
+		} else if (line.toLowerCase().startsWith(AddAxiom.FUNCTOR.toLowerCase())) {
+			return new AddAxiom();
+		}else if (line.toLowerCase().startsWith(Unreduce.FUNCTOR.toLowerCase())) {
+			return new Unreduce();
+		} else if (line.toLowerCase().startsWith(Complete.FUNCTOR.toLowerCase())) {
+			return new Complete();
+		} else if (line.toLowerCase().startsWith(GroundToRoot.FUNCTOR.toLowerCase())) {
+			return new GroundToRoot();
+		}else if (line.toLowerCase().startsWith(Make.FUNCTOR.toLowerCase())) {
 			return new Make(line);
 		} else if (line.toLowerCase().startsWith(EmptyEffect.FUNCTOR.toLowerCase())) {
 			return new EmptyEffect();

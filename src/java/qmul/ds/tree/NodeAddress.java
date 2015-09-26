@@ -409,7 +409,7 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 	 */
 	private String unfixedRegex() {
 
-		String result = address.replaceAll(Pattern.quote(SUFFIX_STAR), "([01]+|\\\\*)");
+		String result = address.replaceAll(Pattern.quote(SUFFIX_STAR), "([01]*|\\\\*)");
 		result = result.replaceAll(Pattern.quote(SUFFIX_LOCAL_UNFIXED), "(1*0|U)");
 		return result;
 	}

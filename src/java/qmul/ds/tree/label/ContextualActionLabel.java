@@ -80,7 +80,7 @@ public class ContextualActionLabel extends Label {
 	 * @see qmul.ds.tree.label.Label#check(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public boolean check(Tree tree, ParserTuple contextTuple) {
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple contextTuple) {
 
 		ContextParserTuple context = ((ContextParserTuple) contextTuple).getPrevious();
 		while (context != null) {

@@ -131,13 +131,13 @@ public class MetaLabel extends Label {
 		}
 	}
 
-	public boolean check(Tree t, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree t, ParserTuple context) {
 		if (getValue() == null) {
 
-			return super.check(t, context);
+			return super.checkWithTupleAsContext(t, context);
 		} else {
 			logger.debug("MetaLabel value not null. Now checking label value:" + getValue());
-			return getValue().check(t, context);
+			return getValue().checkWithTupleAsContext(t, context);
 		}
 
 	}

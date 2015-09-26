@@ -13,12 +13,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.record.formula.functions.T;
+
+import qmul.ds.Context;
 import qmul.ds.ContextParserTuple;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundModalityVariable;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaModality;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Modality;
 import qmul.ds.tree.Node;
@@ -36,7 +42,7 @@ public class ModalLabel extends EmbeddedLabelGroup {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Modality modality;
-
+	private static final Logger logger=Logger.getLogger(ModalLabel.class);
 	/**
 	 * @param modality
 	 * @param label
@@ -67,12 +73,13 @@ public class ModalLabel extends EmbeddedLabelGroup {
 		this(modality, labels, null);
 	}
 
-	private static final Pattern MODAL_LABEL_PATTERN = Pattern.compile("(" + Modality.ANY_MODALITY_PATTERN.pattern()
-			+ ")\\s*(.*)");
+	private static final Pattern MODAL_LABEL_PATTERN = Pattern.compile("("
+			+ Modality.ANY_MODALITY_PATTERN.pattern() + ")\\s*(.*)");
 
 	/**
 	 * @param string
-	 *            a {@link String} representation of a modal label, as used in lexicon specs
+	 *            a {@link String} representation of a modal label, as used in
+	 *            lexicon specs
 	 */
 	public ModalLabel(String string) {
 		this(string, null);
@@ -83,9 +90,11 @@ public class ModalLabel extends EmbeddedLabelGroup {
 		Matcher m = MODAL_LABEL_PATTERN.matcher(string);
 		if (m.matches()) {
 			this.modality = Modality.parse(m.group(1));
-			Matcher m1 = EmbeddedLabelGroup.LABEL_GROUP_PATTERN.matcher(m.group(m.groupCount()));
+			Matcher m1 = EmbeddedLabelGroup.LABEL_GROUP_PATTERN.matcher(m
+					.group(m.groupCount()));
 			if (!m1.matches())
-				this.labels.add(LabelFactory.create(m.group(m.groupCount()), ite));
+				this.labels.add(LabelFactory.create(m.group(m.groupCount()),
+						ite));
 			else {
 				String labelSt = m1.group(1);
 				String[] labels = labelSt.split("&");
@@ -93,36 +102,44 @@ public class ModalLabel extends EmbeddedLabelGroup {
 					this.labels.add(LabelFactory.create(l.trim(), ite));
 				}
 			}
-			logger.debug("created modal label:" + this + " from string:" + string);
+			logger.debug("created modal label:" + this + " from string:"
+					+ string);
 		} else {
-			throw new IllegalArgumentException("unrecognised modal label string " + string);
+			throw new IllegalArgumentException(
+					"unrecognised modal label string " + string);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.tree.label.Label#check(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
+	 * @see qmul.ds.tree.label.Label#check(qmul.ds.tree.Tree,
+	 * qmul.ds.ParserTuple)
 	 */
 	@Override
-	public boolean check(Tree tree, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple context) {
 		logger.debug("Checking model label " + this + " on " + tree);
 		// check if the actual modal label e.g. [\/1]?Ty(t) is present here
-		if (super.check(tree, context)) {
+		if (super.checkWithTupleAsContext(tree, context)) {
 			return true;
 		}
 		// if not, check if the core label is present at the required modality
 		// e.g. ?Ty(t) at [\/1]
 		// first, if this is the "context" modality, check in context *only*
-		if (!(modality instanceof MetaModality) && (modality.getOps().size() == 1)
-				&& (modality.getOps().get(0).getPath().equals(BasicOperator.PATH_CONTEXT))
+		if (!(modality instanceof MetaModality)
+				&& (modality.getOps().size() == 1)
+				&& (modality.getOps().get(0).getPath()
+						.equals(BasicOperator.PATH_CONTEXT))
 				&& (context instanceof ContextParserTuple)) {
-			ContextParserTuple previous = ((ContextParserTuple) context).getPrevious();
+			ContextParserTuple previous = ((ContextParserTuple) context)
+					.getPrevious();
 			// TODO option to restrict context search depth to 1,2 etc here - or
 			// could be in modality path quantifier?
 			while (previous != null) {
-				ModalLabel contextlessLabel = new ModalLabel(modality.pop(), labels, this.embeddingITE);
-				if (contextlessLabel.check(previous.getTree(), previous)) {
+				ModalLabel contextlessLabel = new ModalLabel(modality.pop(),
+						labels, this.embeddingITE);
+				if (contextlessLabel.checkWithTupleAsContext(
+						previous.getTree(), previous)) {
 					return true;
 				}
 				previous = previous.getPrevious();
@@ -135,7 +152,65 @@ public class ModalLabel extends EmbeddedLabelGroup {
 		// check if we are testing with an uninstantiated modality metavariable
 		// - if so, must only instantiate on
 		// success (i.e. must uninstantiate on failure)
-		boolean meta = ((modality instanceof MetaModality) && (((MetaModality) modality).getValue() == null));
+		boolean meta = ((modality instanceof MetaModality) && (((MetaModality) modality)
+				.getValue() == null));
+		for (Node node : tree.getNodes()) {
+
+			if (modality.relates(tree, pointedNode, node)) {
+
+				if (checkLabelsConj(node)) {
+					logger.debug("Modal Label check succeeded");
+					return true;
+				}
+			}
+			// if we're here, the check failed, so uninstantiate previously
+			// uninstantiated modality metavariables
+			// (without losing track of backtracking history)
+			if (meta) {
+				((MetaModality) modality).getMeta().partialReset();
+			}
+		}
+		logger.debug("Modal Label check failed");
+		return false;
+	}
+
+	@Override
+	public <E extends DAGEdge, U extends DAGTuple> boolean check(Tree tree,
+			Context<U, E> context) {
+		logger.debug("Checking model label " + this + " on " + tree);
+		// check if the actual modal label e.g. [\/1]?Ty(t) is present here
+		if (super.checkWithTupleAsContext(tree, null)) {
+			return true;
+		}
+		
+		// if not, check if the core label is present at the required modality
+		// e.g. ?Ty(t) at [\/1]
+		// first, if this is the "context" modality, check in context *only*
+		if (!(modality instanceof MetaModality)
+				&& !modality.getOps().isEmpty()&&modality.getOps().get(0).isUp()
+				&& modality.getOps().get(0).getPath()
+						.equals(BasicOperator.PATH_CONTEXT)) {
+			U previous = context.getCurrentTuple();
+			// TODO option to restrict context search depth to 1,2 etc here - or
+			// could be in modality path quantifier?
+			// currently searching whole trees for labels
+			while (previous != null) {
+				logger.debug("checking "+super.toString()+" on tree:"+previous.getTree());
+				for(Node n:previous.getTree().values())
+					if (checkLabelsConj(n))
+						return true;
+				previous = context.getParent(previous);
+			}
+			logger.debug("modal label check failed");
+			return false;
+		}
+		// otherwise, check within this tree as per normal
+		Node pointedNode = tree.getPointedNode();
+		// check if we are testing with an uninstantiated modality metavariable
+		// - if so, must only instantiate on
+		// success (i.e. must uninstantiate on failure)
+		boolean meta = ((modality instanceof MetaModality) && (((MetaModality) modality)
+				.getValue() == null));
 		for (Node node : tree.getNodes()) {
 
 			if (modality.relates(tree, pointedNode, node)) {
@@ -206,7 +281,8 @@ public class ModalLabel extends EmbeddedLabelGroup {
 		for (Label label : labels)
 			result = prime * result + ((label == null) ? 0 : label.hashCode());
 
-		result = prime * result + ((modality == null) ? 0 : modality.hashCode());
+		result = prime * result
+				+ ((modality == null) ? 0 : modality.hashCode());
 		return result;
 	}
 
@@ -264,7 +340,8 @@ public class ModalLabel extends EmbeddedLabelGroup {
 	@Override
 	public String toUnicodeString() {
 		if (labels.size() == 1)
-			return modality.toUnicodeString() + labels.iterator().next().toUnicodeString();
+			return modality.toUnicodeString()
+					+ labels.iterator().next().toUnicodeString();
 		else
 			return modality.toString() + super.toUnicodeString();
 	}

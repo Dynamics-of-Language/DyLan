@@ -116,6 +116,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 
 			if (!l.check(node)) {
 				partialResetMetas(uninstantiatedBeforeCheck);
+				//System.out.println("Label "+l+"failed"+"on"+node);
 				return false;
 			}
 		}
@@ -144,7 +145,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 		ArrayList<MetaElement<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
 
 		for (Label l : labels) {
-			if (!l.check(t, context)) {
+			if (!l.checkWithTupleAsContext(t, context)) {
 				partialResetMetas(uninstantiatedBeforeCheck);
 				return false;
 			}
@@ -157,7 +158,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 		ArrayList<MetaElement<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
 
 		for (Label l : labels) {
-			if (l.check(t, context))
+			if (l.checkWithTupleAsContext(t, context))
 				return true;
 		}
 		partialResetMetas(uninstantiatedBeforeCheck);

@@ -58,7 +58,7 @@ public class GoFirst extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		Node currentNode = tree.getPointedNode();
 		NodeAddress curAddress = tree.getPointer();
 		while (!this.label.check(currentNode)) {

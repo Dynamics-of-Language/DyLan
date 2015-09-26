@@ -282,6 +282,10 @@ public class TTRField extends Formula {
 		type.setParentRecType(r);
 	}
 
+	public TTRField instantiate()
+	{
+		return new TTRField(new TTRLabel(this.label), (dsType!=null?this.dsType.instantiate():null), (this.type!=null?this.type.instantiate():null));
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

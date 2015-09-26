@@ -59,7 +59,7 @@ public class Go extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		tree.go(modality.instantiate());
 		return tree;
 	}
@@ -75,7 +75,7 @@ public class Go extends Effect {
 	}
 
 	public Effect instantiate() {
-		// for now not using meta Modalities as argument of go so just return this
-		return this;
+	
+		return new Go(modality.instantiate());
 	}
 }
