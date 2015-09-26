@@ -158,10 +158,7 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		
 	}
 
-	@Override
-	public boolean replayAndComplete(UtteredWord w) {
-		throw new UnsupportedOperationException();
-	}
+	
 
 	@Override
 	public DAGInductionTuple addAxiom(List<Action> list) {

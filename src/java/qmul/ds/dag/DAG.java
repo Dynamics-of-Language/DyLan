@@ -201,7 +201,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	
 	
 	
-	public abstract boolean replayAndComplete(UtteredWord w);
+	
 	
 	
 	public T addAxiom()

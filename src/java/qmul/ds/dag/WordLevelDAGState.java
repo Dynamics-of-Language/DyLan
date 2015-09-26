@@ -399,11 +399,7 @@ public class WordLevelDAGState extends DAG<DAGTuple, GroundableEdge> {
 
 	}
 
-	@Override
-	public boolean replayAndComplete(UtteredWord w) {
-		return parser.replayBacktrackedActions(w);
-	}
-
+	
 	public DAGTuple addAxiom(List<Action> actions) {
 		DAGTuple axiom = this.getNewTuple(new Tree());
 		NewClauseEdge edge = this.getNewNewClauseEdge(actions);

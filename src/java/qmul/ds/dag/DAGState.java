@@ -143,10 +143,7 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 
 
 
-	@Override
-	public boolean replayAndComplete(UtteredWord w) {
-		throw new UnsupportedOperationException();
-	}
+	
 	
 	public DAGTuple addAxiom(List<Action> actions)
 	{
