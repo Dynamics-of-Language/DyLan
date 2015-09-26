@@ -375,7 +375,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 						// logger.warn(e);
 						logger.warn("Macros used in lexical template could not be instatiated. Template:" + template
 								+ "; Word:" + word + " Skipping this");
-						e.printStackTrace();
+						//e.printStackTrace();
 
 						continue;
 					}
