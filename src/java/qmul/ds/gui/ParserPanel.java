@@ -555,8 +555,15 @@ public class ParserPanel extends JPanel {
 				else
 				{
 					conPanel.setDAG(p.getState());
+					this.tabbedTuplePanel.setEnabledAt(1, true);
 				}
 				tuples.add(p.getState().getCurrentTuple());
+			}
+			else if (conPanel!=null)
+			{
+				
+				this.tabbedTuplePanel.setEnabledAt(1, false);
+				this.tabbedTuplePanel.setSelectedIndex(0);
 			}
 
 			displayBestParse();
@@ -741,15 +748,15 @@ public class ParserPanel extends JPanel {
 		@Override
 		public void run() {
 			try {
-				int n = tabbedTuplePanel.indexOfTab("Context");// This line returns one as expected
-				System.out.println("index of Context tab:"+n);
+				
 				if (this.parserType.equalsIgnoreCase(breadthFirst)) {
 					parser = new ContextParser(filename);
-					//tabbedTuplePanel.getTabComponentAt(n).setEnabled(false);
+					resetToFTALW.setEnabled(false);
+					
 				} else if (this.parserType.equalsIgnoreCase(interactive)) {
 					parser = new InteractiveContextParser(filename);
 					resetToFTALW.setEnabled(true);
-					//System.out.println(tabbedTuplePanel.getTabComponentAt(n));//.setEnabled(true);
+					
 				} else
 				{
 					JOptionPane.showMessageDialog(ParserPanel.this,
