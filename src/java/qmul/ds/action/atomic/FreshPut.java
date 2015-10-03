@@ -70,7 +70,7 @@ public class FreshPut extends Effect {
 	}
 
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 
 		Formula freshVar;
 		if (type.equalsIgnoreCase("event")) {

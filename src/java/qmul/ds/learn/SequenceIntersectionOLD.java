@@ -110,7 +110,7 @@ public class SequenceIntersectionOLD extends ArrayList<Action> {
 		for (ParserTuple tuple : start) {
 			logger.debug(start.size() + " tuples in Start.");
 			logger.debug("Applying action " + a + " to " + tuple);
-			ParserTuple t = new ParserTuple(a.exec(tuple.getTree().clone(), tuple));
+			ParserTuple t = new ParserTuple(a.execTupleContext(tuple.getTree().clone(), tuple));
 			logger.debug("Result: " + t);
 			newStart.add(t);
 

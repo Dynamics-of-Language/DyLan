@@ -60,7 +60,7 @@ public class AddressSubsumptionLabel extends Label {
 	 * 
 	 * @see qmul.ds.tree.label.Label#check(qmul.ds.tree.Node)
 	 */
-	public boolean check(Tree tree, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple context) {
 		NodeAddress pointed = tree.getPointer();
 		Modality instantiated = modality.instantiate();
 		NodeAddress other;
@@ -70,6 +70,7 @@ public class AddressSubsumptionLabel extends Label {
 		} else
 			other = pointed.go(modality.instantiate());
 
+		System.out.println("cheking "+pointed+" subsumes "+other);
 		return pointed.subsumes(other) || other.subsumes(pointed);
 	}
 

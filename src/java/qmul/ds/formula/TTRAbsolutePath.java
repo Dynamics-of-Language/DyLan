@@ -169,7 +169,7 @@ public class TTRAbsolutePath extends TTRPath {
 	}
 
 	public TTRAbsolutePath instantiate() {
-		return new TTRAbsolutePath(this.name, this.domain.instantiate(), this.labels);
+		return this;
 	}
 
 	public static void main(String a[]) {

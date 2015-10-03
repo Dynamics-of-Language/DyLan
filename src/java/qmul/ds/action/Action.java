@@ -14,9 +14,12 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.util.Pair;
 
@@ -92,10 +95,15 @@ public class Action implements Serializable {
 	 *            (can be null)
 	 * @return a new {@link Tree} if successful, null otherwise
 	 */
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
-		return action.exec(tree, context);
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
+		return action.execTupleContext(tree, context);
 	}
 
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
+	{
+		
+		return action.exec(tree, context);
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -54,14 +54,16 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		private String name;
 		private List<String> metavars;
 		private List<String> lines;
+		private boolean noLeftAdjustment=false;
 
 		/**
 		 * @param name
 		 */
-		protected LexicalTemplate(String name, List<String> metavars, List<String> lines) {
+		protected LexicalTemplate(String name, List<String> metavars, List<String> lines, boolean noLeftAdjustment) {
 			this.name = name;
 			this.metavars = new ArrayList<String>(metavars);
 			this.lines = new ArrayList<String>(lines);
+			this.noLeftAdjustment=noLeftAdjustment;
 		}
 
 		/**
@@ -73,31 +75,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			ArrayList<String> lines = new ArrayList<String>();
 			logger.trace("metavars for word : " + word + " of type " + name);
 
-			// This populates a TTR formula for the action's semantics
-			/*
-			 * Uncomment after new TTR implementation is in TTRFormula ttr = new TTRFormula(); String pred =
-			 * metavars.contains("NAME") ? "x" : "p"; for (int i = 0; i < metavals.size(); i++) {
-			 * logger.trace(metavars.get(i) + " : " + metavals.get(i)); if (metavars.get(i).contains("PRED")) { if
-			 * (name.startsWith("v")||name.startsWith("prep")) { ttr.add(new TTRFormula("e", "null")); ttr.add(new
-			 * TTRFormula("x", "null")); if (name.contains("intran")||name.startsWith("prep")) {
-			 * 
-			 * ttr.add(new TTRFormula("p", metavals.get(i) + "(e,x)")); ttr.setHead(new TTRLabel("p")); } else if
-			 * (name.contains("tran")) { ttr.add(new TTRFormula("p", metavals.get(i) + "(e,x,x1)")); ttr.setHead(new
-			 * TTRLabel("p")); ttr.add(new TTRFormula("x1", "null")); } } }else if (metavars.get(i).contains("NAME")) {
-			 * ttr.add(new TTRFormula("x", metavals.get(i))); } else if (metavars.get(i).contains("TENSE")) {
-			 * ttr.add(new TTRFormula("es", "null")); //these should already be there for any verb/pp adjunct?
-			 * ttr.add(new TTRFormula("r", "null")); //these should already be there for any verb/pp adjunct?
-			 * ttr.add(new TTRFormula("p1", metavals.get(i) + "(r,es)")); //don't bother for now//though this should
-			 * work
-			 * 
-			 * } //leave other stuff out for now, to be added in when lexical actions adjusted else if
-			 * (metavars.get(i).contains("PERSON")) { //ttr.add(new TTRFormula("p1", "null")); ttr.add(new
-			 * TTRFormula("person", metavals.get(i))); //} else if (metavars.get(i).contains("CLASS")) { //
-			 * //ttr.add(new TTRFormula("p1", "null")); // ttr.add(new TTRFormula("p1", metavals.get(i) + "(" + pred +
-			 * ")")); }
-			 * 
-			 * } logger.debug(word + ":" + ttr); logger.debug(word + ":" + ttr);
-			 */
+			
 
 			for (String line : this.lines) {
 				for (int i = 0; i < metavals.size(); i++) {
@@ -107,9 +85,9 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			}
 
 			lexiconsize++;
-			logger.info("lexicon size = " + lexiconsize);
-			// return new LexicalAction(word,lines);
-			return new LexicalAction(word, lines, this.name); // leaving out TTR for now //TODO
+			//logger.info("lexicon size = " + lexiconsize);
+			logger.info("creating lexical action for "+word+" using template "+name);
+			return new LexicalAction(word, lines, this.name, this.noLeftAdjustment);
 		}
 
 	}
@@ -146,12 +124,13 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			} else {
 				reader1 = new BufferedReader(new FileReader(file));
 			}
+
 			initMacroTemplates(reader1);
-			
 			file = new File(dir, ACTION_FILE_NAME);
+
 			BufferedReader macroReader = new BufferedReader(new FileReader(file));
-			initLexicalTemplates(macroReader);
-			
+			initMacroTemplates(macroReader);
+			//Matt change: initLexicalTemplates(macroReader);
 			file = new File(dir, WORD_FILE_NAME);
 			BufferedReader reader2 = new BufferedReader(new FileReader(file));
 			readWords(reader2);
@@ -306,6 +285,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		try {
 			String line;
 			String name = null;
+			boolean noLeftAdjustment=false;
 			List<String> metavars = new ArrayList<String>();
 			List<String> lines = new ArrayList<String>();
 			while ((line = reader.readLine()) != null) {
@@ -314,28 +294,34 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					continue;
 				}
 				if (line.isEmpty() && !lines.isEmpty()) {
-					actionTemplates.put(name, new LexicalTemplate(name, metavars, lines));
-					logger.info("Added template for " + name);
+					actionTemplates.put(name, new LexicalTemplate(name, metavars, lines,noLeftAdjustment));
+					logger.info((noLeftAdjustment)?"Added Lexical Template for " +"*"+name: "Added Lexical Template for "+name);
 					lines.clear();
 					name = null;
 					metavars.clear();
+					noLeftAdjustment=false;
 				} else if (name == null) {
 					Matcher m = TEMPLATE_SPEC_PATTERN.matcher(line);
 					if (m.matches()) {
-						name = m.group(1);
+						if (m.group(1).startsWith("*"))
+						{
+							name = m.group(1).substring(1, m.group(1).length());
+							noLeftAdjustment=true;
+						}
+						else name=m.group(1);
 						for (String s : m.group(2).split(",")) {
 							metavars.add(s);
 						}
 					} else {
 						throw new IllegalArgumentException("unrecognised template spec " + line);
 					}
-					logger.info("New lexical template: " + name);
+					logger.info((noLeftAdjustment)?"New Lexical Template: " +"*"+name: "Added Lexical Template for "+name);
 				} else {
 					lines.add(line);
 				}
 			}
 			if (!lines.isEmpty()) {
-				actionTemplates.put(name, new LexicalTemplate(name, metavars, lines));
+				actionTemplates.put(name, new LexicalTemplate(name, metavars, lines,noLeftAdjustment));
 				logger.debug("Added Lexical Template for " + name);
 			}
 			reader.close();
@@ -389,7 +375,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 						// logger.warn(e);
 						logger.warn("Macros used in lexical template could not be instatiated. Template:" + template
 								+ "; Word:" + word + " Skipping this");
-						// e.printStackTrace();
+						//e.printStackTrace();
 
 						continue;
 					}

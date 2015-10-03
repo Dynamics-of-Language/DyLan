@@ -139,7 +139,7 @@ public class ContextParserTuple extends ParserTuple {
 	 */
 	@Override
 	public ContextParserTuple execAction(Action action, String word) {
-		Tree result = action.exec(getTree().clone(), this);
+		Tree result = action.execTupleContext(getTree().clone(), this);
 		logger.trace("execd action " + action);
 		logger.trace("result " + result);
 		if (result == null) {

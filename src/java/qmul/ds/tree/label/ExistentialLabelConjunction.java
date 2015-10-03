@@ -130,7 +130,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 		return r;
 	}
 
-	public boolean check(Tree tree, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple context) {
 
 		this.setupBacktracker();
 		// __________________________ now the label checking:
@@ -144,7 +144,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 				Label label = this.labels.get(i);
 				backtracker.setIndex(i);
 				logger.debug("lab check " + label + " at " + tree);
-				if (label.check(tree, context)) {
+				if (label.checkWithTupleAsContext(tree, context)) {
 					if (label instanceof AddressLabel) {
 						AddressLabel al = (AddressLabel) label;
 						logger.debug("An Address Label: " + al);
@@ -385,7 +385,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 					logger.debug("Backtrack attempt at conjunction step " + index + " " + meta);
 					if (meta.backtrack()) {
 						// logger.debug("after backtrack:"+meta.backtrack);
-						if (label.check(tree, context)) {
+						if (label.checkWithTupleAsContext(tree, context)) {
 							// if it can succeed with a new value, we're good to
 							// go; but must uninstantiate all those
 							// introduced later

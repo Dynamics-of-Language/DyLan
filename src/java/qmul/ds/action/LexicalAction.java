@@ -12,10 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
@@ -42,6 +45,7 @@ public class LexicalAction extends Action {
 	protected Formula semantics = null;
 	protected int rank;
 	protected double prob;
+	private boolean noLeftAdjustment;
 
 	public LexicalAction(String word, Effect[] actions, String mytype) {
 		super(word, null);
@@ -126,9 +130,10 @@ public class LexicalAction extends Action {
 
 	}
 
-	public LexicalAction(String word, List<String> lines, String actiontype) {
+	public LexicalAction(String word, List<String> lines, String actiontype, boolean noLeftAdjustment) {
 
 		super(word, null);
+		this.noLeftAdjustment=noLeftAdjustment;
 		this.word = word;
 		this.actionType = actiontype;
 		List<Integer> ifIndices = EffectFactory.getIfIndices(lines);
@@ -181,7 +186,28 @@ public class LexicalAction extends Action {
 	 * @return a new {@link Tree} if successful, null otherwise
 	 */
 
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
+
+		T prev = tree;
+		for (Effect action : actions) {
+			prev = action.execTupleContext(prev, context);
+			if (prev == null)
+				return null;
+		}
+
+		return prev;
+	}
+	
+	/**
+	 * Apply a lexical/computational action to a {@link Tree} (optionally given a context {@link ParserTuple})
+	 * 
+	 * @param tree
+	 * @param context
+	 *            (can be null)
+	 * @return a new {@link Tree} if successful, null otherwise
+	 */
+
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context) {
 
 		T prev = tree;
 		for (Effect action : actions) {
@@ -197,7 +223,7 @@ public class LexicalAction extends Action {
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#toString()
-	 */
+	 
 	@Override
 	public String toString() {
 		String result = getName() + "\n";
@@ -205,7 +231,7 @@ public class LexicalAction extends Action {
 			result += action + "\n";
 
 		return result;
-	}
+	}*/
 
 	public Effect[] getEffects() {
 		return this.actions;

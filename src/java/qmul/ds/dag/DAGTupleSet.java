@@ -8,8 +8,18 @@ import org.apache.log4j.Logger;
 import qmul.ds.ParserTuple;
 import qmul.ds.tree.Tree;
 
-@SuppressWarnings("serial")
+/**
+ * A node in a WordHypothesis graph, composed of a set of trees.
+ * 
+ * @author Arash
+ *
+ */
 public class DAGTupleSet extends ArrayList<ParserTuple> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5859939852384702718L;
+
 	private static Logger logger = Logger.getLogger(DAGTuple.class);
 
 	private Long id = 0L;

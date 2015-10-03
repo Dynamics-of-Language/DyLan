@@ -20,11 +20,12 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.ContextParser;
-import qmul.ds.ContextParserTuple;
-import qmul.ds.ParseState;
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.meta.MetaElement;
+import qmul.ds.dag.DAG;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
@@ -290,7 +291,58 @@ public class IfThenElse extends Effect implements Serializable {
 	}
 
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
+		// get & reset metavariables for this application
+
+		// if (embeddingLevel==0) addAndResetMetas(null);
+		MetaElement.resetBoundMetas();
+		if (this.embeddingLevel == 0)
+			setupBacktrackers(new ArrayList<MetaElement<?>>());
+
+		logger.debug("IF Labels after reset:" + Arrays.asList(IF));
+
+		backtracker.setIndex(0);
+
+		boolean success;
+		T result = null;
+		do {
+			// check each label present/inferable in turn
+			success = true;
+			for (int i = backtracker.index; i < IF.length; i++) {
+				Label label = IF[i];
+				backtracker.setIndex(i);
+				logger.debug("lab check " + label + " at " + tree);
+				if (label.checkWithTupleAsContext(tree, context)) {
+					logger.debug("pass lab check " + label + " at " + tree);
+				} else {
+					logger.debug("fail lab check " + label + " at " + tree);
+					success = false;
+					break;
+				}
+			}
+
+			for (Effect effect : (success ? THEN : ELSE)) {
+				if (effect instanceof IfThenElse) {
+					IfThenElse ite = ((IfThenElse) effect);
+					ite.backtracker.resetMetas();
+				}
+				logger.debug("Executing effect:" + effect);
+				result = effect.execTupleContext(tree, context);
+				logger.debug("result was:" + result);
+				if (result == null) {
+					logger.debug("Null result after executing effect:" + effect);
+					break;
+				}
+
+			}
+			// if one fails, backtrack if possible and try again from there
+		} while (result == null && backtracker.canBacktrackTupleContext(tree, context));
+
+		return result;
+	}
+	
+	@Override
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context) {
 		// get & reset metavariables for this application
 
 		// if (embeddingLevel==0) addAndResetMetas(null);
@@ -340,6 +392,7 @@ public class IfThenElse extends Effect implements Serializable {
 		return result;
 	}
 
+
 	public <T extends Tree> Collection<Pair<IfThenElse, T>> execExhaustively(T tree, ParserTuple context) {
 
 		// T clone=(T) tree.clone();
@@ -364,7 +417,7 @@ public class IfThenElse extends Effect implements Serializable {
 					Label label = IF[i];
 					backtracker.setIndex(i);
 					logger.debug("lab check " + label + " at " + t);
-					if (label.check(t, context)) {
+					if (label.checkWithTupleAsContext(t, context)) {
 						logger.debug("pass lab check " + label + " at " + t);
 					} else {
 						logger.debug("fail lab check " + label + " at " + t);
@@ -379,7 +432,7 @@ public class IfThenElse extends Effect implements Serializable {
 						ite.backtracker.resetMetas();
 					}
 
-					cur = effect.exec(t, context);
+					cur = effect.execTupleContext(t, context);
 					logger.debug("executed atomic:" + effect);
 
 					if (cur == null) {
@@ -389,11 +442,11 @@ public class IfThenElse extends Effect implements Serializable {
 					logger.debug("success");
 				}
 				// if one fails, backtrack if possible and try again from there
-			} while (cur == null && backtracker.canBacktrack(t, context));
+			} while (cur == null && backtracker.canBacktrackTupleContext(t, context));
 
 			if (cur != null)
 				result.add(new Pair<IfThenElse, T>(this.instantiate(), cur));
-		} while (cur != null && backtracker.canBacktrack(t, context));
+		} while (cur != null && backtracker.canBacktrackTupleContext(t, context));
 
 		if (result.isEmpty())
 			return null;
@@ -570,7 +623,53 @@ public class IfThenElse extends Effect implements Serializable {
 		 *         a new value which also succeeds. Sets index to the IF step where this happened; uninstantiates all
 		 *         {@link MetaElement}s introduced after this step so that they can get new values too
 		 */
-		private boolean canBacktrack(Tree tree, ParserTuple context) {
+		private boolean canBacktrackTupleContext(Tree tree, ParserTuple context) {
+			for (int i = metas.size() - 1; i >= 0; i--) {
+				MetaElement<?> meta = metas.get(i);
+				// don't bother with steps we haven't got to yet
+				// logger.debug("whenIntro:" + whenIntroduced);
+				// logger.debug("Meta:" + meta);
+				// logger.debug(whenIntroduced.containsKey(meta));
+				if (whenIntroduced.get(meta) <= index) {
+					// uninstantiate this meta-element, remembering its value
+					index = whenIntroduced.get(meta);
+					Label label = IF[index];
+					logger.trace("Backtrack attempt at IF step " + index + " " + meta);
+					if (meta.backtrack()) {
+						logger.trace("after backtrack:" + meta.backtrack);
+						if (label.checkWithTupleAsContext(tree, context)) {
+							// if it can succeed with a new value, we're good to
+							// go; but must uninstantiate all those
+							// introduced later
+							logger.trace("check success in canBacktrack. Label after check:" + label);
+							for (int j = i + 1; j < metas.size(); j++) {
+								MetaElement<?> meta2 = metas.get(j);
+								if (whenIntroduced.get(meta2) >= index) {
+									meta2.reset();
+								}
+							}
+							logger.debug("Backtracking at IF step " + index + " " + meta);
+							return true;
+						} else {
+							// if not, re-instantiate it TODO and remember not
+							// to backtrack again?
+							logger.trace("unbacktracking:" + meta);
+							meta.unbacktrack();
+						}
+					}
+				}
+			}
+			return false;
+		}
+		
+		/**
+		 * @param tree
+		 * @param context
+		 * @return true if we can backtrack to a point where a previously instantiated {@link MetaElement} can be given
+		 *         a new value which also succeeds. Sets index to the IF step where this happened; uninstantiates all
+		 *         {@link MetaElement}s introduced after this step so that they can get new values too
+		 */
+		private <U extends DAGTuple, E extends DAGEdge> boolean canBacktrack(Tree tree, Context<U,E> context) {
 			for (int i = metas.size() - 1; i >= 0; i--) {
 				MetaElement<?> meta = metas.get(i);
 				// don't bother with steps we haven't got to yet
@@ -610,6 +709,10 @@ public class IfThenElse extends Effect implements Serializable {
 		}
 
 	}
+
+	
+	
+	
 
 	public static final int tabSizeForPrinting = 6;// min tab size is 4
 

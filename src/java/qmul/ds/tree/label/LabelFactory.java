@@ -11,11 +11,12 @@ package qmul.ds.tree.label;
 import java.util.HashMap;
 
 import qmul.ds.action.ActionSequence;
+import qmul.ds.action.atomic.Effect;
+import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundLabelVariable;
 import qmul.ds.action.meta.MetaLabel;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRAbsolutePath;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Modality;
 import qmul.ds.tree.NodeAddress;
@@ -124,6 +125,8 @@ public class LabelFactory {
 			return new BoundLabelVariable(string);
 		} else if (upa != null) {
 			return upa;
+		}else if (string.toLowerCase().startsWith(CompleteTreeLabel.PREFIX)) {
+			return new CompleteTreeLabel();
 		} else if (string.toLowerCase().startsWith(ScopeStatement.FUNCTOR.toLowerCase())) {
 			return new ScopeStatement(string, ite);
 		} else if (string.toLowerCase().startsWith(ScopeDepSaturationLabel.FUNCTOR.toLowerCase())) {
@@ -134,7 +137,10 @@ public class LabelFactory {
 			return new DOMLabel(string, ite);
 		} else if (string.toLowerCase().startsWith(IndefLabel.FUNCTOR.toLowerCase())) {
 			return new IndefLabel(string, ite);
-		}  else if (string.toLowerCase().startsWith(ContextualActionLabel.FUNCTOR)) {
+		} else if (string.toLowerCase().startsWith(SpeakerLabel.FUNCTOR.toLowerCase())) {
+			return new SpeakerLabel(Formula.create(
+					string.substring(SpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
+		} else if (string.toLowerCase().startsWith(ContextualActionLabel.FUNCTOR)) {
 			return new ContextualActionLabel(string, ite);
 		} else if (string.toLowerCase().startsWith(FeatureLabel.PREFIX.toLowerCase())) {
 			return new FeatureLabel(string.substring(FeatureLabel.PREFIX.length()), ite);
@@ -281,11 +287,8 @@ public class LabelFactory {
 
 	public static void main(String a[]) {
 
-		/*
-		 * Class<?> c = findVariableType("triggered_by(x, ty(X))", "x");
-		 * 
-		 * System.out.println(c);
-		 */
+		Effect l=EffectFactory.create("ttrput([r:[x:e|p==arash(x):t|head==x:e]|x1==(iota, r.head, r):e|head==x1:e])");
+		System.out.println(l);
 
 	}
 

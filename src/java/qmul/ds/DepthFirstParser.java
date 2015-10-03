@@ -2,6 +2,7 @@ package qmul.ds;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,16 +15,24 @@ import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
 
-public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanford.nlp.parser.Parser {
+/**
+ * @deprecated replaced by InteractiveContextParser - which is also a
+ *             depth-first parser, and does what this class does and more.
+ *             
+ *             
+ */
+public class DepthFirstParser extends Parser<ParserTuple> implements
+		edu.stanford.nlp.parser.Parser {
 
 	private static Logger logger = Logger.getLogger(DepthFirstParser.class);
 
 	protected DAGParseState state;
-	protected Grammar nonoptionalGrammar;// as determined by the prefix * in action spec files.
+	protected Grammar nonoptionalGrammar;// as determined by the prefix * in
+											// action spec files.
 	protected Grammar optionalGrammar;
 
 	public DepthFirstParser(Lexicon lexicon, Grammar grammar) {
@@ -36,17 +45,18 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 	private void separateGrammars() {
 		this.nonoptionalGrammar = new Grammar();
 		this.optionalGrammar = new Grammar();
-		for (ComputationalAction a : grammar) {
+		for (ComputationalAction a : grammar.values()) {
 			if (a.isAlwaysGood())
-				this.nonoptionalGrammar.add(a);
+				this.nonoptionalGrammar.put(a.getName(),a);
 			else
-				this.optionalGrammar.add(a);
+				this.optionalGrammar.put(a.getName(),a);
 		}
 	}
 
 	/**
 	 * @param resourceDir
-	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
+	 *            the dir containing computational-actions.txt,
+	 *            lexical-actions.txt, lexicon.txt
 	 */
 	public DepthFirstParser(File resourceDir) {
 		super(new Lexicon(resourceDir), new Grammar(resourceDir));
@@ -59,13 +69,17 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 
 		return this.state;
 	}
+	
+	
 
 	/**
 	 * @param resourceDirNameOrURL
-	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
+	 *            the dir containing computational-actions.txt,
+	 *            lexical-actions.txt, lexicon.txt
 	 */
 	public DepthFirstParser(String resourceDirNameOrURL) {
-		super(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL));
+		super(new Lexicon(resourceDirNameOrURL), new Grammar(
+				resourceDirNameOrURL));
 		super.state = null;
 		this.state = new DAGParseState();
 		separateGrammars();
@@ -81,8 +95,9 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 	}
 
 	/**
-	 * Add a new AXIOM {@link ParserTuple} to the state, by default ensuring that the state is empty. Subclasses may
-	 * override this to e.g. move the current state to the context
+	 * Add a new AXIOM {@link ParserTuple} to the state, by default ensuring
+	 * that the state is empty. Subclasses may override this to e.g. move the
+	 * current state to the context
 	 */
 	protected void addAxiom() {
 
@@ -90,7 +105,8 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 	}
 
 	/**
-	 * Tell the parser we're beginning a new sentence. By default, this just resets to the initial (axiom) state
+	 * Tell the parser we're beginning a new sentence. By default, this just
+	 * resets to the initial (axiom) state
 	 * 
 	 * @see init()
 	 */
@@ -105,8 +121,7 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 		DAGEdge result;
 		do {
 			result = state.goFirst();
-			if (result != null)
-			{
+			if (result != null) {
 				applyNonOptionalGrammar();
 				break;
 			}
@@ -119,14 +134,12 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 			return null;
 	}
 
-	
 	private ParserTuple adjustOnce(ParserTuple goal) {
 		applyAllActions(goal);
 		DAGEdge result;
 		do {
 			result = state.goFirst();
-			if (result != null)
-			{
+			if (result != null) {
 				applyNonOptionalGrammar(goal);
 				break;
 			}
@@ -139,11 +152,11 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 			return null;
 	}
 
-	public DAGParseState parseWord(String word) {
+	public DAGParseState parseWord(UtteredWord word) {
 		logger.info("Parsing word: " + word);
 		state.resetToFirstTupleAfterLastWord();
 		logger.debug("after reset cur is" + state.getCurrentTuple());
-		Collection<LexicalAction> actions = this.lexicon.get(word);
+		Collection<LexicalAction> actions = this.lexicon.get(word.word());
 		if (actions == null || actions.isEmpty()) {
 			logger.error("Word not in Lexicon: " + word);
 			return null;
@@ -160,7 +173,7 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 		return this.state;
 	}
 
-	public DAGParseState parseWord(String word, ParserTuple goal) {
+	public DAGParseState parseWord(UtteredWord word, ParserTuple goal) {
 		logger.info("Parsing word: " + word);
 		state.resetToFirstTupleAfterLastWord();
 		logger.debug("after reset cur is" + state.getCurrentTuple());
@@ -169,9 +182,9 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 			logger.error("Word not in Lexicon: " + word);
 			return null;
 		}
-		if (state.hasOutWordEdge(word))
+		if (state.hasOutWordEdge(word.word()))
 			return null;
-		
+
 		state.wordStack().push(word);
 		state.clear();
 		if (!parse(goal)) {
@@ -222,8 +235,9 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 	}
 
 	/**
-	 * applies all available actions (except non-optional grammar which are applied separately), i.e. computational and the lexical actions associated with the top of the words
-	 * stack, to the current tuple.
+	 * applies all available actions (except non-optional grammar which are
+	 * applied separately), i.e. computational and the lexical actions
+	 * associated with the top of the words stack, to the current tuple.
 	 * 
 	 */
 	private void applyAllActions() {
@@ -231,12 +245,15 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 		state.removeChildren();
 		if (!state.wordStack().isEmpty()) {
 
-			for (LexicalAction la : lexicon.get(state.wordStack().peek())) {
-				ParserTuple t = this.state.execAction(la, la.getWord());
+			for (LexicalAction la : lexicon.get(state.wordStack().peek().word())) {
+				ParserTuple t = this.state.execAction(la, new UtteredWord(la.getWord()));
 				if (t == null) {
-					logger.debug("Action " + la.getName() + " failed at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + la.getName() + " failed at tree "
+							+ state.getCurrentTuple().getTree());
 				} else {
-					logger.debug("Action " + la.getName() + " succeeded at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + la.getName()
+							+ " succeeded at tree "
+							+ state.getCurrentTuple().getTree());
 					logger.debug("Result was:" + t.getTree());
 				}
 
@@ -244,13 +261,14 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 
 		}
 
-
-		for (ComputationalAction a : this.optionalGrammar) {
+		for (ComputationalAction a : this.optionalGrammar.values()) {
 			ParserTuple t = this.state.execAction(a, null);
 			if (t == null) {
-				logger.debug("Action " + a + " failed at tree " + state.getCurrentTuple().getTree());
+				logger.debug("Action " + a + " failed at tree "
+						+ state.getCurrentTuple().getTree());
 			} else {
-				logger.debug("Action " + a + " succeeded at tree " + state.getCurrentTuple().getTree());
+				logger.debug("Action " + a + " succeeded at tree "
+						+ state.getCurrentTuple().getTree());
 				logger.debug("Result was:" + t.getTree());
 			}
 		}
@@ -259,19 +277,23 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 
 	public void applyNonOptionalGrammar(ParserTuple goal) {
 		do {
-			for (ComputationalAction a : this.nonoptionalGrammar) {
-				// if a non-optional action can be carried out, it has to be, with no other computational possibilities
+			for (ComputationalAction a : this.nonoptionalGrammar.values()) {
+				// if a non-optional action can be carried out, it has to be,
+				// with no other computational possibilities
 				// on this node
 
 				DAGTuple t = this.state.execAction(a, null);
 				if (t == null) {
-					logger.debug("Action " + a + " failed at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + a + " failed at tree "
+							+ state.getCurrentTuple().getTree());
 				} else if (!t.subsumes(goal)) {
-					logger.debug("Action " + a + " failed subsumption at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + a + " failed subsumption at tree "
+							+ state.getCurrentTuple().getTree());
 					logger.debug("Result was:" + t);
 					state.removeChild(t);
 				} else {
-					logger.debug("Action " + a + " succeeded at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + a + " succeeded at tree "
+							+ state.getCurrentTuple().getTree());
 					logger.debug("Result was:" + t.getTree());
 				}
 
@@ -279,18 +301,21 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 		} while (state.goFirst() != null);
 
 	}
-	
+
 	public void applyNonOptionalGrammar() {
 		do {
-			for (ComputationalAction a : this.nonoptionalGrammar) {
-				// if a non-optional action can be carried out, it has to be, with no other computational possibilities
+			for (ComputationalAction a : this.nonoptionalGrammar.values()) {
+				// if a non-optional action can be carried out, it has to be,
+				// with no other computational possibilities
 				// on this node
 
 				DAGTuple t = this.state.execAction(a, null);
 				if (t == null) {
-					logger.debug("Action " + a + " failed at tree " + state.getCurrentTuple().getTree());				
+					logger.debug("Action " + a + " failed at tree "
+							+ state.getCurrentTuple().getTree());
 				} else {
-					logger.debug("Action " + a + " succeeded at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + a + " succeeded at tree "
+							+ state.getCurrentTuple().getTree());
 					logger.debug("Result was:" + t.getTree());
 				}
 
@@ -300,27 +325,32 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 	}
 
 	/**
-	 * applies all available actions, i.e. computational and the lexical actions associated with the top of the words
-	 * stack, to the current tuple.
+	 * applies all available actions, i.e. computational and the lexical actions
+	 * associated with the top of the words stack, to the current tuple.
 	 * 
-	 * USED in GENERATION... also checks for subsumption of goal... only adds edges that subsume
+	 * USED in GENERATION... also checks for subsumption of goal... only adds
+	 * edges that subsume
 	 */
 	private void applyAllActions(ParserTuple goal) {
-		//TODO: Exhaustive application of actions.
-		//state.removeChildren();
+		// TODO: Exhaustive application of actions.
+		// state.removeChildren();
 		if (!state.wordStack().isEmpty()) {
 
-			for (LexicalAction la : lexicon.get(state.wordStack().peek())) {
-				DAGTuple t = this.state.execAction(la, la.getWord());
+			for (LexicalAction la : lexicon.get(state.wordStack().peek().word())) {
+				DAGTuple t = this.state.execAction(la, new UtteredWord(la.getWord()));
 				if (t == null) {
-					logger.debug("Action " + la.getName() + " failed at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + la.getName() + " failed at tree "
+							+ state.getCurrentTuple().getTree());
 				} else if (!t.subsumes(goal)) {
-					logger.debug("Action " + la.getName() + " failed subsumption at tree "
+					logger.debug("Action " + la.getName()
+							+ " failed subsumption at tree "
 							+ state.getCurrentTuple().getTree());
 					logger.debug("Result was:" + t);
 					state.removeChild(t);
 				} else {
-					logger.debug("Action " + la.getName() + " succeeded at tree " + state.getCurrentTuple().getTree());
+					logger.debug("Action " + la.getName()
+							+ " succeeded at tree "
+							+ state.getCurrentTuple().getTree());
 					logger.debug("Result was:" + t.getTree());
 				}
 
@@ -328,16 +358,19 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 
 		}
 
-		for (ComputationalAction a : this.optionalGrammar) {
+		for (ComputationalAction a : this.optionalGrammar.values()) {
 			DAGTuple t = this.state.execAction(a, null);
 			if (t == null) {
-				logger.debug("Action " + a + " failed at tree " + state.getCurrentTuple().getTree());
+				logger.debug("Action " + a + " failed at tree "
+						+ state.getCurrentTuple().getTree());
 			} else if (!t.subsumes(goal)) {
-				logger.debug("Action " + a + " failed subsumption at tree " + state.getCurrentTuple().getTree());
+				logger.debug("Action " + a + " failed subsumption at tree "
+						+ state.getCurrentTuple().getTree());
 				logger.debug("Result was:" + t);
 				state.removeChild(t);
 			} else {
-				logger.debug("Action " + a + " succeeded at tree " + state.getCurrentTuple().getTree());
+				logger.debug("Action " + a + " succeeded at tree "
+						+ state.getCurrentTuple().getTree());
 				logger.debug("Result was:" + t.getTree());
 			}
 		}
@@ -346,7 +379,8 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 
 	/**
 	 * 
-	 * @return true if successful, false if we're at root without any more exploration possibilities
+	 * @return true if successful, false if we're at root without any more
+	 *         exploration possibilities
 	 */
 	public boolean attemptBacktrack() {
 
@@ -357,7 +391,7 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 			Action backAlong = state.getParentAction();
 			if (backAlong instanceof LexicalAction) {
 
-				state.wordStack().push(((LexicalAction) backAlong).getWord());
+				state.wordStack().push(new UtteredWord(((LexicalAction) backAlong).getWord()));
 				logger.debug("adding word to stack, now:" + state.wordStack());
 			}
 			DAGEdge backOver = this.state.goUpOnce();
@@ -424,18 +458,20 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 
 	@Override
 	public Generator<ParserTuple> getGenerator() {
-		
+
 		return new DepthFirstGenerator(this);
 	}
 
 	@Override
-	protected Collection<ParserTuple> execExhaustively(ParserTuple tuple, Action action, String word) {
+	protected Collection<ParserTuple> execExhaustively(ParserTuple tuple,
+			Action action, String word) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected ParserTuple execAction(ParserTuple tuple, Action action, String word) {
+	protected ParserTuple execAction(ParserTuple tuple, Action action,
+			String word) {
 
 		return tuple.execAction(action, word);
 	}
@@ -445,30 +481,26 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 			;
 
 	}
-	
-	public List<LexicalAction> getLeftAdjustingActions(String word, Tree t)
-	{
-		List<LexicalAction> result=new ArrayList<LexicalAction>();
+
+	public List<LexicalAction> getLeftAdjustingActions(String word, Tree t) {
+		List<LexicalAction> result = new ArrayList<LexicalAction>();
 		if (!lexicon.containsKey(word))
 			return result;
-		
+
 		state.init(t);
 		exhaust();
-		for(ParserTuple tuple: state)
-		{
-			Collection<LexicalAction> LAs=lexicon.get(word);
-			for(LexicalAction la: LAs)
-			{
-				Tree r=la.exec(tuple.getTree(), tuple);
-				if (r!=null)
-				{
-					ArrayList<Action> actions=state.getActionSequence(tuple);
+		for (ParserTuple tuple : state) {
+			Collection<LexicalAction> LAs = lexicon.get(word);
+			for (LexicalAction la : LAs) {
+				Tree r = la.execTupleContext(tuple.getTree(), tuple);
+				if (r != null) {
+					ArrayList<Action> actions = state.getActionSequence(tuple);
 					actions.add(la);
 					result.add(new LexicalAction(word, actions));
 				}
-					
+
 			}
-			
+
 		}
 		return result;
 	}
@@ -489,20 +521,33 @@ public class DepthFirstParser extends Parser<ParserTuple> implements edu.stanfor
 		return null;
 	}
 
-	public static void main(String[] a) {
-		
-		DepthFirstParser parser = new DepthFirstParser("resource/2013-english-ttr");
-		parser.init();
-		List<LexicalAction> actions=parser.getLeftAdjustingActions("john", new Tree());
-		for(LexicalAction ac: actions)
-		{
-			System.out.println(ac);
+	/**
+	 * @param words
+	 * @return the resulting (possibly empty) state, or null if the state became
+	 *         empty before seeing the last word
+	 */
+	public ParseState<ParserTuple> parseWords(List<String> words) {
+		for (String word : words) {
+			parseWord(new UtteredWord(word));
 		}
-		/*
-		 * parser.adjustOnce(); System.out.println(parser.getState().getCurrentTuple()); parser.adjustOnce();
-		 * System.out.println(parser.getState().getCurrentTuple()); parser.adjustOnce();
-		 * System.out.println(parser.getState().getCurrentTuple());
-		 */
+		return getState();
+	}
+	public static void main(String[] a) {
+
+		DepthFirstParser parser = new DepthFirstParser(
+				"resource/2013-english-ttr");
+		String sent = "john likes mary who arrives with bill";
+		List<String> words = Arrays.asList(sent.split(" "));
+		parser.parseWords(words);
+		do{
+			try{
+				System.out.println("Final Tuple:"+parser.getState().getCurrentTuple());
+				System.out.println("Press any key to continue.");
+				System.in.read();
+			} catch(Exception e)
+			{}
+		}while(parser.parse());
+		 
 	}
 
 }

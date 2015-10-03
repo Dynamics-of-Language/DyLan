@@ -75,7 +75,7 @@ public class GoLocalEvent extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		Node currentNode = tree.getPointedNode();
 		String curAddress = tree.getPointer().getAddress();
 		ArrayList<BasicOperator> opList = new ArrayList<BasicOperator>();
@@ -125,7 +125,7 @@ public class GoLocalEvent extends Effect {
 		parser.parseWords(sentList);
 		Tree complete = parser.getBestParse();
 		System.out.println(complete);
-		goLocal.exec(complete, null);
+		goLocal.execTupleContext(complete, null);
 		System.out.println(goLocal);
 	}
 }

@@ -49,16 +49,18 @@ public abstract class TTRFormula extends Formula {
 	public TTRFormula conjoin(Formula f) {
 		if (f == null)
 			return this;
-
+		
 		if (f instanceof TTRFormula)
 			return ((TTRFormula) f).asymmetricMerge(this);
-
+		
 		throw new IllegalArgumentException("Can only conjoin a TTRFormula with TTRFormula, got a:" + f + ": "
 				+ f.getClass());
 	}
 
 	public abstract TTRFormula clone();
 
+	public abstract TTRFormula asymmetricMergeSameType(TTRFormula f);
+	
 	public List<Tree> getAbstractions(DSType funcType, NodeAddress prefix) {
 		return getAbstractions(funcType, prefix, funcType.getFinalType());
 
@@ -138,7 +140,6 @@ public abstract class TTRFormula extends Formula {
 		}
 
 		return result;
-
 	}
 
 	protected abstract List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(BasicType basic, int newVarSuffix);

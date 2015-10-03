@@ -61,7 +61,7 @@ public class ScopeLabel extends Label {
 		this(s, null);
 	}
 
-	public boolean check(Tree t, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree t, ParserTuple context) {
 
 		Node n = t.getPointedNode();
 

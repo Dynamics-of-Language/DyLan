@@ -206,7 +206,11 @@ public abstract class Formula implements Serializable {
 		f = InfixPredicateArgumentFormula.parse(string);
 		if (f != null)
 			return f;
-
+		
+		f=TTRInfixExpression.parse(string);
+		if(f!=null)
+			return f;
+		
 		// predicate formula
 		m = PRED_ARG_PATTERN.matcher(string);
 		if (m.matches()) {

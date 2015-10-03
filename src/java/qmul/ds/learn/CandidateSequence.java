@@ -121,7 +121,7 @@ public class CandidateSequence extends ArrayList<Action> {
 				curRight = get(rightI - 1);
 			}
 
-			curStart = new ParserTuple(curLeft.exec(curStart.getTree(), curStart));
+			curStart = new ParserTuple(curLeft.execTupleContext(curStart.getTree(), curStart));
 			leftI++;
 			prevLeft = curLeft;
 			curLeft = get(leftI);
@@ -265,7 +265,7 @@ public class CandidateSequence extends ArrayList<Action> {
 			a = get(i);
 			logger.debug("applying " + a + " to:");
 			logger.debug(start);
-			Tree t = a.exec(start.getTree().clone(), start);
+			Tree t = a.execTupleContext(start.getTree().clone(), start);
 			logger.debug("result was:" + t);
 			start = new ParserTuple(t);
 			if (a instanceof LexicalHypothesis) {
@@ -298,14 +298,14 @@ public class CandidateSequence extends ArrayList<Action> {
 				Tree clone = start.getTree().clone();
 				logger.debug("applying " + get(j) + " to " + clone);
 				logger.debug("action: " + get(j) + " to " + clone);
-				Tree res = get(j).exec(clone, start);
+				Tree res = get(j).execTupleContext(clone, start);
 				logger.debug("result was:" + res);
 				if (res == null)
 					throw new IllegalStateException("Result of action application was null");
 				start = new ParserTuple(res);
 				j++;
 			}
-			start = new ParserTuple(get(j).exec(start.getTree().clone(), start));
+			start = new ParserTuple(get(j).execTupleContext(start.getTree().clone(), start));
 			// we want to end the process if we've reached a second formula decoration:
 			if (get(j) instanceof LexicalHypothesis) {
 				LexicalHypothesis lh = (LexicalHypothesis) get(j);

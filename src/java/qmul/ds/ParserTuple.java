@@ -95,7 +95,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	 *         be null if this is a non-lexical action
 	 */
 	public ParserTuple execAction(Action action, String word) {
-		Tree result = action.exec(tree.clone(), this);
+		Tree result = action.execTupleContext(tree.clone(), this);
 		if (result == null) {
 			return null;
 		}

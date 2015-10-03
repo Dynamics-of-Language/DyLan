@@ -65,7 +65,7 @@ THEN    make(\/1)
         put(?ty(cn))
 ELSE    abort
 
-
+//*
 pron_whq(CLASS)
 IF		?ty(e)
 		</\*>?ty(t)
@@ -75,7 +75,6 @@ THEN	put(ty(e))
 ELSE	abort
 
 
-//*
 pron_nom(PERSON,CLASS)
 IF      ?ty(e)
         </\U>?ty(t)
@@ -109,6 +108,7 @@ THEN	put(fo(X))
 		put(!)
 ELSE	abort
 
+*//
 
 pron_whrel(CLASS)
 IF      ?ty(e)
@@ -116,7 +116,7 @@ IF      ?ty(e)
 THEN    put(ty(e))
         put(fo(X))
 ELSE    abort
-*//
+
 
 
 v_intran_inf(PRED,TENSE,PERSON)

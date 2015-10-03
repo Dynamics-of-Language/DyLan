@@ -66,7 +66,7 @@ public class DOMLabel extends Label {
 		return metas;
 	}
 
-	public boolean check(Tree t, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree t, ParserTuple context) {
 		Node n = t.getPointedNode();
 		Label typeTReq = LabelFactory.create("?ty(t)", null);
 		if (!typeTReq.check(n)) {

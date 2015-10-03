@@ -17,6 +17,8 @@ import qmul.ds.ParserTuple;
 import qmul.ds.tree.Modality;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
+import qmul.ds.tree.label.FormulaLabel;
+import qmul.ds.tree.label.TypeLabel;
 
 /**
  * The <tt>merge</tt> action
@@ -62,21 +64,36 @@ public class Merge extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		Node node = tree.getPointedNode();
 		if (!node.isLocallyFixed()) {
+			logger.debug("Node not locally fixed");
 			return null;
 		}
 		Node other = tree.getNode(modality.instantiate());
 		if ((other == null) || other.isLocallyFixed()) {
+			logger.debug("node at modality doesn't exist or is fixed");
 			return null;
 		}
 
 		if (!node.isUnifiable(other)) {
-			logger.debug("unification failed");
+			logger.error("unification failed");
 			return null;
 		}
-
+		/**
+		 * making sure no duplicate type/formula labels
+		 * 
+		 */
+		
+		TypeLabel tyl=node.getTypeLabel();
+		if (tyl!=null)
+			node.remove(tyl);
+		
+		FormulaLabel thisfol=node.getFormulaLabel();
+		FormulaLabel otherfol=other.getFormulaLabel();
+		if (otherfol!=null&&thisfol!=null)
+			node.remove(thisfol);
+		
 		tree.merge(modality.instantiate());
 		return tree;
 	}

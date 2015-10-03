@@ -60,7 +60,7 @@ public class Delete extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		logger.debug("deleting " + label.instantiate());
 		tree.delete(label.instantiate());
 		return tree;

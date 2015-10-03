@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 
 /**
@@ -69,10 +70,15 @@ public class NegatedLabel extends EmbeddedLabel {
 	 * @see qmul.ds.tree.label.Label#check(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public boolean check(Tree tree, ParserTuple context) {
-		return !label.check(tree, context);
+	public boolean checkWithTupleAsContext(Tree tree, ParserTuple context) {
+		return !label.checkWithTupleAsContext(tree, context);
 	}
 
+	
+	public boolean check(Node n)
+	{
+		return !super.check(n);
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

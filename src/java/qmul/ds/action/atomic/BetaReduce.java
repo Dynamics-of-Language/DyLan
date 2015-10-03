@@ -39,7 +39,7 @@ public class BetaReduce extends Effect {
 	 */
 
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		Node node = tree.getPointedNode();
 		Node d0 = tree.get(node.getAddress().down0());
 		DSType t0 = d0.getType();

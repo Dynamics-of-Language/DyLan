@@ -26,7 +26,7 @@ public class TreeHypothesis extends Action{
 	}
 	
 		
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		return tree;
 	}
 

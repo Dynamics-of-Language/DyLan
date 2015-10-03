@@ -2,10 +2,9 @@ package qmul.ds;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.action.Action;
 import qmul.ds.action.Grammar;
-import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.TTRRecordType;
 
 /**
@@ -69,7 +68,7 @@ public class DepthFirstGenerator extends Generator<ParserTuple> {
 		
 		for (String w : parser.getLexicon().keySet()) {
 			logger.debug("Testing word for generation:"+w);
-			DAGParseState s = parser.parseWord(w, state.getGoal());
+			DAGParseState s = parser.parseWord(new UtteredWord(w,"self"), state.getGoal());
 			if (s == null)
 			{
 				logger.debug("Parsing "+w+" failed");
@@ -140,8 +139,10 @@ public class DepthFirstGenerator extends Generator<ParserTuple> {
 		TTRRecordType goal2=TTRRecordType.parse("[x==john:e|e1==fly:es|p==pres(e1):t|p2==subj(e1,x):t|head==e1:es|x1==bill:e|p3==with(e1,x1):t]");
 		gen.setGoal(goal2);
 		gen.generate();
+		
+		
 		//System.out.println(gen.generate());
-	
+	    
 		//System.out.println(gen.getState().subsumed());
 		
 		/*

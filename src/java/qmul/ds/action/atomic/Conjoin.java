@@ -64,7 +64,7 @@ public class Conjoin extends Effect {
 	 * @see qmul.ds.action.atomic.Effect#exec(qmul.ds.tree.Tree, qmul.ds.ParserTuple)
 	 */
 	@Override
-	public <T extends Tree> T exec(T tree, ParserTuple context) {
+	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
 		Node node = tree.getPointedNode();
 		FormulaLabel l = null;
 		for (Label label : node) {

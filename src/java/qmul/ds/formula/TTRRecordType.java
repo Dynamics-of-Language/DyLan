@@ -16,8 +16,6 @@ import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;
-import qmul.ds.tree.label.Label;
-import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
@@ -602,7 +600,7 @@ public class TTRRecordType extends TTRFormula {
 	 * 
 	 * The merge is right-asymmetrical in the sense that identical labels take their associated type from the argument
 	 * record type (i.e. the right hand side of the asymmetrical merge operator).
-	 * 
+	 * 1
 	 * @param r2
 	 * @return
 	 */
@@ -624,7 +622,27 @@ public class TTRRecordType extends TTRFormula {
 				TTRRecordType otherRestr = (TTRRecordType) f.getType();
 				newF = new TTRField(new TTRLabel(f.getLabel()), f.getDSType(),
 						(TTRRecordType) thisRestr.asymmetricMerge(otherRestr));
-			} else {
+			} else if(merged.hasLabel(f.getLabel())
+					&& (merged.get(f.getLabel()) != null && merged.get(f.getLabel()) instanceof EpsilonTerm)
+					&& (f.getType() != null && f.getType() instanceof EpsilonTerm))
+			{
+				
+				EpsilonTerm termThis=(EpsilonTerm)merged.get(f.getLabel());
+				EpsilonTerm termOther=(EpsilonTerm)f.getType();
+				Predicate thisFunct=termThis.getFunctor();
+				Predicate otherFunct=termOther.getFunctor();
+				Predicate eps=new Predicate(EPSILON_FUNCTOR);
+				Predicate iota=new Predicate(IOTA_FUNCTOR);
+				Predicate tau=new Predicate(TAU_FUNCTOR);
+				if (thisFunct.equals(tau)||otherFunct.equals(tau))
+					throw new UnsupportedOperationException();
+				//assuming tau overrides eps in conjunction
+				Predicate funct=(thisFunct.equals(eps)&&otherFunct.equals(eps))?eps:iota;
+				newF=new TTRField(f.getLabel(), f.getDSType(), new EpsilonTerm(funct, termOther.getOrderedPair()));
+				
+				
+			}
+			else {
 				newF = new TTRField(f);
 
 			}
@@ -752,6 +770,7 @@ public class TTRRecordType extends TTRFormula {
 		return s/* .substring(0, s.length()-TTR_LINE_BREAK.length()) */+ TTR_CLOSE;
 	}
 
+	
 
 	public List<Tree> getEmptyAbstractions(NodeAddress prefix) {
 		List<Tree> result = new ArrayList<Tree>();
@@ -928,8 +947,14 @@ public class TTRRecordType extends TTRFormula {
 	}
 
 	public TTRRecordType instantiate() {
-		// for now assuming meta variables not used inside rec types
-		return this;
+		TTRRecordType result = new TTRRecordType();
+		for (TTRField f : fields) {
+			TTRField instance = f.instantiate();
+			result.fields.add(instance);
+			result.record.put(instance.getLabel(), instance);
+		}
+		result.updateParentLinks();
+		return result;
 	}
 
 	public TTRRecordType getMinimalIncrementWith(TTRField f, TTRLabel on) {
@@ -1094,7 +1119,166 @@ public class TTRRecordType extends TTRFormula {
 		}
 		return result;
 	}
+
+	public TTRFormula conjoin(Formula other)
+	{
+		//System.out.println("Trying to conjoin:"+this);
+		//System.out.println("with:"+other);
+		if (other == null)
+			return this;
+		
+		if (!(other instanceof TTRFormula))
+			throw new UnsupportedOperationException();
+		
+		TTRFormula o=(TTRFormula)other;
+		
+		if (!(o instanceof TTRRecordType))
+			return o.asymmetricMerge(this);
+		
+		
+		TTRRecordType ttr=(TTRRecordType)o;
+			
+		if (this.isEmpty())
+			return ttr;
+		if (ttr.isEmpty())
+			return this;
+		
+		
+		
+		if (this.getHeadField()==null || ttr.getHeadField()==null)
+			throw new UnsupportedOperationException("Cannot conjoin rec types with no head field");
+		
+		DSType thisDSType=getHeadField().getDSType();
+		DSType otherDSType=ttr.getHeadField().getDSType();
+		if (thisDSType.equals(DSType.e) &&thisDSType.equals(otherDSType))
+			return asymmetricMergeSameType(ttr);
+		
+		
+		return ttr.asymmetricMerge(this);
+	}
 	
+	
+	/**
+	 * 
+	 * this is for conjoining two record types of the same head field ds type (e or es). This is used by LinkEvaluation same type
+	 * in modelling appositions and short answers ("Ruth, the professor, just left" Or "A: Who did you meet? B: Ruth").
+	 * The assumptions are:
+	 * 
+	 *  (1) that the record types are both headed; 
+	 *  (2) the heads have the same ds type. (both e, or both es)
+	 *  (3) the heads should be determined (i.e. cannot have head:e. should have e.g. head=x:e)
+	 *  (4) the head fields either both have epsilon terms as types, or one or both have null types (e.g. x:e).
+	 *  WARNING: proper nouns should not be modelled as [x=john:e] but rather as iota terms. [r:[x:e; p==john(x)]; x1=iota(r.x, r):e] 
+	 *  
+	 *  Proceeds by unifying their heads labels, and their restrictor labels. and their restrictors' head labels. And then calling Assymetric merge as normal
+	 */
+	@Override
+	public TTRFormula asymmetricMergeSameType(TTRFormula fo) {
+		if (!(fo instanceof TTRRecordType))
+			throw new UnsupportedOperationException();
+		
+		TTRRecordType other=(TTRRecordType)fo;
+		TTRField thisHead=head();
+		TTRField otherHead=other.head();
+		if (thisHead==null || otherHead==null)
+			throw new UnsupportedOperationException("Both record types must be headed");
+		
+		Variable thisHeadLabel=(Variable)thisHead.getType();
+		Variable otherHeadLabel=(Variable)otherHead.getType();
+		if (thisHeadLabel==null || otherHeadLabel==null)
+			return asymmetricMerge(fo);
+			//throw new UnsupportedOperationException("Both record types must be headed and the heads must be determined (have manifest value)");
+		
+		thisHead=getHeadField();
+		otherHead=other.getHeadField();
+		
+		if (thisHead.getDSType()==null || otherHead.getDSType()==null || !thisHead.getDSType().equals(otherHead.getDSType()))
+			throw new UnsupportedOperationException("both record types must have head types with the same ds type");
+		
+		
+		TTRField thisRestrictor=getRestrictorField();
+		TTRField otherRestrictor=other.getRestrictorField();
+		
+		
+		
+		
+		
+		
+		TTRRecordType headUnified = this.substitute(thisHeadLabel, otherHeadLabel);
+		System.out.println("HeadUnified:"+headUnified);
+		if (thisRestrictor==null || otherRestrictor==null)
+		{
+			System.out.println("restrictor null");
+			return headUnified.asymmetricMerge(other);
+		}
+		
+		//we know that both have a restrictor at this point (i.e. both have head epsilon terms)
+		EpsilonTerm thisEps=(EpsilonTerm)headUnified.getHeadField().getType();
+		EpsilonTerm otherEps=(EpsilonTerm)otherHead.getType();
+		
+		
+		Variable thisEpsVar=thisEps.getVariable();
+		Variable otherEpsVar=otherEps.getVariable();
+		TTRPath thisEpsPath=(TTRPath)thisEps.getOrderedPair().getArguments().get(0);
+		TTRPath otherEpsPath=(TTRPath)otherEps.getOrderedPair().getArguments().get(0);
+
+		Variable restrHeadThis=(Variable)thisEpsPath.evaluate();
+		Variable restrHeadOther=(Variable)otherEpsPath.evaluate();
+		//System.out.println("RestrHeadthis:"+restrHeadThis);
+		//System.out.println("RestrHeadOther:"+restrHeadOther);
+		TTRRecordType thisNewRestr=(restrHeadThis!=null && restrHeadOther!=null && restrHeadThis instanceof Variable && restrHeadOther instanceof Variable)?(TTRRecordType)thisRestrictor.getType().substitute(restrHeadThis, restrHeadOther):(TTRRecordType)thisRestrictor.getType().substitute(thisEpsVar, otherEpsVar);
+		//System.out.println("this new restrictor:"+thisNewRestr);
+		headUnified.getRestrictorField().setType(thisNewRestr);
+		headUnified.getRestrictorField().setLabel(new TTRLabel(otherRestrictor.getLabel()));
+		thisEps.setOrderedPair(otherEps.getOrderedPair());
+		//System.out.println("Now asymmerging:"+headUnified);
+		//System.out.println("With:"+other);
+		return headUnified.asymmetricMerge(other);
+			
+			
+		
+		/*if (!(thisHead.getType() instanceof EpsilonTerm && f.getType() instanceof EpsilonTerm))
+			throw new UnsupportedOperationException("both heads should be epsilon terms or one empty");
+		EpsilonTerm termThis=(EpsilonTerm)thisHead.getType();
+		EpsilonTerm termOther=(EpsilonTerm)f.getType();
+		Predicate thisFunct=termThis.getFunctor();
+		Predicate otherFunct=termOther.getFunctor();
+		Predicate eps=new Predicate(EPSILON_FUNCTOR);
+		Predicate iota=new Predicate(IOTA_FUNCTOR);
+		Predicate tau=new Predicate(TAU_FUNCTOR);
+		if (thisFunct.equals(tau)||otherFunct.equals(tau))
+			throw new UnsupportedOperationException();
+		//assuming tau overrides eps in conjunction
+		Predicate funct=(thisFunct.equals(eps)&&otherFunct.equals(eps))?eps:iota;
+		newF=new TTRField(thisHead.getLabel(), thisHead.getDSType(), new EpsilonTerm(funct, termThis.getOrderedPair()));*/
+		
+		
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @return the restrictor record type if this record type is headed, and the head field has an epsilon term as its type
+	 */
+	
+	public TTRField getRestrictorField()
+	{
+		if (!this.hasHead())
+			return null;
+		
+		TTRField head=this.head();
+		if (head.getType()==null)
+			return null;
+		
+		
+		TTRLabel headLabel=new TTRLabel((Variable)head.getType());
+		if (!(getType(headLabel) instanceof EpsilonTerm))
+			return null;
+		
+		EpsilonTerm headTerm=(EpsilonTerm)getType(headLabel);
+		return record.get(new TTRLabel((Variable)headTerm.getRestrictor()));
+	}
 	
 	public TTRRecordType minimumCommonSuperTypeBasic(TTRRecordType o, HashMap<Variable,Variable> map) {
 	/**

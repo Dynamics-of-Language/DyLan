@@ -121,7 +121,7 @@ public class ScopeDepSaturationLabel extends Label {
 		return true;
 	}
 
-	public boolean check(Tree t, ParserTuple context) {
+	public boolean checkWithTupleAsContext(Tree t, ParserTuple context) {
 		return check(t.getPointedNode());
 	}
 

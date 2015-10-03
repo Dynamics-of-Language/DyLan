@@ -11,14 +11,21 @@ import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGState;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.tree.Tree;
 
+/**
+ * This is a wrapper class that follows the ParseState interface, and wraps
+ * an instance of DAGState. It is here for backwards compatibility with
+ * ParseState class.
+ * 
+ * @deprecated no longer needed as we have the abstract {@link DAGParser} class, with the associated parse state as {@link DAG}
+ * @author Arash
+ */
 public class DAGParseState extends ParseState<ParserTuple> {
 
-	/**
-	 * 
-	 */
 	
+
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unused")
@@ -27,43 +34,36 @@ public class DAGParseState extends ParseState<ParserTuple> {
 	private DAGState state;
 
 	public DAGParseState() {
-		super();
-		state = new DAGState();
-		add(state.getCurrentTuple());
+		this(new Tree(),new ArrayList<UtteredWord>(),null);
 	}
 
-	public DAGParseState(List<String> words) {
-		super();
-		state = new DAGState(words);
-		add(state.getCurrentTuple());
+	public DAGParseState(List<UtteredWord> words) {
+		this(new Tree(), words,null);
 	}
 
 	public DAGParseState(Tree start) {
-		super();
-		state = new DAGState(start);
-		add(state.getCurrentTuple());
+		this(start, new ArrayList<UtteredWord>(), null);
+		
 	}
 
-	public DAGParseState(Tree start, List<String> words) {
+	public DAGParseState(Tree start, List<UtteredWord> words, DAGParser<DAGTuple, DAGEdge> p) {
 		super();
-		state = new DAGState(start, words);
+		state = new DAGState(start, words,p);
 		add(state.getCurrentTuple());
 	}
 
 	public void resetToFirstTupleAfterLastWord() {
 		if (state.getFirstTupleAfterLastWord() != null) {
 			clear();
-			state.setCurrentTuple(state.getFirstTupleAfterLastWord());
-			add(state.getCurrentTuple());
-			state.setExhausted(false);
-			wordStack().clear();
-			state.resetLastN();//reset the loop detection list
-			//removeChildren();
+			state.resetToFirstTupleAfterLastWord();
 		}
 
 	}
-	
-	
+
+	public DAG<DAGTuple, DAGEdge> getState()
+	{
+		return state;
+	}
 	public void thisIsFirstTupleAfterLastWord() {
 		state.thisIsFirstTupleAfterLastWord();
 	}
@@ -81,8 +81,9 @@ public class DAGParseState extends ParseState<ParserTuple> {
 		return state.getCurrentTuple();
 	}
 
-	// this will return null if action returns null or if it's already been tried and failed.
-	public DAGTuple execAction(Action a, String word) {
+	// this will return null if action returns null or if it's already been
+	// tried and failed.
+	public DAGTuple execAction(Action a, UtteredWord word) {
 		return state.execAction(a, word);
 
 	}
@@ -97,8 +98,8 @@ public class DAGParseState extends ParseState<ParserTuple> {
 	}
 
 	/**
-	 * Moves pointer to first child. If the action edge is lexical pops the corresponding word off the remaining words
-	 * stack.
+	 * Moves pointer to first child. If the action edge is lexical pops the
+	 * corresponding word off the remaining words stack.
 	 * 
 	 * @return
 	 */
@@ -112,7 +113,7 @@ public class DAGParseState extends ParseState<ParserTuple> {
 		return state.goUpOnce();
 	}
 
-	public Stack<String> wordStack() {
+	public Stack<UtteredWord> wordStack() {
 		return state.wordStack();
 	}
 
@@ -123,8 +124,9 @@ public class DAGParseState extends ParseState<ParserTuple> {
 	public ArrayList<Action> getActionSequence() {
 		return state.getActionSequence();
 	}
+
 	public ArrayList<Action> getActionSequence(ParserTuple cur) {
-		return state.getActionSequence((DAGTuple)cur);
+		return state.getActionSequence((DAGTuple) cur);
 	}
 
 	public long getDepth() {
@@ -133,18 +135,18 @@ public class DAGParseState extends ParseState<ParserTuple> {
 
 	public void init() {
 		clear();
-		state = null;
-		state = new DAGState();
+		
+		state = new DAGState(state.getParser());
 		add(state.getCurrentTuple());
 	}
-	
-	public void init(Tree t)
-	{
+
+	public void init(Tree t) {
 		clear();
-		state=null;
-		state=new DAGState(t);
+		state = null;
+		state = new DAGState(t,state.getParser());
 		add(state.getCurrentTuple());
 	}
+
 	public boolean isExhausted() {
 		return state.isExhausted();
 
@@ -161,28 +163,26 @@ public class DAGParseState extends ParseState<ParserTuple> {
 	}
 
 	public void markOutEdgeAsSeen(DAGEdge backOver) {
-		state.markOutEdgeAsSeen(backOver);
+		state.markEdgeAsSeenAndBelowItUnseen(backOver);
 
 	}
 
 	public void removeChild(DAGTuple t) {
 		state.removeChild(t);
-		
+
 	}
 
-	public boolean hasOutWordEdge(String w)
-	{
-		for (Action a:getOutActions())
-		{
+	public boolean hasOutWordEdge(String w) {
+		for (Action a : getOutActions()) {
 			if (a.getName().equals(w))
 				return true;
 		}
 		return false;
 	}
+
 	public List<Action> getOutActions() {
-		List<Action> actions=new ArrayList<Action>();
-		for(DAGEdge edge: state.getOutEdges())
-		{
+		List<Action> actions = new ArrayList<Action>();
+		for (DAGEdge edge : state.getOutEdges()) {
 			actions.add(edge.getAction());
 		}
 		return actions;
