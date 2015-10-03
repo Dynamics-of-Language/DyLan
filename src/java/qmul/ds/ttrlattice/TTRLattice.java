@@ -341,7 +341,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		for (int i = 0; i < ttrAtoms.size(); i++) {
 			//Add prop atom to the extent of newSuperType and all its supertypes
 			//The AddIntent should add all the above concepts
-			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), (Node) this.bottom(), (TTRLattice) this.clone());
+			//addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), (Node) this.bottom(), (TTRLattice) this.clone());
 		}
 		
 	}
