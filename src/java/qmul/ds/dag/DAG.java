@@ -991,7 +991,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	
 	
 	/** WARNING: only works with DAGs whose edges are associated with single DS actions - not action sequences -  e.g. it works with
-	 * {@link DAGState}, and not {@link WordLevelDAGState}
+	 * {@link DAGState}, and not {@link WordLevelContextDAG}
 	 * 
 	 * @param current
 	 * @return the action associated with the parent edge of current

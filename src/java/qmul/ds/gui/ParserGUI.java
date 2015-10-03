@@ -38,7 +38,7 @@ import javax.swing.JFrame;
 import org.apache.log4j.Logger;
 /**
  * 
- * @author Arash, Matt
+ * @author Matt, Arash
  *
  */
 

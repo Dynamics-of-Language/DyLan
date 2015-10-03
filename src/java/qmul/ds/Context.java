@@ -6,7 +6,7 @@ import java.util.List;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.WordLevelDAGState;
+import qmul.ds.dag.WordLevelContextDAG;
 import edu.uci.ics.jung.graph.Tree;
 
 /**

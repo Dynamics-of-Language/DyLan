@@ -536,7 +536,7 @@ public class DepthFirstParser extends Parser<ParserTuple> implements
 
 		DepthFirstParser parser = new DepthFirstParser(
 				"resource/2013-english-ttr");
-		String sent = "john likes mary";
+		String sent = "john likes mary who arrives with bill";
 		List<String> words = Arrays.asList(sent.split(" "));
 		parser.parseWords(words);
 		do{

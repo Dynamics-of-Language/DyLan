@@ -14,14 +14,17 @@ import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.UnaryPredicateLabel;
 
-/**
+/** This is a context DAG as per Eshghi et. al. (2015), where edges are instances of {@link GrounableEdge}, sequences of computational actions followed by a single lexical action - so each edge corresponds to a word.
+ *  Nodes contain trees (and semantics) as usual.
+ *  
+ *  There are special edges: BacktrackingEdge, NewClauseEdge, and ActionReplayEdge that only this type of DAG properly supports.
  * 
  * @author Arash
  *
  */
-public class WordLevelDAGState extends DAG<DAGTuple, GroundableEdge> {
+public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
-	public WordLevelDAGState(DAGParser<DAGTuple, GroundableEdge> p) {
+	public WordLevelContextDAG(DAGParser<DAGTuple, GroundableEdge> p) {
 		super(p);
 	}
 
@@ -30,7 +33,7 @@ public class WordLevelDAGState extends DAG<DAGTuple, GroundableEdge> {
 	 * 
 	 * 
 	 */
-	protected static Logger logger = Logger.getLogger(WordLevelDAGState.class);
+	protected static Logger logger = Logger.getLogger(WordLevelContextDAG.class);
 	private static final long serialVersionUID = -8765365147853341079L;
 
 	//protected Map<String, Set<DAGTuple>> acceptance_pointers = new HashMap<String, Set<DAGTuple>>();

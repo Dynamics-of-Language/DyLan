@@ -20,7 +20,7 @@ import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
-import qmul.ds.dag.WordLevelDAGState;
+import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.util.Pair;
@@ -58,7 +58,7 @@ public class InteractiveContextParser extends
 
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir);
-		state = new WordLevelDAGState(this);
+		state = new WordLevelContextDAG(this);
 		context = new Context<DAGTuple, GroundableEdge>(state);
 		state.setContext(context);
 
@@ -71,7 +71,7 @@ public class InteractiveContextParser extends
 	 */
 	public InteractiveContextParser(String resourceDirNameOrURL) {
 		super(resourceDirNameOrURL);
-		state = new WordLevelDAGState(this);
+		state = new WordLevelContextDAG(this);
 		context = new Context<DAGTuple, GroundableEdge>(state);
 		state.setContext(context);
 
