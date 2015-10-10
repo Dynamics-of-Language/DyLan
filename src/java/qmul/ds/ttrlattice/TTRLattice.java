@@ -217,28 +217,50 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 * Function inspired by Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'.
 	 * Adds the intent (Record Type) and the extents (objects, which are Austinian propositions which are judgements of situations being of that type with a given probability)
 	 */
-	public void addTypeJudgement(TTRRecordType ttr,Set<TTRAustinianProp> props, Node n, Node parentCandidate,  TTRLattice frontierLattice){
+	public void addTypeJudgement(TTRRecordType ttr,Set<TTRAustinianProp> props, Node child, Node parentCandidate, TTRLattice frontierLattice){
+		//Turn @ttr record type and @props of that type into a new Node if needed, else adding to existing node
+		//Takes as given that the @child node is a child of the new Node
+		//Function checks whether @parentCanidate should in fact cover this one or not
+		//If FrontierLattice is empty apart from the bottom (and top?) concept, return
+		
 		//Inherently changing the lattice, no need to recursively generate
 		//Get the maximal intent of ttrSit in lattice
 		
-		//Node n = new Node(new TTRLatticeNode(ttrSit,propAtoms));
-		//this.addNode(n);
-		//this.addEdge(n,child);
-		//this.addAustinianJudgements(n,propAtoms);
-		//Propogate through and remove parents of this node from frontier
+		this.addAustinianJudgements(child,props); //Add the type judgements to the child node as this has been checked before calling this- initially we know this is ok in the first call where child==bottom
+		Node n = this.nodeFromTTRRecordType(ttr); //check to see if type node is there already
+		if (n.equals(null)){ //if not in here already, add node
+			n = new Node(new TTRLatticeNode(ttr,props));
+			this.addNode(n);
+		} else { //just add props
+			this.addAustinianJudgements(n,props);
+		}
+		//Add the new node as a parent to the child node as this has already been checked before calling this
+		this.addEdge(n,child);
+		frontierLattice.removeNode(n); //we don't need to check this for parenthood anymore ???
 		
-		TTRRecordType parentTTR = ((TTRLatticeNode) parentCandidate.getWeight()).getTtr();
-		Set<TTRAustinianProp> parentProps = ((TTRLatticeNode) parentCandidate.getWeight()).getProps();
-		//Node newParentCandidate = null;//the one to recurse to
-		//Case 1. The parent candidate does subsume the concept/record type. 
-		//If so, add the link to the parent candidate, recurse upwards with child :- parent from the parent upwards with next bottom thing from Frontier. 
-		//i.e. propogate up the type judgements and remove the candidate parent from Frontier (all its precedessors bar the top will be removed as it climbs the Frontier)
-		if (parentTTR.subsumes(ttr)){
-			//TODO possible optimization, can remove all parents of parentCandidate in the Frontier lattice straight off rather than recurse
-			this.addEdge(parentCandidate, n);
-			this.addAustinianJudgements(parentCandidate,props);
-		
+		//Case 3. (special case of 1). The parent candidate is Top (the empty record type)
+		if (((TTRLatticeNode) parentCandidate.getWeight()).top==true){ //if top node and no nodes left to search return
+			if (frontierLattice.nodes().size()==1){ // if only bottom left in frontierLattice
+				return;
+			}
 			
+			
+		}
+		
+		
+		//Now check the subsumption of the parentCandidate
+		TTRRecordType parentTTR = ((TTRLatticeNode) parentCandidate.getWeight()).getTtr();
+		//Case 1. The parent candidate does subsume the concept/record type. 
+		if (parentTTR.subsumes(ttr)){
+			//If so, add the link to the parent candidate, recurse upwards with child :- parent from the parent upwards with next bottom thing from Frontier. 
+			//i.e. propogate up the type judgements and remove the candidate parent from Frontier (all its precedessors bar the top will be removed as it climbs the Frontier)
+			this.addEdge(n,parentCandidate);
+			this.addAustinianJudgements(parentCandidate, props);
+			frontierLattice.removeNode(parentCandidate);
+			
+			
+			//TODO possible optimization, can remove all parents of parentCandidate in the Frontier lattice straight off rather than recurse
+			this.addTypeJudgement(parentTTR, props, n, parentCandidate, frontierLattice);
 			
 		} else {
 			//Case 2. The parent candidate does not subsume the concept. If not, do not link to it.
@@ -250,7 +272,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				//common supertype is not in the lattice
 				ttr = minimalCommonSuperType;
 				Node siblingCandidate = parentCandidate;
-				Set<TTRAustinianProp> siblingProps = parentProps;
+				Set<TTRAustinianProp> siblingProps = props;
 				parentCandidate = new Node(new TTRLatticeNode(ttr,props)); //TODO check immutability
 				this.addAustinianJudgements(parentCandidate,siblingProps); // add the old parent candidate props
 				this.addEdge(parentCandidate,siblingCandidate);
@@ -261,9 +283,9 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				this.addAustinianJudgements(parentCandidate, props);
 			}
 			//in both cases add a link to the parent
-			this.addEdge(parentCandidate,n);
+			this.addEdge(parentCandidate,child);
 			
-			frontierLattice.removeNode(n); //we've checked n for its parenthood //TODO replace broken links
+			frontierLattice.removeNode(child); //we've checked n for its parenthood //TODO replace broken links
 			
 			
 			
@@ -272,24 +294,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		
 
 		//Recurse from the bottom of the frontier lattice
-		//Case 3. (special case of 1). The parent candidate is Top (the empty record type)
-		
-		//check to see if parent candidate is the top
-		if (((TTRLatticeNode) parentCandidate.getWeight()).top==true){ //if top node and no nodes left to search return
-			//this.addAustinianJudgements(parentCandidate, propAtoms);
-			//this.addEdge(parentCandidate,n);
-			return;
-			//if (frontierLattice.nodes().size()==1){ // if only bottom concept left in frontier, return
-			//	return frontierLattice;
-			//} else {
-		//		//recurse from bottom of TTRlattice frontier that's not
-		//		//addTypeJudgement();
-		//		Collection<Node> frontierAtoms = this.getParents((Node) frontierLattice.bottom());
-		//		for (Node node : frontierAtoms){
-		//			
-		//		}
-		//	}
-		}
+
 		//Now upwards search for propogation up the lattice
 		//Store the nodes that have been accounted for/create a list of the search graph remaining
 		//this has to be a recursive function, will return when it reaches the top node
@@ -312,8 +317,6 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		}
 		
 		
-		 //add type judgement to parent
-		
 		
 	}
 	
@@ -322,7 +325,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 */
 	public void createLatticeIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
 
-		//Initialize by making a top and bottom which are the empty record type (which contains every type) and the absurdity
+		//Initialize a lattice with just a top (empty record type) and bottom (absurdity)
 		TTRLatticeNode abottom = new TTRLatticeNode();
 		abottom.setBottom();
 		Node bottom = new Node(abottom);
@@ -333,15 +336,11 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		Node top = new Node(mytop);
 		this.addNode(top);
 		this.addEdge(top, bottom);
-
-		// atoms and all the supertypes..
-		// done incrementally atom by atom, so it is generalizable to a general addTypeJudgementIntent
-		// Will be bottom up
 		
 		for (int i = 0; i < ttrAtoms.size(); i++) {
-			//Add prop atom to the extent of newSuperType and all its supertypes
-			//The AddIntent should add all the above concepts
-			//addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), (Node) this.bottom(), (TTRLattice) this.clone());
+			//addTypeJudgement can be called during online learning too
+			//parent Candidate always a parent of the bottom node (initially top, but then other atoms)
+			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), (Node) this.bottom(), (Node) this.getParents((Node) this.bottom()).toArray()[0], (TTRLattice) this.clone());
 		}
 		
 	}
