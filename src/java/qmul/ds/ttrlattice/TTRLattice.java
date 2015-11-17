@@ -3,6 +3,7 @@ package qmul.ds.ttrlattice;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +61,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	}
 	
 	public Collection<Node> getParents(Node node){
-		Collection<Node> parents = this.predecessors(node); 
+		Collection<Node> parents = this.successors(node); 
 		parents.retainAll(this.neighbors(node));//gets immediate parents
 		return parents;
 	}
@@ -106,7 +107,30 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		// }
 
 	}
-
+	
+	/**
+	 * Uses the node IDs to remove edges
+	 * @param node1
+	 * @param node2
+	 */
+	public void removeEdge(Node node1, Node node2){
+		System.out.println("removing Edge from child ");
+		System.out.print(this.nodeLabel(node1));
+		System.out.print(" to parent ");
+		System.out.print(this.nodeLabel(node2));
+		System.out.println("");
+		Object[] myedges = this.outputEdges(node1).toArray(); //TODO need a copy TODO make this a getEdge function
+		Collection<Object> edges = new HashSet<Object>(Arrays.asList(myedges));
+		edges.retainAll(this.incidentEdges(node2)); //TODO deep copy?? check
+		this.removeEdge((Edge) edges.toArray()[0]); //disconnect
+	}
+	
+	public Collection<Node> upperBound(Node node1, Node node2){
+		Collection<Node> mynodes = this.reachableNodes(node1);
+		mynodes.retainAll(this.reachableNodes(node2));
+		return mynodes;
+	}
+	
 	public void constructFromAtoms(List<TTRRecordType> myttr, List<Set<TTRAustinianProp>> myprops) {
 		/*
 		 * Constructs the TTR lattice from the bottom up as in Hough and Purver 2014 TTNLS
@@ -206,73 +230,220 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 * 
 	 * @param oldnode the node to add the new judgement(s) to
 	 * @param props the new judgements
+	 * @param addUpSet whether to add the props to upset of the node too
 	 */
-	public void addAustinianJudgements(Node oldnode, Set<TTRAustinianProp> props){
-		Set<TTRAustinianProp> newweight = ((TTRLatticeNode) this.node(oldnode).getWeight()).getProps();
-		newweight.addAll(props);
-		TTRRecordType ttr = ((TTRLatticeNode) this.node(oldnode).getWeight()).getTtr();
-		this.node(oldnode).setWeight(new TTRLatticeNode(ttr,newweight));
+	public void addAustinianJudgements(Node mynode, Set<TTRAustinianProp> props, boolean addUpSet){
+		//System.out.println("ADDDING PROPS-----000000");
+		//System.out.println(mynode);
+		//System.out.println(props);
+		Set<TTRAustinianProp> newweight = ((TTRLatticeNode) mynode.getWeight()).getProps();
+		if (newweight == null){
+			newweight = props;
+		} else {
+			newweight.addAll(props);
+		}
+		TTRRecordType ttr = ((TTRLatticeNode) mynode.getWeight()).getTTR();
+		mynode.setWeight(new TTRLatticeNode(ttr,newweight));
+		if (mynode.equals(this.top())){
+			return;
+		}
+		
+		//pause();
+		if (addUpSet==true){ //TODO could optimize by making it truly recursive
+			//System.out.println(mynode);
+			//System.out.println(this.predecessors(mynode));
+			Collection<Node> upSet = this.reachableNodes(mynode); //nB successors just parents
+			//System.out.println("reachable nodes");
+			System.out.println(upSet);
+			for (Node node : upSet){
+				this.addAustinianJudgements(node, props, true);
+			}
+		}
+		//System.out.println(this);
+		//System.out.println("0000000");
 	}
 
 	/**
 	 * Function inspired by Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'.
 	 * Adds the intent (Record Type) and the extents (objects, which are Austinian propositions which are judgements of situations being of that type with a given probability)
 	 */
-	public void addTypeJudgement(TTRRecordType ttr,Set<TTRAustinianProp> props, Node child){
+	public Node addTypeJudgement(TTRRecordType ttr,Set<TTRAustinianProp> props, Node child, boolean addProps){
 		//Turn @ttr record type and @props of that type into a new Node if needed, else adding to existing node
 		//Takes as given that the @child node is a child of the new Node
-		//Function checks whether @parentCanidate should in fact cover this one or not
-		//If FrontierLattice is empty apart from the bottom (and top?) concept, return
+		//Get the maximal intent (all minimal common supertypes/upper bound) of @ttr in lattice
+		System.out.println("addTypeJudgement===========:");
+		System.out.println("ttr:" + ttr.toString());
+		System.out.println("props:" + props.toString());
+		System.out.println("child:" + child.toString());
+		System.out.println(addProps);
 		
-		//Inherently changing the lattice, no need to recursively generate
-		//Get the maximal intent of ttrSit in lattice
-		
-		Collection<Node> parents = this.getParents(child);// WON'T WORK NOW
+		Collection<Node> parents = this.getParents(child);
+		System.out.print("PARENTS OF " + child.toString() + " are : ");
+		System.out.println(parents);
+		Node myNode = new Node(new TTRLatticeNode(ttr, props)); //It's position/edges will be instantiated below if needed
+
+		this.addNode(myNode);
+		this.addEdge(child,myNode); //always add up
+		System.out.print("adding Node ");
+		System.out.println(this.nodeLabel(myNode));
 		for (Node parent: parents){
-			TTRRecordType parentTTR = ((TTRLatticeNode) parent.getWeight()).getTtr();
-			if (ttr.subsumes(parentTTR)){
-				Collection<Edge> edges = this.outputEdges(child);
-				edges.retainAll(this.incidentEdges(parent)); //TODO deep copy?? check
-				this.removeEdge((Edge) edges.toArray()[0]);
-				this._disconnectEdge((Edge) edges.toArray()[0]);
-				//this._connect(edge, node);
+
+			TTRRecordType parentTTR = ((TTRLatticeNode) parent.getWeight()).getTTR();
+			if (parentTTR.equals(ttr)){ // we have a match, add props to its up set and return
+				System.out.println("already in here as parent" + myNode.toString());
+				System.out.print("preserving outgoing edges and removing Node ");
+				System.out.println(this.nodeLabel(myNode));
+				
+				Collection<Edge> collectedEdges = this.outputEdges(myNode);
+				for (Edge edge : collectedEdges){
+					if (!this.edgeExists(parent, edge.sink())){
+						this.addEdge(parent,edge.sink());
+					} else {
+						System.out.println("Edge exists!");
+					}
+					
+				}
+				
+				
+				this.removeNode(myNode); //TODO remove extra edge needed/collapse edges???
+				myNode = parent;
+				
+				//myNode = this.addTypeJudgement(ttr, props, parent, false); //((TTRLatticeNode) parent.getWeight());
+				break; //no need to search any further, nor connect at bottom
+			}
+			if (parentTTR.subsumes(ttr)){
+				System.out.println("parent" + parentTTR.toString() + " subsumes ttr " + ttr);
+				this.removeEdge(child, parent);
+				System.out.println("adding edge from " + myNode.toString() + " to parent " + parent.toString());
+				if (!this.edgeExists(myNode, parent)){
+					this.addEdge(myNode,parent); //connect up to parent
+				} else {
+					System.out.println("Edge exists!");
+				}
+				
+				
+				//this.addAustinianJudgements(parent, props, true);
+				//this._connect(edge, node); //TODO which method?
+				
+			} else { //it doesn't subsume, needs to search bottom up for a supertype that fits/is in the lattice
+				
+				TTRRecordType minCommonSuper = ttr.minimumCommonSuperTypeBasic(parentTTR, new HashMap<Variable,Variable>());
+				System.out.println("Making new supertype between " + ttr.toString() + parentTTR.toString());
+				Set<TTRAustinianProp> commonProps = new HashSet<TTRAustinianProp>(((TTRLatticeNode) myNode.getWeight()).getProps());
+				Set<TTRAustinianProp> parentProps = new HashSet<TTRAustinianProp>(((TTRLatticeNode) parent.getWeight()).getProps());;
+				commonProps.retainAll(parentProps);
+				//TODO it might be in here already, need to bottom up search for it...
+				
+				if (minCommonSuper.equals(ttr)){
+					
+					System.out.println("Matched min common super");
+					this.removeEdge(child,myNode);
+					
+					//System.out.println("recurse 1");
+					//Check if this is already in parents of parent
+					boolean removeNode = false;
+					if (!this.successors(parent).isEmpty()&!this.successors(child).isEmpty()){
+						System.out.print("Checking upper bound! ");
+						System.out.print(parent);
+						System.out.println(child);
+
+						Collection<Node> nodes = this.upperBound(child,parent);
+						//System.out.println(nodes);
+						for (Node grandparent : nodes){
+							if (((TTRLatticeNode) grandparent.getWeight()).getTTR().equals(minCommonSuper)){
+								System.out.println("Removing myNode " + this.nodeLabel(myNode));
+								removeNode = true;
+								this.removeNode(myNode);
+								myNode = grandparent;
+								//return myNode;
+								break;
+							}
+							
+						}
+					} 
+
+					//if (removeNode==false){
+						System.out.print("Matched min common super adding Edge from child ");
+						System.out.print(this.nodeLabel(parent));
+						System.out.print(" to parent ");
+						System.out.print(this.nodeLabel(myNode));
+						//this.addTypeJudgement(ttr, parentProps, myNode, true); 
+						if (!this.edgeExists(parent, myNode)){
+						
+							this.addEdge(parent,myNode); //connect up to parent
+						} else {
+							System.out.println("Edge exists!");
+						}
+
+						
+					//}
+		
+					break;
+					
+				}
+				//Not the same, is a supertype, need to check if it's in the lattice already, if not, needs to be added
+				System.out.println("RECURSIVE CALL");
+				boolean addPropsHere = commonProps.isEmpty() ? true: false;
+				Node newparent = this.addTypeJudgement(minCommonSuper, parentProps, parent, addPropsHere); //This has to add the new one
+				System.out.println("recusive call end");
+				System.out.print("min common super adding Edge from child ");
+				System.out.print(this.nodeLabel(myNode));
+				System.out.print(" to parent ");
+				System.out.print(this.nodeLabel(newparent));
+				System.out.println("");
+				//NB only add if no intervening edges
+				if (!this.reachableNodes(myNode).contains(newparent)){
+					//this.addAustinianJudgements(newparent, commonProps, true);
+					if (!this.edgeExists(myNode,newparent)){
+						
+						this.addEdge(myNode,newparent); //connect up to parent
+					} else {
+						System.out.println("Edge exists!");
+					}
+				}
+				
+				
+				//TODO bit hacky, but need to remove any unnecessary parents from myNode which are now redundant with newparent
+				//If it finds another node that isn't the new parent, remove the new parent?
+				
+				Collection<Node> reachables = this.reachableNodes(myNode);
+				//System.out.println(reachables);
+				for (Node parent_of_myNode : reachables){ //check through parents
+					TTRRecordType testTTR = ((TTRLatticeNode) parent_of_myNode.getWeight()).getTTR();
+					if (testTTR.subsumes(minCommonSuper)&!parent_of_myNode.equals(newparent)){
+				  		//Remove the link between parent and child
+						if (this.edgeExists(myNode, parent_of_myNode)){
+							System.out.println("subsumed min common super");
+							this.removeEdge(myNode, parent_of_myNode);
+
+						}
+						
+					} 
+				}
+				
 				
 			}
-			
+				
+		}
+
+		if (addProps==true){
+			this.addAustinianJudgements(myNode,props,true); //Add the type judgements to the child node as this has been checked before calling this- initially we know this is ok in the first call where child==bottom
 		}
 		
-		
-	
-		
-		this.addAustinianJudgements(child,props); //Add the type judgements to the child node as this has been checked before calling this- initially we know this is ok in the first call where child==bottom
-		Node n = this.nodeFromTTRRecordType(ttr); //check to see if type node is there already..Should not be needed
-		if (n.equals(null)){ //if not in here already, add node
-			n = new Node(new TTRLatticeNode(ttr,props));
-			this.addNode(n);
-		} else { //just add props
-			this.addAustinianJudgements(n,props);
-		}
-		//Add the new node as a parent to the child node as this has already been checked before calling this
-		this.addEdge(n,child);
-
-		
-		
-			
-		
-		
-
-		//Recurse from the bottom of the frontier lattice
-
-		
+		System.out.println(this);
+		pause();
+		return myNode;
 		
 	}
 	
 	/**
 	 * The createLatticeIncrementally using the AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
 	 */
-	public void createLatticeIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
+	public void constructIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
 
 		//Initialize a lattice with just a top (empty record type) and bottom (absurdity)
+		//new Node(new TTRLatticeNode());
+		
 		TTRLatticeNode abottom = new TTRLatticeNode();
 		abottom.setBottom();
 		Node bottom = new Node(abottom);
@@ -282,13 +453,17 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		mytop.setTtr(TTRRecordType.parse("[]"));//the empty record type at the top
 		Node top = new Node(mytop);
 		this.addNode(top);
-		this.addEdge(top, bottom);
+		this.addEdge(bottom,top); //always go outwards from bottom 'is a subtype of' relation
 		
 		for (int i = 0; i < ttrAtoms.size(); i++) {
 			//addTypeJudgement can be called during online learning too
 			//parent Candidate always a parent of the bottom node (initially top, but then other atoms)
-			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), (Node) this.bottom());
+			System.out.println("ADDING ATOM-----------");
+			System.out.println(propAtoms.get(i));
+			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), bottom, true);
+			System.out.println(this);
 		}
+
 		
 	}
 	
@@ -305,10 +480,10 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TTRLattice lattice = new TTRLattice();
-		double t = 1.0 / 3.0;
-		TTRRecordType ttr = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]");
+		double t = 1.0;
+		TTRRecordType ttr = TTRRecordType.parse("[ x : e |p1==circle(x) : t|p==yellow(x) : t]");
 		TTRRecordType ttr2 = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==yellow(x) : t]");
-		TTRRecordType ttr3 = TTRRecordType.parse("[ x : e |p1==circle(x) : t|p==yellow(x) : t]");
+		TTRRecordType ttr3 = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]");
 		Set<TTRAustinianProp> s = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, t, 1)));
 		Set<TTRAustinianProp> s2 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr2, t, 2)));
 		Set<TTRAustinianProp> s3 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr3, t, 3)));
@@ -317,26 +492,11 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		myprops.add(s);
 		myprops.add(s2);
 		myprops.add(s3);
-		lattice.constructFromAtoms(myttr, myprops);
-
-		/*
-		 * Node n = new Node(new TTRLatticeNode(ttr,s)); lattice.addNode(n); TTRRecordType ttr1 = new TTRRecordType();
-		 * TTRLatticeNode tn1 = new TTRLatticeNode(ttr1,s); Node n1 = new Node(tn1); lattice.addNode(n1);
-		 * lattice.addEdge(n, n1);
-		 */
-		// lattice.
-		// lattice.addEdge(n1,lattice.bottom());
-		// System.out.println(lattice.downSet(tn1));
-		for (Object i : lattice.weightArray(lattice.nodes())) {
-			System.out.println(i.toString());
-			// System.out.println(((TTRLatticeNode) i));
-			// System.out.println(lattice.downSet((TTRLatticeNode)i));
-			// System.out.println(((TTRLatticeNode)i).ttr);
-		}
-		System.out.println("edges");
-		for (Object e : lattice.edges()) {
-			System.out.println(e.toString());
-		}
+		//lattice.constructFromAtoms(myttr, myprops);
+		lattice.constructIncrementally(myttr, myprops);
+		
+		
+		
 
 	}
 

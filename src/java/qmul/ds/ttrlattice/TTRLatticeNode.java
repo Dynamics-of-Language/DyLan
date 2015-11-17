@@ -1,5 +1,6 @@
 package qmul.ds.ttrlattice;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import qmul.ds.formula.TTRRecordType;
@@ -31,11 +32,20 @@ public class TTRLatticeNode {
 	public String toString() {
 		if (bottom == true)
 			return "bottom";
-		//return "TTRLatticeNode [ttr=" + ttr + ", props=" + props.toString() + "]";
-		return "TTRLatticeNode [ttr=" + ttr + "]";
+		String propstring = "empty_props";
+		if (!props.isEmpty()&&!props.equals(null)){
+			propstring = "";
+			for (TTRAustinianProp prop : props){
+				propstring+=String.valueOf(prop.recordNumber)+",";
+			}
+			
+		}
+			
+		return "TTRLatticeNode [ttr= " + ttr + "\n\t, props= " + propstring + "]";
+		//return "TTRLatticeNode [ttr=" + ttr + "]";
 	}
 
-	public TTRRecordType getTtr() {
+	public TTRRecordType getTTR() {
 		return ttr;
 	}
 
@@ -52,6 +62,8 @@ public class TTRLatticeNode {
 	}
 
 	public TTRLatticeNode() {
+		this.props = new HashSet<TTRAustinianProp>();
+		this.ttr  = new TTRRecordType();
 		// TODO Auto-generated constructor stub
 	}
 	
