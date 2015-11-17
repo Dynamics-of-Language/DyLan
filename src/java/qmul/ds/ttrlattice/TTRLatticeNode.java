@@ -69,6 +69,7 @@ public class TTRLatticeNode {
 	
 	public void setBottom(){
 		this.bottom = true;
+		this.ttr = null;
 	}
 	
 	public void setTop(){

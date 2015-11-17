@@ -34,8 +34,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 
 	public Node nodeFromTTRRecordType(TTRRecordType ttr) {
 		for (Object i : this.nodes()) {
-			// System.out.println(((TTRLatticeNode)i).ttr);
-			if (((TTRLatticeNode) ((Node) i).getWeight()).ttr == null) {
+			//System.out.println(((TTRLatticeNode) ((Node) i).getWeight()).getTTR());
+			if (((TTRLatticeNode) ((Node) i).getWeight()).getTTR() == null) {
 				continue;
 			}
 
@@ -66,50 +66,12 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		return parents;
 	}
 
-	/***
-	 * The main ordering relation computation for two record type nodes that are already in the lattice
-	 * 
-	 * @param node1
-	 * @param node2
-	 */
-	public void order(Node node1, Node node2) {
-		// TODO need the most efficient way of ordering two nodes
-		// make it recursive..
-		// case 1- it's a proper supertype (not the same) as current node- order it in the subtype relation
-		// find the supertypes it is a subtype of (if any) and order
-		// TTRLatticeNode ttrLat = (TTRLatticeNode) agenda.get(0);
-		// if (node2.getWeight()) {
-		//
-		// }
-		// case 2- it's not a type of current node- just return (should stop the recursion)
-		// case 3- it's a proper subtype of
-		return;
-	}
 
-	/***
-	 * The ordering operation for a new node which hasn't been ordered yet to other nodes in the lattice
-	 * 
-	 * @param node1
-	 * @throws GraphActionException
-	 */
-	public void orderNode(Node node1) throws GraphActionException {
-		// TODO should be top down search
-		// Go from top then downward path retuning upon hitting bottom
-		// recurse and also keep list of checked nodes, only need to order this one node with each node once
-		// List<Object> obs = this.topologicalSort(this.nodes());
 
-		order((Node) this.bottom(), (Node) node1); // recurse from bottom??
-
-		// for (Object node : obs){
-		// TODO
-		// order((Node) node, node1);
-
-		// }
-
-	}
+	
 	
 	/**
-	 * Uses the node IDs to remove edges
+	 * Uses the node IDs to remove edges, rather than edge IDs
 	 * @param node1
 	 * @param node2
 	 */
@@ -130,6 +92,119 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		mynodes.retainAll(this.reachableNodes(node2));
 		return mynodes;
 	}
+	
+	public Collection<Node> lowerBound(Node node1, Node node2){
+		Collection<Node> mynodes = this.backwardReachableNodes(node1);
+		mynodes.retainAll(this.backwardReachableNodes(node2));
+		return mynodes;
+	}
+	
+	/**
+	 * TODO This is a lowest common ancestor algorithm
+	 * @param node1
+	 * @param node2
+	 * @return
+	 */
+	public Node meetNode(Node node1, Node node2){
+		if (node1.equals(node2)){
+			return node1;
+		}
+		if (edgeExists(node1,node2)){
+			return node1;
+		}
+		if (edgeExists(node2,node1)){
+			return node2;
+		}
+		
+		Collection<Node> upperBound = this.backwardReachableNodes(node1); //relies on this being ordered for max efficiency
+		for (Node child : upperBound){
+			if (child.equals(this.node(this.bottom()))){
+				continue;
+			}
+			if (child.equals(node2)){
+				return node2;
+			}
+			
+			if (this.edgeExists(child, node2)&&!child.equals(this.bottom())){ //we've found it
+				return child;
+			} 
+		}
+		
+		
+		/*Collection<Node> predec = this.predecessors(node1);
+		System.out.println(predec);
+		int count = predec.size();
+		if (count==1&&predec.toArray()[0]==this.node(this.bottom())){
+			if (!)return meetNode(node2,node1)
+		}
+		int i = 0;
+		for (Node child : predec){
+			i+=1;
+			System.out.println(child);
+			if (child.equals(node2)){
+				return node2;
+			}
+			
+			if (this.edgeExists(child, node2)&&!child.equals(this.bottom())){ //we've found it
+				return child;
+			} 
+			
+			if ((!child.equals(this.bottom()))&&i==count){ //search all branches first- kind of breadth first
+				//System.out.println("Recurse");
+				return this.meetNode(child, node2);
+			}
+		
+			
+		}
+		*/
+		return this.node(this.bottom());
+	}
+	
+	public Double probability(TTRRecordType ttr){
+		return ((TTRLatticeNode) this.nodeFromTTRRecordType(ttr).getWeight()).getProbabilityMass()/
+				((TTRLatticeNode) this.top()).getProbabilityMass();
+	}
+	
+	public Double meetProbability(TTRRecordType ttr, TTRRecordType ttr1){
+		Node meetNode = this.meetNode(this.nodeFromTTRRecordType(ttr), this.nodeFromTTRRecordType(ttr1));
+		System.out.println(meetNode);
+		return ((TTRLatticeNode) meetNode.getWeight()).getProbabilityMass()/
+				((TTRLatticeNode) this.top()).getProbabilityMass();
+	}
+	
+	public Double joinProbability(TTRRecordType ttr, TTRRecordType ttr1){
+		return ((TTRLatticeNode) this.leastUpperBound(this.nodeFromTTRRecordType(ttr), this.nodeFromTTRRecordType(ttr1))).getProbabilityMass()/
+				((TTRLatticeNode) this.top()).getProbabilityMass();
+	}
+	
+	public Double conditionalProbability(TTRRecordType condition, TTRRecordType result){
+		Node mynode = null;
+		if (this.nodeFromTTRRecordType(condition)==null){
+			if (condition.subsumes(result)){
+				//System.out.println("No conditioning node, but supertype of " + result.toString()); //TODO this isn't technically true
+				return 1.0;
+			}
+			mynode = this.addTypeJudgement(condition, new HashSet<TTRAustinianProp>(), this.node(this.bottom()), false); //have to find its place..
+			//System.out.println(mynode);
+		} else if (this.nodeFromTTRRecordType(result)==null){
+			if (result.subsumes(condition)){
+				System.out.println("No resulting node, but supertype of " + condition.toString());
+				return 1.0;
+			}
+			mynode = this.addTypeJudgement(result, new HashSet<TTRAustinianProp>(), this.node(this.bottom()), false); //have to find its place..
+			//System.out.println(mynode);
+			//System.out.println(this);
+		}
+		Node meetNode = this.meetNode(this.nodeFromTTRRecordType(condition), this.nodeFromTTRRecordType(result));
+		System.out.println(meetNode);
+		Double conditionalMass = ((TTRLatticeNode) this.nodeFromTTRRecordType(condition).getWeight()).getProbabilityMass();
+		if (mynode!=null){
+			this.removeNode(mynode); //Only temporary node for this
+		}
+		return ((TTRLatticeNode) meetNode.getWeight()).getProbabilityMass()/
+				conditionalMass;
+	}
+	
 	
 	public void constructFromAtoms(List<TTRRecordType> myttr, List<Set<TTRAustinianProp>> myprops) {
 		/*
@@ -182,7 +257,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					System.out.println(this.nodeFromTTRRecordType(nweight.ttr));
 					this.nodeFromTTRRecordType(nweight.ttr).setWeight(nweight);
 					// need to search to order.. i.e. go up as high as possible
-					order(this.nodeFromTTRRecordType(nweight.ttr), node(obj));
+					//order(this.nodeFromTTRRecordType(nweight.ttr), node(obj));
 
 					if (this.reachableNodes(this.nodeFromTTRRecordType(nweight.ttr)).contains(node(obj))) {
 						continue;
@@ -250,10 +325,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		
 		//pause();
 		if (addUpSet==true){ //TODO could optimize by making it truly recursive
-			//System.out.println(mynode);
-			//System.out.println(this.predecessors(mynode));
 			Collection<Node> upSet = this.reachableNodes(mynode); //nB successors just parents
-			//System.out.println("reachable nodes");
 			System.out.println(upSet);
 			for (Node node : upSet){
 				this.addAustinianJudgements(node, props, true);
@@ -278,8 +350,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		System.out.println(addProps);
 		
 		Collection<Node> parents = this.getParents(child);
-		System.out.print("PARENTS OF " + child.toString() + " are : ");
-		System.out.println(parents);
+		//System.out.print("PARENTS OF " + child.toString() + " are : ");
+		//System.out.println(parents);
 		Node myNode = new Node(new TTRLatticeNode(ttr, props)); //It's position/edges will be instantiated below if needed
 
 		this.addNode(myNode);
@@ -294,7 +366,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				System.out.print("preserving outgoing edges and removing Node ");
 				System.out.println(this.nodeLabel(myNode));
 				
-				Collection<Edge> collectedEdges = this.outputEdges(myNode);
+				Collection<Edge> collectedEdges = this.outputEdges(myNode); //preserving edges made to parents, if any
 				for (Edge edge : collectedEdges){
 					if (!this.edgeExists(parent, edge.sink())){
 						this.addEdge(parent,edge.sink());
@@ -304,14 +376,12 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					
 				}
 				
-				
-				this.removeNode(myNode); //TODO remove extra edge needed/collapse edges???
+				this.removeNode(myNode); 
 				myNode = parent;
-				
-				//myNode = this.addTypeJudgement(ttr, props, parent, false); //((TTRLatticeNode) parent.getWeight());
 				break; //no need to search any further, nor connect at bottom
 			}
-			if (parentTTR.subsumes(ttr)){
+			if (parentTTR.subsumes(ttr)){ 
+				//if myNode subsumes parent, reorder myNode between child and parent
 				System.out.println("parent" + parentTTR.toString() + " subsumes ttr " + ttr);
 				this.removeEdge(child, parent);
 				System.out.println("adding edge from " + myNode.toString() + " to parent " + parent.toString());
@@ -321,11 +391,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					System.out.println("Edge exists!");
 				}
 				
-				
-				//this.addAustinianJudgements(parent, props, true);
-				//this._connect(edge, node); //TODO which method?
-				
-			} else { //it doesn't subsume, needs to search bottom up for a supertype that fits/is in the lattice
+			} else { 
+				//parent doesn't subsume myNode, needs to generate minimal common supertype (join), then search bottom up for this RT if in the lattice
 				
 				TTRRecordType minCommonSuper = ttr.minimumCommonSuperTypeBasic(parentTTR, new HashMap<Variable,Variable>());
 				System.out.println("Making new supertype between " + ttr.toString() + parentTTR.toString());
@@ -339,9 +406,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					System.out.println("Matched min common super");
 					this.removeEdge(child,myNode);
 					
-					//System.out.println("recurse 1");
-					//Check if this is already in parents of parent
-					boolean removeNode = false;
+					//boolean removeNode = false;
 					if (!this.successors(parent).isEmpty()&!this.successors(child).isEmpty()){
 						System.out.print("Checking upper bound! ");
 						System.out.print(parent);
@@ -352,7 +417,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 						for (Node grandparent : nodes){
 							if (((TTRLatticeNode) grandparent.getWeight()).getTTR().equals(minCommonSuper)){
 								System.out.println("Removing myNode " + this.nodeLabel(myNode));
-								removeNode = true;
+								//removeNode = true;
 								this.removeNode(myNode);
 								myNode = grandparent;
 								//return myNode;
@@ -362,22 +427,17 @@ public class TTRLattice extends DirectedAcyclicGraph {
 						}
 					} 
 
-					//if (removeNode==false){
-						System.out.print("Matched min common super adding Edge from child ");
-						System.out.print(this.nodeLabel(parent));
-						System.out.print(" to parent ");
-						System.out.print(this.nodeLabel(myNode));
-						//this.addTypeJudgement(ttr, parentProps, myNode, true); 
-						if (!this.edgeExists(parent, myNode)){
+					System.out.print("Matched min common super adding Edge from child ");
+					System.out.print(this.nodeLabel(parent));
+					System.out.print(" to parent ");
+					System.out.print(this.nodeLabel(myNode));
+					//this.addTypeJudgement(ttr, parentProps, myNode, true); 
+					if (!this.edgeExists(parent, myNode)){
+						this.addEdge(parent,myNode); //connect up to parent
+					} else {
+						System.out.println("Edge exists!");
+					}
 						
-							this.addEdge(parent,myNode); //connect up to parent
-						} else {
-							System.out.println("Edge exists!");
-						}
-
-						
-					//}
-		
 					break;
 					
 				}
@@ -389,8 +449,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				System.out.print("min common super adding Edge from child ");
 				System.out.print(this.nodeLabel(myNode));
 				System.out.print(" to parent ");
-				System.out.print(this.nodeLabel(newparent));
-				System.out.println("");
+				System.out.println(this.nodeLabel(newparent));
 				//NB only add if no intervening edges
 				if (!this.reachableNodes(myNode).contains(newparent)){
 					//this.addAustinianJudgements(newparent, commonProps, true);
@@ -405,8 +464,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				
 				//TODO bit hacky, but need to remove any unnecessary parents from myNode which are now redundant with newparent
 				//If it finds another node that isn't the new parent, remove the new parent?
-				
-				Collection<Node> reachables = this.reachableNodes(myNode);
+				Collection<Node> reachables = this.reachableNodes(myNode); //this is the upset
 				//System.out.println(reachables);
 				for (Node parent_of_myNode : reachables){ //check through parents
 					TTRRecordType testTTR = ((TTRLatticeNode) parent_of_myNode.getWeight()).getTTR();
@@ -430,8 +488,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			this.addAustinianJudgements(myNode,props,true); //Add the type judgements to the child node as this has been checked before calling this- initially we know this is ok in the first call where child==bottom
 		}
 		
-		System.out.println(this);
-		pause();
+
 		return myNode;
 		
 	}
@@ -462,6 +519,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			System.out.println(propAtoms.get(i));
 			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), bottom, true);
 			System.out.println(this);
+			//pause();
 		}
 
 		
@@ -478,12 +536,12 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 		TTRLattice lattice = new TTRLattice();
 		double t = 1.0;
-		TTRRecordType ttr = TTRRecordType.parse("[ x : e |p1==circle(x) : t|p==yellow(x) : t]");
+		TTRRecordType ttr3 = TTRRecordType.parse("[ x : e |p1==circle(x) : t|p==yellow(x) : t]");
 		TTRRecordType ttr2 = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==yellow(x) : t]");
-		TTRRecordType ttr3 = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]");
+		TTRRecordType ttr = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]");
 		Set<TTRAustinianProp> s = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, t, 1)));
 		Set<TTRAustinianProp> s2 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr2, t, 2)));
 		Set<TTRAustinianProp> s3 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr3, t, 3)));
@@ -494,7 +552,10 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		myprops.add(s3);
 		//lattice.constructFromAtoms(myttr, myprops);
 		lattice.constructIncrementally(myttr, myprops);
-		
+		//System.out.println(lattice.nodeFromTTRRecordType(TTRRecordType.parse("[]")));
+		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[ x : e ]"),TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]")));
+		System.out.println(lattice.probability(TTRRecordType.parse("[ x : e |p1==square(x) : t]")));
+		System.out.println(lattice.probability(TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]")));
 		
 		
 
