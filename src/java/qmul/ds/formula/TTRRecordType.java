@@ -1327,7 +1327,7 @@ public class TTRRecordType extends TTRFormula {
 							otherField.getType() instanceof TTRRecordType){
 						//recursively find the minimal common supertype of the embedded record type
 						myttr.add(new TTRField(otherField.getLabel(),
-								((TTRRecordType)otherField.getType()).minimumCommonSuperTypeBasic(((TTRRecordType)last.getType()), map)));
+								((TTRRecordType)otherField.getType()).minimumCommonSuperTypeBasic(((TTRRecordType)last.getType()), new HashMap<Variable,Variable>())));
 					}
 					else {
 						//just add the abstract ds type if not record type
