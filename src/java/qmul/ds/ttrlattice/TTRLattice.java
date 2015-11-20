@@ -1,5 +1,7 @@
 package qmul.ds.ttrlattice;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,11 +12,15 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.ling.Word;
+import edu.stanford.nlp.util.Pair;
 import ptolemy.graph.DirectedAcyclicGraph;
 import ptolemy.graph.Edge;
 import ptolemy.graph.Node;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.learn.RecordTypeCorpus;
 
 public class TTRLattice extends DirectedAcyclicGraph {
 
@@ -295,13 +301,13 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		}
 		TTRRecordType ttr = ((TTRLatticeNode) mynode.getWeight()).getTTR();
 		mynode.setWeight(new TTRLatticeNode(ttr,newweight));
-		if (mynode.equals(this.top())){
+		if (mynode.equals(this.nodeFromTTRRecordType(TTRRecordType.parse("[]")))){
 			return;
 		}
 		
 		if (addUpSet==true){ //TODO could optimize by making it truly recursive
 			Collection<Node> upSet = this.reachableNodes(mynode); //nB successors just parents
-			logger.debug(upSet);
+			//logger.error(upSet);
 			for (Node node : upSet){
 				this.addAustinianJudgements(node, props, true);
 			}
@@ -409,7 +415,9 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					}
 				} 
 				
-
+				if (foundIntent){ //myNode is removed, so don't go on
+					break;
+				}
 				logger.debug("Matched min common super adding Edge from child ");
 				logger.debug(this.nodeLabel(parent));
 				logger.debug(" to parent ");
@@ -421,9 +429,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					logger.debug("Edge exists!");
 				}
 				
-				if (foundIntent){ //myNode is removed, so don't go on
-					break;
-				}
+				
 				//break;
 				
 			} else {
@@ -468,6 +474,11 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		}
 
 		if (addProps==true){
+			if (!this.cycleNodeCollection().isEmpty()){
+				logger.error(this.cycleNodeCollection());
+				logger.error(this);
+				pause();
+			}
 			this.addAustinianJudgements(myNode,props,true); //Add the type judgements to the child node as this has been checked before calling this- initially we know this is ok in the first call where child==bottom
 		}
 		
@@ -476,14 +487,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		
 	}
 	
-	/**
-	 * The createLatticeIncrementally using the AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
-	 */
-	public void constructIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
-
-		//Initialize a lattice with just a top (empty record type) and bottom (absurdity)
-		//new Node(new TTRLatticeNode());
-		
+	public void init(){
 		TTRLatticeNode abottom = new TTRLatticeNode();
 		abottom.setBottom();
 		Node bottom = new Node(abottom);
@@ -495,12 +499,21 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		this.addNode(top);
 		this.addEdge(bottom,top); //always go outwards from bottom 'is a subtype of' relation
 		
+	}
+	
+	/**
+	 * The createLatticeIncrementally using the AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
+	 */
+	public void constructIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
+
+		//Initialize a lattice with just a top (empty record type) and bottom (absurdity)
+		this.init();
 		for (int i = 0; i < ttrAtoms.size(); i++) {
 			//addTypeJudgement can be called during online learning too
 			//parent Candidate always a parent of the bottom node (initially top, but then other atoms)
 			System.out.println("ADDING ATOM-----------");
 			System.out.println(propAtoms.get(i));
-			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), bottom, true);
+			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), this.node(this.bottom()), true);
 			System.out.println(this);
 			//pause();
 		}
@@ -556,6 +569,34 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			
 		}
 		
+		//Bigger experiment with 100+ RTs
+		RecordTypeCorpus corpus = new RecordTypeCorpus();
+		try {
+			corpus.loadCorpus(new File("/Users/julianhough/git/dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion100TestFinal.txt"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		lattice = new TTRLattice();
+		lattice.init();
+		int i = 1;
+		for (Pair<Sentence<Word>, TTRRecordType> p : corpus){
+			ttr = p.second().removeHead();
+			System.out.println("adding " + ttr.toString());
+			Set<TTRAustinianProp> s4 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, 1.0, i)));
+			lattice.addTypeJudgement(ttr, s4, lattice.node(lattice.bottom()), true);
+			i+=1;
+			
+		}
+		System.out.println(lattice.edgeCount());
+		System.out.println(lattice.nodeCount());
+		//probability of the subordinate event being cooking:
+		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[]"),TTRRecordType.parse("[ e2==cook : es ]")));
+		//probability that the speaker is the subject/agent, cycle through variations.. TODO labels should be determined
+		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[]"),TTRRecordType.parse("[ x==i : e|e1 : es|p1==subj(e1, x) : t ]")));
+		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[]"),TTRRecordType.parse("[ x1==i : e|e1 : es|p1==subj(e1, x1) : t ]")));
+		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[]"),TTRRecordType.parse("[ x2==i : e|e1 : es|p1==subj(e1, x2) : t ]")));
 
 	}
 
