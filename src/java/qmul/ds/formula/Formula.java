@@ -50,7 +50,7 @@ public abstract class Formula implements Serializable {
 	public static final String UNICODE_IOTA_FUNCTOR = "\u0269"; // iota; also 03B9, 1D6CA
 	public static final String ETA_FUNCTOR = "eta";
 	public static final String UNICODE_ETA_FUNCTOR = "\u03B7"; // eta; also 1D6C8
-	public static final String EPSILON_FUNCTORS = "(eps|tau|iota)";
+	public static final String EPSILON_FUNCTORS = "(eps|tau|iota|notexists)";
 	public static final String CONJUNCTION_OPERATOR = "&";
 	public static final String DISJUNCTION_OPERATOR = "\\|";
 	public static final String UNICODE_CONJUNCTION_OPERATOR = "\u2227"; // logical and; also 22C0
@@ -161,8 +161,10 @@ public abstract class Formula implements Serializable {
 		}
 
 		if (v != null)
+		{
+			logger.debug("Created:"+v+":"+v.getClass());
 			return v;
-
+		}
 		TTRPath path = TTRPath.parse(string);
 		if (path != null) {
 

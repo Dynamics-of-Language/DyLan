@@ -41,8 +41,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 
 	protected DAG<T, E> state;
 	protected Lexicon lexicon;
-	protected Grammar nonoptionalGrammar;// as determined by the prefix * in
-	Context<T, E> context; // action spec files.
+	protected Grammar nonoptionalGrammar;// as determined by the prefix * in action files
+	protected Context<T, E> context; 
 	protected Grammar optionalGrammar;
 
 	protected Grammar completionGrammar;

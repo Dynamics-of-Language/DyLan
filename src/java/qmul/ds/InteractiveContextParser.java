@@ -519,9 +519,9 @@ public class InteractiveContextParser extends
 
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
-				"resource/2015-english-ttr");
-		Utterance utt = new Utterance("who does bill like? mary");
-		parser.parseUtterance(utt);
+				"resource/2012-aux-link-lexicalised");
+		//Utterance utt = new Utterance("who does bill like? mary");
+		//parser.parseUtterance(utt);
 
 	}
 

@@ -94,6 +94,7 @@ public class IfThenElse extends Effect implements Serializable {
 
 	public IfThenElse(List<String> strings, int embeddingLevel, IfThenElse parent) {
 		this.parent = parent;
+		logger.debug("creating IfThenElse from:"+strings);
 		List<String> stringsCopy = deepCopy(strings);
 		this.embeddingLevel = embeddingLevel;
 		ArrayList<Label> IF = new ArrayList<Label>();

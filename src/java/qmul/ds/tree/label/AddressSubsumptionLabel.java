@@ -69,8 +69,6 @@ public class AddressSubsumptionLabel extends Label {
 
 		} else
 			other = pointed.go(modality.instantiate());
-
-		System.out.println("cheking "+pointed+" subsumes "+other);
 		return pointed.subsumes(other) || other.subsumes(pointed);
 	}
 

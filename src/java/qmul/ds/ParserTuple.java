@@ -19,8 +19,9 @@ import qmul.ds.tree.Tree;
 import edu.stanford.nlp.util.Pair;
 
 /**
- * A parser tuple (member of a {@link ParseState}). At its simplest, just a {@link Tree}, but more complex
- * {@link Parser}s may add context information, probabilities etc
+ * A parser tuple (member of a {@link ParseState}). At its simplest, just a
+ * {@link Tree}, but more complex {@link Parser}s may add context information,
+ * probabilities etc
  * 
  * @author mpurver
  */
@@ -69,12 +70,13 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	 * @param tree
 	 */
 	public ParserTuple(ParserTuple tuple) {
-		this.tree = (tuple.tree==null)?null:new Tree(tuple.tree);
-		this.semantics=tuple.semantics==null?null:tuple.semantics.clone();
+		this.tree = (tuple.tree == null) ? null : new Tree(tuple.tree);
+		this.semantics = tuple.semantics == null ? null : tuple.semantics
+				.clone();
 	}
 
 	public ParserTuple(TTRFormula ttrRecordType) {
-		this.semantics=ttrRecordType;
+		this.semantics = ttrRecordType;
 	}
 
 	/**
@@ -91,8 +93,9 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	/**
 	 * @param action
 	 * @param word
-	 * @return the result of applying action to a copy of this tuple; this will be null if the action aborts. Word may
-	 *         be null if this is a non-lexical action
+	 * @return the result of applying action to a copy of this tuple; this will
+	 *         be null if the action aborts. Word may be null if this is a
+	 *         non-lexical action
 	 */
 	public ParserTuple execAction(Action action, String word) {
 		Tree result = action.execTupleContext(tree.clone(), this);
@@ -102,9 +105,11 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 		return new ParserTuple(result);
 	}
 
-	public Collection<? extends ParserTuple> execExhaustively(Action ca, String word) {
+	public Collection<? extends ParserTuple> execExhaustively(Action ca,
+			String word) {
 
-		Collection<Pair<? extends Action, Tree>> trees = ca.execExhaustively(tree, this);
+		Collection<Pair<? extends Action, Tree>> trees = ca.execExhaustively(
+				tree, this);
 
 		if (trees == null)
 			return null;
@@ -134,9 +139,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	 */
 	@Override
 	public int compareTo(ParserTuple other) {
-		
 
-		
 		if (this.tree.isComplete()) {
 			if (other.tree.isComplete()) {
 				return (other.hashCode() - this.hashCode());
@@ -147,7 +150,8 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 			if (other.tree.isComplete()) {
 				return 1;
 			} else {
-				int r = this.tree.numRequirements() - other.tree.numRequirements();
+				int r = this.tree.numRequirements()
+						- other.tree.numRequirements();
 				if (r == 0) {
 					return (other.hashCode() - this.hashCode());
 				}
@@ -155,8 +159,6 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 			}
 		}
 	}
-
-	
 
 	/*
 	 * (non-Javadoc)
@@ -206,27 +208,23 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		String s= (tree==null)?"Tree:null":tree.toString();
-		s+="\nSem:"+(getSemantics()==null?"null":getSemantics());
+		String s = (tree == null) ? "Tree:null" : tree.toString();
+		s += "\nSem:" + (getSemantics() == null ? "null" : getSemantics());
 		return s;
 	}
 
-	public boolean subsumes(ParserTuple t)
-	{
-		if (getSemantics()!=null)
-		{
-			if (t.getSemantics()==null)
+	public boolean subsumes(ParserTuple t) {
+		if (getSemantics() != null) {
+			if (t.getSemantics() == null)
 				return false;
 			return getSemantics().subsumes(t.getSemantics());
 		}
-		if (this.tree==null)
-		{
-			if (t.tree==null)
+		if (this.tree == null) {
+			if (t.tree == null)
 				return true;
 			return false;
 		}
-		
+
 		return tree.subsumes(t.tree);
 	}
 }
-		

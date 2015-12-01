@@ -287,8 +287,8 @@ public class LabelFactory {
 
 	public static void main(String a[]) {
 
-		Effect l=EffectFactory.create("ttrput([r:[x:e|p==arash(x):t|head==x:e]|x1==(iota, r.head, r):e|head==x1:e])");
-		System.out.println(l);
+		Formula l=Formula.create("x^y^y, (x < now)");
+		System.out.println(l+":"+l.getClass().toString());
 
 	}
 

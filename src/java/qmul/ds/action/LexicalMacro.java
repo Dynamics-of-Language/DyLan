@@ -11,15 +11,20 @@ package qmul.ds.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
+import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.tree.Tree;
 
 public class LexicalMacro extends Effect {
 
+	private static Logger logger = Logger.getLogger(LexicalMacro.class);
 	String name;
 	List<Effect> actions;
+	
 
 	public LexicalMacro(String name, ArrayList<Effect> l) {
 		this.name = name;
@@ -32,6 +37,7 @@ public class LexicalMacro extends Effect {
 		// logger.debug("creating lexical macro from:"+lines);
 		this.name = name;
 		for (String line : lines) {
+			logger.debug("processing effect:"+line);
 			actions.add(EffectFactory.create(line.trim()));
 
 		}

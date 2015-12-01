@@ -1205,10 +1205,10 @@ public class TTRRecordType extends TTRFormula {
 		
 		
 		TTRRecordType headUnified = this.substitute(thisHeadLabel, otherHeadLabel);
-		System.out.println("HeadUnified:"+headUnified);
+		
 		if (thisRestrictor==null || otherRestrictor==null)
 		{
-			System.out.println("restrictor null");
+			
 			return headUnified.asymmetricMerge(other);
 		}
 		
@@ -1224,33 +1224,17 @@ public class TTRRecordType extends TTRFormula {
 
 		Variable restrHeadThis=(Variable)thisEpsPath.evaluate();
 		Variable restrHeadOther=(Variable)otherEpsPath.evaluate();
-		//System.out.println("RestrHeadthis:"+restrHeadThis);
-		//System.out.println("RestrHeadOther:"+restrHeadOther);
+		
 		TTRRecordType thisNewRestr=(restrHeadThis!=null && restrHeadOther!=null && restrHeadThis instanceof Variable && restrHeadOther instanceof Variable)?(TTRRecordType)thisRestrictor.getType().substitute(restrHeadThis, restrHeadOther):(TTRRecordType)thisRestrictor.getType().substitute(thisEpsVar, otherEpsVar);
-		//System.out.println("this new restrictor:"+thisNewRestr);
+		
 		headUnified.getRestrictorField().setType(thisNewRestr);
 		headUnified.getRestrictorField().setLabel(new TTRLabel(otherRestrictor.getLabel()));
 		thisEps.setOrderedPair(otherEps.getOrderedPair());
-		//System.out.println("Now asymmerging:"+headUnified);
-		//System.out.println("With:"+other);
+		
 		return headUnified.asymmetricMerge(other);
 			
 			
-		
-		/*if (!(thisHead.getType() instanceof EpsilonTerm && f.getType() instanceof EpsilonTerm))
-			throw new UnsupportedOperationException("both heads should be epsilon terms or one empty");
-		EpsilonTerm termThis=(EpsilonTerm)thisHead.getType();
-		EpsilonTerm termOther=(EpsilonTerm)f.getType();
-		Predicate thisFunct=termThis.getFunctor();
-		Predicate otherFunct=termOther.getFunctor();
-		Predicate eps=new Predicate(EPSILON_FUNCTOR);
-		Predicate iota=new Predicate(IOTA_FUNCTOR);
-		Predicate tau=new Predicate(TAU_FUNCTOR);
-		if (thisFunct.equals(tau)||otherFunct.equals(tau))
-			throw new UnsupportedOperationException();
-		//assuming tau overrides eps in conjunction
-		Predicate funct=(thisFunct.equals(eps)&&otherFunct.equals(eps))?eps:iota;
-		newF=new TTRField(thisHead.getLabel(), thisHead.getDSType(), new EpsilonTerm(funct, termThis.getOrderedPair()));*/
+	
 		
 		
 	}
@@ -1395,9 +1379,13 @@ public class TTRRecordType extends TTRFormula {
 		//System.out.println("target: "+target.toUniqueInt());
 		//System.out.println("r: "+r.toUniqueInt());
 		TTRRecordType target =	TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==circle(x) : t]");
-		TTRRecordType r =       TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==square(x) : t]");
-		System.out.println(target.minimumCommonSuperTypeBasic(r, new HashMap<Variable,Variable>()));
-		System.out.println(target.minus(r));
+		TTRRecordType r =       TTRRecordType.parse("[x : e]");
+		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+		System.out.println(r.subsumesMapped(target, map));
+		
+		System.out.println(map);
+		
+		
 	}
 
 

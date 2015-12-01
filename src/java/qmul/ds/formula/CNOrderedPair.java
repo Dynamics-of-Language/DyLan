@@ -26,7 +26,7 @@ public class CNOrderedPair extends PredicateArgumentFormula {
 	public CNOrderedPair(Formula v, Formula f) {
 		super(EMPTY_FUNCTOR, v, f);
 		if (v instanceof Variable && !f.getVariables().contains(v)) {
-			logger.fatal("expecting variable " + v + " already bound in " + f + " " + f.getVariables());
+			logger.warn("expecting variable " + v + " already bound in " + f + " " + f.getVariables());
 		}
 	}
 
