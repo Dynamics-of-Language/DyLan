@@ -486,23 +486,23 @@ public class TTRRecordType extends TTRFormula {
 		if (!(o instanceof TTRRecordType))
 			return false;
 		TTRRecordType other = (TTRRecordType) o;
-		TTRField last = fields.get(fields.size() - 1);
-		logger.debug("testing subsumption for field:" + last);
-		for (int j = other.fields.size() - 1; j >= 0; j--) {
+		TTRField first = fields.get(0);
+		logger.debug("testing subsumption for field:" + first);
+		for (int j=0; j < other.fields.size(); j++) {
 
 			TTRField otherField = other.fields.get(j);
 			HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
-			if (last.subsumesMapped(otherField, map)) {
+			if (first.subsumesMapped(otherField, map)) {
 				logger.debug("Subsumed " + otherField);
 				logger.debug("map is now:" + map);
-				if (this.removeLabel(last.getLabel()).subsumesMapped(other.removeLabel(otherField.getLabel()), map)) {
+				if (this.removeLabel(first.getLabel()).subsumesMapped(other.removeLabel(otherField.getLabel()), map)) {
 					return true;
 				} else {
 					map.clear();
 					map.putAll(copy);
 				}
 			} else {
-				logger.debug(last + " failed against:" + otherField + " map:" + map);
+				logger.debug(first + " failed against:" + otherField + " map:" + map);
 				map.clear();
 				map.putAll(copy);
 			}
@@ -1372,20 +1372,25 @@ public class TTRRecordType extends TTRFormula {
 		return new Pair<TTRRecordType, TTRRecordType>(addition, subtract);
 	}
 	
+	//public Collection<TTRRecordType> get
+	
 	public static void main(String[] a) {
 
-		//TTRRecordType target =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|head==snore : es|p1==subj(head, x4) : t]");
-		//TTRRecordType r =       TTRRecordType.parse("[r : [x : e|p1==fat(x) : t|p==man(x) : t|head==x : e]|x2==(eps, r.head, r) : e|e1==snore : es|p3==subj(e1, x2) : t]");
+		TTRRecordType r =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|e1==snore : es|p1==subj(e1, x4) : t]");
+		TTRRecordType target = TTRRecordType.parse("[r : [x : e|p1==mad(x) : t|head==x : e]|x1==(eps, r.head, r) : e|e2==snore : es|p3==subj(e2, x1) : t]");
 		//System.out.println("target: "+target.toUniqueInt());
 		//System.out.println("r: "+r.toUniqueInt());
-		TTRRecordType target =	TTRRecordType.parse("[x1 : e|x : e|p==yellow(x) : t|p1==circle(x) : t]");
-		TTRRecordType r =       TTRRecordType.parse("[x : e]");
+		
+		//TTRRecordType target =	TTRRecordType.parse("[x : e | p==yellow(x) : t|p1==circle(x) : t]");
+		//TTRRecordType r =       TTRRecordType.parse("[x1==o1 : e|p1==yellow(x1):t|p2==circle(x1):t|x2==o2:e|p3==sqr(x2):t]");
+		
 		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-		System.out.println(r.subsumesMapped(target, map));
+		System.out.println(target.subsumesMapped(r, map));
 		
 		System.out.println(map);
 		
-		
+		System.out.println("sub:"+r);
+		System.out.println("super:"+target);
 	}
 
 

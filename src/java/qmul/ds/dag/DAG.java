@@ -881,12 +881,12 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	
 	public boolean isBranching(T t)
 	{
-		System.out.println("checking branching:"+t);
+		logger.debug("checking branching:"+t);
 		Collection<E> out=getOutEdges(t);
 		boolean seenOne=false;
 		for(E edge:out)
 		{
-			System.out.println("outedge:"+edge+" in context:"+edge.inContext());
+			logger.debug("outedge:"+edge+" in context:"+edge.inContext());
 			if (edge.inContext() && seenOne)
 				return true;
 			if (edge.inContext())

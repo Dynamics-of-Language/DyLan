@@ -519,9 +519,12 @@ public class InteractiveContextParser extends
 
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
-				"resource/2012-aux-link-lexicalised");
-		//Utterance utt = new Utterance("who does bill like? mary");
-		//parser.parseUtterance(utt);
+				"resource/2015-english-ttr-shape-colour");
+		Utterance utt = new Utterance("A: what do you");
+		parser.parseUtterance(utt);
+		Tree finalT=parser.getState().getCurrentTuple().getTree();
+		System.out.println("Final tree" + finalT);
+		System.out.println("Sem: "+finalT.getMaximalSemantics());
 
 	}
 

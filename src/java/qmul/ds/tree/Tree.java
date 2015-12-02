@@ -729,6 +729,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		List<Tree> result = new ArrayList<Tree>();
 
 		for (Node unfixed : getUnfixedNodes()) {
+			logger.debug("found unfixed node:"+unfixed);
 			for (Node mergePoint : values()) {
 				if (!mergePoint.isLocallyFixed()) {
 					continue;
@@ -769,6 +770,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	public TTRFormula getMaximalSemantics() {
 
 		List<Tree> merged = mergeUnfixed();
+		logger.debug("Merging unfixed if possible,");
+		logger.debug("after merge:"+merged.get(0));
 		if (merged.isEmpty())
 			return null;
 		if (merged.size() < 2) {
@@ -851,17 +854,20 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 				rootReduced = rootReduced.conjoin(localUnfixedReduced);
 			}
 		}
-		// no fixed daughters.. only happens when we are at root of tree with
-		// unfixed nodes
-		if (unfixedReduced != null && localUnfixedReduced != null)
-			rootReduced = unfixedReduced
+		else
+		{
+			// no fixed daughters.. only happens when we are at root of tree with
+			// unfixed nodes
+				if (unfixedReduced != null && localUnfixedReduced != null)
+					rootReduced = unfixedReduced
 					.conjoin(localUnfixedReduced);
 
-		else if (unfixedReduced != null && localUnfixedReduced == null)
-			rootReduced = unfixedReduced;
-		else if (localUnfixedReduced != null)
-			rootReduced = localUnfixedReduced;
-
+				else if (unfixedReduced != null && localUnfixedReduced == null)
+					rootReduced = unfixedReduced;
+				else if (localUnfixedReduced != null)
+					rootReduced = localUnfixedReduced;
+		}
+		
 		if (!getDaughters(root, "L").isEmpty()) {
 
 			Formula maxSemL = getMaximalSemantics(get(root.getAddress()

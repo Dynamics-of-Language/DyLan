@@ -5,7 +5,7 @@
 // Formula metavariables: A,B,C
 // Bottom requirement: !
 
-
+//*
 proper(NAME,PERSON,CLASS)
 IF      ?ty(e)
 		¬<\/1>Ex.x
@@ -18,7 +18,19 @@ THEN    put(person(PERSON))
         ttrput([r:[x:e|p==NAME(x):t|head==x:e]|x1==(iota, r.head, r):e|head==x1:e])
         put(+PN)
 ELSE    abort
+*//
 
+proper(NAME,PERSON,CLASS)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    put(person(PERSON))
+        put(class(CLASS))
+        put(ty(e))
+        delete(?ty(e))
+        ttrput([x==NAME:e|head==x:e])
+        put(+PN)
+ELSE    abort
 
 
 det_quant(QUANT)

@@ -155,11 +155,11 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	 */
 	public GroundableEdge goFirst() {
 		if (outDegree(cur) == 0) {
-			System.out.println("out degree of cur is 0");
+			logger.debug("out degree of cur is 0");
 			return null;
 		}
 		if (wordStack.isEmpty()) {
-			System.out.println("GoFirst: wordstack is empty");
+			logger.debug("GoFirst: wordstack is empty");
 			return null;
 		}
 		UtteredWord word = wordStack.peek();

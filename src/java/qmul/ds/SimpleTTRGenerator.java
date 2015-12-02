@@ -64,5 +64,6 @@ public class SimpleTTRGenerator extends TTRGenerator<ParserTuple> {
 	}
 
 	
+	
 
 }

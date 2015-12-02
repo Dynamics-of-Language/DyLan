@@ -13,6 +13,11 @@ this						  det_demonst					here						  s3
 that						  det_demonst					there					      s3
 this						  demonst  						this						  s3
 that						  demonst						that						  s3
+see							  v_tran_fin					see							  pres                          nons3
+see							  v_tran_inf					see							  inf							per
+sees						  v_tran_fin					see							  pres							s3
+can 						  v_aux_inf                     can                           pres                          nons3
+do						      v_aux_inf                     do                            pres                          nons3
 //the                         det_quant                     iota
 //the                         det_def_postcop               iota
 it							  pron_nom						s3							  obj
@@ -34,3 +39,5 @@ yeah						  accept						yeah
 wow							  accept						wow
 right						  accept						right
 no							  reject						not
+i                             i		                        s1                            spkr
+you							  proper						you							  s2
