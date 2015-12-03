@@ -59,7 +59,7 @@ public abstract class Formula implements Serializable {
 	public static final String OVERLAP_OPERATOR = "overlap";
 	public static final String SUBSET_OPERATOR = "subset";
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
-	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i]][0-9]*|reftime|head"); // bound/free Formula
+	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i^o]][0-9]*|reftime|head"); // bound/free Formula
 																									// variable
 	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula metavariable
 	public static final Pattern REC_METAVARIABLE_PATTERN = Pattern.compile("REC\\d*");

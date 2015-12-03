@@ -26,11 +26,11 @@ a                             det_quant                     eps
 an                            det_quant                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
-//what                          pron_whq                      obj
-//what						  pron_whq_cop					obj
+what                          pron_whq                      obj
+what						  pron_whq_cop					obj
 //which						  pron_whq						obj
 //.							  assert						A
-//?							  question						Q
+?							  question						Q
 //uhu							  accept						uhu
 //ok							  accept						ok
 //yes							  accept						yes

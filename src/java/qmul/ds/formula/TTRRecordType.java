@@ -382,10 +382,19 @@ public class TTRRecordType extends TTRFormula {
 		ArrayList<TTRField> list = new ArrayList<TTRField>();
 		Set<Variable> variables = new HashSet<Variable>(f.getVariables());
 		int i = 0;
+		/*if (variables.isEmpty())
+		{
+			list.add(f);
+			list.addAll(fields);
+			record.put(f.getLabel(), f);
+			this.fields = list;
+			f.setParentRecType(this);
+			return;
+		}*/
 		for (; i < fields.size(); i++) {
 			if (variables.isEmpty())
 				break;
-
+			
 			TTRField field = fields.get(i);
 			if (variables.contains(field.getLabel()))
 				variables.remove(field.getLabel());
@@ -453,6 +462,10 @@ public class TTRRecordType extends TTRFormula {
 			return true;
 		}
 		return false;
+	}
+	public boolean remove(Variable v)
+	{
+		return this.remove(new TTRLabel(v));
 	}
 
 	/**
@@ -1110,6 +1123,10 @@ public class TTRRecordType extends TTRFormula {
 
 		return record.get(l);
 	}
+	public TTRField getField(Variable v)
+	{
+		return record.get(new TTRLabel(v));
+	}
 
 	@Override
 	public int toUniqueInt() {
@@ -1372,13 +1389,40 @@ public class TTRRecordType extends TTRFormula {
 		// return difference conjuncts
 		return new Pair<TTRRecordType, TTRRecordType>(addition, subtract);
 	}
-	
-	public Collection<TTRRecordType> getCompatibleSuperTypes(TTRRecordType restrictor)
+	/**
+	 * Assuming that this rec type is a context (linguistic or non-linguistic), e.g.
+	 * 
+	 *  [x1==o1:e|p1==square(x):t|p2==red(x):t|x2==o2:e|p3==circle(x):t]
+	 *  , this method takes a restrictor record type e.g. [x:e|p==square(x)|head==x:e] 
+	 *  and returns a set of record types that are supertypes of this context, and that are
+	 * compatible with the restrictor, in this case just: [x1==o1:e|p1==square(x):t].
+	 * The method is intended to be used both for retrieving an answer to a question, from a context (or knowledge base), 
+	 * and, as a way of resolving pronouns, or definite references from context (both involving restricted metavariables -to be implemented!).
+	 * 
+	 *  more on this later. This might be hacky. This is inference.
+	 * @param restrictor
+	 * @return a collection of record types.
+	 */
+	public Collection<TTRRecordType> leastSpecificCompatibleSuperTypes(TTRRecordType restrictor)
 	{
+		Collection<TTRRecordType> result = new ArrayList<TTRRecordType>(); 
+		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+		TTRRecordType rest=restrictor.removeHead();
+		TTRRecordType current=new TTRRecordType(this);
+		while(rest.subsumesMapped(current, map))
+		{
+			TTRRecordType cur=new TTRRecordType();
+			for(Variable v: map.keySet())
+			{
+				cur.add(new TTRField(current.getField(map.get(v))));
+				current.remove(map.get(v));
+			}
+			System.out.println(cur.getFields());
+			result.add(cur);
+			map.clear();
+		}
 		
-		
-		throw new UnsupportedOperationException();
-		
+		return result;
 	}
 	
 	public static void main(String[] a) {
@@ -1391,16 +1435,16 @@ public class TTRRecordType extends TTRFormula {
 		TTRRecordType target =	TTRRecordType.parse("[x : e |p1==sqr(x) : t]");
 		TTRRecordType r =       TTRRecordType.parse("[x1==o1 : e|p1==yellow(x1):t|p2==sqr(x1):t|x2==o2:e|p3==sqr(x2):t]");
 		
-		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-		System.out.println(target.subsumesMapped(r, map));
+		Collection<TTRRecordType> res=r.leastSpecificCompatibleSuperTypes(target);
 		
-		System.out.println(map);
-		
-		System.out.println("sub:"+r);
-		System.out.println("super:"+target);
+		System.out.println("context:"+r);
+		System.out.println("restr:"+target);
+		System.out.println(res);
 		
 		//TTRRecordType r = TTRRecordType.parse("[x==U:e|p==person(x):t|head==x]");
 		//System.out.println(r);
+		
+		 
 	}
 
 
