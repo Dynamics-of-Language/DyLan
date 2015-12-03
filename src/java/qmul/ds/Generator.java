@@ -140,7 +140,7 @@ public abstract class Generator<T extends ParserTuple> {
 	public boolean generateNextWord() {
 		GenerationState<T> oldState = state.clone();
 		
-		boolean success=false;
+		//boolean success=false;
 		state.clear();
 		int count = 0;
 		// each tuple is a candidate partial string with its state
@@ -153,9 +153,14 @@ public abstract class Generator<T extends ParserTuple> {
 				logger.debug("Extending tuple with word " + word + " = " + oldPState.size());
 				// logger.info("LEXICON" + parser.getLexicon());
 				parser.parseWord(oldPState, word);
+				logger.debug("parse result was:"+parser.getState());
 				logger.debug("Extension with word " + word + " = " + oldPState.size());
 				
+				
+				
+				
 				ParseState<T> newPState = oldPState.subsumes(state.getGoal());
+				
 				logger.debug("Subsumption with word " + word + " = " + newPState.size());
 				if (!newPState.isEmpty()) {
 					logger.debug("Extended tuple with word " + word);
@@ -163,9 +168,9 @@ public abstract class Generator<T extends ParserTuple> {
 					newString.add(word);
 					state.add(new GeneratorTuple<T>(newString, newPState));
 					logger.debug("Added new tuple " + newString + " " + newPState.size());
-					success=true;
+					//success=true;
 					
-					JOptionPane.showMessageDialog(null, newString);
+//					JOptionPane.showMessageDialog(null, newString);
 					
 					count++;
 					if (gui != null) {
@@ -206,8 +211,14 @@ public abstract class Generator<T extends ParserTuple> {
 				}
 			}
 		}
-		//genGui.addGeneratorOutput("\n");
-		return success;
+		//logger.debug(success+". size of state:"+this.state.size());
+		if (state.isEmpty())
+		{
+			System.out.println("State is empty");
+			state.addAll(oldState);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -228,7 +239,7 @@ public abstract class Generator<T extends ParserTuple> {
 			logger.info("Gen next word");			
 			i++;
 		}
-
+		
 		logger.info("Finished generation.");
 		return successful();
 	}

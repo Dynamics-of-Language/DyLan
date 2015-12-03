@@ -53,10 +53,12 @@ public class SimpleTTRGenerator extends TTRGenerator<ParserTuple> {
 	
 	public static void main(String[] a)
 	{
-		SimpleTTRGenerator gen=new SimpleTTRGenerator("resource/2013-english-ttr");
+		SimpleTTRGenerator gen=new SimpleTTRGenerator("resource/2015-english-ttr-shape-colour");
 		gen.init();
-		TTRRecordType goal=TTRRecordType.parse("[x==john:e|e1==fly:es|p==pres(e1):t|p2==subj(e1,x):t|head==e1:es]");
-	
+		//gen.parser.parseWord("this");
+		//System.out.println(gen.parser.getState());
+		TTRRecordType goal=TTRRecordType.parse("[x==this:e|p==red(x):t|head==x:e]");
+	//	gen.setGoal(goal);
 		gen.generate(goal);
 		
 		System.out.println("Gen State after generation:\n"+gen.getState());

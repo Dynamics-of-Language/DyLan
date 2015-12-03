@@ -144,6 +144,10 @@ public abstract class TTRFormula extends Formula {
 
 	protected abstract List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(BasicType basic, int newVarSuffix);
 
+	public TTRFormula removeHead()
+	{
+		throw new UnsupportedOperationException();
+	}
 	public TTRFormula instantiate()
 	{
 		return this.clone();

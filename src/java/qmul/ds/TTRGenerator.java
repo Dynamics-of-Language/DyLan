@@ -72,12 +72,12 @@ public abstract class TTRGenerator<T extends ParserTuple> extends Generator<T> {
 
 		// Vector<ParseState<T>> parses = new Vector<ParseState<T>>();
 		int i = 1;
-		while (successful()) {
+		while (generateNextWord()) {
 			
 			logger.info("\n\n" + "word number " + i + "--------------------");
 			logger.info("Gen next word");
 			//logger.info("TIME BEFORE WORD " + i + ": " + System.currentTimeMillis());
-			generateNextWord();
+			//generateNextWord();
 			/*
 			if (!successful()) {
 				// logger.info("stateHistory = ");
