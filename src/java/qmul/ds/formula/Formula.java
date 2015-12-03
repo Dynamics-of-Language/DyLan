@@ -61,9 +61,8 @@ public abstract class Formula implements Serializable {
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
 	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i]][0-9]*|reftime|head"); // bound/free Formula
 																									// variable
-	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[A-C]"); // Formula metavariable
+	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula metavariable
 	public static final Pattern REC_METAVARIABLE_PATTERN = Pattern.compile("REC\\d*");
-	public final static String FRESHPUT_METAVARIABLE_PATTERN = "[S-U]"; // Formula metavariable
 	public static final Pattern LAMBDA_ABSTRACT_PATTERN = Pattern.compile("(" + VARIABLE_PATTERN + ")"
 			+ Pattern.quote(FOLLambdaAbstract.LAMBDA_FUNCTOR) + "(.*)");
 
@@ -130,10 +129,11 @@ public abstract class Formula implements Serializable {
 		else if (string.matches("^" + LabelFactory.METAVARIABLE_PATTERN + "$")) {
 			v = MetaFormula.get(string);
 
-		} else if (string.matches("^" + FRESHPUT_METAVARIABLE_PATTERN + "$")) {
-			v = MetaFormula.get(string);
+		} //else if (string.matches("^" + FRESHPUT_METAVARIABLE_PATTERN + "$")) {
+		//	v = MetaFormula.get(string);
 
-		} else if (string.matches("^" + REC_METAVARIABLE_PATTERN + "$")) {
+	//	} commented out because of redundancy.
+		else if (string.matches("^" + REC_METAVARIABLE_PATTERN + "$")) {
 			v = MetaTTRRecordType.get(string);
 		}
 		// formula bound variable as used in e.g. existential labels, e.g.

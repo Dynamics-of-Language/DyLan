@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1372,17 +1373,23 @@ public class TTRRecordType extends TTRFormula {
 		return new Pair<TTRRecordType, TTRRecordType>(addition, subtract);
 	}
 	
-	//public Collection<TTRRecordType> get
+	public Collection<TTRRecordType> getCompatibleSuperTypes(TTRRecordType restrictor)
+	{
+		
+		
+		throw new UnsupportedOperationException();
+		
+	}
 	
 	public static void main(String[] a) {
 
-		TTRRecordType r =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|e1==snore : es|p1==subj(e1, x4) : t]");
-		TTRRecordType target = TTRRecordType.parse("[r : [x : e|p1==mad(x) : t|head==x : e]|x1==(eps, r.head, r) : e|e2==snore : es|p3==subj(e2, x1) : t]");
+		//TTRRecordType r =	TTRRecordType.parse("[r1 : [x3 : e|head==x3 : e|p3==man(x3):t|p6==fat(x3):t]|x4==(eps, r1.head, r1) : e|e1==snore : es|p1==subj(e1, x4) : t]");
+		//TTRRecordType target = TTRRecordType.parse("[r : [x : e|p1==mad(x) : t|head==x : e]|x1==(eps, r.head, r) : e|e2==snore : es|p3==subj(e2, x1) : t]");
 		//System.out.println("target: "+target.toUniqueInt());
 		//System.out.println("r: "+r.toUniqueInt());
 		
-		//TTRRecordType target =	TTRRecordType.parse("[x : e | p==yellow(x) : t|p1==circle(x) : t]");
-		//TTRRecordType r =       TTRRecordType.parse("[x1==o1 : e|p1==yellow(x1):t|p2==circle(x1):t|x2==o2:e|p3==sqr(x2):t]");
+		TTRRecordType target =	TTRRecordType.parse("[x : e |p1==sqr(x) : t]");
+		TTRRecordType r =       TTRRecordType.parse("[x1==o1 : e|p1==yellow(x1):t|p2==sqr(x1):t|x2==o2:e|p3==sqr(x2):t]");
 		
 		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
 		System.out.println(target.subsumesMapped(r, map));
@@ -1391,6 +1398,9 @@ public class TTRRecordType extends TTRFormula {
 		
 		System.out.println("sub:"+r);
 		System.out.println("super:"+target);
+		
+		//TTRRecordType r = TTRRecordType.parse("[x==U:e|p==person(x):t|head==x]");
+		//System.out.println(r);
 	}
 
 
