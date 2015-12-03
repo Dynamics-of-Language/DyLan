@@ -76,7 +76,7 @@ THEN	go(\/L)
 ELSE	abort
 
 
-
+//*
 
 link-adj-e
 IF      ty(e)
@@ -108,6 +108,9 @@ THEN	go(Y)
         		ELSE	do_nothing
         ELSE	abort
 ELSE    abort
+
+*//
+
 
 merge
 IF      Ex.tn(x)
@@ -163,11 +166,11 @@ ELSE    abort
 
 
 //transition relevance place
-
+//*
 trp
 IF		complete
 THEN	addaxiom
 ELSE	abort
-
+*//
 
 

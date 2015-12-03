@@ -1,14 +1,14 @@
-is                            v_aux_inf                     be                            pres                          s3
-square                          count                       square                        s3 							obj            
-circle                          count                       circle                        s3                        	obj		
+is                            copula                    	pres                          s3
+square                          count                       square                        s3                            obj
+circle                          count                       circle                        s3                            obj
 triangle						count						triangle					  s3							obj
-blue                            adj	                       	blue						  colour
-red							    adj							red						      colour
-green							adj							green					      colour
-purple							adj							purple						colour
-yellow							adj							yellow						colour
-orange							adj							orange						colour
-black							adj							black						colour
+blue                            adj	                       	blue
+red							    adj							red
+green							adj							green
+purple							adj							purple
+yellow							adj							yellow
+orange							adj							orange
+black							adj							black
 this						  det_demonst					here						  s3
 that						  det_demonst					there					      s3
 this						  demonst  						this						  s3
@@ -27,17 +27,17 @@ an                            det_quant                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
 //what                          pron_whq                      obj
-what						  pron_whq_cop					obj
+//what						  pron_whq_cop					obj
 //which						  pron_whq						obj
-.							  assert						A
-?							  question						Q
-uhu							  accept						uhu
-ok							  accept						ok
-yes							  accept						yes
-okay						  accept						okay
-yeah						  accept						yeah
-wow							  accept						wow
-right						  accept						right
-no							  reject						not
-i                             i		                        s1                            spkr
+//.							  assert						A
+//?							  question						Q
+//uhu							  accept						uhu
+//ok							  accept						ok
+//yes							  accept						yes
+//okay						  accept						okay
+//yeah						  accept						yeah
+//wow							  accept						wow
+//right						  accept						right
+//no							  reject						not
+//i                             i		                        s1                            spkr
 you							  proper						you							  s2
