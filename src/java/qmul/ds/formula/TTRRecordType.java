@@ -1417,7 +1417,7 @@ public class TTRRecordType extends TTRFormula {
 				cur.add(new TTRField(current.getField(map.get(v))));
 				current.remove(map.get(v));
 			}
-			System.out.println(cur.getFields());
+			//System.out.println(cur.getFields());
 			result.add(cur);
 			map.clear();
 		}
