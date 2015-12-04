@@ -87,6 +87,7 @@ THEN    put(?+eval)
        	go(\/L)        
        	put(?ty(e))
 ELSE    abort
+*//
 
 late-star-adj-q
 IF      ty(t)
@@ -109,7 +110,6 @@ THEN	go(Y)
         ELSE	abort
 ELSE    abort
 
-*//
 
 
 merge
