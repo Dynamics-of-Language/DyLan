@@ -530,5 +530,10 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 		return parse(utt.words);
 	}
 	
+	public static void main(String a[])
+	{
+		Utterance u=new Utterance("what colour");
+		System.out.println(u);
+	}
 
 }

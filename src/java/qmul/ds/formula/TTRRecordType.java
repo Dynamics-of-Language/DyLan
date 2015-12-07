@@ -1439,6 +1439,7 @@ public class TTRRecordType extends TTRFormula {
 		//Collection<TTRRecordType> res=r.leastSpecificCompatibleSuperTypes(target);
 		//TTRRecordType target=TTRRecordType.parse("[x : e |pred1==red : cn|p1==class(x,pred1):t]");
 		//TTRRecordType r=TTRRecordType.parse("[x1 : e |pred==red : cn|p1==class(x1,pred):t]");
+		
 		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
 		
 		System.out.println("context:"+target);
