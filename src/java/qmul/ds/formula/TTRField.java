@@ -243,8 +243,13 @@ public class TTRField extends Formula {
 						HashMap<Variable, Variable> newMap=new HashMap<Variable, Variable>();
 						return type.subsumesMapped(otherField.type, newMap);						
 					}
-					else 
-						return type.subsumesMapped(otherField.type, map);
+					else
+					{
+						//System.out.println("Checking "+type+" subsumes "+otherField.type+" with map "+map);
+						boolean b=type.subsumesMapped(otherField.type, map);
+						//System.out.println("result is:"+b);
+						return b;
+					}
 				}
 				// failure.. don't want to have changed map if I'm returning false
 				// but map could have changed. reset it.
@@ -356,7 +361,7 @@ public class TTRField extends Formula {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		String s;
+		
 		if (dsType != null)
 			return label + (type == null ? "" : "==" + type) + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
 		else
@@ -367,12 +372,12 @@ public class TTRField extends Formula {
 	}
 
 	public String toDebugString() {
-		String s;
+		
 		if (dsType != null)
-			return label + (type == null ? "" : "==" + type + "(" + type.getClass() + ")") + " "
+			return label + (type == null ? "" : "==" + type.toDebugString() + "(" + type.getClass() + ")") + " "
 					+ TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
 		else
-			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + type + "(" + type.getClass() + ")";
+			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + type.toDebugString() + "(" + type.getClass() + ")";
 
 	}
 

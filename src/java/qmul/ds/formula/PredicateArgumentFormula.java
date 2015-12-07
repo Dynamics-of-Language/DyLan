@@ -223,6 +223,22 @@ public class PredicateArgumentFormula extends Formula {
 		}
 	}
 
+	public String toDebugString()
+	{
+		String s=predicate.toString();
+		if (arguments.isEmpty()) {
+			System.out.println("empty arguments");
+			return s;
+		} else {
+			//String args = arguments.toString();
+			s+="(";
+			for(Formula argument:arguments)
+				s+=argument.toString()+"["+argument.getClass()+"],";
+			s+=")";
+			return s;
+		}
+		
+	}
 	public static void main(String a[]) {
 		Formula f=Formula.create("[r:[x:e|p==arash(x):t|head==x:e]|x1==(iota,r.head,r):e|head==x1:e]");
 		System.out.println(f+":"+f.getClass());

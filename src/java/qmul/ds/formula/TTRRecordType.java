@@ -1432,20 +1432,35 @@ public class TTRRecordType extends TTRFormula {
 		//System.out.println("target: "+target.toUniqueInt());
 		//System.out.println("r: "+r.toUniqueInt());
 		
-		TTRRecordType target =	TTRRecordType.parse("[x : e |p1==sqr(x) : t]");
-		TTRRecordType r =       TTRRecordType.parse("[x1==o1 : e|p1==yellow(x1):t|p2==sqr(x1):t|x2==o2:e|p3==sqr(x2):t]");
+		TTRRecordType target =	TTRRecordType.parse("[x==this : e |pred1==red : cn|p1==colour(x,pred1):t|pred2==sqr:cn|p2==class(x,pred2):t]");
+		TTRRecordType r =       TTRRecordType.parse("[x1==this : e|pred3:cn|p==colour(x1,pred3):t]");
 		
-		Collection<TTRRecordType> res=r.leastSpecificCompatibleSuperTypes(target);
+		//Collection<TTRRecordType> res=r.leastSpecificCompatibleSuperTypes(target);
+		//TTRRecordType target=TTRRecordType.parse("[x : e |pred1==red : cn|p1==class(x,pred1):t]");
+		//TTRRecordType r=TTRRecordType.parse("[x1 : e |pred==red : cn|p1==class(x1,pred):t]");
+		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
 		
 		System.out.println("context:"+r);
 		System.out.println("restr:"+target);
-		System.out.println(res);
+		System.out.println(r.subsumesMapped(target, map));
+		System.out.println(map);
+		System.out.println(target.leastSpecificCompatibleSuperTypes(r));
 		
+		//TTRField f1=TTRField.parse("p==class");
 		//TTRRecordType r = TTRRecordType.parse("[x==U:e|p==person(x):t|head==x]");
 		//System.out.println(r);
 		
 		 
 	}
 
+	public String toDebugString()
+	{
+		if (isEmpty())
+			return TTR_OPEN + TTR_CLOSE;
+		String s = TTR_OPEN;
+		for (TTRField f : fields)
+			s += f.toDebugString() + TTR_FIELD_SEPARATOR;
 
+		return s.substring(0, s.length() - TTR_FIELD_SEPARATOR.length()) + TTR_CLOSE;
+	}
 }
