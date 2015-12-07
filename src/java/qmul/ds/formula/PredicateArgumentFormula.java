@@ -130,6 +130,17 @@ public class PredicateArgumentFormula extends Formula {
 		}
 		return subsumesMapped(arguments, eps.arguments, map);
 	}
+	
+	public static void main(String[] a)
+	{
+		PredicateArgumentFormula f=(PredicateArgumentFormula)Formula.create("class(x0,pred1)");
+		PredicateArgumentFormula f1=(PredicateArgumentFormula)Formula.create("class(x1,pred1)");
+		HashMap<Variable, Variable> map=new HashMap<Variable,Variable>();
+		map.put(new Variable("pred1"), new Variable("pred0"));
+		map.put(new Variable("x1"), new Variable("x0"));
+		System.out.println(f1.subsumesMapped(f, map));
+		System.out.println(map);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -239,11 +250,7 @@ public class PredicateArgumentFormula extends Formula {
 		}
 		
 	}
-	public static void main(String a[]) {
-		Formula f=Formula.create("[r:[x:e|p==arash(x):t|head==x:e]|x1==(iota,r.head,r):e|head==x1:e]");
-		System.out.println(f+":"+f.getClass());
-
-	}
+	
 
 	@Override
 	public int toUniqueInt() {

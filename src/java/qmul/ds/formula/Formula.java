@@ -395,8 +395,9 @@ public abstract class Formula implements Serializable {
 			return true;
 		}
 		// check head, recurse
-
-		if (l1.get(0).subsumesBasic(l2.get(0)) || l1.get(0).subsumesMapped(l2.get(0), map)) {
+		//l1.get(0).subsumesBasic(l2.get(0)) ||   
+		//commented out from the below if conditions. This was a bug. Don't know how we got away with it till now.
+		if ( l1.get(0).subsumesMapped(l2.get(0), map)) {
 			return subsumesMapped(l1.subList(1, l1.size()), l2.subList(1, l2.size()), map);
 		}
 		// if head fails, fail
