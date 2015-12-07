@@ -9,6 +9,8 @@
 package qmul.ds;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -57,15 +59,21 @@ public class SimpleTTRGenerator extends TTRGenerator<ParserTuple> {
 		gen.init();
 		//gen.parser.parseWord("this");
 		//System.out.println(gen.parser.getState());
-		TTRRecordType goal=TTRRecordType.parse("[x==this:e|p==red(x):t|head==x:e]");
-	//	gen.setGoal(goal);
-		gen.generate(goal);
+		
+		List<TTRRecordType> goals = new ArrayList<TTRRecordType>(); 
+		goals.add(TTRRecordType.parse("[x==this : e | pred1==red : cn | p1==colour(x,pred1) : t | pred2==square : cn | p2==class(x,pred2) : t]"));
+//		goals.add(TTRRecordType.parse("[x==this : e | pred0 : cn | p0==class(x,pred0) : t]"));
+//		goals.add(TTRRecordType.parse("[x1==this:e|head==x1:e]"));
+//		goals.add(TTRRecordType.parse("[x1==this:e|p2==circle(x1)|head==x1:e]"));
+//		goals.add(TTRRecordType.parse("[x1==this:e|p1==red(x1)|p2==circle(x1)|head==x1:e]"));
+		//gen.setGoal(goal);
+		
+		
+		for(TTRRecordType goal: goals){
+			gen.generate(goal);
+		}
 		
 		System.out.println("Gen State after generation:\n"+gen.getState());
 		
 	}
-
-	
-	
-
 }

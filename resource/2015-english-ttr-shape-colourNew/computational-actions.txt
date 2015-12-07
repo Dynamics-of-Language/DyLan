@@ -166,11 +166,10 @@ ELSE    abort
 
 
 //transition relevance place
-//*
 trp
 IF		complete
 THEN	addaxiom
 ELSE	abort
-*//
+
 
 

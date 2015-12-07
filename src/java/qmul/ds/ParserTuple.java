@@ -11,6 +11,8 @@ package qmul.ds;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.action.Action;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRFormula;
@@ -27,6 +29,7 @@ import edu.stanford.nlp.util.Pair;
  */
 public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 
+	Logger logger = Logger.getLogger(ParserTuple.class);
 	protected Tree tree;
 
 	protected TTRFormula semantics;
@@ -218,7 +221,11 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 			if (t.getSemantics() == null)
 				return false;
 			
+			logger.debug("Semantic :: " + getSemantics());
+			logger.debug("t.getSemantics :: " + t.getSemantics());
+			
 			return getSemantics().removeHead().subsumes(t.getSemantics().removeHead());
+//			return getSemantics().subsumes(t.getSemantics());
 		}
 		if (this.tree == null) {
 			if (t.tree == null)

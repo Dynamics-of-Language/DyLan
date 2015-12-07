@@ -22,11 +22,11 @@ do						      v_aux_inf                     do                            pres  
 //the                         det_def_postcop               iota
 it							  pron_nom						s3							  obj
 it							  pron_acc						s3							  obj
-a                             det_quant                     eps
-an                            det_quant                     eps
+a                             det_indef                     eps
+an                            det_indef                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
-//what                          pron_whq                      obj
+what                          pron_whq                      obj
 what						  pron_whq_cop					obj
 what						  pron_whq_det_cop				meta_cn
 color						  cn_meta_cat					color
@@ -43,4 +43,4 @@ shape						  cn_meta_cat					shape
 //right						  accept						right
 //no							  reject						not
 //i                             i		                        s1                            spkr
-you							  proper						you							  s2
+you							  proper						s							  s2

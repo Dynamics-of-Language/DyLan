@@ -20,7 +20,7 @@ THEN    put(person(PERSON))
 ELSE    abort
 
 
-det_quant(QUANT)
+det_indef(QUANT)
 IF      ?ty(e)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
@@ -28,7 +28,7 @@ THEN    put(person(s3))
 		put(class(obj))
 		make(\/1)
         go(\/1)
-        ttrput(R^[r:R | x1==(QUANT, r.head, r):e | head==x1:e])
+        ttrput(R^(R ++ [head==R.head:e]))
         put(ty(cn>e))
         put(!)
         go(/\1)
@@ -162,7 +162,7 @@ THEN    make(\/1)
         go(/\1)
         make(\/0)
         go(\/0)
-        ttrput([x:e|head:x])
+        ttrput([x:e|head==x:e])
         put(ty(e))
 ELSE    IF		?ty(cn)
 				</\*\/1>ty(cn>(e>t))
@@ -214,7 +214,7 @@ THEN	make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
 		put(ty(e))
-		ttrput([x:e|head==x:e])
+		ttrput([x:e|head==x:e|pred:cn|p==class(pred):t|p1==subj(pred,x):t])
 		put(+WH)
 		put(class(CLASS))
 ELSE	IF		?ty(e)
@@ -268,6 +268,25 @@ ELSE	abort
 pron_nom(PERSON,CLASS)
 IF      ?ty(e)
         </\0>?ty(t)
+        //</\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
+THEN    put(ty(e))
+        ttrput[x==this:e|head==x:e]
+        put(!)
+ELSE    abort
+
+pron_acc(PERSON,CLASS)
+IF      ?ty(e)
+        </\0>?ty(e>X)
+        //</\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
+THEN    put(ty(e))
+        ttrput[x==this:e|head==x:e]
+        put(!)
+ELSE    abort
+
+//*
+pron_nom(PERSON,CLASS)
+IF      ?ty(e)
+        </\0>?ty(t)
         </\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
 THEN    put(ty(e))
         put(Fo(Y))
@@ -283,7 +302,7 @@ THEN    put(ty(e))
         put(!)
 ELSE    abort
 
-//*
+
 pron_ref(PERSON,CLASS)
 IF		?ty(e)
 		¬</\0>?ty(es>t)
@@ -333,12 +352,12 @@ IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
 		//</\1\/0>person(PERSON)	
-THEN	put(?+eval)
-		make(\/L)
-		go(\/L)
-		put(ty(t))
-		event_restrictor(TENSE)
-		go(/\L)
+THEN	//put(?+eval)
+		//make(\/L)
+		//go(\/L)
+		//put(ty(t))
+		//event_restrictor(TENSE)
+		//go(/\L)
 		put(ty(e>t))
 		delete(?ty(e>t))		
 		put(?Ex.fo(x))
@@ -370,12 +389,12 @@ IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
 		//</\1\/0>person(PERSON)
-THEN	put(?+eval)
-		make(\/L)
-		go(\/L)
-		put(ty(t))
-		event_restrictor(TENSE)
-		go(/\L)
+THEN	//put(?+eval)
+		//make(\/L)
+		//go(\/L)
+		//put(ty(t))
+		//event_restrictor(TENSE)
+		//go(/\L)
 		put(ty(e>t))	
 		delete(?ty(e>t))	
 		put(?Ex.fo(x))		

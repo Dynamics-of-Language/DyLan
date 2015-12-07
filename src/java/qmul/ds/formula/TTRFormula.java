@@ -146,6 +146,15 @@ public abstract class TTRFormula extends Formula {
 
 	public TTRFormula removeHead()
 	{
+
+		System.out.println("@@@@@@@@@@@@@@@@"+toString());
+		
+		TTRRecordType _type = getTypes().get(0);
+		_type.remove(new TTRLabel("head"));
+		
+		
+		System.out.println("@@@@@@@@@@@@@@@@"+_type);
+//		return _type.evaluate();
 		throw new UnsupportedOperationException();
 	}
 	public TTRFormula instantiate()
