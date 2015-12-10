@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import qmul.ds.action.meta.MetaFormula;
+import qmul.ds.action.meta.MetaModality;
 
 /**
  * A (possibly bound) variable within a {@link Formula}
@@ -69,6 +70,12 @@ public class Variable extends AtomicFormula {
 		this(l.name);
 	}
 
+	
+	/**
+	 * Just for use by {@link MetaTTRLabel}
+	 */
+	protected Variable() {
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -137,6 +144,11 @@ public class Variable extends AtomicFormula {
 	public boolean hasManifestContent()
 	{
 		return false;
+	}
+	
+	public Variable instantiate()
+	{
+		return this;
 	}
 	
 	@Override

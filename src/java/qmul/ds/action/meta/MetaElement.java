@@ -197,10 +197,15 @@ public class MetaElement<X> implements Serializable {
 	@Override
 	public String toString() {
 
-		return name + "=" + value + "[" + hashCode() + "]";
+		return name + ((value==null)?"":"=" + value + "[" + hashCode() + "]");
 
 	}
 
+	public String toDebugString()
+	{
+		return name + "=" + value + "[" + hashCode() + "]";
+	}
+	
 	public static void resetPool() {
 		pool.clear();
 	}

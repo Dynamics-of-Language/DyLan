@@ -12,11 +12,13 @@ import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.action.meta.MetaElement;
 import qmul.ds.type.DSType;
 
 /**
- * A field (label + type pair) in a {@link TTRRecordType} - with type specified as both possibly manifest type
- * {@link Formula} and definitely not manifest DS {@link DSType}
+ * A field (label + type pair) in a {@link TTRRecordType} - with type specified
+ * as both possibly manifest type {@link Formula} and definitely not manifest DS
+ * {@link DSType}
  * 
  * @author arash, mpurver
  */
@@ -27,7 +29,8 @@ public class TTRField extends Formula {
 	// x1=formula:dstype
 
 	private TTRLabel label;
-	private Formula type; // can be PAFormula, Variable, TTRRecordType, LambdaAbstract ...
+	private Formula type; // can be PAFormula, Variable, TTRRecordType,
+							// LambdaAbstract ...
 	private DSType dsType;
 
 	public static TTRField parse(String s) {
@@ -45,14 +48,23 @@ public class TTRField extends Formula {
 		if (typeSepIndex > 0 && typeSepIndex < labSepIndex) {
 
 			String labelS = s.substring(0, typeSepIndex).trim();
-			label = new TTRLabel(labelS);
-			Matcher m = TTRLabel.LABEL_PATTERN.matcher(labelS);
-			if (!m.matches()) {
 
+			Matcher m = TTRLabel.LABEL_PATTERN.matcher(labelS);
+			Matcher meta = TTRLabel.META_LABEL_PATTERN.matcher(labelS);
+			if (m.matches()) {
+				label = new TTRLabel(labelS);
+
+			} else if (meta.matches())
+				label = MetaTTRLabel.get(labelS);
+			else
 				return null;
-			}
-			String typeS = s.substring(typeSepIndex + TTRRecordType.TTR_TYPE_SEPARATOR.length(), labSepIndex).trim();
-			String dsTypeS = s.substring(labSepIndex + TTRRecordType.TTR_LABEL_SEPARATOR.length(), s.length()).trim();
+
+			String typeS = s.substring(
+					typeSepIndex + TTRRecordType.TTR_TYPE_SEPARATOR.length(),
+					labSepIndex).trim();
+			String dsTypeS = s.substring(
+					labSepIndex + TTRRecordType.TTR_LABEL_SEPARATOR.length(),
+					s.length()).trim();
 			logger.debug("typeString:" + typeS);
 			logger.debug("dsTypeString:" + dsTypeS);
 			type = Formula.create(typeS);
@@ -60,26 +72,39 @@ public class TTRField extends Formula {
 			dsType = DSType.parse(dsTypeS);
 
 			// have made DSType.parse() return null for invalid dstype...
-			// but since we have seen a type separator it means we have to have both type and DSType.. and so we return
+			// but since we have seen a type separator it means we have to have
+			// both type and DSType.. and so we return
 			// null for the field and
-			// thus reject the whole string as a record type if the dsType is null.
+			// thus reject the whole string as a record type if the dsType is
+			// null.
 			if (dsType == null) {
 				logger.debug("dsType is null");
 				return null;
 			}
 
 		} else {
-			// no type separator, so one of two cases, either we have a DSType to the right of the label sep, or we have
+			// no type separator, so one of two cases, either we have a DSType
+			// to the right of the label sep, or we have
 			// type (Formula)
 			String labelS = s.substring(0, labSepIndex).trim();
 			Matcher m = TTRLabel.LABEL_PATTERN.matcher(labelS);
-			if (!m.matches())
+			Matcher meta = TTRLabel.META_LABEL_PATTERN.matcher(labelS);
+			if (m.matches()) {
+				label = new TTRLabel(labelS);
+
+			} else if (meta.matches())
+				label = MetaTTRLabel.get(labelS);
+			else
 				return null;
-			label = new TTRLabel(labelS);
-			String dsTypeS = s.substring(labSepIndex + TTRRecordType.TTR_LABEL_SEPARATOR.length(), s.length()).trim();
+
+			String dsTypeS = s.substring(
+					labSepIndex + TTRRecordType.TTR_LABEL_SEPARATOR.length(),
+					s.length()).trim();
 			dsType = DSType.parse(dsTypeS);
-			// if we can parse this as a DS type then we have unmanifest field such as x:e
-			// otherwise we just have a type (Formula) to the right of the label sep (:), with dsType remaining null.
+			// if we can parse this as a DS type then we have unmanifest field
+			// such as x:e
+			// otherwise we just have a type (Formula) to the right of the label
+			// sep (:), with dsType remaining null.
 			// So:
 			if (dsType == null) {
 				type = Formula.create(dsTypeS);
@@ -95,14 +120,18 @@ public class TTRField extends Formula {
 	private static int indexOfLabelSep(String s) {
 		int depth = 0;
 		for (int i = 0; i < s.length(); i++) {
-			if (s.substring(i, i + TTRRecordType.TTR_OPEN.length()).equals(TTRRecordType.TTR_OPEN))
+			if (s.substring(i, i + TTRRecordType.TTR_OPEN.length()).equals(
+					TTRRecordType.TTR_OPEN))
 				depth++;
-			else if (s.substring(i, i + TTRRecordType.TTR_CLOSE.length()).equals(TTRRecordType.TTR_CLOSE))
+			else if (s.substring(i, i + TTRRecordType.TTR_CLOSE.length())
+					.equals(TTRRecordType.TTR_CLOSE))
 				depth--;
 
 			if (depth == 0
-					&& s.substring(i, i + TTRRecordType.TTR_LABEL_SEPARATOR.length()).equals(
-							TTRRecordType.TTR_LABEL_SEPARATOR) && depth == 0)
+					&& s.substring(i,
+							i + TTRRecordType.TTR_LABEL_SEPARATOR.length())
+							.equals(TTRRecordType.TTR_LABEL_SEPARATOR)
+					&& depth == 0)
 				return i;
 
 		}
@@ -126,7 +155,9 @@ public class TTRField extends Formula {
 	}
 
 	public TTRField(TTRField ttrField) {
-		this(new TTRLabel(ttrField.getLabel().name), ttrField.dsType == null ? null : ttrField.dsType.clone(),
+
+		this(new TTRLabel(ttrField.getLabel().name),
+				ttrField.dsType == null ? null : ttrField.dsType.clone(),
 				ttrField.type == null ? null : ttrField.type.clone());
 
 	}
@@ -169,7 +200,8 @@ public class TTRField extends Formula {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.formula.Formula#substitute(qmul.ds.formula.Formula, qmul.ds.formula.Formula)
+	 * @see qmul.ds.formula.Formula#substitute(qmul.ds.formula.Formula,
+	 * qmul.ds.formula.Formula)
 	 */
 	@Override
 	public TTRField substitute(Formula f1, Formula f2) {
@@ -179,9 +211,10 @@ public class TTRField extends Formula {
 				TTRField newF = new TTRField(new TTRLabel(label), dsType, f2);
 
 				return newF;
-			} 
+			}
 		}
-		return new TTRField(label.substitute(f1, f2), dsType, (type != null) ? type.substitute(f1, f2) : type);
+		return new TTRField(label.substitute(f1, f2), dsType,
+				(type != null) ? type.substitute(f1, f2) : type);
 
 	}
 
@@ -189,7 +222,8 @@ public class TTRField extends Formula {
 	// if (type == null) {
 	// return new TTRField((TTRLabel) label.substitute(f1, f2), dsType, type);
 	// } else if (type instanceof TTRRecordType) {
-	// return new TTRField((TTRLabel) label.substitute(f1, f2), (TTRRecordType) ((TTRRecordType) type).substitute(
+	// return new TTRField((TTRLabel) label.substitute(f1, f2), (TTRRecordType)
+	// ((TTRRecordType) type).substitute(
 	// f1, f2));
 	// } else if (type instanceof TTRLambdaAbstract) {
 	// return new TTRField((TTRLabel) label.substitute(f1, f2),
@@ -204,33 +238,20 @@ public class TTRField extends Formula {
 	 * 
 	 * @see qmul.ds.formula.Formula#subsumesBasic(qmul.ds.formula.Formula)
 	 */
-	@Override
-	public boolean subsumesBasic(Formula other) {
-		if (other instanceof TTRField) {
-			TTRField otherField = (TTRField) other;
-			if (label.subsumesBasic(otherField.label)) {
-				// TODO: Why was the dsType equality check commented out?
-				if ((dsType == null && otherField.dsType == null)
-						|| (dsType != null && dsType.equals(otherField.dsType))) {
-					if ((type == null) || type.subsumesBasic(otherField.type)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
+	
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.formula.Formula#subsumesMapped(qmul.ds.formula.Formula, java.util.HashMap)
+	 * @see qmul.ds.formula.Formula#subsumesMapped(qmul.ds.formula.Formula,
+	 * java.util.HashMap)
 	 */
 	@Override
 	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		if (other instanceof TTRField) {
 			TTRField otherField = (TTRField) other;
-			HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
+			HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(
+					map);
 			if (label.subsumesMapped(otherField.label, map)) {
 				if ((dsType == null && otherField.dsType == null)
 						|| (dsType != null && dsType.equals(otherField.dsType))) {
@@ -238,25 +259,24 @@ public class TTRField extends Formula {
 					if (type == null) {
 						return true;
 					}
-					if (type instanceof TTRRecordType)
-					{
-						HashMap<Variable, Variable> newMap=new HashMap<Variable, Variable>();
-						return type.subsumesMapped(otherField.type, newMap);						
-					}
-					else
-					{
-						//System.out.println("Checking "+type+" subsumes "+otherField.type+" with map "+map);
-						boolean b=type.subsumesMapped(otherField.type, map);
-						//System.out.println("result is:"+b);
+					if (type instanceof TTRRecordType) {
+						HashMap<Variable, Variable> newMap = new HashMap<Variable, Variable>();
+						return type.subsumesMapped(otherField.type, newMap);
+					} else {
+						// System.out.println("Checking "+type+" subsumes "+otherField.type+" with map "+map);
+						boolean b = type.subsumesMapped(otherField.type, map);
+						// System.out.println("result is:"+b);
 						return b;
 					}
 				}
-				// failure.. don't want to have changed map if I'm returning false
+				// failure.. don't want to have changed map if I'm returning
+				// false
 				// but map could have changed. reset it.
-				// TODO: this is a bit hacky, leading to more time complexity than necessary.
-				
+				// TODO: this is a bit hacky, leading to more time complexity
+				// than necessary.
+
 			}
-			
+
 		}
 
 		return false;
@@ -278,7 +298,8 @@ public class TTRField extends Formula {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.formula.Formula#setParentRecType(qmul.ds.formula.TTRRecordType)
+	 * @see
+	 * qmul.ds.formula.Formula#setParentRecType(qmul.ds.formula.TTRRecordType)
 	 */
 	public void setParentRecType(TTRRecordType r) {
 		this.parentRecType = r;
@@ -287,10 +308,12 @@ public class TTRField extends Formula {
 		type.setParentRecType(r);
 	}
 
-	public TTRField instantiate()
-	{
-		return new TTRField(new TTRLabel(this.label), (dsType!=null?this.dsType.instantiate():null), (this.type!=null?this.type.instantiate():null));
+	public TTRField instantiate() {
+		return new TTRField(new TTRLabel(this.label),
+				(dsType != null ? this.dsType.instantiate() : null),
+				(this.type != null ? this.type.instantiate() : null));
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -339,7 +362,8 @@ public class TTRField extends Formula {
 	}
 
 	/**
-	 * @return the set of variables (free or bound) involved in the type of this field
+	 * @return the set of variables (free or bound) involved in the type of this
+	 *         field
 	 */
 	protected Set<Variable> getVariables() {
 
@@ -361,49 +385,80 @@ public class TTRField extends Formula {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		
+
 		if (dsType != null)
-			return label + (type == null ? "" : "==" + type) + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
+			return label + (type == null ? "" : "==" + type) + " "
+					+ TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
 		else
 			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + type;
-		// return s+(type==null?"(typenull)":(type.parentRecType==this.parentRecType &&
+		// return
+		// s+(type==null?"(typenull)":(type.parentRecType==this.parentRecType &&
 		// type.parentRecType!=null)?"(linked)":"notLinked");
 
 	}
 
 	public String toDebugString() {
-		
+
 		if (dsType != null)
-			return label + (type == null ? "" : "==" + type.toDebugString() + "(" + type.getClass() + ")") + " "
+			return label
+					+ (type == null ? "" : "==" + type.toDebugString() + "("
+							+ type.getClass() + ")") + " "
 					+ TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
 		else
-			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + type.toDebugString() + "(" + type.getClass() + ")";
+			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " "
+					+ type.toDebugString() + "(" + type.getClass() + ")";
 
 	}
 
-	
 	public static void main(String[] a) {
-		TTRField f = parse("y==(eps, r.x, r):e");
-		System.out.println(f.substitute(new TTRLabel("r"), new TTRLabel("r1")));
+		TTRField meta = parse("P==person(L):t");
+		TTRField inst = parse("p==person(x):t");
+		//System.out.println(meta.toDebugString());
+		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
+		System.out.println("After:" + meta);
 
+	}
+	
+	@Override
+	public boolean subsumesBasic(Formula other) {
+		if (!(other instanceof TTRField))
+			return false;
+
+		TTRField otherField = (TTRField) other;
+
+		if ((dsType == null && otherField.dsType == null)
+				|| (dsType != null && dsType.equals(otherField.dsType))) {
+			
+			if ((type == null) || type.subsumesBasic(otherField.type)) {
+				
+				return label.subsumesBasic(otherField.label);
+			}
+
+		}
+
+		return false;
 	}
 
 	public Dimension getDimensionsWhenDrawn(Graphics2D g) {
 		FontMetrics fm = g.getFontMetrics();
 		int lineHeight = fm.getHeight();
-		int labelWidth = (dsType == null ? fm.stringWidth(this.label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " ")
-				: fm.stringWidth(this.label + " " + TTRRecordType.TTR_TYPE_SEPARATOR + " "));
+		int labelWidth = (dsType == null ? fm.stringWidth(this.label + " "
+				+ TTRRecordType.TTR_LABEL_SEPARATOR + " ") : fm
+				.stringWidth(this.label + " "
+						+ TTRRecordType.TTR_TYPE_SEPARATOR + " "));
 
 		if (type == null) {
 
-			return new Dimension(fm.stringWidth(this.label + " : " + dsType), lineHeight);
+			return new Dimension(fm.stringWidth(this.label + " : " + dsType),
+					lineHeight);
 		}
 		Dimension typeD = type.getDimensionsWhenDrawn(g);
 
 		if (dsType != null) {
 
 			Dimension d = new Dimension();
-			double width = labelWidth + typeD.getWidth() + fm.stringWidth(" : " + dsType);
+			double width = labelWidth + typeD.getWidth()
+					+ fm.stringWidth(" : " + dsType);
 			double height = typeD.getHeight();
 			d.setSize(width, height);
 			return d;
@@ -419,47 +474,58 @@ public class TTRField extends Formula {
 	}
 
 	public boolean dependsOn(TTRField f) {
-		if (f==null) return false;
+		if (f == null)
+			return false;
 		if (f.getLabel().equals(label))
 			return false;
 		if (getVariables().contains(f.getLabel()))
 			return true;
-		
-		if (f.getType()==null || !(f.getType() instanceof TTRPath))
+
+		if (f.getType() == null || !(f.getType() instanceof TTRPath))
 			return false;
-		
-		return getTTRPaths().contains((TTRPath)f.getType());
+
+		return getTTRPaths().contains((TTRPath) f.getType());
 	}
-	public boolean dependsOn(TTRPath path)
-	{
+
+	public boolean dependsOn(TTRPath path) {
 		return this.getTTRPaths().contains(path);
 	}
 
 	public Dimension draw(Graphics2D g2, float x, float y) {
 		FontMetrics fm = g2.getFontMetrics();
 		int lineHeight = fm.getHeight();
-		int labelWidth = (dsType == null ? fm.stringWidth(this.label + " : ") : fm.stringWidth(this.label + " == "));
+		int labelWidth = (dsType == null ? fm.stringWidth(this.label + " : ")
+				: fm.stringWidth(this.label + " == "));
 
 		if (type == null) {
 			g2.drawString(this.label + " : " + dsType, x, y);
-			return new Dimension(fm.stringWidth(this.label + " : " + dsType), lineHeight);
+			return new Dimension(fm.stringWidth(this.label + " : " + dsType),
+					lineHeight);
 		}
 		Dimension typeD = type.draw(g2, x + labelWidth, y);
 
 		if (dsType != null) {
 			g2.drawString(this.label + " == ", x, y);
-			g2.drawString(" : " + dsType, x + labelWidth + (float) typeD.getWidth(),
-					type instanceof TTRRecordType ? (float) y + (float) typeD.getHeight() / 2 : y);
+			g2.drawString(
+					" : " + dsType,
+					x + labelWidth + (float) typeD.getWidth(),
+					type instanceof TTRRecordType ? (float) y
+							+ (float) typeD.getHeight() / 2 : y);
 			Dimension d = new Dimension();
-			double width = labelWidth + typeD.getWidth() + fm.stringWidth(" : " + dsType);
+			double width = labelWidth + typeD.getWidth()
+					+ fm.stringWidth(" : " + dsType);
 			double height = typeD.getHeight();
 			d.setSize(width, height);
 			return d;
 		}
-		g2.drawString(this.label + " : ", x, type instanceof TTRRecordType ? (float) y + (float) typeD.getHeight() / 2
-				: y);
+		g2.drawString(
+				this.label + " : ",
+				x,
+				type instanceof TTRRecordType ? (float) y
+						+ (float) typeD.getHeight() / 2 : y);
 		Dimension d = new Dimension();
-		double width = labelWidth + typeD.getWidth() + fm.stringWidth(" : " + dsType);
+		double width = labelWidth + typeD.getWidth()
+				+ fm.stringWidth(" : " + dsType);
 		double height = typeD.getHeight();
 
 		d.setSize(width, height);
@@ -517,12 +583,31 @@ public class TTRField extends Formula {
 		return label.equals(TTRRecordType.HEAD);
 	}
 
-	
 	@Override
 	public int toUniqueInt() {
-		int typeInt=(type==null?0:type.toUniqueInt());
-		int dsTypeInt=(dsType==null?0:dsType.toUniqueInt());
-		return typeInt+dsTypeInt;
+		int typeInt = (type == null ? 0 : type.toUniqueInt());
+		int dsTypeInt = (dsType == null ? 0 : dsType.toUniqueInt());
+		return typeInt + dsTypeInt;
+	}
+
+	public ArrayList<MetaElement<?>> getMetas() {
+		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+		metas.addAll(label.getMetas());
+		metas.addAll(type.getMetas());
+		return metas;
+
+	}
+	
+	public void resetMeta()
+	{
+		if (label instanceof MetaTTRLabel)
+			((MetaTTRLabel)label).reset();
+	}
+	
+	public void partialResetMeta()
+	{
+		if (label instanceof MetaTTRLabel)
+			((MetaTTRLabel)label).partialReset();
 	}
 
 }

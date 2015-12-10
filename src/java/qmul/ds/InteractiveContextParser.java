@@ -21,6 +21,7 @@ import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.WordLevelContextDAG;
+import qmul.ds.formula.TTRFormula;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.util.Pair;
@@ -112,7 +113,8 @@ public class InteractiveContextParser extends
 		// commitToContext();
 		return true;
 	}
-
+	
+	
 	private void applyAllPermutations() {
 		if (state.wordStack().isEmpty())
 			return;
@@ -334,6 +336,23 @@ public class InteractiveContextParser extends
 
 	}
 
+	public UtteredWord generateNextWord(TTRFormula goal)
+	{
+		
+		
+		
+		return null;
+	}
+	
+	
+	public boolean parseWord(TTRFormula goal, UtteredWord word)
+	{
+		
+		
+		
+		
+		return false;
+	}
 	/**
 	 * @param word
 	 *            , speaker

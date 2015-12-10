@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import qmul.ds.action.meta.MetaElement;
+
 /**
  * An epsilon calculus {@link Formula}
  * 
@@ -131,15 +133,50 @@ public class PredicateArgumentFormula extends Formula {
 		return subsumesMapped(arguments, eps.arguments, map);
 	}
 	
+	public ArrayList<MetaElement<?>> getMetas()
+	{
+		ArrayList<MetaElement<?>> metas=new ArrayList<MetaElement<?>>();
+		
+		for(Formula f: arguments)
+		{
+			metas.addAll(f.getMetas());
+		}
+		metas.addAll(predicate.getMetas());
+		return metas;
+		
+		
+	}
+	
+	public boolean subsumesBasic(Formula f)
+	{
+		if (!(f instanceof PredicateArgumentFormula))
+			return false;
+		
+		PredicateArgumentFormula other=(PredicateArgumentFormula)f;
+		
+		if (arguments.size()!=other.arguments.size())
+			return false;
+		
+		if (!this.predicate.subsumesBasic(other.predicate))
+			return false;
+		
+		for(int i=0;i<arguments.size();i++)
+		{
+			//System.out.println(arguments.get(i)+" and "+other.arguments.get(i)+"\n");
+			
+			if (!arguments.get(i).equals(other.arguments.get(i)))
+				return false;
+		}
+		return true;
+		
+	}
 	public static void main(String[] a)
 	{
-		PredicateArgumentFormula f=(PredicateArgumentFormula)Formula.create("class(x0,pred1)");
-		PredicateArgumentFormula f1=(PredicateArgumentFormula)Formula.create("class(x1,pred1)");
-		HashMap<Variable, Variable> map=new HashMap<Variable,Variable>();
-		map.put(new Variable("pred1"), new Variable("pred0"));
-		map.put(new Variable("x1"), new Variable("x0"));
-		System.out.println(f1.subsumesMapped(f, map));
-		System.out.println(map);
+		PredicateArgumentFormula f=(PredicateArgumentFormula)Formula.create("class(L1,L2)");
+		PredicateArgumentFormula f1=(PredicateArgumentFormula)Formula.create("class(x1,x2)");
+		
+		System.out.println(f.subsumesBasic(f1));
+		System.out.println(f.instantiate().toString());
 	}
 
 	/*
@@ -238,13 +275,13 @@ public class PredicateArgumentFormula extends Formula {
 	{
 		String s=predicate.toString();
 		if (arguments.isEmpty()) {
-			System.out.println("empty arguments");
+			
 			return s;
 		} else {
 			//String args = arguments.toString();
 			s+="(";
 			for(Formula argument:arguments)
-				s+=argument.toString()+"["+argument.getClass()+"],";
+				s+=argument.toDebugString()+"["+argument.getClass()+"],";
 			s+=")";
 			return s;
 		}

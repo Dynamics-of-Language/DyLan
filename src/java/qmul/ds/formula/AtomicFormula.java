@@ -10,6 +10,8 @@ package qmul.ds.formula;
 
 import java.util.HashMap;
 
+import qmul.ds.action.meta.MetaModality;
+
 /**
  * An atomic (no pred-arg structure) formula, e.g. a functor or variable. Just a string really
  * 
@@ -26,6 +28,12 @@ public class AtomicFormula extends Formula {
 	 */
 	public AtomicFormula(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Just for use by {@link MetaTTRLabel}
+	 */
+	protected AtomicFormula() {
 	}
 
 	/**

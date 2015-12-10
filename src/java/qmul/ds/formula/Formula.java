@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
+import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.action.meta.MetaTTRRecordType;
 import qmul.ds.tree.Tree;
@@ -60,7 +61,7 @@ public abstract class Formula implements Serializable {
 	public static final String SUBSET_OPERATOR = "subset";
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
 	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free Formula
-																									// variable
+	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN;																								// variable
 	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula metavariable
 	public static final Pattern REC_METAVARIABLE_PATTERN = Pattern.compile("REC\\d*");
 	public static final Pattern LAMBDA_ABSTRACT_PATTERN = Pattern.compile("(" + VARIABLE_PATTERN + ")"
@@ -146,6 +147,10 @@ public abstract class Formula implements Serializable {
 		else if (string.matches("^" + METAVARIABLE_PATTERN + "$")) {
 			v = FormulaMetavariable.get(string);
 
+		}//Meta TTR Label 
+		else if (string.matches("^" + META_LABEL_PATTERN+ "$"))
+		{
+			v = MetaTTRLabel.get(string);
 		}
 		// fresh (bound) formula variable of type es
 		else if (string.matches("^" + FRESH_EVENT_VARIABLE_PATTERN + "$")) {
@@ -456,7 +461,22 @@ public abstract class Formula implements Serializable {
 		return toString();
 	}
 	
-
+	
+	public ArrayList<MetaElement<?>> getMetas() {
+		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+		return metas;
+	}
 	
 
+	public void resetMetas()
+	{
+		for(MetaElement<?> meta:getMetas())
+			meta.reset();
+	}
+	
+	public void partialResetMetas()
+	{
+		for(MetaElement<?> meta:getMetas())
+			meta.partialReset();
+	}
 }
