@@ -448,6 +448,17 @@ public class Node extends TreeSet<Label> {
 		
 		addAll(other);
 	}
+	
+	
+	
+	public void removeFormulaLabel()
+	{
+		for(Label l: this)
+		{
+			if (l instanceof FormulaLabel)
+				remove(l);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

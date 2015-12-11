@@ -296,5 +296,9 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 		TTRLambdaAbstract l2=(TTRLambdaAbstract)Formula.create("R2^(R2 ++ [head==R2.head : e|p1==boat(head) : t])");
 		System.out.println(l.subsumesMapped(l2,new HashMap<Variable, Variable>()));
 	}
+	
+	
+	
+	
 
 }

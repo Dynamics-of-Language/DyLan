@@ -23,8 +23,10 @@ import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
+import qmul.ds.type.BasicType;
 import qmul.ds.type.DSType;
 import edu.stanford.nlp.trees.LabeledScoredTreeFactory;
 import edu.stanford.nlp.trees.TreeFactory;
@@ -691,11 +693,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		typeMap.put(DSType.parse("e>(e>(e>t))"),
 				Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
 		// for underspec adjunct e>t, see below, special case
-
+		
 		typeMap.put(DSType.parse("cn>e"),
 				Formula.create("R1^[r:R1|x:e|head==x:e]"));
 		typeMap.put(DSType.parse("cn>es"),
 				Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+		
+		Label copula=LabelFactory.create("+BE");
+		
+		
 		for (Node n : values()) {
 			if (!getDaughters(n, "01").isEmpty())
 				continue;
@@ -704,8 +710,24 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 			Formula f = n.getFormula();
 			if (dsType != null && f == null) {
 				if (typeMap.containsKey(dsType)) {
-					n.addLabel(new FormulaLabel(typeMap.get(dsType)
+					Node mother=this.get(n.getAddress().go(Modality.parse("/\\")));
+					
+					//TODO: this is a hack. Checking for type of mother to determine the underspecified formula to be put on a ?cn node.
+					//I don't like this. ..... later.....
+					//another exception: if an e>t node is decorated with Copula (having parsed 'to be'), then we want a differnet underspecification for this node, not involving event type
+					
+					DSType motherType=mother.getType()==null?mother.getRequiredType():mother.getType();
+					if (dsType.equals(BasicType.cn)&&motherType.equals(DSType.parse("e>t")))
+						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]")));
+					else if (dsType.equals(DSType.parse("e>t"))&&n.contains(copula))
+					{
+						n.addLabel(new FormulaLabel(Formula.create("R^(R ++ [head==R.head:e|pred:cn|p1==subj(pred,head):t])")));
+						
+					}
+					else
+						n.addLabel(new FormulaLabel(typeMap.get(dsType)
 							.freshenVars(this)));
+					
 				} else if (!dsType.equals(DSType.t))
 					logger.warn("could not add underspecified formula to node; ds type is not listed as underspecifiable:"
 							+ n);
@@ -738,13 +760,21 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 						.getRequiredType() : mergePoint.getType();
 				DSType unfixedType = unfixed.getType() == null ? unfixed
 						.getRequiredType() : unfixed.getType();
-				Formula mergePointF = mergePoint.getFormula();
+				FormulaLabel mergePointF = mergePoint.getFormulaLabel();
+				FormulaLabel unfixedF=unfixed.getFormulaLabel();
+				//&& mergePointF == null
+				//commented out, because with late-*-Adjunction for short answers to questions, the merge point will actually have a formula on it already.
+						
 				if (getDaughters(mergePoint, "01").isEmpty()
 						&& unfixed.getAddress().subsumes(
-								mergePoint.getAddress()) && mergePointF == null
+								mergePoint.getAddress()) 
 						&& mergePointType.equals(unfixedType)) {
 					Tree t = clone();
+					
 					t.setPointer(mergePoint.getAddress());
+					//if (mergePointF!=null && unfixedF!=null)
+					//	t.getPointedNode().removeFormulaLabel();
+						
 					t.merge(unfixed);
 					result.add(t);
 				}
@@ -768,7 +798,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * @return the maximal semantics of this tree
 	 */
 	public TTRFormula getMaximalSemantics() {
-
+		
 		List<Tree> merged = mergeUnfixed();
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("after merge:"+merged.get(0));
@@ -822,11 +852,33 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		TTRFormula unfixedReduced = null;
 		if (unfixed != null) {
 			unfixedReduced = getMaximalSemantics(unfixed);
+			//we now have unfixed nodes of type e->t. To get the maxSem we can just assume there is an argument node of type e, and reduce the e>t function to get the maxSem
+			//WARNING: currently not supporting unfixed nodes of any other type (e.g. e>e>t, etc.)
+			if (unfixedReduced instanceof TTRLambdaAbstract)
+			{
+				//maxSem is a function. Now create an underspecified rectype of type e to reduce
+				TTRRecordType imaginaryTypeESem=TTRRecordType.parse("[x:e|head==x:e]");
+				TTRLambdaAbstract unfixedFunct=(TTRLambdaAbstract)unfixedReduced;
+				//now reduce
+				unfixedReduced=unfixedFunct.betaReduce(imaginaryTypeESem);
+				
+			}
 
 		}
 		TTRFormula localUnfixedReduced = null;
 		if (localUnfixed != null) {
-			localUnfixedReduced = getMaximalSemantics(localUnfixed);
+			//we now have unfixed nodes of type e->t. To get the maxSem we can just assume there is an argument node of type e, and reduce the e>t function to get the maxSem
+			//WARNING: currently not supporting unfixed nodes of any other type (e.g. e>e>t, etc.)
+			localUnfixedReduced=getMaximalSemantics(localUnfixed);
+			if (localUnfixedReduced instanceof TTRLambdaAbstract)
+			{
+				//maxSem is a function. Now create an underspecified rectype of type e to reduce
+				TTRRecordType imaginaryTypeESem=TTRRecordType.parse("[x:e|head==x:e]");
+				TTRLambdaAbstract unfixedFunct=(TTRLambdaAbstract)localUnfixedReduced;
+				//now reduce
+				localUnfixedReduced=unfixedFunct.betaReduce(imaginaryTypeESem);
+				
+			}
 
 		}
 		TTRFormula rootReduced = null;

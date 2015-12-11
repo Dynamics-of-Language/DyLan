@@ -55,13 +55,13 @@ public class SimpleTTRGenerator extends TTRGenerator<ParserTuple> {
 	
 	public static void main(String[] a)
 	{
-		SimpleTTRGenerator gen=new SimpleTTRGenerator("resource/2015-english-ttr-shape-colour");
+		SimpleTTRGenerator gen=new SimpleTTRGenerator("resource/2015-english-ttr-shape-colourNew");
 		gen.init();
 		//gen.parser.parseWord("this");
 		//System.out.println(gen.parser.getState());
 		
 		List<TTRRecordType> goals = new ArrayList<TTRRecordType>(); 
-		goals.add(TTRRecordType.parse("[x==this : e | pred1==red : cn | p1==colour(x,pred1) : t | pred2==square : cn | p2==class(x,pred2) : t]"));
+		goals.add(TTRRecordType.parse("[x==this : e | pred1==red : cn | p3 == subj(pred1,x) : t | pred2==square : cn | p2==class(pred2) : t | p4==subj(pred2, x) : t]"));
 //		goals.add(TTRRecordType.parse("[x==this : e | pred0 : cn | p0==class(x,pred0) : t]"));
 //		goals.add(TTRRecordType.parse("[x1==this:e|head==x1:e]"));
 //		goals.add(TTRRecordType.parse("[x1==this:e|p2==circle(x1)|head==x1:e]"));
