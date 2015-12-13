@@ -164,12 +164,13 @@ THEN    conjoin(X)
 		ELSE	do_nothing
 ELSE    abort
 
-
+//*commented out because this only works with DAG versions of parsing/generation
 //transition relevance place
 trp
 IF		complete
 THEN	addaxiom
 ELSE	abort
 
+*//
 
 

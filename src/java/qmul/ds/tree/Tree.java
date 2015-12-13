@@ -746,15 +746,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		return result;
 	}
 
-	private List<Tree> mergeUnfixed() {
+	private Tree mergeUnfixed() {
 
-		List<Tree> result = new ArrayList<Tree>();
+		Tree result = clone();
 
-		for (Node unfixed : getUnfixedNodes()) {
+		for (Node unfixed : result.getUnfixedNodes()) {
 			logger.debug("found unfixed node:"+unfixed);
 			FormulaLabel mergePointFChosen=null;
 			Node mergePointChosen=null;
-			for (Node mergePoint : values()) {
+			for (Node mergePoint : result.values()) {
 				if (!mergePoint.isLocallyFixed()) {
 					continue;
 				}
@@ -767,24 +767,24 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					
 				if (getDaughters(mergePoint, "01").isEmpty() && mergePoint.isUnifiable(unfixed))
 				{
-					Tree t = clone();
 					
-					t.setPointer(mergePoint.getAddress());
+					
+					result.setPointer(mergePoint.getAddress());
 					
 					
 						
-					t.merge(unfixed);
-					result.add(t);
+					result.merge(unfixed);
+					
 					
 					if (mergePointF!=null&&unfixedF!=null)
 					{
-						mergePointFChosen=t.getPointedNode().getFormulaLabel();
-						mergePointChosen=t.getPointedNode();
+						mergePointFChosen=result.getPointedNode().getFormulaLabel();
+						mergePointChosen=result.getPointedNode();
 						
 						
 					}
 					
-					
+					break;
 						
 				}
 				
@@ -795,8 +795,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 				mergePointChosen.remove(mergePointFChosen);
 
 		}
-		if (result.isEmpty())
-			result.add(clone());
+		
 
 		return result;
 
@@ -813,41 +812,20 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	public TTRFormula getMaximalSemantics() {
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
-		List<Tree> merged = mergeUnfixed();
+		Tree merged = mergeUnfixed();
 		
 		
-		logger.debug("after merge:"+merged.get(0));
-		if (merged.isEmpty())
-			return null;
-		if (merged.size() < 2) {
-			merged.get(0).addUnderspecifiedFormulae();
-			logger.debug("After adding underspecified formulae, tree is:"
-					+ merged.get(0));
-			TTRFormula f = merged.get(0).getMaximalSemantics(
-					merged.get(0).getRootNode());
+		
+		merged.addUnderspecifiedFormulae();
+		logger.debug("After adding underspecified formulae, tree is:"
+					+ merged);
+	
+		TTRFormula f = merged.getMaximalSemantics(
+					merged.getRootNode());
 
-			return f;
-		}
-		merged.get(0).addUnderspecifiedFormulae();
-		merged.get(1).addUnderspecifiedFormulae();
-		TTRRecordType first = (TTRRecordType) merged.get(0)
-				.getMaximalSemantics();
-		TTRRecordType second = (TTRRecordType) merged.get(1)
-				.getMaximalSemantics();
-
-		TTRInfixExpression disjunction = new TTRInfixExpression(
-				TTRInfixExpression.TTR_DISJUNTION_FUNCTOR, first, second);
-
-		for (int i = 2; i < merged.size(); i++) {
-			merged.get(i).addUnderspecifiedFormulae();
-			TTRRecordType cur = (TTRRecordType) merged.get(i)
-					.getMaximalSemantics();
-
-			disjunction = new TTRInfixExpression(
-					TTRInfixExpression.TTR_DISJUNTION_FUNCTOR, disjunction, cur);
-		}
-
-		return disjunction;
+		return f;
+		
+		
 	}
 
 	/**

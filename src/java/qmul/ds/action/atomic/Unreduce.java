@@ -107,6 +107,6 @@ public class Unreduce extends Effect {
 
 	@Override
 	public <T extends Tree> T execTupleContext(T tree, ParserTuple context) {
-		throw new UnsupportedOperationException("this shouldn't happen");
+		return this.exec(tree, null);
 	}
 }
