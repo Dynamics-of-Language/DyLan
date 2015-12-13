@@ -392,9 +392,15 @@ public class Node extends TreeSet<Label> {
 	 */
 	public boolean isUnifiable(Node other) {
 		
+		if (!other.getAddress().subsumes(getAddress()))
+		{
+			logger.debug("address subsumption failed. this:"+this.getAddress()+"other:"+other.getAddress());
+			return false;
+		}	
 		DSType t = getType();
 		if (t == null)
 			t = getRequiredType();
+		
 		if (t != null) {
 			DSType ot = other.getType();
 			if (ot == null)
@@ -418,6 +424,8 @@ public class Node extends TreeSet<Label> {
 		}
 		return true;
 	}
+	
+	
 	public TypeLabel getTypeLabel()
 	{
 		for(Label l:this)

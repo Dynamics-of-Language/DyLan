@@ -574,7 +574,7 @@ public class TTRRecordType extends TTRFormula {
 	}
 
 	public static void main(String[] a) {
-
+		/*
 		TTRRecordType meta = TTRRecordType.parse("[L:e|P==person(L):t]");
 		TTRRecordType inst = TTRRecordType.parse("[x:e|x1:e|p==person(x1):t|p1==person(x):t]");
 		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
@@ -587,7 +587,14 @@ public class TTRRecordType extends TTRFormula {
 		meta.backtrackMetas();
 		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
 		System.out.println("After:" + meta);
-
+	*/
+		
+		TTRRecordType r=TTRRecordType.parse("[x==john:e|head:x]");
+		TTRRecordType r1=TTRRecordType.parse("[x1:e|head:x1]");
+		
+		System.out.println(r.conjoin(r1));
+		System.out.println(r1.conjoin(r));
+		
 	}
 
 	public boolean subsumesBasic(TTRRecordType other, int thisIndex,
@@ -1304,14 +1311,14 @@ public class TTRRecordType extends TTRFormula {
 		if (ttr.isEmpty())
 			return this;
 
-		if (this.getHeadField() == null || ttr.getHeadField() == null)
-			throw new UnsupportedOperationException(
-					"Cannot conjoin rec types with no head field");
-
-		DSType thisDSType = getHeadField().getDSType();
-		DSType otherDSType = ttr.getHeadField().getDSType();
-		if (thisDSType.equals(DSType.e) && thisDSType.equals(otherDSType))
-			return asymmetricMergeSameType(ttr);
+		//if (this.getHeadField() == null || ttr.getHeadField() == null)
+		//	throw new UnsupportedOperationException(
+		//			"Cannot conjoin rec types with no head field");
+//
+	//	DSType thisDSType = getHeadField().getDSType();
+	//	DSType otherDSType = ttr.getHeadField().getDSType();
+	//	if (thisDSType.equals(DSType.e) && thisDSType.equals(otherDSType))
+	//		return asymmetricMergeSameType(ttr);
 
 		return ttr.asymmetricMerge(this);
 	}

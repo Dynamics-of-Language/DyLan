@@ -752,34 +752,47 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 
 		for (Node unfixed : getUnfixedNodes()) {
 			logger.debug("found unfixed node:"+unfixed);
+			FormulaLabel mergePointFChosen=null;
+			Node mergePointChosen=null;
 			for (Node mergePoint : values()) {
 				if (!mergePoint.isLocallyFixed()) {
 					continue;
 				}
-				DSType mergePointType = mergePoint.getType() == null ? mergePoint
-						.getRequiredType() : mergePoint.getType();
-				DSType unfixedType = unfixed.getType() == null ? unfixed
-						.getRequiredType() : unfixed.getType();
+				
+						
 				FormulaLabel mergePointF = mergePoint.getFormulaLabel();
 				FormulaLabel unfixedF=unfixed.getFormulaLabel();
-				//&& mergePointF == null
+				//
 				//commented out, because with late-*-Adjunction for short answers to questions, the merge point will actually have a formula on it already.
-						
-				if (getDaughters(mergePoint, "01").isEmpty()
-						&& unfixed.getAddress().subsumes(
-								mergePoint.getAddress()) 
-						&& mergePointType.equals(unfixedType)) {
+					
+				if (getDaughters(mergePoint, "01").isEmpty() && mergePoint.isUnifiable(unfixed))
+				{
 					Tree t = clone();
 					
 					t.setPointer(mergePoint.getAddress());
-					//if (mergePointF!=null && unfixedF!=null)
-					//	t.getPointedNode().removeFormulaLabel();
+					
+					
 						
 					t.merge(unfixed);
 					result.add(t);
+					
+					if (mergePointF!=null&&unfixedF!=null)
+					{
+						mergePointFChosen=t.getPointedNode().getFormulaLabel();
+						mergePointChosen=t.getPointedNode();
+						
+						
+					}
+					
+					
+						
 				}
+				
+				
 
 			}
+			if (mergePointChosen!=null && mergePointFChosen!=null)
+				mergePointChosen.remove(mergePointFChosen);
 
 		}
 		if (result.isEmpty())
@@ -798,9 +811,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * @return the maximal semantics of this tree
 	 */
 	public TTRFormula getMaximalSemantics() {
-		
-		List<Tree> merged = mergeUnfixed();
 		logger.debug("Merging unfixed if possible,");
+		logger.debug("before merge:"+this);
+		List<Tree> merged = mergeUnfixed();
+		
+		
 		logger.debug("after merge:"+merged.get(0));
 		if (merged.isEmpty())
 			return null;
@@ -896,10 +911,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 			logger.debug("beta-reducing. Funct:" + functMax);
 			logger.debug("beta-reducing. Arg:" + argMax);
 			rootReduced = functMax.betaReduce(argMax);
+			logger.debug("result:"+rootReduced);
+			
 
 			if (unfixedReduced != null) {
 
 				rootReduced = rootReduced.conjoin(unfixedReduced);
+				logger.debug("found unfixed:"+unfixedReduced);
+				logger.debug("conjoining unfixed. result:"+rootReduced);
 
 			}
 			if (localUnfixedReduced != null) {
