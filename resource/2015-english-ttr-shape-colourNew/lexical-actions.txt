@@ -38,11 +38,14 @@ THEN    put(person(s3))
 ELSE    abort
 
 det_indef_postcop(QUANT)
-IF		?ty(e>t)
+IF		ty(e>t)
 		+BE
+		?Ex.fo(x)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-THEN	make(\/1)
+THEN	delete(ty(e>t))
+		put(?ty(e>t))
+		make(\/1)
 		go(\/1)
 		put(ty(cn>(e>t)))
 		ttrput(R1^R2^(R2 ++ (R1 ++ [head==R2.head:e|p1==subj(R1.head,head):t])))
@@ -53,11 +56,14 @@ THEN	make(\/1)
 ELSE	abort
 
 det_def_postcop(QUANT)
-IF		?ty(e>t)
+IF		ty(e>t)
 		+BE
+		?Ex.fo(x)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-THEN	make(\/1)
+THEN	delete(ty(e>t))
+		put(?ty(e>t))
+		make(\/1)
 		go(\/1)
 		put(ty(e>(e>t)))
 		ttrput(R1^R2^(R1 ++ (R2 ++ [p2==eq(R1.head,R2.head):t|head==p2:t])))
@@ -87,6 +93,7 @@ THEN    put(class(CLASS))
         ttrput([x==PRED:e|head==x:e])
 ELSE    abort
 
+//*
 det_demonst(PRED,CLASS)
 IF      ?ty(e)
 		¬<\/1>Ex.x
@@ -102,6 +109,7 @@ THEN    put(person(s3))
         go(\/0)
         put(?ty(cn))
 ELSE    abort
+*//
 
 my(PERSON)
 IF      ?ty(e)
@@ -185,12 +193,12 @@ THEN    make(\/1)
         make(\/0)
         go(\/0)
         put(?ty(cn))
-ELSE    IF		?ty(e>t)
+ELSE    IF		ty(e>t)
 				+BE
-				//?Ex.fo(x)
+				?Ex.fo(x)
 		THEN	ttrput(R^(R ++ [pred==PRED:cn|p1==subj(pred,R.head):t]))
 				put(ty(e>t))
-				delete(?ty(e>t))
+				delete(?Ex.fo(x))
 ELSE	abort
 
 
@@ -214,25 +222,28 @@ THEN	make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
 		put(ty(e))
-		ttrput([x:e|head==x:e])
+		ttrput([x:e|head==x:e|p==question(x):t])
 		put(+WH)
 		put(class(CLASS))
-ELSE	IF		?ty(e)
-		THEN	put(?Ex.tn(x))
-				put(ty(e))
-				ttrput([x:e|head==x:e])
-				put(+WH)
-				put(class(CLASS))
-		ELSE	abort
+ELSE	abort
 
 pron_whq_cop(CLASS)
 IF		?ty(t)
 		¬<\/*>Ex.x
-THEN	make(\/*)
+		¬<\/0>Ex.x
+		¬<\/1>Ex.x
+THEN	make(\/0)
+		go(\/0)
+		put(?Ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>t))
+		make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
 		put(ty(e>t))
-		ttrput(R2^(R2 ++ [head==R2.head:e|pred:cn|p==class(pred):t|p1==subj(pred,head):t]))
+		ttrput(R2^(R2 ++ [head==R2.head:e|pred:cn|p==class(pred):t|p1==subj(pred,head):t|p2==question(pred):t]))
 		put(+WH)
 		put(class(CLASS))
 ELSE	abort
@@ -270,7 +281,7 @@ IF      ?ty(e)
         </\0>?ty(t)
         //</\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
 THEN    put(ty(e))
-        ttrput[x==this:e|head==x:e]
+        ttrput([x==this:e|head==x:e])
         put(!)
 ELSE    abort
 
@@ -279,7 +290,7 @@ IF      ?ty(e)
         </\0>?ty(e>X)
         //</\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
 THEN    put(ty(e))
-        ttrput[x==this:e|head==x:e]
+        ttrput([x==this:e|head==x:e])
         put(!)
 ELSE    abort
 
@@ -339,6 +350,7 @@ ELSE	abort
 v_intran_inf(PRED,TENSE,PERSON)
 IF		ty(e>t)
         ?Ex.fo(x)
+        ¬+BE
         ¬<\/0>Ex.x
         ¬<\/1>Ex.x
 THEN	delete(?Ex.fo(x))
@@ -374,6 +386,7 @@ ELSE	abort
 v_tran_inf(PRED,TENSE,PERSON)
 IF		ty(e>t)
         ?Ex.fo(x)
+        ¬+BE
         ¬<\/0>Ex.x
         ¬<\/1>Ex.x
 THEN	delete(?Ex.fo(x))
@@ -388,14 +401,7 @@ v_tran_fin(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-		//</\1\/0>person(PERSON)
-THEN	//put(?+eval)
-		//make(\/L)
-		//go(\/L)
-		//put(ty(t))
-		//event_restrictor(TENSE)
-		//go(/\L)
-		put(ty(e>t))	
+THEN	put(ty(e>t))	
 		delete(?ty(e>t))	
 		put(?Ex.fo(x))		
 ELSE	abort
@@ -436,21 +442,37 @@ IF		?ty(e>t)
 		</\1\/0>ty(e)
 		¬+BE
 THEN	put(+BE)
+		put(ty(e>t))
 		put(?Ex.fo(x))
 ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
 	 			¬<\/0>Ex.x				
-		THEN	put(+Q)
+		THEN	put(?+eval)
+	 			make(\/L)
+	 			go(\/L)
+	 			ttrput([head:e|p==question(head):t])
+	 			go(/\L)
 				make(\/1)
 				go(\/1)
-				put(?ty(e>t))
+				put(ty(e>t))
 				put(+BE)
 				put(?Ex.fo(x))
 				go(/\1)
 				make(\/0)
 				go(\/0)
 				put(?ty(e))
-		ELSE	abort	
+		ELSE	IF		?ty(e>t)
+						¬<\/1>Ex.x
+	 					¬<\/0>Ex.x
+	 					¬+BE
+	 			THEN	put(ty(e>t))
+						delete(?ty(e>t))
+						put(+BE)
+						put(?Ex.fo(x))
+						go(/\1)
+						go(\/0)
+				ELSE	abort
+	 					
 
 
 

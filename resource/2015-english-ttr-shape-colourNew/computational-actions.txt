@@ -102,11 +102,12 @@ THEN	go(Y)
         		Ex.tn(x)
         THEN	make(\/*)
         		go(\/*)
-        		put(?ty(X))
         		put(?Ex.tn(x))
         		IF		</\*>+BE
         		THEN 	put(+BE)
-        		ELSE	do_nothing
+        				put(ty(X))
+        				put(?Ex.fo(x))
+        		ELSE	put(?ty(X))
         ELSE	abort
 ELSE    abort
 
@@ -114,6 +115,7 @@ ELSE    abort
 
 merge
 IF      Ex.tn(x)
+		¬<\/*>Ex.x
 		<Y>?Ex.tn(x)
 		subsumes(Y)		
 		<Y>ty(V)
@@ -122,6 +124,20 @@ THEN    merge(Y)
 		delete(?Ex.tn(x))	
 ELSE    abort
 
+
+*late-star-merge-wh
+IF		Ex.tn(x)
+		<\/*>?Ex.tn(x)
+		ty(Y)
+		<\/*>ty(Y)
+		+WH
+THEN	merge(<\/*>)
+		delete(?Ex.tn(x))
+		delete(+WH)
+		unreduce
+ELSE	abort
+
+
 *late-star-merge
 IF		Ex.tn(x)
 		<\/*>?Ex.tn(x)
@@ -129,7 +145,6 @@ IF		Ex.tn(x)
 		<\/*>ty(Y)
 THEN	merge(<\/*>)
 		delete(?Ex.tn(x))
-		delete(+WH)
 		unreduce
 ELSE	abort
 

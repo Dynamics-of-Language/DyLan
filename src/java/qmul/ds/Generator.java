@@ -145,29 +145,31 @@ public abstract class Generator<T extends ParserTuple> {
 		int count = 0;
 		// each tuple is a candidate partial string with its state
 		for (GeneratorTuple<T> tuple : oldState) {
-			logger.debug("Checking tuple " + tuple);
+			logger.trace("Checking tuple " + tuple);
 			
 			for (String word : parser.getLexicon().keySet()) { // for now forgetting about sublexicon... iterating through whole lexicon
 
 				ParseState<T> oldPState = tuple.getParseState().clone();
-				logger.debug("Extending tuple with word " + word + " = " + oldPState.size());
+				logger.debug("Trying to generate word " + word + " with " + oldPState.size() +" tuples in parse state");
 				// logger.info("LEXICON" + parser.getLexicon());
 				parser.parseWord(oldPState, word);
-				logger.debug("parse result was:"+parser.getState());
-				logger.debug("Extension with word " + word + " = " + oldPState.size());
+				logger.trace("parse result was:"+parser.getState());
+				logger.trace("Extension with word " + word + " = " + oldPState.size());
 				
 				
 				
 				
 				ParseState<T> newPState = oldPState.subsumes(state.getGoal());
 				
-				logger.debug("Subsumption with word " + word + " = " + newPState.size());
+				logger.trace("Subsumption with word " + word + " = " + newPState.size());
 				if (!newPState.isEmpty()) {
 					logger.debug("Extended tuple with word " + word);
+					
 					ArrayList<String> newString = new ArrayList<String>(tuple.getString());
 					newString.add(word);
 					state.add(new GeneratorTuple<T>(newString, newPState));
-					logger.debug("Added new tuple " + newString + " " + newPState.size());
+					logger.debug("New generation candidate:"+newString);
+					logger.trace("Added new tuple " + newString + " " + newPState.size());
 					//success=true;
 					
 //					JOptionPane.showMessageDialog(null, newString);
@@ -206,7 +208,7 @@ public abstract class Generator<T extends ParserTuple> {
 					}*/
 					
 				} else {
-					logger.debug("Failed to extend tuple with word " + word);
+					logger.debug("Failed to extend with " + word);
 
 				}
 			}
@@ -214,7 +216,7 @@ public abstract class Generator<T extends ParserTuple> {
 		//logger.debug(success+". size of state:"+this.state.size());
 		if (state.isEmpty())
 		{
-			System.out.println("State is empty");
+			logger.trace("State is empty");
 			state.addAll(oldState);
 			return false;
 		}
