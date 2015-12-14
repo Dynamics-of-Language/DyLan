@@ -65,6 +65,9 @@ public class Put extends Effect {
 		Label instance = label.instantiate();
 		if (tree.getPointedNode().contains(instance)) {
 			logger.warn("putting already existing label: " + label.instantiate());
+			logger.warn("on node:"+tree.getPointedNode());
+			logger.warn("in tree:"+tree);
+			
 			return tree;
 		}
 		tree.put(instance);

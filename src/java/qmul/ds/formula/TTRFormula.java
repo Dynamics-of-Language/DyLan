@@ -152,4 +152,8 @@ public abstract class TTRFormula extends Formula {
 	{
 		return this.clone();
 	}
+
+	public TTRFormula removeHeadIfManifest() {
+		throw new UnsupportedOperationException("Operation unsupported for the TTRFormula class:"+this.getClass());
+	}
 }

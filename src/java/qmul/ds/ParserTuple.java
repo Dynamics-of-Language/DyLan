@@ -221,10 +221,8 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 			if (t.getSemantics() == null)
 				return false;
 			
-			logger.debug("Semantic :: " + getSemantics());
-			logger.debug("t.getSemantics :: " + t.getSemantics());
-			
-			return getSemantics().removeHead().subsumes(t.getSemantics().removeHead());
+			TTRFormula headLess=getSemantics().removeHead();
+			return headLess.subsumes(t.getSemantics().removeHead());
 //			return getSemantics().subsumes(t.getSemantics());
 		}
 		if (this.tree == null) {

@@ -475,6 +475,16 @@ public class TTRRecordType extends TTRFormula {
 		return this.record.containsKey(l);
 	}
 
+	public TTRRecordType removeHeadIfManifest()
+	{
+		TTRField head=head();
+		if (head==null||head.getType()==null)
+			return new TTRRecordType(this);
+		
+		
+		
+		return removeHead();
+	}
 	/**
 	 * removes the head label if it exists
 	 * 
@@ -589,11 +599,8 @@ public class TTRRecordType extends TTRFormula {
 		System.out.println("After:" + meta);
 	*/
 		
-		TTRRecordType r=TTRRecordType.parse("[x==john:e|head:x]");
-		TTRRecordType r1=TTRRecordType.parse("[x1:e|head:x1]");
-		
-		System.out.println(r.conjoin(r1));
-		System.out.println(r1.conjoin(r));
+		TTRRecordType r=TTRRecordType.parse("[x:e|head==x:e]");
+		System.out.println(r.hasManifestContent());
 		
 	}
 

@@ -364,14 +364,14 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 	 */
 	public ParseState<T> parseWord(ParseState<T> state, String word) {
 		if (state.isEmpty()) {
-			logger.info("State empty at " + word);
+		logger.debug("State empty at " + word);
 			return null;
 		}
 		if (!lexicon.containsKey(word)) {
-			logger.info("Skipping word " + word);
+			//logger.info("Skipping word " + word);
 			return null;
 		}
-		logger.info("Parsing word:(" + word + ")");
+		logger.debug("Parsing word:(" + word + ")");
 		// words may be ambiguous i.e. have more than one possible action
 		ParseState<T> oldState = state.clone();
 		state.clear();
@@ -394,7 +394,7 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 			}
 		}
 		if (state.isEmpty()) {
-			logger.warn("Empty state, stopping!");
+			logger.debug("Empty state, stopping!");
 		} else {
 			adjust(state);
 

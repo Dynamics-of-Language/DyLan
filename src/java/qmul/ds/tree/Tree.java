@@ -683,7 +683,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 				Formula.create("R1^(R1 ++ [head==R1.head:es])"));
 		typeMap.put(DSType.parse("e>cn"),
 				Formula.create("R1^(R1 ++ [head==R1.head:e])"));
-		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));
+		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es|p==subj(head, R1.head):t])"));
 		typeMap.put(DSType.parse("e>(e>t)"),
 				Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
 		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula

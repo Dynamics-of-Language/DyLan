@@ -61,7 +61,7 @@ public class SimpleTTRGenerator extends TTRGenerator<ParserTuple> {
 		//System.out.println(gen.parser.getState());
 		
 		List<TTRRecordType> goals = new ArrayList<TTRRecordType>(); 
-		goals.add(TTRRecordType.parse("[x==this : e | pred1==red : cn | p3 == subj(pred1,x) : t | pred2==square : cn | p2==class(pred2) : t | p4==subj(pred2, x) : t]"));
+		goals.add(TTRRecordType.parse("[x==this: e | pred1 : cn | p2==class(pred1) : t | p4==subj(pred1, x) : t|p5==question(pred1):t]"));
 //		goals.add(TTRRecordType.parse("[x==this : e | pred0 : cn | p0==class(x,pred0) : t]"));
 //		goals.add(TTRRecordType.parse("[x1==this:e|head==x1:e]"));
 //		goals.add(TTRRecordType.parse("[x1==this:e|p2==circle(x1)|head==x1:e]"));
@@ -75,5 +75,9 @@ public class SimpleTTRGenerator extends TTRGenerator<ParserTuple> {
 		
 		System.out.println("Gen State after generation:\n"+gen.getState());
 		
+		System.out.println("Best string:"+gen.getBestString());
+		
 	}
+
+	
 }

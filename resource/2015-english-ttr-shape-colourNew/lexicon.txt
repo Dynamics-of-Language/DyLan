@@ -43,4 +43,4 @@ shape						  cn_meta_cat					shape
 //right						  accept						right
 //no							  reject						not
 //i                             i		                        s1                            spkr
-you							  proper						s							  s2
+you							  proper						system							  s2
