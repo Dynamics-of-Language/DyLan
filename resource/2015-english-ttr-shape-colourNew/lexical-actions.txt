@@ -213,6 +213,8 @@ ELSE	abort
 pron_whq(CLASS)
 IF		?ty(t)
 		¬<\/*>Ex.x
+		¬<\/0>Ex.x
+		¬<\/1>Ex.x
 THEN	make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
