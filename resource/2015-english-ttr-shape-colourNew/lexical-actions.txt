@@ -251,7 +251,16 @@ ELSE	abort
 pron_whq_det_cop(CLASS)
 IF		?ty(t)
 		¬<\/*>Ex.x
-THEN	make(\/*)
+		¬<\/0>Ex.x
+		¬<\/1>Ex.x
+THEN	make(\/0)
+		go(\/0)
+		put(?Ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>t))
+		make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
 		put(+WH)
