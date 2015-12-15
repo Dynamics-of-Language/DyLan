@@ -180,18 +180,18 @@ ELSE    IF		?ty(cn)
 				put(!)
 		ELSE	abort
 
-adj(PRED,META)
+adj(PRED)
 IF      ty(cn>e>t)
 		¬<\/L>Ex.x
 THEN    put(?+eval)
 		make(\/L)
         go(\/L)
         put(ty(cn>e>t))
-        ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
+        ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t])
 ELSE    IF		ty(e>t)
 				+BE
 				?Ex.fo(x)
-		THEN	ttrput(R^(R ++ [pred==PRED:cn|p1==subj(pred,R.head):t|p2==META(pred):t]))
+		THEN	ttrput(R^(R ++ [pred==PRED:cn|p1==subj(pred,R.head):t]))
 				delete(?Ex.fo(x))
 ELSE	abort
 
@@ -275,7 +275,6 @@ ELSE	abort
 cn_meta_cat(PRED)
 IF		?ty(cn)
 		</\0>?ty(e>t)
-		</\0>+WH
 THEN	put(ty(cn))
 		delete(?ty(cn))
 		ttrput([pred:cn|p==PRED(pred):t|head==pred:cn])

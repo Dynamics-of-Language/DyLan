@@ -2,13 +2,13 @@ is                            copula                    	pres                   
 square                          count                       square                        s3                            obj
 circle                          count                       circle                        s3                            obj
 triangle						count						triangle					  s3							obj
-blue                            adj	                       	blue						  color
-red							    adj							red							  color
-green							adj							green						  color
-purple							adj							purple						  color
-yellow							adj							yellow						  color
-orange							adj							orange						  color
-black							adj							black						  color
+blue                            adj	                       	blue						  
+red							    adj							red							  
+green							adj							green						  
+purple							adj							purple						  
+yellow							adj							yellow						  
+orange							adj							orange						  
+black							adj							black						  
 this						  det_demonst					here						  s3
 that						  det_demonst					there					      s3
 this						  demonst  						this						  s3
