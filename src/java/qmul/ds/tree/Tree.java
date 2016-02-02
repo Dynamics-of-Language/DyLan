@@ -787,6 +787,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					break;
 						
 				}
+				else logger.debug(mergePoint+" not unifiable with:"+unfixed);
 				
 				
 
@@ -813,7 +814,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
 		Tree merged = mergeUnfixed();
-		
+		logger.debug("after merge"+merged);
 		
 		
 		merged.addUnderspecifiedFormulae();

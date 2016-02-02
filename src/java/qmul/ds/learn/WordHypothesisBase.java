@@ -1,6 +1,5 @@
 package qmul.ds.learn;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -17,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
+import qmul.ds.dag.WordHypothesis;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Word;
 

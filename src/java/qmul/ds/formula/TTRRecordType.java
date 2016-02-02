@@ -599,8 +599,9 @@ public class TTRRecordType extends TTRFormula {
 		System.out.println("After:" + meta);
 	*/
 		
-		TTRRecordType r=TTRRecordType.parse("[x:e|head==x:e]");
-		System.out.println(r.hasManifestContent());
+		TTRRecordType r=TTRRecordType.parse("[x==this:e|pred==square:cn|p==subj(pred,x):t]");
+		
+		System.out.println(r.toLatex());
 		
 	}
 

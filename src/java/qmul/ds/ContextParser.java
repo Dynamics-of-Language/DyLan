@@ -174,4 +174,10 @@ public class ContextParser extends Parser<ContextParserTuple> {
 		}
 	}
 
+	@Override
+	public void setRepairProcessing(boolean repair) {
+		throw new UnsupportedOperationException("Repair processing is not supported in Context Parser");
+		
+	}
+
 }

@@ -51,13 +51,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -71,7 +74,6 @@ import qmul.ds.Generator;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.ParserTuple;
 import qmul.ds.Utterance;
-import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.TTRFormula;
@@ -137,11 +139,11 @@ public class ParserPanel extends JPanel {
 	private SimpleAttributeSet normalStyle, highlightStyle;
 	private int startIndex, endIndex;
 	private JTabbedPane tabbedTuplePanel;
-	
-	private ParserTupleViewer tupleViewer;
-	//private TreePanel treePanel;
 
-	//private FormulaPanel semPanel;
+	private ParserTupleViewer tupleViewer;
+	// private TreePanel treePanel;
+
+	// private FormulaPanel semPanel;
 	private DAGViewer<DAGTuple, GroundableEdge> conPanel;
 	private DSParser parser;
 	private Generator<?> generator;
@@ -377,7 +379,7 @@ public class ParserPanel extends JPanel {
 	 * text.
 	 */
 	public void parse() {
-		
+
 		if (pTextPane.getText().length() == 0) {
 			logger.info("nothing to parse");
 			return;
@@ -385,21 +387,20 @@ public class ParserPanel extends JPanel {
 
 		// use endIndex+1 because substring subtracts 1
 		String text = pTextPane.getText();
-		//logger.debug("got text " + text);
+		// logger.debug("got text " + text);
 
 		if (parser != null && text.length() > 0) {
-		
-			//Tokenizer<? extends HasWord> toke = tlp.getTokenizerFactory()
-			//		.getTokenizer(new CharArrayReader(text.toCharArray()));
-			//List<? extends HasWord> wordList = toke.tokenize();
-			
-			Utterance utt=new Utterance(text);
-			
-			if (prevUtterance!=null&&utt.getSpeaker().equals(Utterance.defaultSpeaker))
-			{
+
+			// Tokenizer<? extends HasWord> toke = tlp.getTokenizerFactory()
+			// .getTokenizer(new CharArrayReader(text.toCharArray()));
+			// List<? extends HasWord> wordList = toke.tokenize();
+
+			Utterance utt = new Utterance(text);
+
+			if (prevUtterance != null
+					&& utt.getSpeaker().equals(Utterance.defaultSpeaker)) {
 				utt.setSpeaker(prevUtterance.getSpeaker());
-				
-				
+
 			}
 			parseThread = new ParseThread(utt);
 			parseThread.start();
@@ -542,26 +543,23 @@ public class ParserPanel extends JPanel {
 			tuples.clear();
 			parser.init();
 			parsedTextPane.setText("");
-			prevUtterance=null;
-			
+			prevUtterance = null;
+
 			if (parser instanceof InteractiveContextParser) {
 				InteractiveContextParser p = (InteractiveContextParser) parser;
-				if (conPanel==null)
-				{
-					conPanel = new DAGViewer<DAGTuple, GroundableEdge>(p.getState());
-					GraphZoomScrollPane scrollPane = new GraphZoomScrollPane(conPanel.vv);
+				if (conPanel == null) {
+					conPanel = new DAGViewer<DAGTuple, GroundableEdge>(
+							p.getState());
+					GraphZoomScrollPane scrollPane = new GraphZoomScrollPane(
+							conPanel.vv);
 					this.tabbedTuplePanel.addTab("Context", scrollPane);
-				}
-				else
-				{
+				} else {
 					conPanel.setDAG(p.getState());
 					this.tabbedTuplePanel.setEnabledAt(1, true);
 				}
 				tuples.add(p.getState().getCurrentTuple());
-			}
-			else if (conPanel!=null)
-			{
-				
+			} else if (conPanel != null) {
+
 				this.tabbedTuplePanel.setEnabledAt(1, false);
 				this.tabbedTuplePanel.setSelectedIndex(0);
 			}
@@ -587,7 +585,6 @@ public class ParserPanel extends JPanel {
 		treeNumberLabel.setText("Tree: " + (tupleNumber + 1) + " of "
 				+ tuples.size());
 		tupleViewer.setTuple(tuple);
-		
 
 		treePrevButton.setEnabled(tupleNumber > 0);
 
@@ -638,7 +635,6 @@ public class ParserPanel extends JPanel {
 				conPanel.update(dagParser.getState());
 				displayBestParse();
 			}
-			
 
 		}
 
@@ -736,6 +732,7 @@ public class ParserPanel extends JPanel {
 	private class LoadParserThread extends Thread {
 		String filename;
 		String parserType = interactive;// either 'depth-first' or
+		
 		// 'breadth-first'
 		static final String breadthFirst = "Breadth First";
 		static final String interactive = "Interactive (Best-First)";
@@ -743,28 +740,32 @@ public class ParserPanel extends JPanel {
 		LoadParserThread(String filename, String parserType) {
 			this.filename = filename;
 			this.parserType = parserType;
+			
 		}
 
 		@Override
 		public void run() {
 			try {
-				
+
 				if (this.parserType.equalsIgnoreCase(breadthFirst)) {
 					parser = new ContextParser(filename);
 					resetToFTALW.setEnabled(false);
-					
+					repairingOption.setEnabled(false);
+					if (repairingOption.isSelected())
+						logger.warn("Repair is not supported for the breadth first parser");
+
 				} else if (this.parserType.equalsIgnoreCase(interactive)) {
-					parser = new InteractiveContextParser(filename);
+					parser = new InteractiveContextParser(filename, repairingOption.isSelected());
 					resetToFTALW.setEnabled(true);
-					
-				} else
-				{
+					repairingOption.setEnabled(true);
+
+				} else {
 					JOptionPane.showMessageDialog(ParserPanel.this,
-							"Could not load parser. Invalid parser type.", null,
-							JOptionPane.ERROR_MESSAGE);
+							"Could not load parser. Invalid parser type.",
+							null, JOptionPane.ERROR_MESSAGE);
 					setStatus("Error loading parser");
 					parser = null;
-					
+
 				}
 				logger.info("loaded parser");
 				// parser = new SimpleParser(filename);
@@ -801,13 +802,12 @@ public class ParserPanel extends JPanel {
 	 */
 	private class ParseThread extends Thread {
 
-		
 		Utterance utterance;
 
 		public ParseThread(Utterance sentence) {
-			
+
 			this.utterance = sentence;
-			
+
 		}
 
 		public ParseThread() {
@@ -841,14 +841,13 @@ public class ParserPanel extends JPanel {
 			setStatus("Done");
 			if (successful) {
 				if (parser instanceof InteractiveContextParser) {
-					InteractiveContextParser p=(InteractiveContextParser)parser;
+					InteractiveContextParser p = (InteractiveContextParser) parser;
 					tuples.clear();
 
-					tuples.add(p.getState()
-							.getCurrentTuple());
+					tuples.add(p.getState().getCurrentTuple());
 					conPanel.update(p.getState());
 				}
-				
+
 				displayParsedUtterance(utterance);
 				displayBestParse();
 				clearButton.setEnabled(true);
@@ -940,7 +939,7 @@ public class ParserPanel extends JPanel {
 	private void initComponents()// GEN-BEGIN:initComponents
 	{
 		this.tabbedTuplePanel = new JTabbedPane();
-
+		this.repairingOption = new JCheckBox("Repair Processing");
 		splitPane = new javax.swing.JSplitPane();
 		topPanel = new javax.swing.JPanel();
 		buttonsAndFilePanel = new javax.swing.JPanel();
@@ -970,7 +969,7 @@ public class ParserPanel extends JPanel {
 		parseNextButton = new javax.swing.JButton();
 		clearButton = new javax.swing.JButton();
 		nextButton = new javax.swing.JButton();
-		resetToFTALW= new javax.swing.JButton();
+		resetToFTALW = new javax.swing.JButton();
 		dataFilePanel = new javax.swing.JPanel();
 		dataFileLabel = new javax.swing.JLabel();
 		pTextScrollPane = new javax.swing.JScrollPane();
@@ -978,7 +977,7 @@ public class ParserPanel extends JPanel {
 		parsedTextScrollPane = new javax.swing.JScrollPane();
 		pTextPane = new javax.swing.JTextPane();
 		gTextPane = new javax.swing.JTextPane();
-		parsedTextPane=new javax.swing.JTextPane();
+		parsedTextPane = new javax.swing.JTextPane();
 		treeContainer = new javax.swing.JPanel();
 		infoControlPanel = new javax.swing.JPanel();
 		parserFilePanel = new javax.swing.JPanel();
@@ -1049,6 +1048,21 @@ public class ParserPanel extends JPanel {
 		});
 		loadButtonPanel.add(parserTypeBox);
 
+		repairingOption
+				.setToolTipText("Check to enable self/other-repair via contextual backtrack and parse");
+		repairingOption.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AbstractButton abstractButton = (AbstractButton) e.getSource();
+		        boolean selected = abstractButton.getModel().isSelected();
+				if (parser!=null)
+				{
+					logger.info("Setting repair processing to:"+selected);
+					parser.setRepairProcessing(selected);
+				}
+			}
+		});
+		loadButtonPanel.add(repairingOption);
+
 		buttonsAndFilePanel.add(loadButtonPanel);
 
 		buttonPanel
@@ -1117,23 +1131,21 @@ public class ParserPanel extends JPanel {
 				nextButtonActionPerformed(evt);
 			}
 		});
-		
+
 		resetToFTALW.setText("Reset to FRALW");
 		resetToFTALW
 				.setToolTipText("Tells the parser to reset the state to the first state after parsing the last word");
 		resetToFTALW.setEnabled(false);
 		resetToFTALW.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (parser instanceof InteractiveContextParser)
-				{
-					InteractiveContextParser p=(InteractiveContextParser)parser;
-				
+				if (parser instanceof InteractiveContextParser) {
+					InteractiveContextParser p = (InteractiveContextParser) parser;
+
 					p.getState().resetToFirstTupleAfterLastWord();
 					conPanel.update(p.getState());
 				}
 			}
 		});
-		
 
 		buttonPanel.add(nextButton);
 		buttonPanel.add(resetToFTALW);
@@ -1205,18 +1217,14 @@ public class ParserPanel extends JPanel {
 		treeContainer.setForeground(new java.awt.Color(0, 0, 0));
 		treeContainer.setPreferredSize(new java.awt.Dimension(600, 500));
 
-		
-		tupleViewer= new ParserTupleViewer();
-		
-		
+		tupleViewer = new ParserTupleViewer();
+
 		this.tabbedTuplePanel.addTab("Tuple", tupleViewer);
 
-		//semPanel = new FormulaPanel();
-		//JScrollPane fs = new JScrollPane(semPanel);
-		//semPanel.setContainer(fs);
-		//this.tabbedTuplePanel.addTab("Semantics", fs);
-
-		
+		// semPanel = new FormulaPanel();
+		// JScrollPane fs = new JScrollPane(semPanel);
+		// semPanel.setContainer(fs);
+		// this.tabbedTuplePanel.addTab("Semantics", fs);
 
 		treeContainer.add("Center", this.tabbedTuplePanel);
 		tupleViewer.setBackground(Color.white);
@@ -1306,13 +1314,14 @@ public class ParserPanel extends JPanel {
 		gTextPane.setPreferredSize(new java.awt.Dimension(250, 170));
 		gTextScrollPane.setViewportView(gTextPane);
 		parsedTextScrollPane.setViewportView(parsedTextPane);
-		JPanel parsedGenPanel=new JPanel();
-		parsedGenPanel.setLayout(new BoxLayout(parsedGenPanel, BoxLayout.X_AXIS));
-		
+		JPanel parsedGenPanel = new JPanel();
+		parsedGenPanel
+				.setLayout(new BoxLayout(parsedGenPanel, BoxLayout.X_AXIS));
+
 		parsedGenPanel.add(parsedTextScrollPane);
 		parsedGenPanel.add(gTextScrollPane);
 		treeContainer.add(parsedGenPanel, java.awt.BorderLayout.SOUTH);
-		
+
 		splitPane.setRightComponent(treeContainer);
 
 		add(splitPane, java.awt.BorderLayout.CENTER);
@@ -1332,26 +1341,26 @@ public class ParserPanel extends JPanel {
 
 	}// GEN-END:initComponents
 
-	Utterance prevUtterance=null;
+	Utterance prevUtterance = null;
+
 	public void displayParsedUtterance(Utterance utterance) {
-		StyledDocument doc=parsedTextPane.getStyledDocument();
+		StyledDocument doc = parsedTextPane.getStyledDocument();
 		SimpleAttributeSet simple = new SimpleAttributeSet();
-		try
-		{
-			if (prevUtterance==null)
-				doc.insertString(0,utterance+" ", simple);
+		try {
+			if (prevUtterance == null)
+				doc.insertString(0, utterance + " ", simple);
 			else if (utterance.getSpeaker().equals(prevUtterance.getSpeaker()))
-				doc.insertString(doc.getLength(), utterance.getText()+" ", simple);
+				doc.insertString(doc.getLength(), utterance.getText() + " ",
+						simple);
 			else
-				doc.insertString(doc.getLength(), "\n"+utterance+" ", simple);
-			
-			prevUtterance=utterance;
-		}
-		catch(BadLocationException e)
-		{
+				doc.insertString(doc.getLength(), "\n" + utterance + " ",
+						simple);
+
+			prevUtterance = utterance;
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void textPaneFocusLost(java.awt.event.FocusEvent evt)// GEN-FIRST:event_textPaneFocusLost
@@ -1384,6 +1393,17 @@ public class ParserPanel extends JPanel {
 		pTextPane.setText("");
 		// highlightSelectedSentence();
 	}// GEN-LAST:event_textPaneMouseClicked
+
+	private void repairingStateChanged(ChangeEvent e) {
+		loadParser(defaultParser);
+		if (parserTypeBox.getSelectedItem().equals(PARSER_TYPES[1])) {
+			adjustOnceButton.setEnabled(true);
+			exhaustButton.setEnabled(true);
+		} else {
+			adjustOnceButton.setEnabled(false);
+			exhaustButton.setEnabled(false);
+		}
+	}
 
 	private void parseButtonActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_parseButtonActionPerformed
 	{// GEN-HEADEREND:event_parseButtonActionPerformed
@@ -1493,6 +1513,7 @@ public class ParserPanel extends JPanel {
 	private javax.swing.JComboBox parserTypeBox;
 	private javax.swing.JButton adjustOnceButton;
 	private javax.swing.JButton exhaustButton;
+	private javax.swing.JCheckBox repairingOption;
 	// End of variables declaration//GEN-END:variables
 
 }

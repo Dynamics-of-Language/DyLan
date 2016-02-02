@@ -130,13 +130,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	}
 
 	
-	public GroundableEdge getNewGroundingEdge(ArrayList<Action> newActs,
-			UtteredWord w) {
-		long newID = idPoolEdges.size() + 1;
-		GroundingEdge cl=new GroundingEdge(newActs, w, newID);
-		idPoolEdges.add(newID);
-		return cl;
-	}
+	
 	
 	public E getNewEdge(Action action, UtteredWord word) {
 		List<Action> l = new ArrayList<Action>();
@@ -815,8 +809,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 				return false;
 			
 		}
-		else if (parent instanceof GroundingEdge)
-			return false;
+		
 		
 		
 		return true;

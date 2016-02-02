@@ -27,11 +27,20 @@ import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.util.Pair;
 
 /**
- * An interactive parsing/generation agent with a DAG context as per Eshghi et.
- * al (2015).
+ * An interactive parsing agent with a DAG context as per Eshghi et. al (2015).
  * 
  * Self-repair processing. CR processing. Acknowledgements. Question/Answer
  * pairs....
+ * 
+ * TODO: (1) Turn repair processing on/off TODO: (2) Fix how tree completion
+ * works. Currently it is right-edge tokens like . or ? that take care of it. ??
+ * TODO: (3) Add generation: Given current context, i.e. the DAG constructed so
+ * far, and a goal concept, generate turn/string such that the maximal semantics
+ * of the right-most node on the DAG equals the goal. Generally, there will be
+ * two options: (a) local extension including repair/correction; and (b)
+ * starting a new clause. At this point, we can force (a) to be preferred and
+ * (b) only tried if (a) fails.
+ * 
  * 
  * @author Arash
  *
@@ -48,11 +57,10 @@ public class InteractiveContextParser extends
 	 * the dialogue context. See {@link Context} for more info.
 	 */
 
-	// String currentSpeaker = "self";
-	String[] acksa = {"uhu"};
+	String[] acksa = { "uhu" };
 	List<String> acks = Arrays.asList(acksa);
-	String accept="yes";
-	String[] repairand = { "uhh", "errm", "sorry", "err", "er", "well", "oh", "uh"};
+	String[] repairand = { "uhh", "errm", "sorry", "err", "er", "well", "oh",
+			"uh" };
 	List<String> repairanda = Arrays.asList(repairand);
 	String[] punct = { ".", "?", "!" };
 	List<String> rightEdgeIndicators = Arrays.asList(punct);
@@ -65,18 +73,27 @@ public class InteractiveContextParser extends
 
 	}
 
+	
+	
 	/**
 	 * @param resourceDirNameOrURL
 	 *            the dir containing computational-actions.txt,
 	 *            lexical-actions.txt, lexicon.txt
 	 */
-	public InteractiveContextParser(String resourceDirNameOrURL) {
-		super(resourceDirNameOrURL);
+	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing) {
+		super(resourceDirNameOrURL, repairing);
 		state = new WordLevelContextDAG(this);
 		context = new Context<DAGTuple, GroundableEdge>(state);
 		state.setContext(context);
 
 	}
+	
+	public InteractiveContextParser(String resourceDirOrURL)
+	{
+		this(resourceDirOrURL, false);
+	}
+	
+	
 
 	private boolean adjustOnce() {
 		if (state.outDegree(state.getCurrentTuple()) == 0)
@@ -113,8 +130,7 @@ public class InteractiveContextParser extends
 		// commitToContext();
 		return true;
 	}
-	
-	
+
 	private void applyAllPermutations() {
 		if (state.wordStack().isEmpty())
 			return;
@@ -122,22 +138,20 @@ public class InteractiveContextParser extends
 		// logger.debug("apply all for word:"+word);
 		if (this.rightEdgeIndicators.contains(word.word())) {
 			replayBacktrackedActions(word);
-		}else if (word.word().equals(repair_init_prefix))
-		{
+		} else if (word.word().equals(repair_init_prefix)) {
 			state.wordStack().pop();
 			initiateRepair();
 			return;
-			
-		}
-		else if (this.acks.contains(word.word())) {
+
+		} else if (this.acks.contains(word.word())) {
 			String lastSpkr = state.getParentEdge().word().speaker();
 			// System.out.println("last speaker was:"+lastSpkr);
 			DAGTuple completed = complete(word);
 
 			state.getParentEdge(completed).groundFor(lastSpkr);
 			return;
-		} 
-		
+		}
+
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(
 				new ArrayList<Action>(), state.getCurrentTuple().tree.clone());
 
@@ -179,87 +193,75 @@ public class InteractiveContextParser extends
 		for (Pair<List<Action>, Tree> pair : global) {
 
 			UtteredWord w = state.wordStack().peek();
-			
-			
+
 			for (LexicalAction la : lexicon.get(w.word())) {
-				//set right edge to not replayable
-				//TODO: should be part of the lexical entry? Need to think about this.
-				//for later... now must demo!
-				boolean replayable=true;
-				boolean repairable=true;
-				if (this.rightEdgeIndicators.contains(w.word())||la.getLexicalActionType().equals("accept")||la.getLexicalActionType().equals("reject"))
-				{
-					repairable=false;
-					replayable=false;
+				// set right-edge indicators (e.g. '.' or '?') and acceptances to not replayable
+				// TODO: should be part of the lexical entry? Need to think
+				// about this.
+				boolean replayable = true;
+				boolean repairable = true;
+				if (this.rightEdgeIndicators.contains(w.word())
+						|| la.getLexicalActionType().equals("accept")
+						|| la.getLexicalActionType().equals("reject")) {
+					repairable = false;
+					replayable = false;
 				}
 				Tree res = la.exec(pair.second.clone(), context);
 				if (res != null) {
 					int TRPIndex = getIndexOfTRP(pair.first);
-
+					ArrayList<Action> newActs = null;
 					if (TRPIndex > -1) {
+
 						List<Action> axiomActs = new ArrayList<Action>(
 								pair.first.subList(0, TRPIndex + 1));
-						DAGTuple axiom = state.addAxiom(axiomActs);
+						DAGTuple axiom=state.addAxiom(axiomActs);
 						logger.debug("Added axiom with actions:" + axiomActs);
-						ArrayList<Action> newActs = TRPIndex == 0 ? new ArrayList<Action>()
+						state.setCurrentTuple(axiom);
+						newActs = TRPIndex == 0 ? new ArrayList<Action>()
 								: new ArrayList<Action>(pair.first.subList(
 										TRPIndex + 1, pair.first.size()));
-						newActs.add(la.instantiate());
-						GroundableEdge wordEdge = state.getNewEdge(newActs, w);
-						logger.debug("created word edge with word:" + w);
-						logger.debug("with actions:" + wordEdge.getActions());
-						wordEdge.setReplayable(replayable);
-						wordEdge.setRepairable(repairable);
-						DAGTuple newTuple = state.getNewTuple(res);
-						state.addChild(axiom, newTuple, wordEdge);
+					} else
+						newActs = new ArrayList<Action>(pair.first);
 
-						logger.debug("Added Edge:" + wordEdge);
-						logger.debug("Child:" + newTuple);
-						continue;
-
-					}
-					ArrayList<Action> newActs = new ArrayList<Action>(
-							pair.first);
 					newActs.add(la.instantiate());
-					GroundableEdge wordEdge;
-					if (la.getLexicalActionType().equals("accept"))
-					{
-						wordEdge=state.getNewGroundingEdge(newActs,w);
-						
-						//if (state.getCurrentTuple().tree.getRootNode())
-						//state.setAcceptancePointer(state.getParentEdge().word().speaker());
-					}
-					else
-					    wordEdge = state.getNewEdge(newActs, w);
-					
-					
+					GroundableEdge wordEdge = state.getNewEdge(newActs, w);
+
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);
 					wordEdge.setReplayable(replayable);
 					wordEdge.setRepairable(repairable);
 					DAGTuple newTuple = state.getNewTuple(res);
-					
+
 					state.addChild(newTuple, wordEdge);
-					
+
 					logger.debug("Added Edge:" + wordEdge);
 					logger.debug("Child:" + newTuple);
-					
+
+					/**
+					 *  if the lexical action was acceptance/rejection, manually
+			 		 *	set acceptance pointers.
+					 * 
+					 */
 					if (la.getLexicalActionType().equals("reject"))
 						state.setAcceptancePointer(w.speaker(), newTuple);
-					else if (la.getLexicalActionType().equals("accept")||la.getLexicalActionType().equals("assert"))
-					{
-						state.setAcceptancePointer(w.speaker(),newTuple);
-						for(String spkr: state.getAcceptancePointers(state.getParent(newTuple)))
-						{
-							logger.info("setting acceptance pointer for:"+spkr);
+					else if (la.getLexicalActionType().equals("accept")
+							|| la.getLexicalActionType().equals("assert")) {
+						state.setAcceptancePointer(w.speaker(), newTuple);
+						for (String spkr : state.getAcceptancePointers(state
+								.getParent(newTuple))) {
+							logger.info("setting acceptance pointer for:"
+									+ spkr);
 							state.setAcceptancePointer(spkr, newTuple);
 						}
 					}
-					//if the lexical action was acceptance/rejection, manually set acceptance pointers.
-					//this need to go into the lexical actions.
-					//TODO
 					
-						
+					// TODO: the problem with doing this in the lexical actions is that
+					// the acceptance pointer is a tuple level annotation, rather than a tree-level one.
+					// so it cannot be done in the lexical actions, but only after the tuple has been 
+					// constructed here.
+					// Solution: have ds atomic actions return tuples?? (probably NOT!) Or make acceptance
+					// an annotation on the trees? Or in a ctxt field in the rec types... the latter! (Matt... )
+
 				}
 			}
 		}
@@ -286,15 +288,12 @@ public class InteractiveContextParser extends
 		Pair<List<GroundableEdge>, Tree> edgeTreePair = trimUntilApplicable(
 				start, state.getBacktrackedEdges(), acts);
 
-		//logger.debug("got edges back from trim:"
-			//	+ (edgeTreePair == null ? null : edgeTreePair.first));
-		//logger.debug("got actions back from trim:" + acts);
+		// logger.debug("got edges back from trim:"
+		// + (edgeTreePair == null ? null : edgeTreePair.first));
+		// logger.debug("got actions back from trim:" + acts);
 		if (edgeTreePair == null || edgeTreePair.first.isEmpty()) {
 			logger.info("Replay: didn't rerun anything from context");
 			return false;
-			// edgeTreePair = new Pair<List<GroundableEdge>, Tree>(new
-			// ArrayList<GroundableEdge>(),
-			// start);
 
 		}
 		ActionReplayEdge replayEdge = state.getNewActionReplayEdge(acts,
@@ -304,7 +303,7 @@ public class InteractiveContextParser extends
 		state.addChild(res, replayEdge);
 		state.getBacktrackedEdges().clear();
 		return true;
-		
+
 	}
 
 	@Override
@@ -336,23 +335,16 @@ public class InteractiveContextParser extends
 
 	}
 
-	public UtteredWord generateNextWord(TTRFormula goal)
-	{
-		
-		
-		
+	public UtteredWord generateNextWord(TTRFormula goal) {
+
 		return null;
 	}
-	
-	
-	public boolean parseWord(TTRFormula goal, UtteredWord word)
-	{
-		
-		
-		
-		
+
+	public boolean parseWord(TTRFormula goal, UtteredWord word) {
+
 		return false;
 	}
+
 	/**
 	 * @param word
 	 *            , speaker
@@ -365,13 +357,6 @@ public class InteractiveContextParser extends
 		// state.resetToFirstTupleAfterLastWord();
 		// logger.debug("after reset cur is" + state.getCurrentTuple());
 
-		// if (this.acks.contains(word.word()))
-		// {
-		// logger.debug("parsing an acknowledgement");
-		// this.state.thisIsFirstTupleAfterLastWord();
-		// this.state.groundToRootFor(word.speaker());
-		// return this.state;
-		// }
 		if (this.repairanda.contains(word.word())) {
 			this.state.thisIsFirstTupleAfterLastWord();
 			return this.state;
@@ -388,22 +373,23 @@ public class InteractiveContextParser extends
 		if (!parse()) {
 			logger.info("OOPS! Cannot parse " + word);
 			logger.info("Resetting state to the state after the last parsable word");
-			logger.info("Now initiating repair.");
-			state.resetToFirstTupleAfterLastWord();
-			// logger.debug("tuple after last word:"+state.getCurrentTuple());
 
+			state.resetToFirstTupleAfterLastWord();
+			if (!repair_processing) {
+				logger.info("repair processing is disabled. Reset to state after last parsable word.");
+				return state;
+			}
+			logger.info("Now initiating repair.");
 			state.wordStack().push(word);
 			initiateRepair();
 
-			if (!parse())
-			{
+			if (!parse()) {
 				logger.info("OOPS! Couldn't parse word as repair either");
 				return null;
 			}
 		}
 
 		this.state.thisIsFirstTupleAfterLastWord();
-		//this.state.setAcceptancePointer(word.speaker());
 		logger.info("Parsed " + word);
 		logger.info("Final Tuple:" + state.getCurrentTuple());
 
@@ -420,6 +406,8 @@ public class InteractiveContextParser extends
 	}
 
 	public void initiateRepair() {
+		if (!this.repair_processing)
+			return;
 
 		backtrackAndParse(state.wordStack().peek());
 
@@ -429,68 +417,63 @@ public class InteractiveContextParser extends
 
 	}
 
-	private GroundableEdge getFirstRepairableEdge()
-	{
+	private GroundableEdge getFirstRepairableEdge() {
 		logger.debug("finding first repairable edge:");
-		
-		GroundableEdge parent=state.getParentEdge();
-		while(parent!=null)
-		{
+
+		GroundableEdge parent = state.getParentEdge();
+		while (parent != null) {
 			if (parent.isRepairable())
 				return parent;
-			
-			parent=state.getParentEdge(state.getSource(parent));
+
+			parent = state.getParentEdge(state.getSource(parent));
 			logger.debug("inside loop");
-			
+
 		}
 		return null;
 	}
-	
-	
+
 	private void backtrackAndParse(UtteredWord word) {
 
 		if (this.rightEdgeIndicators.contains(word.word()))
 			return;
-		
-		logger.debug("backtrack and parsing:"+word);
-		
+
+		logger.debug("backtrack and parsing:" + word);
+
 		for (LexicalAction la : lexicon.get(word.word())) {
-			if (la.getLexicalActionType().equals("accept")||la.getLexicalActionType().equals("reject"))
+			if (la.getLexicalActionType().equals("accept")
+					|| la.getLexicalActionType().equals("reject"))
 				return;
-			
+
 			DAGTuple current = state.getCurrentTuple();
 			if (state.isClauseRoot(current))
 				return;
-			
-			
-			
-			GroundableEdge firstRepairable=getFirstRepairableEdge();
-			if (firstRepairable==null)
-			{
+
+			GroundableEdge firstRepairable = getFirstRepairableEdge();
+			if (firstRepairable == null) {
 				logger.debug("didn't find repairable edge.");
 				return;
 			}
-			logger.debug("first repariable edge:"+firstRepairable);
-			String speakerOfFirstRepairable=firstRepairable.word().speaker();
-			//we want to repair only either the current turn, or the previous.
-			
+			logger.debug("first repariable edge:" + firstRepairable);
+			String speakerOfFirstRepairable = firstRepairable.word().speaker();
+			// we want to repair only either the current turn, or the previous.
+
 			GroundableEdge repairableEdge;
 			List<GroundableEdge> backtracked = new ArrayList<GroundableEdge>();
 
 			do {
 				repairableEdge = state.getParentEdge(current);
-			    current=state.getSource(repairableEdge);
-				//shouldn't repair right edges like ? . ! <eot> etc.
-			    backtracked.add(0, repairableEdge);
-			    logger.debug("checking repairable"+repairableEdge);
-			    if (!repairableEdge.isRepairable())
-			    {
-			    	logger.debug("edge not repairable");
-			    	continue;
-			    }
-			    
-			    if (!speakerOfFirstRepairable.equals(repairableEdge.word().speaker()))
-			    	break;
+				current = state.getSource(repairableEdge);
+				// shouldn't repair right edges like ? . ! <eot> etc.
+				backtracked.add(0, repairableEdge);
+				logger.debug("checking repairable" + repairableEdge);
+				if (!repairableEdge.isRepairable()) {
+					logger.debug("edge not repairable");
+					continue;
+				}
+
+				if (!speakerOfFirstRepairable.equals(repairableEdge.word()
+						.speaker()))
+					break;
 				List<Action> actions = new ArrayList<Action>(repairableEdge
 						.getActions().subList(0,
 								repairableEdge.getActions().size() - 1));
@@ -518,12 +501,9 @@ public class InteractiveContextParser extends
 					logger.debug("from: " + current);
 					logger.debug("to: " + to);
 
-					
-					
 				} else
-					logger.debug("could not apply:"+actions+"\n at:"+current.getTree());
-				
-				
+					logger.debug("could not apply:" + actions + "\n at:"
+							+ current.getTree());
 
 			} while (!state.isClauseRoot(current)
 					&& !state.isBranching(current));
@@ -535,15 +515,21 @@ public class InteractiveContextParser extends
 
 		return parseWords(utt.words) != null;
 	}
+	
+	@Override
+	public void setRepairProcessing(boolean repair) {
+		this.repair_processing=repair;
+		
+	}
 
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
 				"resource/2015-english-ttr-shape-colour");
 		Utterance utt = new Utterance("A: what do you");
 		parser.parseUtterance(utt);
-		Tree finalT=parser.getState().getCurrentTuple().getTree();
+		Tree finalT = parser.getState().getCurrentTuple().getTree();
 		System.out.println("Final tree" + finalT);
-		System.out.println("Sem: "+finalT.getMaximalSemantics());
+		System.out.println("Sem: " + finalT.getMaximalSemantics());
 
 	}
 

@@ -2,7 +2,6 @@ package qmul.ds.learn;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import qmul.ds.dag.WordHypothesis;
 import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.Word;
 
 public class WordLogProbDistribution extends HashMap<WordHypothesis, Double> {
 

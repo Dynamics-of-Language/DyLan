@@ -100,5 +100,12 @@ public class SimpleParser extends Parser<ParserTuple> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void setRepairProcessing(boolean repair) {
+		throw new UnsupportedOperationException("Repair processing not supported");
+		
+	}
+
 
 }

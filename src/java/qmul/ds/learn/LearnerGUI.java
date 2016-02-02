@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTupleSet;
 import qmul.ds.dag.HorizontalFlipTreeLayout;
+import qmul.ds.dag.WordHypothesis;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Word;
 import edu.uci.ics.jung.algorithms.layout.Layout;

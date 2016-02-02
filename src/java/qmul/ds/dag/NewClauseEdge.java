@@ -13,6 +13,7 @@ public class NewClauseEdge extends GroundableEdge {
 		super.word=null;
 		super.id=newID;
 		super.weight=0.0;
+		super.setInContext(true);
 		
 	}
 	

@@ -60,6 +60,13 @@ public interface DSParser extends edu.stanford.nlp.parser.Parser {
 	 * @return
 	 */
 	public boolean parseUtterance(Utterance utt);
+
+	/**
+	 * Sets repair processing on and off
+	 * 
+	 */
+	public void setRepairProcessing(boolean repairing);
+	
 	
 	
 	

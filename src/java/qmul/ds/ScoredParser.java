@@ -133,4 +133,10 @@ public class ScoredParser extends Parser<ScoredParserTuple> {
 		return null;
 	}
 
+	@Override
+	public void setRepairProcessing(boolean repair) {
+		throw new UnsupportedOperationException("Repair processing not supported");
+		
+	}
+
 }

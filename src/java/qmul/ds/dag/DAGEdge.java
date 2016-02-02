@@ -14,6 +14,10 @@ import qmul.ds.action.Action;
 /**
  * A generic Edge in a context DAG. Can be subclassed to include more contextual info.
  * 
+ * WARNING: Do NOT use the constructors to create a new edge object. Use the getNew[edge type]Edge methods provided in the DAG class. 
+ * (i.e. the {@link DAG} class is its own edge factory (and tuple (node) factory)).
+ * 
+ * 
  * @author Arash
  *
  */
@@ -25,7 +29,11 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	public static final int REPAIRED = 2;
 	public static final int IN_CONTEXT = 3;
 
+	/**
+	 * The edge's unique id. Hashcode just returns id. Equals method works based on this.
+	 */
 	protected Long id = 0L;
+	
 	protected Long pid = -1L;
 	protected List<Action> actions = null;
 	protected UtteredWord word = null;
@@ -39,37 +47,37 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	
 	protected boolean replayable=true;
 
-	public DAGEdge() {
+	DAGEdge() {
 		this.actions = new ArrayList<Action>();
 	}
 
-	public DAGEdge(Action a, UtteredWord w) {
+	DAGEdge(Action a, UtteredWord w) {
 		this.word = w;
 		this.actions = new ArrayList<Action>();
 		this.actions.add(a);
 	}
 
-	public DAGEdge(Action a, UtteredWord w, long id) {
+	DAGEdge(Action a, UtteredWord w, long id) {
 		this(a, w);
 		this.id = id;
 	}
 
-	public DAGEdge(Action a) {
+	DAGEdge(Action a) {
 		this(a, null);
 	}
 
-	public DAGEdge(List<Action> a, UtteredWord w) {
+	DAGEdge(List<Action> a, UtteredWord w) {
 		this.word = w;
 		this.actions = a;
 	}
 
-	public DAGEdge(List<Action> a, UtteredWord w, long id) {
+	DAGEdge(List<Action> a, UtteredWord w, long id) {
 		this(a, w);
 		this.id = id;
 	}
 
 	
-	public DAGEdge(List<Action> a) {
+	DAGEdge(List<Action> a) {
 		this(a, null);
 	}
 

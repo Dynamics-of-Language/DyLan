@@ -1,7 +1,6 @@
 package qmul.ds.learn;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +16,7 @@ import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.Put;
 import qmul.ds.action.atomic.TTRFreshPut;
 import qmul.ds.dag.DAGEdge;
-import qmul.ds.dag.DAG;
+import qmul.ds.dag.DAGInductionState;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.TypeLattice;
 import qmul.ds.dag.TypeLatticeIncrement;
@@ -27,7 +26,6 @@ import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRLabel;
 import qmul.ds.formula.TTRPath;
 import qmul.ds.formula.TTRRecordType;
-import qmul.ds.formula.Variable;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.NodeAddress;

@@ -3,8 +3,6 @@ package qmul.ds.dag;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
-import qmul.ds.learn.WordHypothesis;
-
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Forest;
 

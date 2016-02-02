@@ -30,28 +30,48 @@ import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.util.Pair;
 
 /**
- * A generic parser
+ * A generic parser with a Directed Asyclic Graph  as its parse state and context ({@link DAG<T,E>}, see Eshghi et. al. (2013)).
  * 
- * @author mpurver, arash
+ * @author arash, mpurver
  */
 public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		implements DSParser {
 
 	private static Logger logger = Logger.getLogger(DAGParser.class);
-
+	/**
+	 * The parse state, which is a directed acyclic graph. This acts as the DS context.
+	 * See e.g. Eshghi et. al. (2015); Eshghi et. al. (2013)
+	 * 
+	 */
 	protected DAG<T, E> state;
 	protected Lexicon lexicon;
+	/**
+	 * The non-optional set of computational actions.
+	 */
 	protected Grammar nonoptionalGrammar;// as determined by the prefix * in action files
-	protected Context<T, E> context; 
+	protected Context<T, E> context;
+	
+	/**
+	 * The optional set of computational actions
+	 */
 	protected Grammar optionalGrammar;
+	/**
+	 * The computational actions used for completing a tree: completion, beta-reduction, thinning (anticipation?)
+	 */
 
 	protected Grammar completionGrammar;
 
+	
+	boolean repair_processing=true;
+	
 	public DAGParser(Lexicon lexicon, Grammar grammar) {
 		this.lexicon = lexicon;
 		separateGrammars(grammar);
 	}
-
+	/** This method divides the set of computational actions into optional and non-optional ones.
+	 * 
+	 * @param grammar
+	 */
 	private void separateGrammars(Grammar grammar) {
 		this.nonoptionalGrammar = new Grammar();
 		this.optionalGrammar = new Grammar();
@@ -76,6 +96,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public DAGParser(File resourceDir) {
 		this(new Lexicon(resourceDir), new Grammar(resourceDir));
 	}
+	
+	
 
 	/**
 	 * @param resourceDirNameOrURL
@@ -86,7 +108,19 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		this(new Lexicon(resourceDirNameOrURL), new Grammar(
 				resourceDirNameOrURL));
 	}
-
+	
+	public DAGParser(String resourceDirNameOrURL, boolean repairing)
+	{
+		this(resourceDirNameOrURL);
+		this.repair_processing=repairing;
+	}
+	
+	
+	/** BEGIN METHODS FOR RERUNNING ACTIONS________________________________________________________________________ 
+	 * The following methods are used for re-running actions having backtracked over them to do repair.
+	 * 
+	 */
+	
 	protected List<E> extractEdges(List<Action> actions, List<E> edges)
 	{
 		List<E> result=new ArrayList<E>();
@@ -143,52 +177,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		return null;
 
 	}
-
-	public T complete(UtteredWord word)
-	{
-		Pair<List<Action>,Tree> completed=complete(state.getCurrentTuple().getTree());
-		
-		
-		
-		E replayEdge = state.getNewEdge(completed.first, word);
-		
-		T res = state.getNewTuple(completed.second);
-		state.addChild(res, replayEdge);
-		return res;
-		// replayEdge.setInContext(true);
-		// setCurrentTuple(res);
-
-	}
-	/**
-	 * Will complete the current tuple, as much as possible, using the
-	 * non-optional grammar and Completion.
-	 * 
-	 * @return The sequence of computational actions applied paired with the
-	 *         resulting tuple.
-	 */
-	protected Pair<List<Action>, Tree> complete(Tree res) {
-
-		// Pair<ParserTuple, List<Action>> initPair=new Pair<ParserTuple,
-		// List<Action>>(new ParserTuple(t.getTree()), new ArrayList<Action>());
-		ArrayList<Action> actions = new ArrayList<Action>();
-		// Tree res = initPair.first.getTree();
-		Pair<List<Action>,Tree> cur =new Pair<List<Action>,Tree>(actions,res.clone());
-		Pair<List<Action>,Tree> result= new Pair<List<Action>,Tree>(new ArrayList<Action>(), res);
-		List<Tree> seen=new ArrayList<Tree>();
-		do {
-			result.second=cur.second;
-			result.first.addAll(cur.first);
-			if (result.second.isComplete())
-				return result;
-			cur=completeOnce(result.second);
-			
-		} while (!cur.first.isEmpty());
 	
-		
-		logger.trace("result:" + result.first);
-		return result;
-	}
-
 	/**
 	 * 
 	 * @param start
@@ -230,25 +219,71 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		
 	}
 	
+	//END OF methods for rerunning actions-------------------------------------------------------
+	
 
-	/**
-	 * helper method. applies all actions in edge to t.
+	//BEGIN methods for completing a tree --------------------------------------------------------
+	/** Completes the current tuple in the state (the right most node), and adds an edge to the dag which 
+	 * is composed of all the computational actions applied to do the completion, followed by word (e.g. "."): this is 
+	 * the word that will be associated with the edge.
 	 * 
-	 * @param t
-	 * @param edge
-	 * @return the resulting tuple
+	 * @param word is a right-edge indicator, "." or "?".
+	 * @return
 	 */
-	protected Tree applyActions(Tree t, List<Action> edge) {
-		Tree clone = new Tree(t);
+	public T complete(UtteredWord word)
+	{
+		Pair<List<Action>,Tree> completed=complete(state.getCurrentTuple().getTree());
+		
+		
+		
+		E replayEdge = state.getNewEdge(completed.first, word);
+		
+		T res = state.getNewTuple(completed.second);
+		state.addChild(res, replayEdge);
+		return res;
+		// replayEdge.setInContext(true);
+		// setCurrentTuple(res);
 
-		for (Action a : edge) {
-			clone = a.exec(clone, context);
-			if (clone == null)
-				return null;
-
-		}
-		return clone;
 	}
+	
+	/**
+	 * Will complete the current tuple, as much as possible, using the
+	 * non-optional grammar and Completion.
+	 * 
+	 * @return The sequence of computational actions applied paired with the
+	 *         resulting tuple.
+	 */
+	protected Pair<List<Action>, Tree> complete(Tree res) {
+
+		// Pair<ParserTuple, List<Action>> initPair=new Pair<ParserTuple,
+		// List<Action>>(new ParserTuple(t.getTree()), new ArrayList<Action>());
+		ArrayList<Action> actions = new ArrayList<Action>();
+		// Tree res = initPair.first.getTree();
+		Pair<List<Action>,Tree> cur =new Pair<List<Action>,Tree>(actions,res.clone());
+		Pair<List<Action>,Tree> result= new Pair<List<Action>,Tree>(new ArrayList<Action>(), res);
+		List<Tree> seen=new ArrayList<Tree>();
+		do {
+			result.second=cur.second;
+			result.first.addAll(cur.first);
+			if (result.second.isComplete())
+				return result;
+			cur=completeOnce(result.second);
+			
+		} while (!cur.first.isEmpty());
+	
+		
+		logger.trace("result:" + result.first);
+		return result;
+	}
+	
+	/**
+	 *  Helper method. Used by the {@link complete(Tree)} method.
+	 *  This implements on step of tree completion: a sequence of non-optional computational actions, followed possibly, by 
+	 *  a single optional one (e.g. completion).
+	 *  
+	 * @param t
+	 * @return the partially completed tree
+	 */
 
 	protected Pair<List<Action>,Tree> completeOnce(Tree t)
 	{
@@ -273,7 +308,35 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		
 		return init;
 	}
+
+	//END OF methods for completing a tree ------------------------------------------
 	
+
+	/**
+	 * helper method. applies all actions in edge to t.
+	 * 
+	 * @param t
+	 * @param actions
+	 * @return the resulting tuple
+	 */
+	protected Tree applyActions(Tree t, List<Action> actions) {
+		Tree clone = new Tree(t);
+
+		for (Action a : actions) {
+			clone = a.exec(clone, context);
+			if (clone == null)
+				return null;
+
+		}
+		return clone;
+	}
+
+	
+	/**
+	 * 
+	 * @param initPair
+	 * @return
+	 */
 	protected Pair<List<Action>,Tree> adjustWithNonOptionalGrammar(
 			Pair<List<Action>,Tree> initPair) {
 		logger.debug("adjusting non-optionally: " + initPair.second);
@@ -439,5 +502,12 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	}
 	
 	public abstract void initiateRepair();
+	
+	public boolean isRepairProcessingEnabled()
+	{
+		return this.repair_processing;
+	}
+	
+	
 
 }

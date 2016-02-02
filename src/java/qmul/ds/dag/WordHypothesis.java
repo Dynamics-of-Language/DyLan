@@ -1,12 +1,10 @@
-package qmul.ds.learn;
+package qmul.ds.dag;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -14,17 +12,11 @@ import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.LexicalAction;
-import qmul.ds.action.atomic.Abort;
 import qmul.ds.action.atomic.Effect;
-import qmul.ds.action.atomic.IfThenElse;
-import qmul.ds.dag.DAGEdge;
-import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.DAGTupleSet;
+import qmul.ds.learn.CandidateSequence;
+import qmul.ds.learn.Hypothesiser;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
-import qmul.ds.tree.label.LabelDisjunction;
-import qmul.ds.tree.label.Requirement;
-import qmul.ds.tree.label.TypeLabel;
 import edu.stanford.nlp.ling.HasWord;
 import edu.uci.ics.jung.graph.DelegateTree;
 import edu.uci.ics.jung.graph.util.EdgeType;

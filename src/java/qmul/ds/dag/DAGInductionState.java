@@ -1,16 +1,12 @@
-package qmul.ds.learn;
+package qmul.ds.dag;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import qmul.ds.DAGParser;
 import qmul.ds.action.Action;
-import qmul.ds.dag.BacktrackingEdge;
-import qmul.ds.dag.DAG;
-import qmul.ds.dag.DAGEdge;
-import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.NewClauseEdge;
-import qmul.ds.dag.UtteredWord;
+import qmul.ds.learn.DAGInductionTuple;
+import qmul.ds.learn.TreeHypothesis;
 import qmul.ds.tree.Tree;
 
 /**

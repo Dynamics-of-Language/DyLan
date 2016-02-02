@@ -549,5 +549,11 @@ public class DepthFirstParser extends Parser<ParserTuple> implements
 		}while(parser.parse());
 		 
 	}
+	
+	@Override
+	public void setRepairProcessing(boolean repair) {
+		throw new UnsupportedOperationException("Repair processing is not supported in Context Parser");
+		
+	}
 
 }

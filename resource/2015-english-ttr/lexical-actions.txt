@@ -17,6 +17,7 @@ THEN    put(person(PERSON))
         ttrput([x==NAME:e|head==x:e])
         put(+PN)
 ELSE    abort
+
 *//
 
 proper(NAME,PERSON,CLASS)
@@ -31,6 +32,7 @@ THEN    put(person(PERSON))
         ttrput([r:[x:e|p==NAME(x):t|head==x:e]|x1==(iota, r.head, r):e|head==x1:e])
         put(+PN)
 ELSE    abort
+
 
 //*
 the(QUANT)

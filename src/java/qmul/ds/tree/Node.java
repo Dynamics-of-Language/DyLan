@@ -336,7 +336,7 @@ public class Node extends TreeSet<Label> {
 
 			return false;
 		}
-		// System.out.println("Address "+address+" subsumes "+ other.address);
+		
 		logger.debug("checking " + this + " subsumes " + other);
 		label: for (Label thisLabel : this) {
 
@@ -394,9 +394,10 @@ public class Node extends TreeSet<Label> {
 		
 		if (!other.getAddress().subsumes(getAddress()))
 		{
+			
 			logger.debug("address subsumption failed. this:"+this.getAddress()+"other:"+other.getAddress());
 			return false;
-		}	
+		}else logger.debug(other.getAddress()+" subsumes "+getAddress());
 		DSType t = getType();
 		if (t == null)
 			t = getRequiredType();
@@ -419,6 +420,7 @@ public class Node extends TreeSet<Label> {
 			if (of == null)
 				of = other.getRequiredFormula();
 			if ((of != null) && !f.subsumes(of)) {
+				System.out.println("Formula subsumption failed");
 				return false;
 			}
 		}
