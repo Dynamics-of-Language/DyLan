@@ -149,6 +149,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		return result;
 		
 	}
+	
 	protected Pair<List<E>, Tree> trimUntilApplicable(Tree t,
 			List<E> edges, List<Action> acts) {
 		
@@ -195,10 +196,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		List<Tree> seen=new ArrayList<Tree>();
 		do
 		{
-			if (seen.contains(init.second))
-				break;
-			logger.trace("trying actions: "+edge);
-			logger.trace("on:"+init.second);
+			
+			logger.debug("trying actions: "+edge);
+			logger.debug("on:"+init.second);
 			completer=this.applyActions(init.second,edge);
 			if (completer!=null)
 			{
@@ -208,10 +208,18 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 				logger.debug("completetuple until applicable returns actions:"+actions);
 				return new Pair<List<Action>,Tree>(actions,completer);
 			}
-			logger.trace("no success");
-
+			logger.debug("no success");
+			seen.add(init.second.clone());
+			logger.debug("adding to seen:"+init.second);
 			init=completeOnce(init.second);
-			seen.add(init.second);
+			if (seen.contains(init.second))
+			{
+				logger.debug("seen:"+init.second);
+				logger.debug(seen);
+				break;
+			}
+	
+			
 		}while(!init.first.isEmpty());
 		
 		logger.debug("completetuple until applicable returns false");
@@ -295,7 +303,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		
 		for(Action a: completionGrammar.values())
 		{
-			Tree completedOnce=a.exec(init.second, context);
+			Tree completedOnce=a.exec(init.second.clone(), context);
 			
 			if (completedOnce!=null)
 			{
@@ -339,7 +347,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	protected Pair<List<Action>,Tree> adjustWithNonOptionalGrammar(
 			Pair<List<Action>,Tree> initPair) {
-		logger.debug("adjusting non-optionally: " + initPair.second);
+		logger.trace("adjusting non-optionally: " + initPair.second);
 		ArrayList<Action> actions = new ArrayList<Action>(initPair.first);
 
 		Tree res = initPair.second;
@@ -349,10 +357,10 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			for (ComputationalAction a : nonoptionalGrammar.values()) {
 				
 				clone = res.clone();
-				logger.debug("applying "+a.getName()+ " to "+clone);
+				logger.trace("applying "+a.getName()+ " to "+clone);
 				clone = a.exec(clone, context);
 				
-				logger.debug("result was "+clone);
+				logger.trace("result was "+clone);
 				if (clone != null) {
 					actions.add(a.instantiate());
 					res = clone;
@@ -364,8 +372,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		} while (clone != null);
 		Pair<List<Action>,Tree> result = new Pair<List<Action>,Tree>(
 				actions,res);
-		logger.debug("Adjusted with" + result.first);
-		logger.debug("Resulting tree:"+result.second);
+		logger.trace("Adjusted with" + result.first);
+		logger.trace("Resulting tree:"+result.second);
 		return result;
 	}
 

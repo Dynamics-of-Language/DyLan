@@ -240,7 +240,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		for (GroundableEdge e : edges) {
 			DAGTuple child = getDest(e);
 
-			if (!e.hasBeenSeen() && e.word().equals(stack.peek())) {
+			if (!e.hasBeenSeen() && (e instanceof NewClauseEdge || e.word().equals(stack.peek()))) {
 				logger.info("Going forward (first) along: " + e);
 				if (e instanceof BacktrackingEdge<?>) {
 					BacktrackingEdge<GroundableEdge> backEdge = (BacktrackingEdge) e;
@@ -254,7 +254,10 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 				} else if (e instanceof ActionReplayEdge) {
 					((ActionReplayEdge) e).groundReplayedEdgesFor(word
 							.speaker());
-				} else {
+				} else if (e instanceof NewClauseEdge) {
+					e.setInContext(true);
+				}
+				else {
 					GroundableEdge prevEdge = getParentEdge();
 					if (prevEdge != null
 							&& prevEdge.word() != null
@@ -268,7 +271,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 				logger.info("depth is now:" + getDepth());
 
-				if (e.word().word() != null) {
+				if (e.word() != null) {
 					if (e.word().equals(stack.peek()))
 						stack.pop();
 					else {

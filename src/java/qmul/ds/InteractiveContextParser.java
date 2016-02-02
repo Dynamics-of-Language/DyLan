@@ -284,7 +284,7 @@ public class InteractiveContextParser extends
 													// it will be added to as a
 													// result of call to
 													// trimuntil
-
+		logger.debug("Edges to be replayed:"+state.getBacktrackedEdges());
 		Pair<List<GroundableEdge>, Tree> edgeTreePair = trimUntilApplicable(
 				start, state.getBacktrackedEdges(), acts);
 
@@ -293,6 +293,7 @@ public class InteractiveContextParser extends
 		// logger.debug("got actions back from trim:" + acts);
 		if (edgeTreePair == null || edgeTreePair.first.isEmpty()) {
 			logger.info("Replay: didn't rerun anything from context");
+			logger.debug("trimUntilApplicable returned:"+edgeTreePair);
 			return false;
 
 		}
@@ -372,7 +373,7 @@ public class InteractiveContextParser extends
 		// state.clear();
 		if (!parse()) {
 			logger.info("OOPS! Cannot parse " + word);
-			logger.info("Resetting state to the state after the last parsable word");
+			logger.info("Resetting to the state after the last parsable word");
 
 			state.resetToFirstTupleAfterLastWord();
 			if (!repair_processing) {
@@ -408,7 +409,7 @@ public class InteractiveContextParser extends
 	public void initiateRepair() {
 		if (!this.repair_processing)
 			return;
-
+		logger.debug("initiating repair. Last word on stack:"+state.wordStack().peek());
 		backtrackAndParse(state.wordStack().peek());
 
 		state.wordStack().push(
