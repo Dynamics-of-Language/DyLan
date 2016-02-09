@@ -78,7 +78,9 @@ public class OpenPageDialog extends javax.swing.JDialog {
 
 	/* use JFileChooser jfc to browse files */
 	private void browseFiles() {
+		
 		jfc.setDialogTitle("Open file");
+		jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		int status = jfc.showOpenDialog(this);
 		if (status == JFileChooser.APPROVE_OPTION) {
 			urlTextField.setText(jfc.getSelectedFile().getPath());
