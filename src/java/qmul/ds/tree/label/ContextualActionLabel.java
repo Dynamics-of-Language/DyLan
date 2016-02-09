@@ -22,8 +22,8 @@ import qmul.ds.action.LexicalAction;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundActionSequenceVariable;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaActionSequence;
-import qmul.ds.action.meta.MetaElement;
 import qmul.ds.tree.Tree;
 
 public class ContextualActionLabel extends Label {
@@ -133,8 +133,8 @@ public class ContextualActionLabel extends Label {
 		return false;
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		for (Label l : requiredTriggers)
 			result.addAll(l.getMetas());
 		if (this.actionSequence instanceof MetaActionSequence)
@@ -142,8 +142,8 @@ public class ContextualActionLabel extends Label {
 		return result;
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		for (Label l : requiredTriggers)
 			result.addAll(l.getBoundMetas());
 		if (this.actionSequence instanceof BoundActionSequenceVariable)

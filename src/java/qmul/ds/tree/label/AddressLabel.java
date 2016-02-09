@@ -10,10 +10,11 @@ package qmul.ds.tree.label;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundNodeAddressVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaNodeAddress;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.NodeAddress;
@@ -140,8 +141,8 @@ public class AddressLabel extends Label implements Serializable {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		if (address instanceof MetaNodeAddress) {
 			metas.addAll(((MetaNodeAddress) address).getMetas());
 		}
@@ -149,8 +150,8 @@ public class AddressLabel extends Label implements Serializable {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		if (address instanceof BoundNodeAddressVariable) {
 			metas.addAll(((BoundNodeAddressVariable) (address)).getBoundMetas());
 		}

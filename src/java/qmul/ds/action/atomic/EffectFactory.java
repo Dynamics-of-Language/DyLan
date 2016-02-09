@@ -78,9 +78,8 @@ public class EffectFactory {
 			return new AddAxiom();
 		}else if (line.toLowerCase().startsWith(Unreduce.FUNCTOR.toLowerCase())) {
 			return new Unreduce();
-		} else if (line.toLowerCase().startsWith(Complete.FUNCTOR.toLowerCase())) {
-			return new Complete();
-		} else if (line.toLowerCase().startsWith(GroundToRoot.FUNCTOR.toLowerCase())) {
+		} 
+		else if (line.toLowerCase().startsWith(GroundToRoot.FUNCTOR.toLowerCase())) {
 			return new GroundToRoot();
 		}else if (line.toLowerCase().startsWith(Make.FUNCTOR.toLowerCase())) {
 			return new Make(line);

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundTypeVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaType;
 import qmul.ds.type.DSType;
 
@@ -63,8 +63,8 @@ public class TypeLabel extends Label implements Serializable {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		// TODO if ConstructedTypes can contain MetaTypes e.g. (e>(e>X)) then
 		// we'll need Type to implement getMetas()
 		if (type instanceof MetaType) {
@@ -74,8 +74,8 @@ public class TypeLabel extends Label implements Serializable {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 		// TODO if ConstructedTypes can contain MetaTypes e.g. (e>(e>X)) then
 		// we'll need Type to implement getMetas()
 		if (type instanceof BoundTypeVariable) {

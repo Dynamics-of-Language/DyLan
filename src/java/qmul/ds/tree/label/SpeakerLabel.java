@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import qmul.ds.Context;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
@@ -70,8 +70,8 @@ public class SpeakerLabel extends Label implements Serializable {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		if (formula instanceof MetaFormula) {
 			metas.addAll(((MetaFormula) formula).getMetas());
 		} else if (formula instanceof FormulaMetavariable) {
@@ -81,8 +81,8 @@ public class SpeakerLabel extends Label implements Serializable {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 		if (formula instanceof BoundFormulaVariable) {
 			metas.addAll(((BoundFormulaVariable) formula).getBoundMetas());
 		} else if (formula instanceof FormulaMetavariable) {

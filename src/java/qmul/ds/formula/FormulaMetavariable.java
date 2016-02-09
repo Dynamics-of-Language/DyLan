@@ -105,7 +105,7 @@ public class FormulaMetavariable extends Formula {
 	 * @see qmul.ds.formula.Formula#subsumesBasic(qmul.ds.formula.Formula)
 	 */
 	@Override
-	protected boolean subsumesBasic(Formula other) {
+	public boolean subsumesBasic(Formula other) {
 		if (value == null) {
 			return true;
 		}

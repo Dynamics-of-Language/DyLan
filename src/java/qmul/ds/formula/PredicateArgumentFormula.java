@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 
 /**
  * An epsilon calculus {@link Formula}
@@ -133,9 +133,9 @@ public class PredicateArgumentFormula extends Formula {
 		return subsumesMapped(arguments, eps.arguments, map);
 	}
 	
-	public ArrayList<MetaElement<?>> getMetas()
+	public ArrayList<Meta<?>> getMetas()
 	{
-		ArrayList<MetaElement<?>> metas=new ArrayList<MetaElement<?>>();
+		ArrayList<Meta<?>> metas=new ArrayList<Meta<?>>();
 		
 		for(Formula f: arguments)
 		{

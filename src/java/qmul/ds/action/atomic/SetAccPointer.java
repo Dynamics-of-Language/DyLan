@@ -27,12 +27,14 @@ public class SetAccPointer extends Effect {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final String FUNCTOR = "setAccPointer";
+	public static final String FUNCTOR = "assert";
 
 	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
 	{
-		String speaker=context.getCurrentSpeaker();
-		tree.getPointedNode().add(LabelFactory.create("accept("+speaker+")"));
+		logger.info("setting acc pointer");
+		
+		
+		context.setAcceptancePointer();
 		return tree;
 	}
 

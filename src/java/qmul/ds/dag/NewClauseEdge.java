@@ -8,12 +8,11 @@ public class NewClauseEdge extends GroundableEdge {
 
 	boolean grounded=false;
 	
-	public NewClauseEdge(List<Action> actions, long newID) {
+	public NewClauseEdge(List<Action> actions, UtteredWord word, long newID) {
 		super.actions=actions;
-		super.word=null;
+		super.word=word;
 		super.id=newID;
 		super.weight=0.0;
-		super.setInContext(true);
 		
 	}
 	
@@ -29,13 +28,15 @@ public class NewClauseEdge extends GroundableEdge {
 	
 	public String toString()
 	{
-		return "New-Cl: "+(grounded?"gr":"ungr");
+		return super.toString()+"(NC"+(grounded?"-gr":"-ugr")+")";
 	}
 	
 	public boolean isGrounded()
 	{
 		return grounded;
 	}
+	
+	
 	
 	
 }

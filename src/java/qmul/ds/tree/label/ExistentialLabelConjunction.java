@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaNodeAddress;
 import qmul.ds.tree.Node;
@@ -121,8 +122,8 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 		return true;
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> r = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> r = new ArrayList<Meta<?>>();
 		for (Label l : labels) {
 
 			r.addAll(l.getBoundMetas());
@@ -256,21 +257,22 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 	 * (after==null) result+=metaVarReplacement; else if(!after.matches("[a-zA-Z]")) result+=metaVarReplacement; else
 	 * result+=self; } else result+=self; } return result; }
 	 */
+	
 
 	private void setupBacktracker() {
 		this.backtracker = new Backtracker();
 		for (Label l : labels) {
 
-			ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+			ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 			metas.addAll(l.getMetas());
 			metas.addAll(l.getBoundMetas());
 			if (this.embeddingITE == null) {
 				logger.debug("embedding ITE is null");
 				logger.debug("no exceptions in adding metas to backtracker");
 				logger.debug("Adding and resetting:" + metas);
-				backtracker.addAndResetExcept(metas, new ArrayList<MetaElement<?>>());
+				backtracker.addAndResetExcept(metas, new ArrayList<Meta<?>>());
 			} else {
-				List<MetaElement<?>> exceptions = this.embeddingITE.getMetasAboveLabel(this);
+				List<Meta<?>> exceptions = this.embeddingITE.getMetasAboveLabel(this);
 				// logger.debug("Adding and resetting " + metas + " except:" + exceptions);
 
 				backtracker.addAndResetExcept(metas, this.embeddingITE.getMetasAboveLabel(this));
@@ -302,18 +304,18 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 	 */
 	private class Backtracker {
 
-		private HashMap<MetaElement<?>, Integer> whenIntroduced;
-		private ArrayList<MetaElement<?>> metas;
+		private HashMap<Meta<?>, Integer> whenIntroduced;
+		private ArrayList<Meta<?>> metas;
 		private int index;
 
 		private Backtracker() {
-			whenIntroduced = new HashMap<MetaElement<?>, Integer>();
-			metas = new ArrayList<MetaElement<?>>();
+			whenIntroduced = new HashMap<Meta<?>, Integer>();
+			metas = new ArrayList<Meta<?>>();
 			index = 0;
 		}
 
-		public HashSet<MetaElement<?>> getMetas() {
-			HashSet<MetaElement<?>> res = new HashSet<MetaElement<?>>();
+		public HashSet<Meta<?>> getMetas() {
+			HashSet<Meta<?>> res = new HashSet<Meta<?>>();
 			res.addAll(metas);
 			return res;
 
@@ -325,8 +327,8 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 		 * 
 		 * @param metas
 		 */
-		private void add(List<MetaElement<?>> metas) {
-			for (MetaElement<?> meta : metas) {
+		private void add(List<Meta<?>> metas) {
+			for (Meta<?> meta : metas) {
 				if (!this.metas.contains(meta)) {
 					meta.reset();
 					this.metas.add(meta);
@@ -345,8 +347,8 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 		 * @param exceptions
 		 *            those that should be added but not reset
 		 */
-		private void addAndResetExcept(List<MetaElement<?>> metas, List<MetaElement<?>> exceptions) {
-			for (MetaElement<?> meta : metas) {
+		private void addAndResetExcept(List<Meta<?>> metas, List<Meta<?>> exceptions) {
+			for (Meta<?> meta : metas) {
 				if (!this.metas.contains(meta)) {
 					if (!exceptions.contains(meta)) {
 						meta.reset();
@@ -376,7 +378,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 		 */
 		private boolean canBacktrack(Tree tree, ParserTuple context) {
 			for (int i = metas.size() - 1; i >= 0; i--) {
-				MetaElement<?> meta = metas.get(i);
+				Meta<?> meta = metas.get(i);
 				// don't bother with steps we haven't got to yet
 				if (whenIntroduced.get(meta) <= index) {
 					// uninstantiate this meta-element, remembering its value
@@ -391,7 +393,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 							// introduced later
 							// logger.debug("check success in canBacktrack. Label after check:"+label);
 							for (int j = i + 1; j < metas.size(); j++) {
-								MetaElement<?> meta2 = metas.get(j);
+								Meta<?> meta2 = metas.get(j);
 								if (whenIntroduced.get(meta2) >= index) {
 									meta2.reset();
 								}
@@ -421,7 +423,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 		 */
 		private boolean canBacktrack(Node n) {
 			for (int i = metas.size() - 1; i >= 0; i--) {
-				MetaElement<?> meta = metas.get(i);
+				Meta<?> meta = metas.get(i);
 				// don't bother with steps we haven't got to yet
 				if (whenIntroduced.get(meta) <= index) {
 					// uninstantiate this meta-element, remembering its value
@@ -436,7 +438,7 @@ public class ExistentialLabelConjunction extends EmbeddedLabelGroup implements S
 							// introduced later
 							// logger.debug("check success in canBacktrack. Label after check:"+label);
 							for (int j = i + 1; j < metas.size(); j++) {
-								MetaElement<?> meta2 = metas.get(j);
+								Meta<?> meta2 = metas.get(j);
 								if (whenIntroduced.get(meta2) >= index) {
 									meta2.reset();
 								}

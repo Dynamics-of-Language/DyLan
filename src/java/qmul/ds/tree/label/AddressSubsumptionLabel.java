@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundModalityVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaModality;
 import qmul.ds.tree.Modality;
 import qmul.ds.tree.NodeAddress;
@@ -132,8 +132,8 @@ public class AddressSubsumptionLabel extends Label {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		if (modality instanceof MetaModality) {
 			metas.addAll(((MetaModality) modality).getMetas());
 		}
@@ -141,8 +141,8 @@ public class AddressSubsumptionLabel extends Label {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 		if (modality instanceof BoundModalityVariable) {
 			metas.addAll(((BoundModalityVariable) modality).getBoundMetas());
 		}

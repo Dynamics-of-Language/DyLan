@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.Node;
@@ -48,8 +48,8 @@ public class DOMLabel extends Label {
 		this(s, null);
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		if (this.variable instanceof MetaFormula) {
 			metas.addAll(((MetaFormula) this.variable).getMetas());
 
@@ -57,8 +57,8 @@ public class DOMLabel extends Label {
 		return metas;
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 		if (this.variable instanceof BoundFormulaVariable) {
 			metas.addAll(((BoundFormulaVariable) this.variable).getBoundMetas());
 

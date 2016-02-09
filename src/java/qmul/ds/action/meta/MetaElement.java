@@ -26,7 +26,7 @@ import qmul.ds.type.DSType;
  * 
  * @author mpurver
  */
-public class MetaElement<X> implements Serializable {
+public class MetaElement<X> implements Serializable, Meta<X> {
 
 	/**
 	 * 

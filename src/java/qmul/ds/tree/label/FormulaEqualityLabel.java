@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.Node;
@@ -59,8 +59,8 @@ public class FormulaEqualityLabel extends Label implements Serializable {
 		return left.toUnicodeString() + "=" + right.toUnicodeString();
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (left instanceof MetaFormula)
 			result.addAll(((MetaFormula) left).getMetas());
 		if (right instanceof MetaFormula)
@@ -69,8 +69,8 @@ public class FormulaEqualityLabel extends Label implements Serializable {
 		return result;
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (left instanceof BoundFormulaVariable)
 			result.addAll(((BoundFormulaVariable) left).getBoundMetas());
 		if (right instanceof BoundFormulaVariable)

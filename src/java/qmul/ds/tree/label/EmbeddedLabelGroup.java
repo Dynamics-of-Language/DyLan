@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 
@@ -87,8 +87,8 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		for (Label l : labels)
 			metas.addAll(l.getMetas());
 
@@ -96,8 +96,8 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 		for (Label l : labels)
 			metas.addAll(l.getBoundMetas());
 
@@ -110,7 +110,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	 */
 	protected boolean checkLabelsConj(Node node) {
 
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
 
 		for (Label l : labels) {
 
@@ -129,7 +129,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	 */
 	protected boolean checkLabelsDisj(Node node) {
 
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
 
 		for (Label l : labels) {
 
@@ -142,7 +142,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	}
 
 	protected boolean checkLabelsConj(Tree t, ParserTuple context) {
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
 
 		for (Label l : labels) {
 			if (!l.checkWithTupleAsContext(t, context)) {
@@ -155,7 +155,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	}
 
 	protected boolean checkLabelsDisj(Tree t, ParserTuple context) {
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
 
 		for (Label l : labels) {
 			if (l.checkWithTupleAsContext(t, context))

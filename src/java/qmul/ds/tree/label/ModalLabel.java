@@ -14,14 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.record.formula.functions.T;
 
 import qmul.ds.Context;
 import qmul.ds.ContextParserTuple;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundModalityVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaModality;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
@@ -237,8 +236,8 @@ public class ModalLabel extends EmbeddedLabelGroup {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		if (modality instanceof MetaModality) {
 			metas.addAll(((MetaModality) modality).getMetas());
 		}
@@ -247,8 +246,8 @@ public class ModalLabel extends EmbeddedLabelGroup {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 		if (modality instanceof BoundModalityVariable) {
 			metas.addAll(((BoundModalityVariable) modality).getBoundMetas());
 		}

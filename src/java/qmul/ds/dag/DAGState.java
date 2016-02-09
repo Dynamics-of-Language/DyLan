@@ -16,24 +16,25 @@ import qmul.ds.tree.Tree;
 public class DAGState extends DAG<DAGTuple, DAGEdge> {
 
 	
-	public DAGState(DAGParser<DAGTuple, DAGEdge> p) {
-		super(p);
-	}
 	
+	
+	public DAGState()
+	{
+		super();
+	}
 
-	public DAGState(List<UtteredWord> words, DAGParser<DAGTuple, DAGEdge> p) {
-		super(words, p);
+	public DAGState(List<UtteredWord> words) {
+		super(new Tree(), words);
 		
 	}
 	
-	public DAGState(Tree start, DAGParser<DAGTuple, DAGEdge> p) {
-		super(start, new ArrayList<UtteredWord>(), p);
+	public DAGState(Tree start) {
+		super(start, new ArrayList<UtteredWord>());
 		
 	}
 
-	public DAGState(Tree start, List<UtteredWord> words,
-			DAGParser<DAGTuple, DAGEdge> parser) {
-		super(start, words, parser);
+	public DAGState(Tree start, List<UtteredWord> words) {
+		super(start, words);
 		
 	}
 
@@ -104,8 +105,8 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 
 
 	@Override
-	public BacktrackingEdge<DAGEdge> getNewBacktrackingEdge(
-			List<DAGEdge> backtrackedOver, String speaker) {
+	public BacktrackingEdge getNewBacktrackingEdge(
+			List<GroundableEdge> backtrackedOver, String speaker) {
 		
 		throw new UnsupportedOperationException();
 	}
@@ -145,16 +146,34 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 
 	
 	
-	public DAGTuple addAxiom(List<Action> actions)
+	public DAGTuple addAxiom(List<Action> actions, UtteredWord word)
 	{
 		
 			DAGTuple axiom=this.getNewTuple(new Tree());
-			NewClauseEdge edge=this.getNewNewClauseEdge(actions);
+			NewClauseEdge edge=this.getNewNewClauseEdge(actions, word);
 			this.addChild(axiom, edge);
 			return axiom;
 			
 		
 	}
+
+
+	@Override
+	public VirtualRepairingEdge getNewRepairingEdge(List<GroundableEdge> backtrackedOver,
+			List<Action> repairingActions, DAGTuple midTuple,
+			UtteredWord repairingWord) {
+		throw new UnsupportedOperationException("Repairing edges not supported in this DAG class");
+	}
+
+
+	@Override
+	public RepairingWordEdge getNewRepairingWordEdge(List<Action> actions,
+			UtteredWord word) {
+		throw new UnsupportedOperationException("Repairing Word Edge not supported in this DAG class");
+	}
+
+
+	
 
 
 

@@ -62,7 +62,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	protected Grammar completionGrammar;
 
 	
-	boolean repair_processing=true;
+	
 	
 	public DAGParser(Lexicon lexicon, Grammar grammar) {
 		this.lexicon = lexicon;
@@ -112,7 +112,6 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public DAGParser(String resourceDirNameOrURL, boolean repairing)
 	{
 		this(resourceDirNameOrURL);
-		this.repair_processing=repairing;
 	}
 	
 	
@@ -149,6 +148,13 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		return result;
 		
 	}
+	protected int getIndexOfTRP(List<Action> actions) {
+		for (int i = 0; i < actions.size(); i++) {
+			if (actions.get(i).getName().equals("trp"))
+				return i;
+		}
+		return -1;
+	}
 	
 	protected Pair<List<E>, Tree> trimUntilApplicable(Tree t,
 			List<E> edges, List<Action> acts) {
@@ -157,6 +163,10 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			return new Pair<List<E>,Tree>(new ArrayList<E>(), t);
 		
 		List<Action> actions=state.getAsActionList(edges);
+		int trpIndex=getIndexOfTRP(actions);
+		if (trpIndex>=0)
+			actions=new ArrayList<Action>(actions.subList(trpIndex+1, actions.size()));
+		
 		for (int i = 0; i < actions.size(); i++) {
 			Pair<List<Action>, Tree> res = completeTupleUntilApplicable(t, actions.subList(i, actions.size()));
 			
@@ -509,11 +519,15 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		return this.complete(state.getCurrentTuple().tree).second;
 	}
 	
-	public abstract void initiateRepair();
-	
 	public boolean isRepairProcessingEnabled()
 	{
-		return this.repair_processing;
+		return state.repairProcessingEnabled();
+	}
+	
+	public void setRepairProcessing(boolean b)
+	{
+		
+		this.state.setRepairProcessing(b);
 	}
 	
 	

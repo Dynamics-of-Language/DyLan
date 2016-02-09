@@ -53,6 +53,23 @@ public class ActionReplayEdge extends GroundableEdge {
 		
 	}
 	
+	public void traverse(WordLevelContextDAG dag)
+	{
+		super.traverse(dag);
+		groundReplayedEdgesFor(word.speaker());
+		setInContext(true);
+		
+		
+	}
+	
+	public void backtrack(WordLevelContextDAG dag)
+	{
+		ungroundReplayedEdgesFor(word.speaker());
+
+				
+		super.backtrack(dag);
+
+	}
 	
 	
 	

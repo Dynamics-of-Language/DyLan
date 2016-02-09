@@ -67,17 +67,45 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	protected List<E> actionReplay=new ArrayList<E>();
 	
-	protected DAGParser<T,E> parser;
+	//protected DAGParser<T,E> parser;
 	
 	
 	protected Map<String, Set<T>> acceptance_pointers = new HashMap<String, Set<T>>();
 	
+	
+
 	public abstract T getNewTuple(Tree t);
 
 	public abstract E getNewEdge(List<Action> actions, UtteredWord word);
 	
+	public abstract VirtualRepairingEdge getNewRepairingEdge(List<GroundableEdge> backtrackedOver, List<Action> repairingActions, DAGTuple midTuple, UtteredWord repairingWord);
 	
-	public abstract BacktrackingEdge<E> getNewBacktrackingEdge(List<E> backtrackedOver, String speaker);
+
+	public abstract BacktrackingEdge getNewBacktrackingEdge(List<GroundableEdge> backtrackedOver, String speaker);
+	
+	public DAG(Tree start, List<UtteredWord> words)
+	{
+		
+		wordStack = new Stack<UtteredWord>();
+		for (int i = words.size() - 1; i >= 0; i--) {
+			wordStack.push(words.get(i));
+		}
+		cur = getNewTuple(start);
+		addVertex(cur);
+		root = cur;
+		//lastN.add(cur.getTree());
+		thisIsFirstTupleAfterLastWord();
+		
+		//this.completionGrammar=completionGrammar;
+		
+		
+	}
+	
+	
+	public DAG()
+	{
+		this(new Tree(), new ArrayList<UtteredWord>());
+	}
 	
 	public ActionReplayEdge getNewActionReplayEdge(List<Action> actions, UtteredWord w, List<GroundableEdge> edges)
 	{
@@ -88,6 +116,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		
 		
 	}
+	
+	public abstract RepairingWordEdge getNewRepairingWordEdge(List<Action> actions, UtteredWord word);
 	
 	
 	public void setSelfPointer() {
@@ -121,9 +151,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	
 	
 	
-	public NewClauseEdge getNewNewClauseEdge(List<Action> actions) {
+	public NewClauseEdge getNewNewClauseEdge(List<Action> actions, UtteredWord word) {
 		long newID = idPoolEdges.size() + 1;
-		NewClauseEdge cl=new NewClauseEdge(actions, newID);
+		NewClauseEdge cl=new NewClauseEdge(actions, word, newID);
 		idPoolEdges.add(newID);
 		return cl;
 		
@@ -148,7 +178,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	
 	
-	
+	/*
 	public DAG(Tree start, List<UtteredWord> words, DAGParser<T,E> parser)
 	{
 		this.parser=parser;
@@ -165,13 +195,13 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		//this.completionGrammar=completionGrammar;
 		
 		
-	}
+	}*/
 	
-	
+	/*
 	public DAG(DAGParser<T,E> p)
 	{
 		this(new Tree(), new ArrayList<UtteredWord>(), p);
-	}
+	}*/
 	
 	
 	public void setContext(Context<T,E> context)
@@ -180,6 +210,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	}
 	
 
+	
 	public List<E> getBacktrackedEdges()
 	{
 		return this.actionReplay;
@@ -258,10 +289,11 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	
 
+	/*
 	public DAG(List<UtteredWord> words, DAGParser<T,E> p) {
 		this(new Tree(), words, p);
 
-	}
+	}*/
 
 	
 
@@ -282,6 +314,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return null;
 	}
 	
+	/*
 	public void markEdgeAsUnseenAndAboveItSeen(E seen)
 	{
 		SortedSet<E> edges=getOutEdges(getSource(seen), seen.pid);
@@ -310,7 +343,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 				
 		}
 		
-	}
+	}*/
 	/**
 	 * returns the outgoing edges of cur that are compatible with parsing word.
 	 * These are either edges associated with word, or edges with no word, e.g.
@@ -319,7 +352,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	 * @param cur
 	 * @param word
 	 * @return see above.
-	 */
+	 
 	protected SortedSet<E> getOutEdges(T cur, long activeParentID) {
 
 		TreeSet<E> result = new TreeSet<E>();
@@ -328,7 +361,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 				result.add(edge);
 		}
 		return result;
-	}
+	}*/
+	
+
 	
 
 	public boolean isComplete() {
@@ -347,15 +382,6 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return getSuccessorCount(cur);
 	}
 
-	public T getActiveParent(T child)
-	{
-		E edge=getActiveParentEdge(child);
-		if (edge==null)
-			return null;
-		
-		
-		return getSource(edge);
-	}
 	
 	protected List<E> getActiveInEdges(T child) {
 		List<E> result=new ArrayList<E>();
@@ -388,6 +414,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return removeVertex(child);
 	}
 
+	/*
 	protected E getMostRecentParentEdgeNotIn(T node, Set<E> seen)
 	{
 		
@@ -416,49 +443,43 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 			}
 		return null;
 		
-	}
+	}*/
 	
-	public T getActiveParent() {
-		return getActiveParent(cur);
-
-	}
+	
 
 	public abstract DAGTuple execAction(Action a, UtteredWord w);
 
-	public void addChild(T child, E edge) {
+	public DAGTuple addChild(T child, E edge) {
 		
-		addChild(cur, child, edge);
+	    return addChild(cur, child, edge);
 	}
 	
-	protected long getActiveParentEdgeId(T cur) {
-		E active=getActiveParentEdge(cur);
-		return active==null?-1:active.id;
-	}
+	
 
-	protected long getActiveParentEdgeId() {
-		return getActiveParentEdgeId(cur);
-	}
+	
 
-	public void addChild(T from, T to, E edge)
+	public DAGTuple addChild(T from, T to, E edge)
 	{
 		if (!this.containsVertex(from))
 			throw new IllegalArgumentException("Cannot add child. The parent doesn't exist");
 		
-		if (this.containsVertex(to))
-		{
-			 
-			edge.incidenceNumber=inDegree(to);
-			
-		}
-		else
+//		if (this.containsVertex(to))
+//		{
+//			 
+//			edge.incidenceNumber=inDegree(to);
+//			
+//		}
+//		else
+		if (!this.containsVertex(to))
 			to.setDepth(from.getDepth() + 1);
 		//System.out.println(this.getActiveParent(from));
-		if (this.getActiveParent(from)==null)
-			edge.setParentEdgeId(-1L);
-		else
-			edge.setParentEdgeId(this.getActiveParentEdge(from).id);
+//		if (this.getActiveParent(from)==null)
+//			edge.setParentEdgeId(-1L);
+//		else
+//			edge.setParentEdgeId(this.getActiveParentEdge(from).id);
 		
 		addEdge(edge, from, to);
+		return to;
 		
 	}
 
@@ -475,11 +496,26 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	boolean loopDetection_enabled=false;
 	protected List<Tree> lastN = new ArrayList<Tree>();
 
+
+
+	protected boolean repair_processing=false;
+
 	protected boolean loopDetected(Tree res) {
 
 		return lastN.contains(res);
 	}
 
+	public boolean repairProcessingEnabled()
+	{
+		return repair_processing;
+		
+	}
+	
+	public void setRepairProcessing(boolean b)
+	{
+		this.repair_processing=b;
+	}
+	
 	protected void updateLastN()
 	{
 		lastN.clear();
@@ -514,6 +550,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	}
 	
 	
+	
+	
+	
 	public E goFirst() {
 		if (outDegree(cur) == 0)
 			return null;
@@ -521,18 +560,12 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 		for (E e : edges) {
 			T child = getDest(e);
-
+			
 			if (!e.hasBeenSeen()) {
 				logger.info("Going forward (first) along: " + e);
-				if (e instanceof BacktrackingEdge<?>)
-				{
-					BacktrackingEdge<E> backEdge=(BacktrackingEdge)e;
-					
-					backEdge.markRepairedEdges();
-					this.actionReplay.addAll(backEdge.getReplayableBacktrackedEdges());
-				}
-				else
-					e.setInContext(true);
+				
+
+				e.setInContext(true);
 				
 				
 				this.cur = child;
@@ -561,22 +594,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	
 	
 
-	/** Simulates DAG behaviour ignoring {@link BacktrackingEdge}s.
-	 *  Assumption: each node has one unique incoming edge that is not a BacktrackingEdge. Nodes may have 1 or more incoming
-	 *  BacktrackingEdge's, and they will be ordered by their incidence number.
-	 * @param node
-	 * @return parent edge of node
-	 */
 	
-	public E getParentEdge(T node)
-	{
-		for(E edge: getInEdges(node))
-		{
-			if (!(edge instanceof BacktrackingEdge))
-				return edge;
-		}
-		return null;
-	}
 	
 	/** Simulates DAG behaviour. Ignores {@link BacktrackingEdge}s.
 	 *  Assumption: each node has one unique parent, and, at most one incoming Backtracking edge.
@@ -602,30 +620,31 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return getParentEdge(cur);
 	}
 	
+	/** the state graph must be acyclic for this method to be meaningful.
+	 * @param node
+	 * @return parent edge of node
+	 */
 	
-	public E getActiveParentEdge(T node) {
-		
-		List<E> incomingNonBacktracked = getActiveInEdges(node);
-		if (incomingNonBacktracked.isEmpty())
-		{
-			//System.out.println("incoming nonbacktracking is empty");
+	public E getParentEdge(T node)
+	{
+		Collection<E> edges=getInEdges(node);
+		if (edges.size()==0)
 			return null;
+		
+		if (edges.size()>1)
+		{
+			logger.error("edges:"+edges);
+			throw new IllegalStateException("Loops not supported by default. Unique parent assumed here.");
 		}
-		Collections.sort(incomingNonBacktracked, new Comparator<E>() {
-
-			@Override
-			public int compare(E e1, E e2) {
-				if (e1.incidenceNumber > e2.incidenceNumber)
-					return -1;
-				else
-					return 1;
-			}
-
-		});
 		
-		return incomingNonBacktracked.get(0);
 		
+		return edges.iterator().next();
 	}
+	
+	
+	
+	
+	
 
 	/**
 	 * 
@@ -634,7 +653,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	public E goUpOnce() {
 		
 
-		E result = getActiveParentEdge();
+		E result = getParentEdge();
 		if (result==null)
 		{
 			logger.debug("At root, can't go up.");
@@ -644,15 +663,13 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		logger.info("going back along: " + result);
 		logger.info("depth was:" + getDepth());
 		
-		this.cur = getActiveParent();
+		this.cur = getParent();
 		updateLastN();
 		logger.info("depth is now:" + getDepth());
 		return result;
 	}
 
-	public E getActiveParentEdge() {
-		return getActiveParentEdge(cur);
-	}
+	
 
 	public boolean isExhausted() {
 		return this.exhausted;
@@ -665,16 +682,16 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	}
 
 	public Action getPrevAction() {
-		if (getActiveParentEdge()==null)
+		if (getParentEdge()==null)
 			return null;
 		
-		return getActiveParentEdge().getAction();
+		return getParentEdge().getAction();
 	}
 
 	public UtteredWord getPrevWord() {
-		if (getActiveParentEdge()==null)
+		if (getParentEdge()==null)
 			return null;
-		return getActiveParentEdge().word();
+		return getParentEdge().word();
 	}
 
 	public ArrayList<Action> getActionSequence(T current) {
@@ -752,9 +769,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	public List<Action> getParentActions(T current) {
 
-		if (getActiveParentEdge(current) == null)
+		if (getParentEdge(current) == null)
 			return null;
-		return getActiveParentEdge(current).getActions();
+		return getParentEdge(current).getActions();
 	}
 
 	public static void main(String a[]) {
@@ -762,9 +779,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	}
 
 	public UtteredWord getPrevWord(T current) {
-		if (getActiveParentEdge(current)!=null)
+		if (getParentEdge(current)!=null)
 			return null;
-		return getActiveParentEdge(current).word();
+		return getParentEdge(current).word();
 	}
 
 	public void setExhausted(boolean a) {
@@ -799,18 +816,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	public boolean canBacktrack()
 	{
-		if (getActiveParent()==null)
+		if (getParent()==null)
 			return false;
-		E parent=getActiveParentEdge();
-		if (parent instanceof NewClauseEdge)
-		{
-			NewClauseEdge cl=(NewClauseEdge)parent;
-			if (cl.isGrounded())
-				return false;
-			
-		}
-		
-		
 		
 		return true;
 	}
@@ -824,45 +831,26 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	 */
 	public boolean attemptBacktrack() {
 
-		
+	
 		while (!moreUnseenEdges()) {
 			if (!canBacktrack())
 			{
+				logger.info("cannot backtrack from:"+cur);
 				return false;
 			}
 				
-			E backover = getActiveParentEdge();
+			E backover = getParentEdge();
 			
 			if (backover.word() != null) {
 
 				wordStack.push(backover.word());
 				logger.debug("adding word to stack, now:" + wordStack);
-				E prevPrevEdge=getParentEdge(getSource(backover));
-				if (prevPrevEdge!=null&&!backover.word().speaker().equals(prevPrevEdge.word().speaker()))
-				{
-					ungroundToClauseRootFor(backover.word().speaker(),getSource(backover));
-				}
-			}
-			if (backover instanceof BacktrackingEdge<?>)
-			{
-				BacktrackingEdge<E> backEdge=(BacktrackingEdge)backover;
-				backEdge.unmarkRepairedEdges();
-				actionReplay.clear();
-				//ungroundToRootFor(backover.word().speaker(), cur);
-				logger.debug("going back (forward) over backtrakcing edge");
-				logger.debug(":"+backEdge);
-			}else if (backover instanceof ActionReplayEdge)
-			{
-				((ActionReplayEdge)backover).ungroundReplayedEdgesFor(backover.word().speaker());
 				
 			}
-			E backOver = goUpOnce();
-			//backOver.setBacktracked(true);
-			// remove edge from context
-			// context.goUpDelete();
-			// mark edge that we're back over as seen (already explored)...
 			
-			//markOutEdgeAsSeen(backOver);
+			
+			E backOver = goUpOnce();
+			
 			backOver.setSeen(true);
 			backOver.setInContext(false);
 			
@@ -872,6 +860,13 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return true;
 	}
 	
+	
+	/**
+	 * 
+	 * @param t Tuple
+	 * @return true if there is more than one in-context edge from tuple, e.g. if there is an outgoing repaired edge and the current edge
+	 * 
+	 */
 	public boolean isBranching(T t)
 	{
 		logger.debug("checking branching:"+t);
@@ -1036,23 +1031,78 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	
 	public abstract void ungroundToClauseRootFor(String speaker, DAGTuple cur);
 
+
+	
 	public boolean isClauseRoot(T current) {
+		if (isRoot(current))
+			return true;
 		
-		return current.getTree().isAxiom();
-	}
-
-	
-	public abstract T addAxiom(List<Action> list);
-	
-
-	public qmul.ds.tree.Tree complete() {
-		return parser.complete();
+		for(E edge: getOutEdges(current))
+		{
+			if ((edge instanceof NewClauseEdge))
+				return true;
+				
+		}
+		return false;
 	}
 	
-	public DAGParser<T,E> getParser()
+	
+	public boolean atClauseRoot()
 	{
-		return parser;
+		if (atRoot())
+			return true;
+		
+		for(E edge: getOutEdges())
+		{
+			if ((edge instanceof NewClauseEdge)&&edge.hasBeenSeen())
+				return true;
+				
+		}
+		return false;
+		
 	}
+	
+
+	
+	public T addAxiom(List<Action> list)
+	{
+		return addAxiom(list, null);
+	}
+	
+	public abstract T addAxiom(List<Action> acts, UtteredWord word);
+	
+	
+	
+
+	public void initiateLocalRepair() {
+		if (!this.repair_processing)
+			return;
+		logger.info("initiating repair. Stack:"+wordStack());
+		
+		
+		//wordStack().push(word);
+		wordStack().push(
+				new UtteredWord(BacktrackingEdge.repair_init_prefix, wordStack().peek()
+						.speaker()));
+
+		
+	}
+
+	public boolean repairInitiated() {
+		return !wordStack().isEmpty()&&wordStack().peek().word().equals(BacktrackingEdge.repair_init_prefix);
+		
+	}
+
+	public String getSpeakerOfPreviousWord() {
+		
+		if (atRoot())
+			return null;
+		
+		return getParentEdge().word.speaker();
+		
+	}
+
+	
 
 	
 	

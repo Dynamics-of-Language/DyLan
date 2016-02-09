@@ -12,8 +12,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRInfixExpression;
 import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.TTRInfixExpression;
 import qmul.ds.formula.TTRRecordType;
 
 /**
@@ -51,8 +51,8 @@ public class MetaTTRRecordType extends TTRRecordType implements Serializable {
 	/**
 	 * @return the meta-elements
 	 */
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		metas.add(meta);
 		return metas;
 	}

@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.type.DSType;
 
 /**
@@ -54,8 +54,12 @@ public class TTRField extends Formula {
 			if (m.matches()) {
 				label = new TTRLabel(labelS);
 
-			} else if (meta.matches())
-				label = MetaTTRLabel.get(labelS);
+			} else if (meta.matches()){
+				//can't have meta-Label, but have a type
+				logger.warn("illegal field string: the type should always be null/empty initially when using meta-label. Field String:"+s);
+				return null;
+				//label = MetaTTRLabel.get(labelS);
+			}
 			else
 				return null;
 
@@ -100,6 +104,14 @@ public class TTRField extends Formula {
 			String dsTypeS = s.substring(
 					labSepIndex + TTRRecordType.TTR_LABEL_SEPARATOR.length(),
 					s.length()).trim();
+			if (dsTypeS.isEmpty() && label instanceof MetaTTRLabel)
+				return new TTRField(label, null, null);
+			else if (dsTypeS.isEmpty())
+			{
+				logger.warn("Illegal Field string. Can only have both empty type and empty dsType if the label is Meta. Field String:"+s);
+				return null;
+			}
+			
 			dsType = DSType.parse(dsTypeS);
 			// if we can parse this as a DS type then we have unmanifest field
 			// such as x:e
@@ -238,7 +250,6 @@ public class TTRField extends Formula {
 	 * 
 	 * @see qmul.ds.formula.Formula#subsumesBasic(qmul.ds.formula.Formula)
 	 */
-	
 
 	/*
 	 * (non-Javadoc)
@@ -248,34 +259,46 @@ public class TTRField extends Formula {
 	 */
 	@Override
 	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
-		if (other instanceof TTRField) {
-			TTRField otherField = (TTRField) other;
-			HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(
-					map);
-			if (label.subsumesMapped(otherField.label, map)) {
-				if ((dsType == null && otherField.dsType == null)
-						|| (dsType != null && dsType.equals(otherField.dsType))) {
+		if (!(other instanceof TTRField))
+			return false;
 
-					if (type == null) {
-						return true;
-					}
-					if (type instanceof TTRRecordType) {
-						HashMap<Variable, Variable> newMap = new HashMap<Variable, Variable>();
-						return type.subsumesMapped(otherField.type, newMap);
-					} else {
-						// System.out.println("Checking "+type+" subsumes "+otherField.type+" with map "+map);
-						boolean b = type.subsumesMapped(otherField.type, map);
-						// System.out.println("result is:"+b);
-						return b;
-					}
+		TTRField otherField = (TTRField) other;
+		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
+		if (label.subsumesMapped(otherField.label, map)) {
+			if ((dsType == null && otherField.dsType == null)
+					|| (dsType != null && dsType.equals(otherField.dsType))) {
+
+				if (type == null) {
+					//set type from other if meta
+					if (label instanceof MetaTTRLabel)
+						this.type=otherField.type;
+					return true;
 				}
-				// failure.. don't want to have changed map if I'm returning
-				// false
-				// but map could have changed. reset it.
-				// TODO: this is a bit hacky, leading to more time complexity
-				// than necessary.
-
+				if (type instanceof TTRRecordType) {
+					HashMap<Variable, Variable> newMap = new HashMap<Variable, Variable>();
+					return type.subsumesMapped(otherField.type, newMap);
+				} else {
+					// System.out.println("Checking "+type+" subsumes "+otherField.type+" with map "+map);
+					if (!type.subsumesMapped(otherField.type, map))
+					{
+						//don't want to have instantiated metalabel if the field is failing to subsume
+						partialResetMeta();
+						return false;
+					}
+					
+					return true;
+				}
 			}
+			else
+			{
+				partialResetMeta();
+				return false;
+			}
+			// failure.. don't want to have changed map if I'm returning
+			// false
+			// but map could have changed. reset it.
+			// TODO: this is a bit hacky, leading to more time complexity
+			// than necessary.
 
 		}
 
@@ -309,7 +332,7 @@ public class TTRField extends Formula {
 	}
 
 	public TTRField instantiate() {
-		return new TTRField(new TTRLabel(this.label),
+		return new TTRField(new TTRLabel(this.label.instantiate()),
 				(dsType != null ? this.dsType.instantiate() : null),
 				(this.type != null ? this.type.instantiate() : null));
 	}
@@ -411,14 +434,24 @@ public class TTRField extends Formula {
 	}
 
 	public static void main(String[] a) {
-		TTRField meta = parse("P==person(L):t");
-		TTRField inst = parse("p==person(x):t");
-		//System.out.println(meta.toDebugString());
-		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
+		TTRField meta = parse("L:e");
+		TTRField inst = parse("x==john:e");
+		// System.out.println(meta.toDebugString());
+		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
 		System.out.println("After:" + meta);
+		System.out.println("map: "+ map);
+		map.clear();
+		System.out.println("resetting meta");
+		meta.backtrack();
+		System.out.println("After reset meta:"+meta);
+		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
+		System.out.println("After:" + meta);
+		System.out.println("map: "+ map);
+		
 
 	}
-	
+
 	@Override
 	public boolean subsumesBasic(Formula other) {
 		if (!(other instanceof TTRField))
@@ -428,9 +461,9 @@ public class TTRField extends Formula {
 
 		if ((dsType == null && otherField.dsType == null)
 				|| (dsType != null && dsType.equals(otherField.dsType))) {
-			
+
 			if ((type == null) || type.subsumesBasic(otherField.type)) {
-				
+
 				return label.subsumesBasic(otherField.label);
 			}
 
@@ -590,24 +623,40 @@ public class TTRField extends Formula {
 		return typeInt + dsTypeInt;
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		metas.addAll(label.getMetas());
 		metas.addAll(type.getMetas());
 		return metas;
 
 	}
-	
-	public void resetMeta()
-	{
+
+	public void resetMeta() {
 		if (label instanceof MetaTTRLabel)
-			((MetaTTRLabel)label).reset();
+		{
+			
+			((MetaTTRLabel) label).reset();
+			this.type=null;
+		}
+		
 	}
-	
-	public void partialResetMeta()
-	{
+
+	public void partialResetMeta() {
 		if (label instanceof MetaTTRLabel)
-			((MetaTTRLabel)label).partialReset();
+		{
+			((MetaTTRLabel) label).partialReset();
+			this.type=null;
+		}
+		
+	}
+
+	public void backtrack() {
+		if (label instanceof MetaTTRLabel)
+		{
+			MetaTTRLabel meta=(MetaTTRLabel)label;
+			meta.backtrack();
+		}
+		
 	}
 
 }

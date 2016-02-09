@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -29,7 +29,7 @@ import edu.stanford.nlp.util.Pair;
  * 
  * @author arash
  */
-public class TTRRecordType extends TTRFormula {
+public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -527,8 +527,8 @@ public class TTRRecordType extends TTRFormula {
 		return fields.isEmpty();
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		for (TTRField f : fields)
 			metas.addAll(f.getMetas());
 
@@ -559,7 +559,7 @@ public class TTRRecordType extends TTRFormula {
 	/**
 	 * Backtracks all metas.
 	 * 
-	 * @return true of all metas can be backtracked. 
+	 * @return true if all metas can be backtracked. 
 	 */
 	public boolean backtrackMetas()
 	{
@@ -568,40 +568,35 @@ public class TTRRecordType extends TTRFormula {
 		
 		for(TTRField f:fields)
 		{
-			if (f.getLabel() instanceof MetaTTRLabel)
-			{
-				MetaTTRLabel meta=(MetaTTRLabel)f.getLabel();
-				meta.backtrack();
-			}
+			f.backtrack();
 		}
 		return true;
 	}
 
 	public boolean subsumesBasic(Formula other) {
-		if (!(other instanceof TTRRecordType))
+		if (other==null || !(other instanceof TTRRecordType))
 			return false;
 		return subsumesBasic((TTRRecordType) other, 0, 0);
 	}
 
 	public static void main(String[] a) {
-		/*
-		TTRRecordType meta = TTRRecordType.parse("[L:e|P==person(L):t]");
-		TTRRecordType inst = TTRRecordType.parse("[x:e|x1:e|p==person(x1):t|p1==person(x):t]");
-		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
+		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+		TTRRecordType meta = TTRRecordType.parse("[L:|p:person(L)|head:L]");
+		TTRRecordType inst = TTRRecordType.parse("[x:john|x1:e|p1:person(x)|p:person(x1)|head:x]");
+		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
 		System.out.println("After:" + meta);
+		System.out.println("map:"+map);
 		System.out.println("----------------");
-		meta.backtrackMetas();
-		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
-		System.out.println("After:" + meta);
-		System.out.println("----------------");
-		meta.backtrackMetas();
-		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
-		System.out.println("After:" + meta);
-	*/
 		
-		TTRRecordType r=TTRRecordType.parse("[x==this:e|pred==square:cn|p==subj(pred,x):t]");
-		
-		System.out.println(r.toLatex());
+		meta.backtrackMetas();
+		map.clear();
+		System.out.println("Subsumes:" + meta.subsumesMapped(inst,map));
+		System.out.println("After:" + meta);
+//		System.out.println("----------------");
+//		meta.backtrackMetas();
+//		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
+//		System.out.println("After:" + meta);
+//	
 		
 	}
 
@@ -655,6 +650,7 @@ public class TTRRecordType extends TTRFormula {
 				} else {
 					map.clear();
 					map.putAll(copy);
+					first.partialResetMeta();
 				}
 			} else {
 				logger.debug(first + " failed against:" + otherField + " map:"
@@ -1123,6 +1119,8 @@ public class TTRRecordType extends TTRFormula {
 		TTRRecordType result = new TTRRecordType();
 		for (TTRField f : fields) {
 			TTRField instance = f.instantiate();
+			logger.debug("instatiating "+f);
+			logger.debug("instantiated:"+instance);
 			result.fields.add(instance);
 			result.record.put(instance.getLabel(), instance);
 		}
@@ -1628,5 +1626,35 @@ public class TTRRecordType extends TTRFormula {
 
 		return s.substring(0, s.length() - TTR_FIELD_SEPARATOR.length())
 				+ TTR_CLOSE;
+	}
+
+	@Override
+	public boolean backtrack() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void unbacktrack() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partialReset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public TTRRecordType getValue() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

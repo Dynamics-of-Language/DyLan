@@ -34,21 +34,21 @@ public class DAGParseState extends ParseState<ParserTuple> {
 	private DAGState state;
 
 	public DAGParseState() {
-		this(new Tree(),new ArrayList<UtteredWord>(),null);
+		this(new Tree(),new ArrayList<UtteredWord>());
 	}
 
 	public DAGParseState(List<UtteredWord> words) {
-		this(new Tree(), words,null);
+		this(new Tree(), words);
 	}
 
 	public DAGParseState(Tree start) {
-		this(start, new ArrayList<UtteredWord>(), null);
+		this(start, new ArrayList<UtteredWord>());
 		
 	}
 
-	public DAGParseState(Tree start, List<UtteredWord> words, DAGParser<DAGTuple, DAGEdge> p) {
+	public DAGParseState(Tree start, List<UtteredWord> words) {
 		super();
-		state = new DAGState(start, words,p);
+		state = new DAGState(start, words);
 		add(state.getCurrentTuple());
 	}
 
@@ -136,14 +136,14 @@ public class DAGParseState extends ParseState<ParserTuple> {
 	public void init() {
 		clear();
 		
-		state = new DAGState(state.getParser());
+		state = new DAGState();
 		add(state.getCurrentTuple());
 	}
 
 	public void init(Tree t) {
 		clear();
 		state = null;
-		state = new DAGState(t,state.getParser());
+		state = new DAGState(t);
 		add(state.getCurrentTuple());
 	}
 

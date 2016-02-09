@@ -76,7 +76,7 @@ THEN	go(\/L)
 ELSE	abort
 
 
-
+//*
 
 link-adj-e
 IF      ty(e)
@@ -88,7 +88,7 @@ THEN    put(?+eval)
        	put(?ty(e))
 ELSE    abort
 
-
+*//
 
 late-star-adj-q
 IF      ty(t)
@@ -110,6 +110,7 @@ THEN	go(Y)
         		ELSE	do_nothing
         ELSE	abort
 ELSE    abort
+
 
 merge
 IF      Ex.tn(x)

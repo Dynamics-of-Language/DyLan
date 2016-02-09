@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.Node;
@@ -112,16 +112,16 @@ public class ScopeLabel extends Label {
 		return FUNCTOR + "(" + var.toUnicodeString() + ")";
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (var instanceof MetaFormula)
 			result.addAll(((MetaFormula) var).getMetas());
 
 		return result;
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (var instanceof BoundFormulaVariable)
 			result.addAll(((BoundFormulaVariable) var).getBoundMetas());
 

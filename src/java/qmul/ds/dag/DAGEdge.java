@@ -23,7 +23,7 @@ import qmul.ds.action.Action;
  */
 public class DAGEdge implements Comparable<DAGEdge> {
 
-	private static Logger logger = Logger.getLogger(DAGEdge.class);
+	protected static Logger logger = Logger.getLogger(DAGEdge.class);
 	
 	public static final int SEEN = 1;
 	public static final int REPAIRED = 2;
@@ -34,7 +34,7 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	 */
 	protected Long id = 0L;
 	
-	protected Long pid = -1L;
+	//protected Long pid = -1L;
 	protected List<Action> actions = null;
 	protected UtteredWord word = null;
 	// protected boolean seen = false;
@@ -42,10 +42,10 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	// no longer dealing with a tree, but a graph, with multiple incident edges.
 	// We order them by recency
 	// so we can backtrack accordingly. This number is used there.
-	protected int incidenceNumber = 0;
+	//protected int incidenceNumber = 0;
 	protected Set<Integer> edge_properties = new HashSet<Integer>();
 	
-	protected boolean replayable=true;
+	
 
 	DAGEdge() {
 		this.actions = new ArrayList<Action>();
@@ -81,14 +81,20 @@ public class DAGEdge implements Comparable<DAGEdge> {
 		this(a, null);
 	}
 
+	public DAGEdge(UtteredWord w, long id) {
+		this.word=w;
+		this.id=id;
+		this.actions=null;
+	}
+
 	public void setID(long id) {
 		this.id = id;
 	}
 
-	public void setParentEdgeId(long id)
-	{
-		this.pid=id;
-	}
+//	public void setParentEdgeId(long id)
+//	{
+//		this.pid=id;
+//	}
 	/**
 	 * WARNING: only valid of DAGEdge contains one action only - e.g. doesn't
 	 * work with ContextualWordEdge
@@ -219,14 +225,19 @@ public class DAGEdge implements Comparable<DAGEdge> {
 		this.actions=actions;
 	}
 	
-	public boolean isReplayable()
-	{
-		return replayable;
-	}
+
 	
-	public void setReplayable(boolean b)
+	/*public void traverse(DAG<DAGTuple,DAGEdge> dag)
 	{
-		this.replayable=b;
-	}
+		DAGTuple source=dag.getSource(this);
+		if (!source.equals(dag.getCurrentTuple()))
+		{
+			logger.error("Didn't traverse edge:"+this);
+			logger.error("Because its source isn't the pointed tuple on the dag.");
+			return;
+		}
+		DAGTuple dest=dag.getDest(this);
+	}*/
+	
 
 }

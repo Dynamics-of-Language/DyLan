@@ -48,8 +48,8 @@ public class MetaFormula extends Formula implements Serializable {
 	/**
 	 * @return the meta-elements
 	 */
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		metas.add(meta);
 		return metas;
 	}
@@ -131,6 +131,18 @@ public class MetaFormula extends Formula implements Serializable {
 	@Override
 	public int toUniqueInt() {
 		throw new UnsupportedOperationException("Shouldn't need to turn MetaFormulae into ints.... ");
+		
+	}
+	
+	public boolean subsumesBasic(Formula f)
+	{
+		if (f==null)
+			return false;
+		if (meta.getValue()==null)
+			return false;
+		
+		return meta.getValue().subsumesBasic(f);
+		
 		
 	}
 

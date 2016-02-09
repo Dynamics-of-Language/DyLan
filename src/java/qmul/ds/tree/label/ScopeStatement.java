@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.FormulaMetavariable;
@@ -118,8 +118,8 @@ public class ScopeStatement extends Label {
 		return false;
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> result = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> result = super.getMetas();
 		for (Formula f : sequence) {
 
 			if (f instanceof MetaFormula) {
@@ -134,8 +134,8 @@ public class ScopeStatement extends Label {
 
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> result = super.getMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> result = super.getMetas();
 		for (Formula f : sequence) {
 
 			if (f instanceof BoundFormulaVariable) {
@@ -168,8 +168,8 @@ public class ScopeStatement extends Label {
 		if (sequence.size() != other.getSequence().size())
 			return false;
 
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheckSelf = getUninstantiatedMetas();
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheckOther = other.getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheckSelf = getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheckOther = other.getUninstantiatedMetas();
 
 		for (int i = 0; i < sequence.size(); i++) {
 			Formula f = sequence.get(i);

@@ -5,7 +5,7 @@
 // Formula metavariables: A,B,C
 // Bottom requirement: !
 
-//*
+
 proper(NAME,PERSON,CLASS)
 IF      ?ty(e)
 		¬<\/1>Ex.x
@@ -18,8 +18,8 @@ THEN    put(person(PERSON))
         put(+PN)
 ELSE    abort
 
-*//
 
+//*
 proper(NAME,PERSON,CLASS)
 IF      ?ty(e)
 		¬<\/1>Ex.x
@@ -32,7 +32,7 @@ THEN    put(person(PERSON))
         ttrput([r:[x:e|p==NAME(x):t|head==x:e]|x1==(iota, r.head, r):e|head==x1:e])
         put(+PN)
 ELSE    abort
-
+*//
 
 //*
 the(QUANT)
@@ -274,15 +274,17 @@ THEN	make(\/*)
 ELSE	abort
 
 
-
+//*
 pron_nom(PERSON,CLASS)
 IF      ?ty(e)
         </\0>?ty(t)
-        </\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
+        </\C>(ty(e)& fo(Y)& Y << [L:e|P==PERSON(L):t])
 THEN    put(ty(e))
-        put(Fo(Y))
+        put(Fo([L:e|P==PERSON(L):t]))
         put(!)
 ELSE    abort
+
+*//
 
 pron_acc(PERSON,CLASS)
 IF      ?ty(e)
@@ -483,11 +485,6 @@ THEN	put(?+eval)
 		ttrput([head:es|p==PRED(head):t])
 ELSE	abort
 
-*backchannel(PRED)
-IF		ty(X)
-THEN	complete
-		ground
-ELSE	abort
 
 assert(PRED)
 IF		ty(t)

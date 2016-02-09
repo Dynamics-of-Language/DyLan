@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.Node;
@@ -59,8 +59,8 @@ public class ScopeDepSaturationLabel extends Label {
 		this.f2 = f2;
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (f1 instanceof MetaFormula)
 			result.addAll(((MetaFormula) f1).getMetas());
 		if (f2 instanceof MetaFormula)
@@ -69,8 +69,8 @@ public class ScopeDepSaturationLabel extends Label {
 		return result;
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (f1 instanceof BoundFormulaVariable)
 			result.addAll(((BoundFormulaVariable) f1).getBoundMetas());
 		if (f2 instanceof BoundFormulaVariable)
@@ -136,8 +136,8 @@ public class ScopeDepSaturationLabel extends Label {
 
 		ScopeDepSaturationLabel other = (ScopeDepSaturationLabel) o;
 
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheckSelf = getUninstantiatedMetas();
-		ArrayList<MetaElement<?>> uninstantiatedBeforeCheckOther = other.getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheckSelf = getUninstantiatedMetas();
+		ArrayList<Meta<?>> uninstantiatedBeforeCheckOther = other.getUninstantiatedMetas();
 
 		if (f1.equals(other.f1) && f2.equals(other.f2))
 			return true;

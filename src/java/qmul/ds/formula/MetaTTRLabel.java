@@ -166,17 +166,24 @@ public class MetaTTRLabel extends TTRLabel {
 	@Override
 	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		if (value == null) {
-			return true;
+			if (subsumesBasic(other))
+			{
+				map.put(this, (Variable)other);
+				return true;
+			}
+			return false;
+			
 		}
-		if (other instanceof MetaTTRLabel) {
-			MetaTTRLabel oth = (MetaTTRLabel) other;
-			if (oth.value == null)
-				return false;
-			else
-				return value.subsumesMapped(oth.value, map);
-		} else {
-			return value.subsumesMapped(other, map);
-		}
+		return super.subsumesMapped(other, map);
+//		if (other instanceof MetaTTRLabel) {
+//			MetaTTRLabel oth = (MetaTTRLabel) other;
+//			if (oth.value == null)
+//				return false;
+//			else
+//				return value.subsumesMapped(oth.value, map);
+//		} else {
+//			return value.subsumesMapped(other, map);
+//		}
 	}
 
 	/*
@@ -224,6 +231,8 @@ public class MetaTTRLabel extends TTRLabel {
 				// logger.debug("Can't inst MetaEl, already used " + other);
 				return false;
 			}
+//			else
+//				System.out.println("Backtrakc:"+backtrack);
 			value = other;
 		}
 		return value.equals(other);	
@@ -250,7 +259,7 @@ public class MetaTTRLabel extends TTRLabel {
 		if (value == null) {
 			return name;
 		} else {
-			return name + "=" + value;
+			return "("+name + "=" + value+")";
 		}
 	}
 

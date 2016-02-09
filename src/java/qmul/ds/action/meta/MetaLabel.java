@@ -55,8 +55,8 @@ public class MetaLabel extends Label {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		metas.add(meta);
 		return metas;
 	}

@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import qmul.ds.action.atomic.IfThenElse;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 
 /**
  * A label which embeds another label, e.g. a negated label �L
@@ -68,15 +68,15 @@ public abstract class EmbeddedLabel extends Label implements Serializable {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		metas.addAll(label.getMetas());
 		return metas;
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 		metas.addAll(label.getBoundMetas());
 		return metas;
 	}

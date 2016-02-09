@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaLabel;
 import qmul.ds.dag.DAGEdge;
@@ -34,8 +35,8 @@ public abstract class Label implements Comparable<Label>, Serializable {
 
 	protected transient IfThenElse embeddingITE = null;
 
-	protected void partialResetMetas(ArrayList<MetaElement<?>> uninstantiated) {
-		for (MetaElement<?> meta : uninstantiated) {
+	protected void partialResetMetas(ArrayList<Meta<?>> uninstantiated) {
+		for (Meta<?> meta : uninstantiated) {
 			meta.partialReset();
 		}
 
@@ -49,9 +50,9 @@ public abstract class Label implements Comparable<Label>, Serializable {
 
 	}
 
-	protected ArrayList<MetaElement<?>> getUninstantiatedMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
-		for (MetaElement<?> meta : getMetas()) {
+	protected ArrayList<Meta<?>> getUninstantiatedMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
+		for (Meta<?> meta : getMetas()) {
 			if (meta.getValue() == null)
 				metas.add(meta);
 		}
@@ -119,12 +120,12 @@ public abstract class Label implements Comparable<Label>, Serializable {
 	 * @return in order, the {@link MetaElement}s contained within this {@link Label}. By default, none; this should be
 	 *         overridden by {@link MetaLabel}s and the like.
 	 */
-	public ArrayList<MetaElement<?>> getMetas() {
-		return new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		return new ArrayList<Meta<?>>();
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		return new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		return new ArrayList<Meta<?>>();
 	}
 
 	/*
@@ -152,7 +153,7 @@ public abstract class Label implements Comparable<Label>, Serializable {
 	}
 
 	public void resetMetas() {
-		for (MetaElement<?> meta : getMetas()) {
+		for (Meta<?> meta : getMetas()) {
 			meta.reset();
 
 		}

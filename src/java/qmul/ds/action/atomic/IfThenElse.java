@@ -22,8 +22,8 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
-import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
@@ -227,7 +227,7 @@ public class IfThenElse extends Effect implements Serializable {
 	 * the corresponding set of metas.
 	 * 
 	 * */
-	private void setupBacktrackers(List<MetaElement<?>> exceptions) {
+	private void setupBacktrackers(List<Meta<?>> exceptions) {
 		this.backtracker = new Backtracker();
 
 		for (Label label : IF) {
@@ -250,8 +250,8 @@ public class IfThenElse extends Effect implements Serializable {
 		}
 	}
 
-	private List<MetaElement<?>> getMetasHereAndAbove() {
-		List<MetaElement<?>> result = getMetas();
+	private List<Meta<?>> getMetasHereAndAbove() {
+		List<Meta<?>> result = getMetas();
 
 		IfThenElse current = parent;
 		while (current != null) {
@@ -264,8 +264,8 @@ public class IfThenElse extends Effect implements Serializable {
 
 	}
 
-	public List<MetaElement<?>> getMetas() {
-		List<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public List<Meta<?>> getMetas() {
+		List<Meta<?>> result = new ArrayList<Meta<?>>();
 		for (Label l : IF) {
 			result.addAll(l.getMetas());
 		}
@@ -273,8 +273,8 @@ public class IfThenElse extends Effect implements Serializable {
 		return result;
 	}
 
-	public List<MetaElement<?>> getMetasAboveLabel(Label l) {
-		List<MetaElement<?>> result = new ArrayList<MetaElement<?>>();
+	public List<Meta<?>> getMetasAboveLabel(Label l) {
+		List<Meta<?>> result = new ArrayList<Meta<?>>();
 		List<Label> triggers = Arrays.asList(IF);
 		int i = triggers.indexOf(l);
 		logger.debug("index of exist label in embedding IF:" + i);
@@ -298,7 +298,7 @@ public class IfThenElse extends Effect implements Serializable {
 		// if (embeddingLevel==0) addAndResetMetas(null);
 		MetaElement.resetBoundMetas();
 		if (this.embeddingLevel == 0)
-			setupBacktrackers(new ArrayList<MetaElement<?>>());
+			setupBacktrackers(new ArrayList<Meta<?>>());
 
 		logger.debug("IF Labels after reset:" + Arrays.asList(IF));
 
@@ -349,7 +349,7 @@ public class IfThenElse extends Effect implements Serializable {
 		// if (embeddingLevel==0) addAndResetMetas(null);
 		MetaElement.resetBoundMetas();
 		if (this.embeddingLevel == 0)
-			setupBacktrackers(new ArrayList<MetaElement<?>>());
+			setupBacktrackers(new ArrayList<Meta<?>>());
 
 		logger.debug("IF Labels after reset:" + Arrays.asList(IF));
 
@@ -399,7 +399,7 @@ public class IfThenElse extends Effect implements Serializable {
 		// T clone=(T) tree.clone();
 		MetaElement.resetBoundMetas();
 		if (this.embeddingLevel == 0)
-			setupBacktrackers(new ArrayList<MetaElement<?>>());
+			setupBacktrackers(new ArrayList<Meta<?>>());
 
 		logger.debug("IF Labels after reset:" + Arrays.asList(IF));
 
@@ -460,7 +460,7 @@ public class IfThenElse extends Effect implements Serializable {
 	 * 
 	 * HashSet<T> allResults = new HashSet<T>(); // get & reset metavariables for this application, only if this is the
 	 * // top level // IfThenElse. This will apply recursively to all the embedded // IfThenElse's.
-	 * MetaElement.resetBoundMetas(); if (this.embeddingLevel == 0) setupBacktrackers(new ArrayList<MetaElement<?>>());
+	 * MetaElement.resetBoundMetas(); if (this.embeddingLevel == 0) setupBacktrackers(new ArrayList<Meta<?>>());
 	 * 
 	 * logger.debug("Applying action exhaustively:\n" + this); backtracker.setIndex(0);
 	 * 
@@ -543,8 +543,8 @@ public class IfThenElse extends Effect implements Serializable {
 	 * @return all metas at this ite plus all those at all higher ite's in which this ite is embedded
 	 */
 	/*
-	 * public HashSet<MetaElement<?>> getAllMetasInScope() { if (this.parent == null) return backtracker.getMetas();
-	 * else { HashSet<MetaElement<?>> res = new HashSet<MetaElement<?>>(); res.addAll(backtracker.getMetas());
+	 * public HashSet<Meta<?>> getAllMetasInScope() { if (this.parent == null) return backtracker.getMetas();
+	 * else { HashSet<Meta<?>> res = new HashSet<Meta<?>>(); res.addAll(backtracker.getMetas());
 	 * res.addAll(parent.getAllMetasInScope()); return res; } }
 	 */
 	/**
@@ -555,25 +555,25 @@ public class IfThenElse extends Effect implements Serializable {
 	 */
 	private class Backtracker implements Serializable{
 
-		private HashMap<MetaElement<?>, Integer> whenIntroduced;
-		private ArrayList<MetaElement<?>> metas;
+		private HashMap<Meta, Integer> whenIntroduced;
+		private ArrayList<Meta> metas;
 		private int index;
 
 		private Backtracker() {
-			whenIntroduced = new HashMap<MetaElement<?>, Integer>();
-			metas = new ArrayList<MetaElement<?>>();
+			whenIntroduced = new HashMap<Meta, Integer>();
+			metas = new ArrayList<Meta>();
 			index = 0;
 		}
 
 		public void resetMetas() {
-			for (MetaElement<?> meta : metas) {
+			for (Meta meta : metas) {
 				meta.reset();
 			}
 
 		}
 
-		public HashSet<MetaElement<?>> getMetas() {
-			HashSet<MetaElement<?>> res = new HashSet<MetaElement<?>>();
+		public HashSet<Meta> getMetas() {
+			HashSet<Meta> res = new HashSet<Meta>();
 			res.addAll(metas);
 			return res;
 
@@ -584,8 +584,8 @@ public class IfThenElse extends Effect implements Serializable {
 		 * 
 		 * @param metas
 		 */
-		private void add(ArrayList<MetaElement<?>> metas) {
-			for (MetaElement<?> meta : metas) {
+		private void add(ArrayList<Meta> metas) {
+			for (Meta meta : metas) {
 				if (!this.metas.contains(meta)) {
 					meta.reset();
 					this.metas.add(meta);
@@ -595,8 +595,8 @@ public class IfThenElse extends Effect implements Serializable {
 			index++;
 		}
 
-		private void addAndResetExcept(List<MetaElement<?>> metas, List<MetaElement<?>> exceptions) {
-			for (MetaElement<?> meta : metas) {
+		private void addAndResetExcept(ArrayList<Meta<?>> arrayList, List<Meta<?>> exceptions) {
+			for (Meta meta : arrayList) {
 				if (!this.metas.contains(meta)) {
 					if (!exceptions.contains(meta)) {
 						meta.reset();
@@ -626,7 +626,7 @@ public class IfThenElse extends Effect implements Serializable {
 		 */
 		private boolean canBacktrackTupleContext(Tree tree, ParserTuple context) {
 			for (int i = metas.size() - 1; i >= 0; i--) {
-				MetaElement<?> meta = metas.get(i);
+				Meta meta = metas.get(i);
 				// don't bother with steps we haven't got to yet
 				// logger.debug("whenIntro:" + whenIntroduced);
 				// logger.debug("Meta:" + meta);
@@ -637,14 +637,14 @@ public class IfThenElse extends Effect implements Serializable {
 					Label label = IF[index];
 					logger.trace("Backtrack attempt at IF step " + index + " " + meta);
 					if (meta.backtrack()) {
-						logger.trace("after backtrack:" + meta.backtrack);
+						//logger.trace("after backtrack:" + meta.backtrack);
 						if (label.checkWithTupleAsContext(tree, context)) {
 							// if it can succeed with a new value, we're good to
 							// go; but must uninstantiate all those
 							// introduced later
 							logger.trace("check success in canBacktrack. Label after check:" + label);
 							for (int j = i + 1; j < metas.size(); j++) {
-								MetaElement<?> meta2 = metas.get(j);
+								Meta meta2 = metas.get(j);
 								if (whenIntroduced.get(meta2) >= index) {
 									meta2.reset();
 								}
@@ -672,7 +672,7 @@ public class IfThenElse extends Effect implements Serializable {
 		 */
 		private <U extends DAGTuple, E extends DAGEdge> boolean canBacktrack(Tree tree, Context<U,E> context) {
 			for (int i = metas.size() - 1; i >= 0; i--) {
-				MetaElement<?> meta = metas.get(i);
+				Meta meta = metas.get(i);
 				// don't bother with steps we haven't got to yet
 				// logger.debug("whenIntro:" + whenIntroduced);
 				// logger.debug("Meta:" + meta);
@@ -683,14 +683,14 @@ public class IfThenElse extends Effect implements Serializable {
 					Label label = IF[index];
 					logger.trace("Backtrack attempt at IF step " + index + " " + meta);
 					if (meta.backtrack()) {
-						logger.trace("after backtrack:" + meta.backtrack);
+						//logger.trace("after backtrack:" + meta.backtrack);
 						if (label.check(tree, context)) {
 							// if it can succeed with a new value, we're good to
 							// go; but must uninstantiate all those
 							// introduced later
 							logger.trace("check success in canBacktrack. Label after check:" + label);
 							for (int j = i + 1; j < metas.size(); j++) {
-								MetaElement<?> meta2 = metas.get(j);
+								Meta meta2 = metas.get(j);
 								if (whenIntroduced.get(meta2) >= index) {
 									meta2.reset();
 								}

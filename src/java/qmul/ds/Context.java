@@ -72,11 +72,6 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		
 	}
 
-	public qmul.ds.tree.Tree complete() {
-		
-		qmul.ds.tree.Tree completed=dag.complete();
-		return completed;
-	}
 
 	public void groundToRoot() {
 		dag.groundToRootFor(getCurrentSpeaker());
@@ -100,6 +95,14 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 
 	public T getParent(T cur) {
 		return dag.getParent(cur);
+	}
+	
+	/**
+	 * deems the current tuple to have been asserted by the last speaker.
+	 */
+	public void setAcceptancePointer()
+	{
+		dag.setAcceptancePointer(dag.getSpeakerOfPreviousWord());
 	}
 	
 	

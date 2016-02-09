@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.action.meta.MetaTTRRecordType;
 import qmul.ds.tree.Tree;
@@ -329,7 +329,7 @@ public abstract class Formula implements Serializable {
 	 * @param other
 	 * @return true if this subsumes other, false otherwise
 	 */
-	protected boolean subsumesBasic(Formula other) {
+	public boolean subsumesBasic(Formula other) {
 		return this.equals(other);
 	}
 
@@ -462,21 +462,21 @@ public abstract class Formula implements Serializable {
 	}
 	
 	
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		return metas;
 	}
 	
 
 	public void resetMetas()
 	{
-		for(MetaElement<?> meta:getMetas())
+		for(Meta<?> meta:getMetas())
 			meta.reset();
 	}
 	
 	public void partialResetMetas()
 	{
-		for(MetaElement<?> meta:getMetas())
+		for(Meta<?> meta:getMetas())
 			meta.partialReset();
 	}
 }

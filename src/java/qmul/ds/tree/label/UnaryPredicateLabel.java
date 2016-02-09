@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundPredicateArgumentVariable;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaPredicateArgument;
 
 public class UnaryPredicateLabel extends Label implements Serializable {
@@ -108,8 +108,8 @@ public class UnaryPredicateLabel extends Label implements Serializable {
 	 * @see qmul.ds.tree.label.Label#getMetas()
 	 */
 	@Override
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = super.getMetas();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = super.getMetas();
 
 		if (arg instanceof MetaPredicateArgument) {
 			metas.addAll(((MetaPredicateArgument) arg).getMetas());
@@ -118,8 +118,8 @@ public class UnaryPredicateLabel extends Label implements Serializable {
 	}
 
 	@Override
-	public ArrayList<MetaElement<?>> getBoundMetas() {
-		ArrayList<MetaElement<?>> metas = super.getBoundMetas();
+	public ArrayList<Meta<?>> getBoundMetas() {
+		ArrayList<Meta<?>> metas = super.getBoundMetas();
 
 		if (arg instanceof BoundPredicateArgumentVariable) {
 			metas.addAll(((BoundPredicateArgumentVariable) arg).getBoundMetas());

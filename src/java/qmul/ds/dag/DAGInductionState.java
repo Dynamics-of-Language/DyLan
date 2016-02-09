@@ -23,34 +23,24 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 	
 
 
-	public DAGInductionState(DAGParser<DAGInductionTuple, DAGEdge> p) {
-		super(p);
-	}
+	
 
-	public DAGInductionState(List<UtteredWord> words,
-			DAGParser<DAGInductionTuple, DAGEdge> p) {
-		super(words, p);
-		
-		
-	}
+	
 
-	public DAGInductionState(Tree start, List<UtteredWord> words,
-			DAGParser<DAGInductionTuple, DAGEdge> parser) {
-		super(start, words, parser);
+	public DAGInductionState(Tree start, List<UtteredWord> words) {
+		super(start, words);
 		
 	}
 
 	public DAGInductionState(Tree start) {
-		this(start, new ArrayList<UtteredWord>(), null);
+		this(start, new ArrayList<UtteredWord>());
 	}
 
 	public DAGInductionState(List<UtteredWord> asUtteredWords) {
-		this(new Tree(), asUtteredWords, null);
+		this(new Tree(), asUtteredWords);
 	}
 
-	public DAGInductionState(Tree start, List<UtteredWord> asUtteredWords) {
-		this(start,asUtteredWords,null);
-	}
+	
 
 	@Override
 	public DAGInductionTuple execAction(Action a, UtteredWord w) {
@@ -127,8 +117,9 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 
 
 	@Override
-	public BacktrackingEdge<DAGEdge> getNewBacktrackingEdge(
-			List<DAGEdge> backtrackedOver, String speaker) {
+	public BacktrackingEdge getNewBacktrackingEdge(
+			List<GroundableEdge> backtrackedOver, String speaker) {
+		
 		throw new UnsupportedOperationException();
 	}
 
@@ -157,9 +148,9 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 	
 
 	@Override
-	public DAGInductionTuple addAxiom(List<Action> list) {
+	public DAGInductionTuple addAxiom(List<Action> list, UtteredWord word) {
 		DAGInductionTuple axiom=this.getNewTuple(new Tree());
-		NewClauseEdge edge=this.getNewNewClauseEdge(list);
+		NewClauseEdge edge=this.getNewNewClauseEdge(list, word);
 		this.addChild(axiom, edge);
 		return axiom;
 		
@@ -176,6 +167,19 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 			// removeChildren();
 		}
 		
+	}
+
+	@Override
+	public VirtualRepairingEdge getNewRepairingEdge(List<GroundableEdge> backtrackedOver,
+			List<Action> repairingActions, DAGTuple midTuple,
+			UtteredWord repairingWord) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public RepairingWordEdge getNewRepairingWordEdge(List<Action> actions,
+			UtteredWord word) {
+		throw new UnsupportedOperationException();
 	}
 
 	
