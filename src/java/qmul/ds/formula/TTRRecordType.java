@@ -572,6 +572,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		}
 		return true;
 	}
+	
+	
+	
 
 	public boolean subsumesBasic(Formula other) {
 		if (other==null || !(other instanceof TTRRecordType))
@@ -581,25 +584,32 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	public static void main(String[] a) {
 		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-		TTRRecordType meta = TTRRecordType.parse("[L:|p:person(L)|head:L]");
-		TTRRecordType inst = TTRRecordType.parse("[x:john|x1:e|p1:person(x)|p:person(x1)|head:x]");
+		TTRRecordType meta = TTRRecordType.parse("[L:e|PRED:cn|p1==shape(PRED):t|p2==subj(PRED,L):t]");
+		System.out.println("meta:"+meta);
+		//TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|x1==this:e|p7==subj(pred3,x1):t]");
+		
+		TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|pred4==square : cn|p8==shape(pred4) : t|"
+				+ "p9==class(pred4) : t|pred1==black : cn|p0==color(pred1) : t|pred2==green : cn|p2==color(pred2) : t|e2==see : es|x==s : e|p==subj(e2, x) : t|"
+				+ "x0==this : e|x1==o1:e|p11==obj(e2, x0) : t|p10==subj(pred4, x1) : t|p7==subj(pred3, x0) : t|p4==obj(e2, x0) : t|p1==subj(pred1, x0) : t|p3==subj(pred2, x0) : t]");
+		
 		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
 		System.out.println("After:" + meta);
 		System.out.println("map:"+map);
+		System.out.println("instantiated:"+meta.instantiate());
 		System.out.println("----------------");
 		
 		meta.backtrackMetas();
 		map.clear();
 		System.out.println("Subsumes:" + meta.subsumesMapped(inst,map));
 		System.out.println("After:" + meta);
-//		System.out.println("----------------");
+		System.out.println("----------------");
 //		meta.backtrackMetas();
 //		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
 //		System.out.println("After:" + meta);
 //	
 		
 	}
-
+	
 	public boolean subsumesBasic(TTRRecordType other, int thisIndex,
 			int otherIndex) {
 
@@ -620,48 +630,107 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		return false;
 	}
-
-	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map) {
-		logger.debug("----------------------------");
-		logger.debug("testing " + this + " subsumes " + o);
-		logger.debug("with map " + map);
-
-		// List<TTRPath> paths=o.getTTRPaths();
-		// for(TTRPath p:paths)
-		// System.out.println("path "+p+" parent:"+p.getParentRecType());
-		if (isEmpty())
+	
+	
+	public boolean subsumesMapped(TTRRecordType other, int thisIndex,  HashMap<Variable, Variable> map)
+	{
+		
+		if (thisIndex == fields.size())
 			return true;
-		if (!(o instanceof TTRRecordType))
-			return false;
-		TTRRecordType other = (TTRRecordType) o;
-		TTRField first = fields.get(0);
-		logger.debug("testing subsumption for field:" + first);
-		for (int j = 0; j < other.fields.size(); j++) {
-
-			TTRField otherField = other.fields.get(j);
-			HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(
-					map);
-			if (first.subsumesMapped(otherField, map)) {
-				logger.debug("Subsumed " + otherField);
+		
+		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(
+				map);
+		logger.debug("testing subsumption for field:" + fields.get(thisIndex));
+		
+		for (int i = 0; i < other.fields.size(); i++) {
+			TTRField field = other.fields.get(i);
+			if (map.values().contains(field.getLabel()))
+				continue;
+			
+			if (fields.get(thisIndex).subsumesMapped(field, map)) {
+				logger.debug("Subsumed " + field);
 				logger.debug("map is now:" + map);
-				if (this.removeLabel(first.getLabel()).subsumesMapped(
-						other.removeLabel(otherField.getLabel()), map)) {
+
+				if (subsumesMapped(other, thisIndex + 1, map))
 					return true;
-				} else {
-					map.clear();
-					map.putAll(copy);
-					first.partialResetMeta();
-				}
-			} else {
-				logger.debug(first + " failed against:" + otherField + " map:"
+
+				fields.get(thisIndex).partialResetMeta();
+				map.clear();
+				map.putAll(copy);
+
+			} else
+			{
+				logger.debug(fields.get(thisIndex) + " failed against:" + field + " map:"
 						+ map);
 				map.clear();
 				map.putAll(copy);
 			}
 		}
-
+		
+		
+		
+		
+		
 		return false;
 	}
+
+	
+	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map)
+	{
+		
+		if (isEmpty())
+			return true;
+		
+		if (!(o instanceof TTRRecordType))
+			return false;
+		
+		TTRRecordType other = (TTRRecordType) o;
+		
+		return subsumesMapped(other, 0, map);
+		
+	}
+	
+//	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map) {
+//		logger.debug("----------------------------");
+//		logger.debug("testing " + this + " subsumes " + o);
+//		logger.debug("with map " + map);
+//
+//		// List<TTRPath> paths=o.getTTRPaths();
+//		// for(TTRPath p:paths)
+//		// System.out.println("path "+p+" parent:"+p.getParentRecType());
+//		if (isEmpty())
+//			return true;
+//		if (!(o instanceof TTRRecordType))
+//			return false;
+//		TTRRecordType other = (TTRRecordType) o;
+//		TTRField first = fields.get(0);
+//		logger.debug("testing subsumption for field:" + first);
+//		for (int j = 0; j < other.fields.size(); j++) {
+//
+//			TTRField otherField = other.fields.get(j);
+//			HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(
+//					map);
+//			if (first.subsumesMapped(otherField, map)) {
+//				logger.debug("Subsumed " + otherField);
+//				logger.debug("map is now:" + map);
+//				if (this.removeLabel(first.getLabel()).subsumesMapped(
+//						other.removeLabel(otherField.getLabel()), map)) {
+//					return true;
+//				} else {
+//					map.clear();
+//					map.putAll(copy);
+//					first.partialResetMeta();
+//				}
+//			} else {
+//				logger.debug(first + " failed against:" + otherField + " map:"
+//						+ map);
+//				map.clear();
+//				map.putAll(copy);
+//			}
+//		}
+//
+//		return false;
+//	}
 
 	public TTRFormula freshenVars(Tree t) {
 		TTRRecordType fresh = new TTRRecordType(this);
@@ -1627,28 +1696,60 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return s.substring(0, s.length() - TTR_FIELD_SEPARATOR.length())
 				+ TTR_CLOSE;
 	}
-
+	
+	//backtracking index
+	private int bindex;
 	@Override
 	public boolean backtrack() {
-		// TODO Auto-generated method stub
+		if (fields.get(bindex).canBacktrack())
+			return fields.get(bindex).backtrack();
+		
+		if (bindex==0)
+			return false;
+		//can't backtrack last meta
+		//reset all below, and backtrack the previous one.
+		for(int i=bindex;i<fields.size();i++)
+		{
+			fields.get(i).resetMeta();
+		}
+		
+		for(int i=bindex-1;i>=0;i--)
+		{
+			if(fields.get(i).isMeta())
+			{
+				bindex=i;
+				
+				return fields.get(i).backtrack();
+			}
+			
+				
+		}
+		
 		return false;
-	}
+	}	
+		
+		
+		
+		
+	
 
 	@Override
 	public void unbacktrack() {
-		// TODO Auto-generated method stub
-		
+		for(TTRField field: this.fields)
+			field.unbacktrack();
+			
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+		bindex=fields.size()-1;
+		this.resetMetas();
 		
 	}
 
 	@Override
 	public void partialReset() {
-		// TODO Auto-generated method stub
+		this.partialResetMetas();
 		
 	}
 

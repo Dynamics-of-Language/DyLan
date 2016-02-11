@@ -584,8 +584,8 @@ public class IfThenElse extends Effect implements Serializable {
 		 * 
 		 * @param metas
 		 */
-		private void add(ArrayList<Meta> metas) {
-			for (Meta meta : metas) {
+		private void add(ArrayList<Meta<?>> metas) {
+			for (Meta<?> meta : metas) {
 				if (!this.metas.contains(meta)) {
 					meta.reset();
 					this.metas.add(meta);
@@ -596,7 +596,7 @@ public class IfThenElse extends Effect implements Serializable {
 		}
 
 		private void addAndResetExcept(ArrayList<Meta<?>> arrayList, List<Meta<?>> exceptions) {
-			for (Meta meta : arrayList) {
+			for (Meta<?> meta : arrayList) {
 				if (!this.metas.contains(meta)) {
 					if (!exceptions.contains(meta)) {
 						meta.reset();
@@ -690,7 +690,7 @@ public class IfThenElse extends Effect implements Serializable {
 							// introduced later
 							logger.trace("check success in canBacktrack. Label after check:" + label);
 							for (int j = i + 1; j < metas.size(); j++) {
-								Meta meta2 = metas.get(j);
+								Meta<?> meta2 = metas.get(j);
 								if (whenIntroduced.get(meta2) >= index) {
 									meta2.reset();
 								}

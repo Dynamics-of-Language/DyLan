@@ -22,7 +22,7 @@ import qmul.ds.type.DSType;
  * 
  * @author arash, mpurver
  */
-public class TTRField extends Formula {
+public class TTRField extends Formula{
 
 	private static Logger logger = Logger.getLogger(TTRField.class);
 	private static final long serialVersionUID = 1L;
@@ -33,6 +33,7 @@ public class TTRField extends Formula {
 							// LambdaAbstract ...
 	private DSType dsType;
 
+	
 	public static TTRField parse(String s) {
 		TTRLabel label = null;
 		Formula type = null;
@@ -69,8 +70,8 @@ public class TTRField extends Formula {
 			String dsTypeS = s.substring(
 					labSepIndex + TTRRecordType.TTR_LABEL_SEPARATOR.length(),
 					s.length()).trim();
-			logger.debug("typeString:" + typeS);
-			logger.debug("dsTypeString:" + dsTypeS);
+			logger.trace("typeString:" + typeS);
+			logger.trace("dsTypeString:" + dsTypeS);
 			type = Formula.create(typeS);
 
 			dsType = DSType.parse(dsTypeS);
@@ -261,17 +262,24 @@ public class TTRField extends Formula {
 	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		if (!(other instanceof TTRField))
 			return false;
-
+		
+		logger.debug("Checking "+this+" subsumes "+other);
 		TTRField otherField = (TTRField) other;
 		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
 		if (label.subsumesMapped(otherField.label, map)) {
 			if ((dsType == null && otherField.dsType == null)
 					|| (dsType != null && dsType.equals(otherField.dsType))) {
+				logger.debug("ds type matched");
 
 				if (type == null) {
 					//set type from other if meta
+					logger.debug("Success, type is null");
 					if (label instanceof MetaTTRLabel)
+					{
+						logger.debug("instantiating meta to "+otherField.type);
 						this.type=otherField.type;
+					}
+					
 					return true;
 				}
 				if (type instanceof TTRRecordType) {
@@ -281,6 +289,10 @@ public class TTRField extends Formula {
 					// System.out.println("Checking "+type+" subsumes "+otherField.type+" with map "+map);
 					if (!type.subsumesMapped(otherField.type, map))
 					{
+						logger.debug("type subsumption failed.");
+						logger.debug("uninstantiating meta and resetting map");
+						map.clear();
+						map.putAll(copy);
 						//don't want to have instantiated metalabel if the field is failing to subsume
 						partialResetMeta();
 						return false;
@@ -291,7 +303,11 @@ public class TTRField extends Formula {
 			}
 			else
 			{
+				
+				map.clear();
+				map.putAll(copy);
 				partialResetMeta();
+				logger.debug("DS type failed subsume:" + this);
 				return false;
 			}
 			// failure.. don't want to have changed map if I'm returning
@@ -332,7 +348,7 @@ public class TTRField extends Formula {
 	}
 
 	public TTRField instantiate() {
-		return new TTRField(new TTRLabel(this.label.instantiate()),
+		return new TTRField(this.label.instantiate(),
 				(dsType != null ? this.dsType.instantiate() : null),
 				(this.type != null ? this.type.instantiate() : null));
 	}
@@ -413,7 +429,7 @@ public class TTRField extends Formula {
 			return label + (type == null ? "" : "==" + type) + " "
 					+ TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
 		else
-			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + type;
+			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + (type==null?"":type);
 		// return
 		// s+(type==null?"(typenull)":(type.parentRecType==this.parentRecType &&
 		// type.parentRecType!=null)?"(linked)":"notLinked");
@@ -650,13 +666,41 @@ public class TTRField extends Formula {
 		
 	}
 
-	public void backtrack() {
+	public boolean backtrack() {
 		if (label instanceof MetaTTRLabel)
 		{
 			MetaTTRLabel meta=(MetaTTRLabel)label;
-			meta.backtrack();
+			if (meta.backtrack())
+			{
+				this.type=null;
+				return true;
+			}
+			
+			
+		}
+		return false;
+		
+	}
+
+	public void unbacktrack() {
+		if (label instanceof MetaTTRLabel)
+		{
+			
 		}
 		
+	}
+
+	public boolean canBacktrack() {
+		if (label instanceof MetaTTRLabel)
+		{
+			return ((MetaTTRLabel)label).canBacktrack();
+		}
+		
+		return false;
+	}
+
+	public boolean isMeta() {
+		return label instanceof MetaTTRLabel;
 	}
 
 }
