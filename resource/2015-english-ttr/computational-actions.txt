@@ -92,6 +92,7 @@ ELSE    abort
 
 late-star-adj-q
 IF      ty(t)
+		<\/*>+WH
 		<Y>+WH
 THEN	go(Y)
 		IF		</\*>tn(0)
