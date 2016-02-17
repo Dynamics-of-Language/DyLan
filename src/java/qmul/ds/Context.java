@@ -79,6 +79,10 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	}
 	
 
+	/**
+	 * TODO: this isn't going work in generation as the stack will be empty.
+	 * @return
+	 */
 	public String getCurrentSpeaker()
 	{
 		return dag.wordStack().peek().speaker();
