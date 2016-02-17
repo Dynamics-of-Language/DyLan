@@ -31,7 +31,7 @@ public class MetaTTRLabel extends TTRLabel {
 
 	/**
 	 * @param name
-	 *            a String name e.g. "X", "Y"
+	 *            a String name e.g. "L1", "L2", ...
 	 */
 	private MetaTTRLabel(String name) {
 		this.name = name;

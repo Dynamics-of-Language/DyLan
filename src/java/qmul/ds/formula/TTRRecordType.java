@@ -69,6 +69,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		ArrayList<String> fieldStrings = splitFields(fieldsS);
 
 		for (String fieldS : fieldStrings) {
+//		 logger.info("Field: " + fieldS);
 
 			TTRField cur = TTRField.parse(fieldS);
 			if (cur == null) {
@@ -87,6 +88,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	public List<TTRField> getFields() {
 		return fields;
+	}
+
+	public List<TTRField> getFieldsbyType(String type) {
+		List<TTRField> result = new ArrayList<TTRField>();
+		for(TTRField f: this.fields){
+			if(f.toString().contains(type)){
+				result.add(f);
+			}
+		}
+		return result;
 	}
 
 	public TTRField getHeadField() {
@@ -278,7 +289,20 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		for (TTRField fi : argument.fields) {
 			remove(fi.getLabel());
 		}
+	}
 
+	private void removeField(TTRField _field) {
+		if(_field != null)
+			remove(_field.getLabel());
+	}
+	
+	public TTRRecordType removeField(String _type)// inclusive
+	{
+		TTRRecordType rt = new TTRRecordType(this);
+		TTRField _field = rt.getFieldsbyType(_type).get(0);
+		rt.removeField(_field);
+
+		return rt;
 	}
 
 	private TTRRecordType removeFieldsUpToIndex(int i)// inclusive
@@ -1224,6 +1248,37 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	}
 
+	public TTRRecordType getSuperTypewithDepandents(TTRField field){
+		if (!this.hasField(field))
+			return new TTRRecordType();
+		
+		List<TTRField> fields = getDepandents(field);
+		return new TTRRecordType(fields);
+	}
+	
+	public List<TTRField> getDepandents(TTRField field) {
+		List<TTRField> result = new ArrayList<TTRField>();
+		for (int i = 0; i < fields.size(); i++) {
+			TTRField f = fields.get(i);
+//			logger.debug("Field: " + f);
+
+			if (f.dependsOn(field)) {
+//				logger.debug(" dependsOn Field: " + f);
+				
+				List<TTRField> _parents = getParents(f);
+				for(TTRField _parent: _parents){
+//					logger.debug(" _parent Field: " + f);
+					if(!result.contains(_parent))
+						result.add(_parent);
+				}
+				
+				if(!result.contains(f))
+					result.add(f);
+			}
+		}
+		return result;
+	}
+	
 	public TTRRecordType getSuperTypeWithParents(TTRField f) {
 		if (!this.hasField(f))
 			return new TTRRecordType();
@@ -1232,7 +1287,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return new TTRRecordType(fields);
 	}
 
-	private List<TTRField> getParents(TTRField field) {
+	public List<TTRField> getParents(TTRField field) {
 
 		List<TTRField> result = new ArrayList<TTRField>();
 		for (int i = fields.indexOf(field) - 1; i >= 0; i--) {
