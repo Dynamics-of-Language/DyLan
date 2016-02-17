@@ -89,7 +89,7 @@ public class GroundableEdge extends DAGEdge {
 				&& dag.wordStack.peek().equals(this.word()))
 			dag.wordStack().pop();
 		
-		else if (this.word() != null) {
+		else if (!dag.wordStack().isEmpty()) {
 			logger.error("Trying to pop word " + dag.wordStack.peek()
 					+ " off the stack when going along " + this);
 			throw new IllegalStateException(
