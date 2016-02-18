@@ -306,11 +306,15 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 
 				if (!opsLeft.isEmpty())
 					throw new UnsupportedOperationException();
+				
 				for (NodeAddress na : nodesBelow) {
-					if (na.equals(other.address))
+					if (na.equals(other))
 						return true;
+					
+					
 
 				}
+				
 				return false;
 
 			}
@@ -323,6 +327,7 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 	}
 
 	private ArrayList<NodeAddress> goDownStarExpand(Tree t) {
+		
 		ArrayList<NodeAddress> result = new ArrayList<NodeAddress>();
 		for (NodeAddress na : t.keySet()) {
 			if (na.getAddress().startsWith(this.address)) {
@@ -339,6 +344,7 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 
 			}
 		}
+	
 		return result;
 	}
 
@@ -477,6 +483,7 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 				return false;
 		} else if (!address.equals(other.address))
 			return false;
+		
 		return true;
 	}
 

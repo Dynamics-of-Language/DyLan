@@ -367,10 +367,10 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			for (ComputationalAction a : nonoptionalGrammar.values()) {
 				
 				clone = res.clone();
-				logger.trace("applying "+a.getName()+ " to "+clone);
+				logger.info("applying "+a.getName()+ " to "+clone);
 				clone = a.exec(clone, context);
 				
-				logger.trace("result was "+clone);
+				logger.info("result was "+clone);
 				if (clone != null) {
 					actions.add(a.instantiate());
 					res = clone;

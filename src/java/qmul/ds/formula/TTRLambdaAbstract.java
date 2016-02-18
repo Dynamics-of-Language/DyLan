@@ -293,8 +293,9 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	
 	public static void main(String args[]) {
 		TTRLambdaAbstract l=(TTRLambdaAbstract)Formula.create("R2^(R2 ++ [head==R2.head : e])");
-		TTRLambdaAbstract l2=(TTRLambdaAbstract)Formula.create("R2^(R2 ++ [head==R2.head : e|p1==boat(head) : t])");
-		System.out.println(l.subsumesMapped(l2,new HashMap<Variable, Variable>()));
+		TTRRecordType l2=(TTRRecordType)Formula.create("[p==question(head):t]");
+		TTRRecordType l3=TTRRecordType.parse("[x:e|head==x:e]");
+		System.out.println(((TTRLambdaAbstract)l2.conjoin(l)).betaReduce(l3));
 	}
 	
 	

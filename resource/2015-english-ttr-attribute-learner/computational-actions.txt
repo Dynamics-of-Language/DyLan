@@ -75,45 +75,34 @@ IF		(ty(t) || ty(e>t))
 THEN	go(\/L)		
 ELSE	abort
 
-
-//*
-
-link-adj-e
-IF      ty(e)
-		+PN
-		¬<\/L>Ex.x
-THEN    put(?+eval)
-		make(\/L)
-       	go(\/L)        
-       	put(?ty(e))
-ELSE    abort
-*//
-
 late-star-adj-q
 IF      ty(t)
-		<Y>+WH
-THEN	go(Y)
+		<\/*>+Q
+		<Z>+Q
+THEN	go(Z)
 		IF		</\*>tn(0)
         		¬!
         		ty(X)  // could restrict this to e/t but no way to do disjunction here yet
-        		¬<\/1>Ex.x
-        		¬<\/0>Ex.x
+        		//¬<\/1>Ex.x
+        		//¬<\/0>Ex.x
         		¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
         		Ex.tn(x)
-        THEN	make(\/*)
+        THEN	delete(+Q)
+        		make(\/*)
         		go(\/*)
-        		put(?ty(X))
         		put(?Ex.tn(x))
-        		IF		</\*>+BE
-        		THEN 	put(+BE)
-        		ELSE	do_nothing
+        		put(?ty(X))
         ELSE	abort
 ELSE    abort
 
 
 
+
+
+
 merge
 IF      Ex.tn(x)
+		¬<\/*>Ex.x
 		<Y>?Ex.tn(x)
 		subsumes(Y)		
 		<Y>ty(V)
@@ -122,6 +111,8 @@ THEN    merge(Y)
 		delete(?Ex.tn(x))	
 ELSE    abort
 
+
+
 *late-star-merge
 IF		Ex.tn(x)
 		<\/*>?Ex.tn(x)
@@ -129,26 +120,9 @@ IF		Ex.tn(x)
 		<\/*>ty(Y)
 THEN	merge(<\/*>)
 		delete(?Ex.tn(x))
-		delete(+WH)
 		unreduce
 ELSE	abort
 
-//*
-*link-evaluation
-IF      ¬+evaluated
-		Ex.fo(x)
-		<\/L>Ex.x
-		<\/L>fo(X)
-THEN    conjoin(X)
-		put(+evaluated)
-		IF		</\L>Ex.x
-				</\L>+evaluated
-		THEN	go(/\L)
-				delete(+evaluated)
-		ELSE	do_nothing
-ELSE    abort
-
-*//
 
 *link-evaluation
 IF      ?+eval
@@ -165,12 +139,20 @@ THEN    conjoin(X)
 ELSE    abort
 
 
-//transition relevance place
-//*
 trp
 IF		complete
 THEN	addaxiom
 ELSE	abort
-*//
+
+
+*substitution
+IF		?ty(cn)
+		?Ex.fo(x)
+		</\C>(ty(cn)& fo(Y)& ¬+Q)
+THEN	put(fo(Y))
+		put(ty(cn))
+		delete(?ty(cn))
+		delete(?Ex.fo(x))
+ELSE	abort
 
 

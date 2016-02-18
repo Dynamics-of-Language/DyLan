@@ -190,16 +190,27 @@ public class ModalLabel extends EmbeddedLabelGroup {
 				&& modality.getOps().get(0).getPath()
 						.equals(BasicOperator.PATH_CONTEXT)) {
 			U previous = context.getCurrentTuple();
+			if (previous==null)
+				return false;
 			// TODO option to restrict context search depth to 1,2 etc here - or
 			// could be in modality path quantifier?
 			// currently searching whole trees for labels
-			while (previous != null) {
+			int depth=1;
+			int index=0;
+			//Restricting it to complete trees only
+			do {
+				if (index==depth)
+					break;
+				if (!previous.getTree().isComplete())
+					continue;
+				
 				logger.debug("checking "+super.toString()+" on tree:"+previous.getTree());
 				for(Node n:previous.getTree().values())
 					if (checkLabelsConj(n))
 						return true;
-				previous = context.getParent(previous);
-			}
+				index++;
+				
+			} while((previous = context.getParent(previous))!=null);
 			logger.debug("modal label check failed");
 			return false;
 		}
@@ -213,7 +224,7 @@ public class ModalLabel extends EmbeddedLabelGroup {
 		for (Node node : tree.getNodes()) {
 
 			if (modality.relates(tree, pointedNode, node)) {
-
+				//System.out.println("matched "+modality+" "+pointedNode+" "+node);
 				if (checkLabelsConj(node)) {
 					logger.debug("Modal Label check succeeded");
 					return true;

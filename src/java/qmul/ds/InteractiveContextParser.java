@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -14,7 +16,6 @@ import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.LexicalAction;
 import qmul.ds.dag.ActionReplayEdge;
-import qmul.ds.dag.BacktrackingEdge;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
@@ -210,7 +211,7 @@ public class InteractiveContextParser extends
 				// about this.
 
 				boolean repairable = true;
-				logger.trace("executing " + la + " on " + pair.second);
+				logger.debug("executing " + la + " on " + pair.second);
 				Tree res = la.exec(pair.second.clone(), context);
 
 				if (res != null) {
@@ -236,7 +237,7 @@ public class InteractiveContextParser extends
 
 					state.addChild(newTuple, wordEdge);
 
-					logger.debug("Added Edge:" + wordEdge);
+					logger.debug("Added Edge:" + wordEdge.toDebugString());
 					logger.debug("Child:" + newTuple);
 
 					/**
@@ -247,7 +248,7 @@ public class InteractiveContextParser extends
 					if (la.getLexicalActionType().equals("reject"))
 						state.setAcceptancePointer(w.speaker(), newTuple);
 					else if (la.getLexicalActionType().equals("accept")
-							|| la.getLexicalActionType().equals("assert")) {
+							|| la.getLexicalActionType().equals("assert") || la.getLexicalActionType().equals("yes")) {
 						state.setAcceptancePointer(w.speaker(), newTuple);
 						for (String spkr : state.getAcceptancePointers(state
 								.getParent(newTuple))) {
@@ -292,7 +293,7 @@ public class InteractiveContextParser extends
 		// + (edgeTreePair == null ? null : edgeTreePair.first));
 		// logger.debug("got actions back from trim:" + acts);
 		if (edgeTreePair == null || edgeTreePair.first.isEmpty()) {
-			logger.info("Replay: didn't rerun anything from context");
+			logger.debug("Replay: didn't rerun anything from context");
 			logger.debug("trimUntilApplicable returned:" + edgeTreePair);
 			return false;
 
@@ -336,14 +337,17 @@ public class InteractiveContextParser extends
 
 	}
 
-	public UtteredWord generateNextWord(TTRFormula goal) {
+	public List<Pair<GroundableEdge, DAGTuple>> getLocalGenerationOptions(
+			TTRFormula goal) {
+		List<Pair<GroundableEdge, DAGTuple>> result = new ArrayList<Pair<GroundableEdge, DAGTuple>>();
+
 		for (String word : lexicon.keySet())
 			for (LexicalAction la : lexicon.get(word)) {
-				Pair<List<Action>, Tree> res=this.leftAdjustAndApply(la, "self", goal);
-				if (res!=null)
-				{
+				Pair<List<Action>, Tree> res = this.leftAdjustAndApply(la,
+						"self", goal);
+				if (res != null) {
 					GroundableEdge wordEdge;
-					UtteredWord w=new UtteredWord(word,"self");
+					UtteredWord w = new UtteredWord(word, "self");
 					if (getIndexOfTRP(res.first) >= 0)
 						wordEdge = state.getNewNewClauseEdge(res.first, w);
 					else
@@ -356,41 +360,54 @@ public class InteractiveContextParser extends
 						wordEdge.setRepairable(false);
 
 					DAGTuple newTuple = state.getNewTuple(res.second);
+					result.add(new Pair<GroundableEdge, DAGTuple>(wordEdge,
+							newTuple));
 
-					state.addChild(newTuple, wordEdge);
-
-					logger.debug("Added Edge:" + wordEdge);
-					logger.debug("Child:" + newTuple);
-					
-
-					/**
-					 * if the lexical action was acceptance/rejection, manually
-					 * set acceptance pointers.
-					 * 
-					 */
-					if (la.getLexicalActionType().equals("reject"))
-						state.setAcceptancePointer(w.speaker(), newTuple);
-					else if (la.getLexicalActionType().equals("accept")
-							|| la.getLexicalActionType().equals("assert")) {
-						state.setAcceptancePointer(w.speaker(), newTuple);
-						for (String spkr : state.getAcceptancePointers(state
-								.getParent(newTuple))) {
-							logger.info("setting acceptance pointer for:"
-									+ spkr);
-							state.setAcceptancePointer(spkr, newTuple);
-						}
-					}
-					logger.debug("Now traversing" + wordEdge);
-					wordEdge.traverse((WordLevelContextDAG)state);
-					return w;
-					
 				}
-				
-				
 
 			}
-		
-		return null;
+
+		return result;
+
+	}
+
+	public UtteredWord generateNextWord(TTRFormula goal) {
+		List<Pair<GroundableEdge, DAGTuple>> localOptions = getLocalGenerationOptions(goal);
+		if (localOptions.isEmpty())
+			return null;
+		Random r = new Random(new Date().getTime());
+
+		Pair<GroundableEdge, DAGTuple> edgeTuple = localOptions.get(r
+				.nextInt(localOptions.size()));
+
+		LexicalAction la = (LexicalAction) edgeTuple.first.getActions().get(
+				edgeTuple.first.getActions().size() - 1);
+		UtteredWord w = edgeTuple.first.word();
+		state.addChild(edgeTuple.second, edgeTuple.first);
+
+		logger.debug("Added Edge:" + edgeTuple.first);
+		logger.debug("Child:" + edgeTuple.second);
+
+		/**
+		 * if the lexical action was acceptance/rejection, manually set
+		 * acceptance pointers.
+		 * 
+		 */
+		if (la.getLexicalActionType().equals("reject"))
+			state.setAcceptancePointer(w.speaker(), edgeTuple.second);
+		else if (la.getLexicalActionType().equals("accept")
+				|| la.getLexicalActionType().equals("assert")) {
+			state.setAcceptancePointer(w.speaker(), edgeTuple.second);
+			for (String spkr : state.getAcceptancePointers(state
+					.getParent(edgeTuple.second))) {
+				logger.info("setting acceptance pointer for:" + spkr);
+				state.setAcceptancePointer(spkr, edgeTuple.second);
+			}
+		}
+		logger.debug("Now traversing" + edgeTuple.first);
+		edgeTuple.first.traverse((WordLevelContextDAG) state);
+		return w;
+
 	}
 
 	/**
@@ -553,16 +570,16 @@ public class InteractiveContextParser extends
 				"resource/2015-english-ttr");
 		Utterance utt = new Utterance("A: john likes mary");
 		parser.parseUtterance(utt);
-		
-		TTRFormula goal=parser.getState().getCurrentTuple().getSemantics();
-		
+
+		TTRFormula goal = parser.getState().getCurrentTuple().getSemantics();
+
 		parser.getState().init();
-		
-		System.out.println("Generated:"+parser.generateNextWord(goal));
-		//System.out.println("Final Tuple:"+parser.getState().getCurrentTuple());
-		System.out.println("Generated:"+parser.generateNextWord(goal));
-		System.out.println("Generated:"+parser.generateNextWord(goal));
-		System.out.println("Generated:"+parser.generateNextWord(goal));
+
+		System.out.println("Generated:" + parser.generateNextWord(goal));
+		// System.out.println("Final Tuple:"+parser.getState().getCurrentTuple());
+		System.out.println("Generated:" + parser.generateNextWord(goal));
+		System.out.println("Generated:" + parser.generateNextWord(goal));
+		System.out.println("Generated:" + parser.generateNextWord(goal));
 
 	}
 

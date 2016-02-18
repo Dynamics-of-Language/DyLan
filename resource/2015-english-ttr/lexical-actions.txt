@@ -242,24 +242,34 @@ ELSE	abort
 
 
 
-
+//only clause initally
 pron_whq(CLASS)
 IF		?ty(t)
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
 		¬<\/*>Ex.x
-THEN	make(\/*)
+		¬</\L>Ex.x
+THEN	put(+Q)
+		make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
 		put(ty(e))
 		ttrput([x:e|head==x:e])
-		put(+WH)
+		put(+Q)
 		put(class(CLASS))
-ELSE	IF		?ty(e)
+ELSE	abort
+
+//* 
+commenting out for now, so cannot parse, "john likes who?"
+IF		?ty(e)
 		THEN	put(?Ex.tn(x))
 				put(ty(e))
 				ttrput([x:e|head==x:e])
-				put(+WH)
+				put(+Q)
 				put(class(CLASS))
 		ELSE	abort
+*//
+
 
 pron_whq_cop(CLASS)
 IF		?ty(t)
@@ -269,7 +279,7 @@ THEN	make(\/*)
 		put(?Ex.tn(x))
 		put(ty(e>t))
 		ttrput(R2^(R2 ++ [head==R2.head:e]))
-		put(+WH)
+		put(+Q)
 		put(class(CLASS))
 ELSE	abort
 
@@ -289,7 +299,7 @@ ELSE    abort
 pron_acc(PERSON,CLASS)
 IF      ?ty(e)
         </\0>?ty(e>X)
-        </\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+WH)
+        </\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+Q)
 THEN    put(ty(e))
         put(Fo(Y))
         put(!)
@@ -324,6 +334,14 @@ THEN	make(\/L)
         put(ty(e))
         put(fo(X))
         put(?Ex.tn(x))
+       	go(/\*)
+       	make(\/1)
+       	go(\/1)
+       	put(?ty(e>t))
+       	go(/\1)
+       	make(\/0)
+       	go(\/0)
+       	put(?ty(e))
 ELSE	abort
 
 
@@ -490,14 +508,14 @@ assert(PRED)
 IF		ty(t)
 		complete
 THEN	delete(+Q)
-		ground
+		//ground
 ELSE	abort
 
 question(PRED)
 IF		ty(t)
 		complete
 THEN	put(+Q)
-		ground
+		//ground
 ELSE	abort
 
 accept(PRED)
@@ -512,3 +530,22 @@ IF		ty(t)
 THEN	put(+neg)
 		put(!)
 ELSE	abort
+
+
+not(PRED)
+IF		ty(e>t)
+		?Ex.Fo(x)
+		¬<\/0>Ex.x
+        ¬<\/1>Ex.x
+THEN	delete(?Ex.Fo(x))
+		make(\/1)
+		go(\/1)
+		put(ty((e>t)>(e>t)))
+		ttrput(R1^(R1 ++ [p==PRED(R1.head):t|head==p:t]))
+		put(!)
+		go(/\1)
+		make(\/0)
+		put(?ty(e>t))
+		put(?Ex.Fo(x))
+ELSE	abort
+		

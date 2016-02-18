@@ -435,7 +435,7 @@ london                        proper                        london              
 paris                         proper                        paris                         s3                            dest
 //aeroplane                     mass                          aeroplane                     s3                            trans
 //aeroplanes                    mass                          aeroplane                     plur                          trans
-my							 my								s1							  
+//my							 my								s1							  
 your						 your							s2							 
 cousin                    count                         cousin                     s3                            trans
 guy						  count							guy						   s3							male
@@ -556,7 +556,7 @@ Paris                         proper                        paris               
 Tuesday						  proper						tuesday						  s3                           
 casserole					  proper						caserole					  s3
 stew						  proper						stew						  s3
-i                             i		                        s1                            spkr
+i                             proper		                i							  s1							per
 you							  proper						you							  s2							per
 he                            pron_nom                      s3                            male
 it                            pron_nom                      s3                            obj
@@ -605,3 +605,4 @@ yeah						  accept						yeah
 wow							  accept						wow
 right						  accept						right
 no							  reject						not
+//not							  not							not

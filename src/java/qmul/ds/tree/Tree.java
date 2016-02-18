@@ -247,6 +247,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 */
 	public void go(Modality modality) {
 		NodeAddress addr = getPointer().go(modality);
+		System.out.println("pointed:"+addr);
 		if ((addr == null) || !containsKey(addr)) {
 			throw new RuntimeException("Can't go to non-existent node " + addr);
 		}
@@ -699,7 +700,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		typeMap.put(DSType.parse("cn>es"),
 				Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
 		
-		Label copula=LabelFactory.create("+BE");
+		//Label copula=LabelFactory.create("+BE");
 		
 		
 		for (Node n : values()) {
@@ -717,13 +718,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					//another exception: if an e>t node is decorated with Copula (having parsed 'to be'), then we want a differnet underspecification for this node, not involving event type
 					
 					DSType motherType=mother.getType()==null?mother.getRequiredType():mother.getType();
-					if (dsType.equals(BasicType.cn)&&motherType.equals(DSType.parse("e>t")))
-						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]")));
-					else if (dsType.equals(DSType.parse("e>t"))&&n.contains(copula))
-					{
-						n.addLabel(new FormulaLabel(Formula.create("R^(R ++ [head==R.head:e|pred:cn|p1==subj(pred,head):t])")));
-						
-					}
+					if (dsType.equals(BasicType.cn)&&(motherType.equals(DSType.parse("e>t"))||motherType.equals(DSType.cn)))
+						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
 					else
 						n.addLabel(new FormulaLabel(typeMap.get(dsType)
 							.freshenVars(this)));
@@ -811,6 +807,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * @return the maximal semantics of this tree
 	 */
 	public TTRFormula getMaximalSemantics() {
+		
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
 		Tree merged = mergeUnfixed();
@@ -829,6 +826,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		
 	}
 
+	
+	static Label questionLabel=LabelFactory.create("+Q");
+	static TTRRecordType questionRec=(TTRRecordType)Formula.create("[p==question(head):t]");
 	/**
 	 * Preconditions: all mergeable unfixed nodes are merged already
 	 * 
@@ -926,6 +926,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 			rootReduced = rootReduced.conjoin(maxSemL);
 		}
 		logger.debug("done: " + rootReduced);
+		
+		if (root.contains(questionLabel))
+			return questionRec.conjoin(rootReduced);
+		
 		return rootReduced;
 
 	}
