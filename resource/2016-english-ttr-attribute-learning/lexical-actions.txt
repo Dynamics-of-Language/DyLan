@@ -288,7 +288,7 @@ IF		ty(cn)
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
-		put(ty(cn))
+		put(ty(t))
 		ttrput([head:cn|p==PRED(head):t])
 ELSE	abort
 

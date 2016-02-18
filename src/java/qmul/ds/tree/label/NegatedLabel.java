@@ -11,13 +11,15 @@ package qmul.ds.tree.label;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 
 /**
- * A negated label �L
+ * A negated label ¬L
  * 
  * @author mpurver
  */
@@ -28,7 +30,7 @@ public class NegatedLabel extends EmbeddedLabel {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final String FUNCTOR = "¬";
-
+	public static final Logger logger=Logger.getLogger(NegatedLabel.class);
 	/**
 	 * @param label
 	 */
@@ -77,6 +79,9 @@ public class NegatedLabel extends EmbeddedLabel {
 	
 	public boolean check(Node n)
 	{
+		if (n.hasLabel(label))
+			return false;
+		
 		return !super.check(n);
 	}
 	/*

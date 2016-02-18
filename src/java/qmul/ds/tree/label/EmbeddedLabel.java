@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.meta.Meta;
+import qmul.ds.tree.Node;
 
 /**
  * A label which embeds another label, e.g. a negated label �L
@@ -88,5 +89,8 @@ public abstract class EmbeddedLabel extends Label implements Serializable {
 	 */
 	@Override
 	public abstract Label instantiate();
+	
+	
+	
 
 }
