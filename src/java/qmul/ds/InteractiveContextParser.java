@@ -14,7 +14,9 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
+import qmul.ds.action.Grammar;
 import qmul.ds.action.LexicalAction;
+import qmul.ds.action.Lexicon;
 import qmul.ds.dag.ActionReplayEdge;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
@@ -95,6 +97,13 @@ public class InteractiveContextParser extends
 
 	public InteractiveContextParser(String resourceDirOrURL) {
 		this(resourceDirOrURL, false);
+	}
+
+	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
+		super(lexicon, grammar);
+		state = new WordLevelContextDAG();
+		context = new Context<DAGTuple, GroundableEdge>(state);
+		state.setContext(context);
 	}
 
 	protected boolean repairInitiated() {
@@ -371,7 +380,35 @@ public class InteractiveContextParser extends
 
 	}
 
-	public UtteredWord generateNextWord(TTRFormula goal) {
+	/**
+	 * Only generating to propositional semantics. But incrementally of course. 
+	 * @param goal
+	 * @return
+	 */
+	public boolean generateTo(TTRFormula goal)
+	{
+		this.goal=goal;
+		this.generated.clear();
+		Pair<GroundableEdge, DAGTuple> genPair=generateNextWord();
+		if (genPair==null)
+			return false;
+		
+		while(genPair!=null)
+		{
+			if (genPair.second.isComplete()&&goal.subsumes(genPair.second.getSemantics()))
+				return true;
+			
+			genPair=generateNextWord();
+		}
+	
+		
+		return false;
+	}
+	
+	public List<String> generated=new ArrayList<String>();
+	private TTRFormula goal;
+	
+	private Pair<GroundableEdge, DAGTuple> generateNextWord() {
 		List<Pair<GroundableEdge, DAGTuple>> localOptions = getLocalGenerationOptions(goal);
 		if (localOptions.isEmpty())
 			return null;
@@ -406,7 +443,8 @@ public class InteractiveContextParser extends
 		}
 		logger.debug("Now traversing" + edgeTuple.first);
 		edgeTuple.first.traverse((WordLevelContextDAG) state);
-		return w;
+		generated.add(w.word());
+		return edgeTuple;
 
 	}
 
@@ -567,19 +605,34 @@ public class InteractiveContextParser extends
 
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
-				"resource/2015-english-ttr");
-		Utterance utt = new Utterance("A: john likes mary");
-		parser.parseUtterance(utt);
-
-		TTRFormula goal = parser.getState().getCurrentTuple().getSemantics();
+				"resource/2016-english-ttr-attribute-learning");
+		Utterance utt = new Utterance("A: this is a red square");
+		TTRFormula goal;
+		if (parser.parseUtterance(utt))
+			goal = parser.getState().getCurrentTuple().getSemantics();
+		else
+		{
+			System.out.println("Failed to construct goal from:"+utt);
+			System.out.println("Terminating....");
+			return;
+		}
 
 		parser.getState().init();
 
-		System.out.println("Generated:" + parser.generateNextWord(goal));
-		// System.out.println("Final Tuple:"+parser.getState().getCurrentTuple());
-		System.out.println("Generated:" + parser.generateNextWord(goal));
-		System.out.println("Generated:" + parser.generateNextWord(goal));
-		System.out.println("Generated:" + parser.generateNextWord(goal));
+		if (parser.generateTo(goal))
+			System.out.println(parser.generated);
+		else
+		{
+			System.out.println("Generation to goal Failed.");
+			System.out.println("Generated:"+parser.generated);
+			System.out.println("final tuple:"+parser.getState().getCurrentTuple().getSemantics());
+		}
+		
+//		System.out.println("Generated:" + parser.generateNextWord(goal));
+//		// System.out.println("Final Tuple:"+parser.getState().getCurrentTuple());
+//		System.out.println("Generated:" + parser.generateNextWord(goal));
+//		System.out.println("Generated:" + parser.generateNextWord(goal));
+//		System.out.println("Generated:" + parser.generateNextWord(goal));
 
 	}
 
@@ -681,33 +734,31 @@ public class InteractiveContextParser extends
 
 	}
 
-	private class GenerationThread extends Thread {
-		TTRFormula goal;
-
-		public GenerationThread(TTRFormula goal) {
-			this.goal = goal;
-		}
-
-		public void generate() {
-			if (goal == null)
-				return;
-			this.start();
-		}
-
-		/**
-		 * 
-		 * @param goal
-		 * @return
-		 */
-		public UtteredWord generateNextWord(TTRFormula goal) {
-			this.goal = goal;
-			return null;
-		}
-
-		public void run() {
-
-		}
-
-	}
+	
+//	public class GenerationThread extends Thread {
+//		TTRFormula goal;
+//
+//		
+//
+//		public void generate(TTRFormula goal) {
+//			this.goal=goal;
+//			this.start();
+//		}
+//
+//		/**
+//		 * 
+//		 * @param goal
+//		 * @return
+//		 */
+//		public UtteredWord generateNextWord(TTRFormula goal) {
+//			this.goal = goal;
+//			return null;
+//		}
+//
+//		public void run() {
+//
+//		}
+//
+//	}
 
 }

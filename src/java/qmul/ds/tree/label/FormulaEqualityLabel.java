@@ -46,6 +46,7 @@ public class FormulaEqualityLabel extends Label implements Serializable {
 	}
 
 	public boolean check(Node n) {
+		
 
 		return left.equals(right) || right.equals(left);
 

@@ -41,6 +41,7 @@ det_indef_postcop(QUANT)
 IF		?ty(cn)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
+        ¬</\0>?ty(cn)
 THEN	delete(?Ex.fo(x))
 		make(\/1)
 		go(\/1)
@@ -56,6 +57,7 @@ adj(PRED,META)
 IF      ?ty(cn)
 		</\0\/1>ty(cn>cn)
 THEN    IF 		</\0>?Ex.tn(x)
+				¬</\0/\*/\0\/1\/L>Ex.x 
 		THEN	go(/\0/\*/\0\/1)
 				put(?+eval)
 				make(\/L)
@@ -63,21 +65,22 @@ THEN    IF 		</\0>?Ex.tn(x)
  		        put(ty(cn>(e>t)))
  		        ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
  		        go(/\L/\1\/0\/*\/0)
-		ELSE    go(/\0/\0\/1)
-			    put(?+eval)
-				make(\/L)
-        		go(\/L)
-        		put(ty(cn>(e>t)))
-        		ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
-        		go(/\L/\1\/0\/0)
+		ELSE    IF		¬</\0/\0\/1\/L>Ex.x
+				THEN	go(/\0/\0\/1)
+			    		put(?+eval)
+						make(\/L)
+        				go(\/L)
+        				put(ty(cn>(e>t)))
+        				ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
+        				go(/\L/\1\/0\/0)
+        		ELSE	abort
 ELSE    IF		?ty(cn)
-				//</\0\/1>ty(cn>(e>t))
-THEN	ttrput([pred==PRED:cn|p2==META(pred):t|head==pred:cn])
-		put(ty(cn))
-		delete(?ty(cn))
-		delete(?Ex.fo(x))
-		put(!)
-ELSE	abort
+		THEN	ttrput([pred==PRED:cn|p2==META(pred):t|head==pred:cn])
+				put(ty(cn))
+				delete(?ty(cn))
+				delete(?Ex.fo(x))
+				put(!)
+		ELSE	abort
 
 
 		
@@ -583,15 +586,18 @@ ELSE	abort
 assert(PRED)
 IF		ty(t)
 		complete
-THEN	do_nothing
+		¬!
+THEN	put(!)
 ELSE	abort
 
 question(PRED)
 IF		ty(t)
 		complete
+		¬!
 THEN	IF	  <\/*>+Q
-		THEN  do_nothing
-		ELSE  put(+Q)	
+		THEN  put(!)
+		ELSE  put(+Q)
+			  put(!)
 ELSE	abort
 
 
@@ -613,13 +619,21 @@ IF		ty(t)
 		complete
 		¬+Q
 		¬<\/*>+Q
-THEN	do_nothing
+		Speaker(X)
+		PrevSpeaker(Y)
+THEN	IF 		X=Y
+		THEN	abort
+		ELSE	do_nothing
 ELSE	abort
 
 yes(PRED)
 IF 		ty(t)
 		complete
 		+Q
-THEN	delete(+Q)
+		Speaker(X)
+		PrevSpeaker(Y)
+THEN	IF		X=Y
+		THEN    abort
+		ELSE	delete(+Q)
 ELSE	abort
 		

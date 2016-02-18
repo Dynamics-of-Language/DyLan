@@ -140,6 +140,9 @@ public class LabelFactory {
 		} else if (string.toLowerCase().startsWith(SpeakerLabel.FUNCTOR.toLowerCase())) {
 			return new SpeakerLabel(Formula.create(
 					string.substring(SpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
+		}  else if (string.toLowerCase().startsWith(PrevSpeakerLabel.FUNCTOR.toLowerCase())) {
+			return new PrevSpeakerLabel(Formula.create(
+					string.substring(PrevSpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
 		} else if (string.toLowerCase().startsWith(ContextualActionLabel.FUNCTOR)) {
 			return new ContextualActionLabel(string, ite);
 		} else if (string.toLowerCase().startsWith(FeatureLabel.PREFIX.toLowerCase())) {

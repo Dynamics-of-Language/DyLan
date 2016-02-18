@@ -247,7 +247,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 */
 	public void go(Modality modality) {
 		NodeAddress addr = getPointer().go(modality);
-		System.out.println("pointed:"+addr);
+
 		if ((addr == null) || !containsKey(addr)) {
 			throw new RuntimeException("Can't go to non-existent node " + addr);
 		}
@@ -707,7 +707,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		
 		//Label copula=LabelFactory.create("+BE");
 		
-		
+		Label formReq=LabelFactory.create("?Ex.fo(x)");
 		for (Node n : values()) {
 			if (!getDaughters(n, "01").isEmpty())
 				continue;
@@ -725,6 +725,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					DSType motherType=mother.getType()==null?mother.getRequiredType():mother.getType();
 					if (dsType.equals(BasicType.cn)&&(motherType.equals(DSType.parse("e>t"))||motherType.equals(DSType.cn)))
 						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
+					else if (dsType.equals(DSType.parse("e>t"))&&n.contains(formReq))
+						n.addLabel(new FormulaLabel(Formula.create("R1^(R1 ++ [head:es|p==subj(head,R1.head):t])").freshenVars(this)));
 					else
 						n.addLabel(new FormulaLabel(typeMap.get(dsType)
 							.freshenVars(this)));
@@ -834,7 +836,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 
 	
 	static Label questionLabel=LabelFactory.create("+Q");
+	static Label negatedLabel=LabelFactory.create("+neg");
 	static TTRRecordType questionRec=(TTRRecordType)Formula.create("[p==question(head):t]");
+	static TTRRecordType negatedRec=(TTRRecordType)Formula.create("[p==not(head):t]");
 	/**
 	 * Preconditions: all mergeable unfixed nodes are merged already
 	 * 
@@ -934,7 +938,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		logger.debug("done: " + rootReduced);
 		
 		if (root.contains(questionLabel))
-			return questionRec.conjoin(rootReduced);
+			rootReduced= questionRec.conjoin(rootReduced);
+		
+		if (root.contains(negatedLabel))
+			rootReduced=negatedRec.conjoin(rootReduced);
 		
 		return rootReduced;
 

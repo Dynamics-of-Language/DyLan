@@ -85,8 +85,15 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 */
 	public String getCurrentSpeaker()
 	{
-		return dag.wordStack().peek().speaker();
+		return (dag.wordStack().isEmpty())?null:dag.wordStack().peek().speaker();
 	}
+	
+	public String getPrevSpeaker()
+	{
+		return dag.getSpeakerOfPreviousWord();
+	}
+	
+	
 
 	public T getCurrentTuple() {
 		return dag.getCurrentTuple();

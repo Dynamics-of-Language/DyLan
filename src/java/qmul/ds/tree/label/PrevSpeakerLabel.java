@@ -30,30 +30,30 @@ import qmul.ds.tree.Tree;
  * 
  * @author arash
  */
-public class SpeakerLabel extends Label implements Serializable {
+public class PrevSpeakerLabel extends Label implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static Logger logger = Logger.getLogger(SpeakerLabel.class);
-	public final static String FUNCTOR = "Speaker";
+	private static Logger logger = Logger.getLogger(PrevSpeakerLabel.class);
+	public final static String FUNCTOR = "PrevSpeaker";
 
 	private Formula formula;
 
 	/**
 	 * @param formula
 	 */
-	public SpeakerLabel(Formula formula, IfThenElse ite) {
+	public PrevSpeakerLabel(Formula formula, IfThenElse ite) {
 		super(ite);
 		this.formula = formula;
 	}
 
-	public SpeakerLabel(Formula variable) {
+	public PrevSpeakerLabel(Formula variable) {
 		this(variable, null);
 	}
 
-	public SpeakerLabel(SpeakerLabel formulaLabel) {
+	public PrevSpeakerLabel(PrevSpeakerLabel formulaLabel) {
 		this(formulaLabel.getFormula().clone(), null);
 	}
 
@@ -99,7 +99,7 @@ public class SpeakerLabel extends Label implements Serializable {
 	 */
 	public <E extends DAGEdge, U extends DAGTuple> boolean check(Tree t, Context<U,E> context)
 	{
-		String speaker=context.getCurrentSpeaker();
+		String speaker=context.getPrevSpeaker();
 		Formula speakerF=new AtomicFormula(speaker);
 		return this.formula.equals(speakerF);
 		
@@ -112,7 +112,7 @@ public class SpeakerLabel extends Label implements Serializable {
 	 */
 	@Override
 	public Label instantiate() {
-		return new SpeakerLabel(formula.instantiate().evaluate());
+		return new PrevSpeakerLabel(formula.instantiate().evaluate());
 	}
 
 	/*
@@ -142,7 +142,7 @@ public class SpeakerLabel extends Label implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SpeakerLabel other = (SpeakerLabel) obj;
+		PrevSpeakerLabel other = (PrevSpeakerLabel) obj;
 		if (formula == null) {
 			if (other.formula != null)
 				return false;
@@ -174,10 +174,10 @@ public class SpeakerLabel extends Label implements Serializable {
 	}
 
 	public boolean subsumes(Label l) {
-		if (!(l instanceof SpeakerLabel))
+		if (!(l instanceof PrevSpeakerLabel))
 			return false;
 
-		SpeakerLabel la = (SpeakerLabel) l;
+		PrevSpeakerLabel la = (PrevSpeakerLabel) l;
 		boolean res = this.formula.subsumes(la.formula);
 		if (!res)
 			logger.debug(this.formula + ":" + this.formula.getClass() + " does not subsume " + la.formula + ":"
@@ -188,8 +188,8 @@ public class SpeakerLabel extends Label implements Serializable {
 	
 	
 
-	public SpeakerLabel clone() {
-		return new SpeakerLabel(this);
+	public PrevSpeakerLabel clone() {
+		return new PrevSpeakerLabel(this);
 	}
 
 }

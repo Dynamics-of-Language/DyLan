@@ -107,6 +107,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		this(new Tree(), new ArrayList<UtteredWord>());
 	}
 	
+	public DAG(Tree start) {
+		this(new Tree(start), new ArrayList<UtteredWord>());
+	}
+
 	public ActionReplayEdge getNewActionReplayEdge(List<Action> actions, UtteredWord w, List<GroundableEdge> edges)
 	{
 		long newID = idPoolEdges.size() + 1;
@@ -178,30 +182,6 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	
 	
-	/*
-	public DAG(Tree start, List<UtteredWord> words, DAGParser<T,E> parser)
-	{
-		this.parser=parser;
-		wordStack = new Stack<UtteredWord>();
-		for (int i = words.size() - 1; i >= 0; i--) {
-			wordStack.push(words.get(i));
-		}
-		cur = getNewTuple(start);
-		addVertex(cur);
-		root = cur;
-		//lastN.add(cur.getTree());
-		thisIsFirstTupleAfterLastWord();
-		
-		//this.completionGrammar=completionGrammar;
-		
-		
-	}*/
-	
-	/*
-	public DAG(DAGParser<T,E> p)
-	{
-		this(new Tree(), new ArrayList<UtteredWord>(), p);
-	}*/
 	
 	
 	public void setContext(Context<T,E> context)
@@ -591,7 +571,35 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return null;
 	}
 	
-	
+	public E goFirstGen() {
+		if (outDegree(cur) == 0)
+			return null;
+		SortedSet<E> edges = getOutEdges(cur);
+
+		for (E e : edges) {
+			T child = getDest(e);
+			
+			if (!e.hasBeenSeen()) {
+				logger.info("Going forward (first) along: " + e);
+				
+
+				e.setInContext(true);
+				
+				
+				this.cur = child;
+				
+				updateLastN();
+
+				logger.info("depth is now:" + getDepth());
+
+				if (e.word() != null) 
+					wordStack.push(e.word());
+				
+				return e;
+			}
+		}
+		return null;
+	}
 	
 
 	
@@ -822,7 +830,40 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		return true;
 	}
 
-	
+	public boolean attemptBacktrackGen()
+	{
+		while (!moreUnseenEdges()) {
+			if (!canBacktrack())
+			{
+				logger.info("cannot backtrack from:"+cur);
+				return false;
+			}
+				
+			E backover = getParentEdge();
+			
+			if (backover.word() != null) {
+
+				if (!wordStack.peek().equals(backover.word()))
+					throw new IllegalStateException("top of stack is "+wordStack.peek()+" but edge is "+backover);
+				
+				UtteredWord word=wordStack.pop();
+				logger.debug("popped word off stack:" + word);
+				logger.debug("stack now:"+wordStack);
+				
+			}
+			
+			
+			E backOver = goUpOnce();
+			
+			backOver.setSeen(true);
+			backOver.setInContext(false);
+			
+
+		}
+		logger.debug("Backtrack succeeded");
+		return true;
+		
+	}
 	
 	/**
 	 * 
