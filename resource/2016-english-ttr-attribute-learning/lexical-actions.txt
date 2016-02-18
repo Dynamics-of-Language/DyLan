@@ -594,22 +594,25 @@ THEN	IF	  <\/*>+Q
 		ELSE  put(+Q)	
 ELSE	abort
 
-accept(PRED)
-IF		ty(t)
-		complete
-THEN	do_nothing
-ELSE	abort
+
 
 reject(PRED)
 IF		ty(t)
 		complete
-THEN	put(+neg)
-		put(!)
+		¬<\/*>+Q
+THEN	IF	    +Q
+		THEN    delete(+Q)
+			    put(+neg)
+		        put(!)
+		ELSE    put(+neg)
+				put(!)
 ELSE	abort
 
 accept(PRED)
 IF		ty(t)
 		complete
+		¬+Q
+		¬<\/*>+Q
 THEN	do_nothing
 ELSE	abort
 

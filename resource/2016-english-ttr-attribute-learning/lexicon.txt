@@ -35,12 +35,13 @@ shape						  cn_meta_cat					shape
 .							  assert						A
 ?							  question						Q
 //uhu							  accept						uhu
-//ok							  accept						ok
+ok							  accept						ok
 yes							  yes							yes
+yes							  accept						yes
 okay						  accept						okay
 yeah						  accept						yeah
 //wow							  accept						wow
 //right						  accept						right
-//no							  reject						not
+no							  reject						not
 //i                             i		                        s1                            spkr
 you							  proper						system							  s2

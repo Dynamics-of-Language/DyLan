@@ -145,7 +145,7 @@ THEN	addaxiom
 ELSE	abort
 
 
-*substitution
+substitution
 IF		?ty(cn)
 		?Ex.fo(x)
 		</\C>(ty(cn)& fo(Y)& ¬+Q)
