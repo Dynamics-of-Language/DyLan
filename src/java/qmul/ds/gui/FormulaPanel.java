@@ -48,5 +48,11 @@ public class FormulaPanel extends JPanel {
 		this.container = fs;
 
 	}
+	
+	public void clear(){
+		this.f = null;
+		this.validate();
+		this.repaint();
+	}
 
 }
