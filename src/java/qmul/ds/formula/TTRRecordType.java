@@ -54,8 +54,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	private ArrayList<TTRField> fields = new ArrayList<TTRField>();
 
 	private HashMap<TTRLabel, TTRField> record = new HashMap<TTRLabel, TTRField>();
-	
-	public boolean negated=false;
 
 	public static TTRRecordType parse(String s1) {
 		TTRRecordType newRT = new TTRRecordType();
@@ -101,6 +99,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		}
 		return result;
 	}
+
+	public boolean hasFieldbyType(String type) {
+		List<TTRField> result = new ArrayList<TTRField>();
+		for(TTRField f: this.fields){
+			if(f.toString().contains(type)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 
 	public TTRField getHeadField() {
 		if (head() == null)
@@ -287,6 +296,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return result;
 	}
 
+	public TTRRecordType removeSpecificField(TTRField _field) {
+		TTRRecordType rt = new TTRRecordType(this);
+		rt.removeField(_field);
+
+		return rt;
+	}
+	
 	private void removeFields(TTRRecordType argument) {
 		for (TTRField fi : argument.fields) {
 			remove(fi.getLabel());
@@ -609,13 +625,44 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public static void main(String[] a) {
-		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-		TTRRecordType goal = TTRRecordType.parse("[pred2==square : cn|p5==class(pred2) : t|x1==this : e|p1==subj(pred2, x1) : t|head==x1 : e|pred1==red : cn|p3==color(pred1) : t|p4==subj(pred1, x1) : t]");
+//		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+//		TTRRecordType meta = TTRRecordType.parse("[L:e|PRED:cn|p1==shape(PRED):t|p2==subj(PRED,L):t]");
+//		System.out.println("meta:"+meta);
+//		//TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|x1==this:e|p7==subj(pred3,x1):t]");
+//		
+//		TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|pred4==square : cn|p8==shape(pred4) : t|"
+//				+ "p9==class(pred4) : t|pred1==black : cn|p0==color(pred1) : t|pred2==green : cn|p2==color(pred2) : t|e2==see : es|x==s : e|p==subj(e2, x) : t|"
+//				+ "x0==this : e|x1==o1:e|p11==obj(e2, x0) : t|p10==subj(pred4, x1) : t|p7==subj(pred3, x0) : t|p4==obj(e2, x0) : t|p1==subj(pred1, x0) : t|p3==subj(pred2, x0) : t]");
+//		
+//		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
+//		System.out.println("After:" + meta);
+//		System.out.println("map:"+map);
+//		System.out.println("instantiated:"+meta.instantiate());
+//		System.out.println("----------------");
+//		
+//		meta.backtrackMetas();
+//		map.clear();
+//		System.out.println("Subsumes:" + meta.subsumesMapped(inst,map));
+//		System.out.println("After:" + meta);
+//		System.out.println("----------------");
+//		meta.backtrackMetas();
+//		System.out.println("Subsumes:" + meta.subsumesBasic(inst));
+//		System.out.println("After:" + meta);
 		
 		
-		TTRRecordType cur = TTRRecordType.parse("[x1 : e|head==x1 : e|pred1==square : cn|p2==subj(pred1, x1) : t|p3==class(pred1) : t|pred2==red : cn|p4==subj(pred2, x1) : t|p5==color(pred2) : t]");
-	
-		System.out.println("subsume:"+goal.subsumes(cur));
+//		TTRRecordType meta = TTRRecordType.parse("[pred1==triangle : cn|p2==class(pred1) : t|x1==this : e|p1==subj(pred1, x1) : t]");
+//		System.out.println("meta:"+meta);
+//		//TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|x1==this:e|p7==subj(pred3,x1):t]");
+//		
+//		TTRRecordType inst = TTRRecordType.parse("[pred1==circle : cn|p5==class(pred1) : t|p4==shape(pred1) : t|pred0==black : cn|"
+//				+ "p2==color(pred0) : t|e2==see : es|x==s : e|p0==subj(e2, x) : t|x0==this : e|p6==subj(pred1, x0) : t|p3==subj(pred0, x0) : t|p1==obj(e2, x0) : t]");
+//		
+//		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
+//		System.out.println("After:" + meta);
+//		System.out.println("map:"+map);
+//		System.out.println("instantiated:"+meta.instantiate());
+//		System.out.println("----------------");
+//	
 		
 	}
 	
