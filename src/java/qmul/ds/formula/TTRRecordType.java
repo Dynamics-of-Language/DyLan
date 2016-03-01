@@ -699,6 +699,64 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		
 	}
 	
+	public boolean subsumesMappedStrictLabelIdentity(TTRRecordType other, int thisIndex,  HashMap<Variable, Variable> map)
+	{
+		
+		if (thisIndex == fields.size())
+			return true;
+		
+		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(
+				map);
+		logger.debug("testing subsumption for field:" + fields.get(thisIndex));
+		
+		for (int i = 0; i < other.fields.size(); i++) {
+			TTRField field = other.fields.get(i);
+			if (map.values().contains(field.getLabel()))
+				continue;
+			
+			if (fields.get(thisIndex).getLabel().equals(field.getLabel())&&fields.get(thisIndex).subsumesMapped(field, map)) {
+				logger.debug("Subsumed " + field);
+				logger.debug("map is now:" + map);
+
+				if (subsumesMappedStrictLabelIdentity(other, thisIndex + 1, map))
+					return true;
+
+				fields.get(thisIndex).partialResetMeta();
+				map.clear();
+				map.putAll(copy);
+
+			} else
+			{
+				logger.debug(fields.get(thisIndex) + " failed against:" + field + " map:"
+						+ map);
+				map.clear();
+				map.putAll(copy);
+			}
+		}
+	
+		return false;
+	}
+	
+	public boolean subsumesMappedStrictLabelIdentity(Formula o, HashMap<Variable, Variable> map)
+	{
+		
+		if (isEmpty())
+			return true;
+		
+		if (!(o instanceof TTRRecordType))
+			return false;
+		
+		TTRRecordType other = (TTRRecordType) o;
+		
+		return subsumesMappedStrictLabelIdentity(other, 0, map);
+		
+	}
+	
+	public boolean subsumesStrictLabelIdentity(Formula o)
+	{
+		return subsumesMappedStrictLabelIdentity(o, new HashMap<Variable,Variable>());
+	}
+	
 //	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map) {
 //		logger.debug("----------------------------");
 //		logger.debug("testing " + this + " subsumes " + o);
@@ -1573,6 +1631,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		}
 		TTRRecordType other = (TTRRecordType) o;
 		// simple n x m iteration over all fields
+		//looks for simple label matching
+		// TODO simple assumption of label mapping string identity for now, gets much more
+		// complex without this
 		for (int i = this.fields.size() - 1; i >= 0; i--) {
 			TTRField last = fields.get(i);
 			logger.debug("testing subsumption for field:" + last);
@@ -1583,22 +1644,59 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				if (!last.getLabel().equals(otherField.getLabel())) {
 					continue;
 				}
-				// TODO simple assumption of label mapping, gets much more
-				// complex without this
-				if (last.subsumesMapped(otherField, map)) {
-					// add this field as its the most general
+
+				if (last.subsumesBasic(otherField)) {
+					// add this field as its the most general, with the fields it depends on
 					logger.debug("Subsumed " + otherField);
 					logger.debug("map is now:" + map);
-					myttr.add(last);
-				} else if (otherField.subsumesMapped(last, map)) {
-					// we add the otherField
-					myttr.add(otherField);
+					if (!myttr.hasField(last)){
+						myttr.add(last);
+					}
+					List<TTRField> parents = this.getParents(last);
+					boolean checked = true;
+					for (TTRField f : parents){
+						if (!other.hasField(f)){ //if not matched exactly, remove all
+							checked = false;
+							break;
+						}
+						if (!myttr.hasField(f)){
+							myttr.add(f);
+						}
+					}
+					if (checked==false){
+						for (TTRField parent : myttr.getParents(otherField)){
+							myttr.removeField(parent); 
+						}
+						myttr.removeField(last);	
+					}
+				} else if (otherField.subsumesBasic(last)) {
+					// we add the otherField and the fields it depends on
+					if (!myttr.hasField(last)){
+						myttr.add(otherField);
+					}
+					List<TTRField> parents = other.getParents(otherField);
+					boolean checked = true;
+					for (TTRField f : parents){
+						if (!this.hasField(f)){ //if not matched exactly, remove all
+							checked = false;
+							break;
+						}
+						if ((!myttr.hasField(f))){
+							myttr.add(f);
+						}
+					}
+					if (checked==false){
+						for (TTRField parent : myttr.getParents(otherField)){
+							myttr.removeField(parent);
+						}
+						myttr.removeField(otherField);	
+					}
 				} else if (last.getDSType() == otherField.getDSType()) {
 					if (last.getType() instanceof TTRRecordType
 							& otherField.getType() instanceof TTRRecordType) {
 						// recursively find the minimal common supertype of the
-						// embedded record type
-						myttr.add(new TTRField(
+						// embedded record type, can override the parents added already
+						myttr.put(new TTRField(
 								otherField.getLabel(),
 								((TTRRecordType) otherField.getType()).minimumCommonSuperTypeBasic(
 										((TTRRecordType) last.getType()),

@@ -22,8 +22,12 @@ import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
 import qmul.ds.learn.RecordTypeCorpus;
 
-public class TTRLattice extends DirectedAcyclicGraph {
 
+
+public class TTRLattice extends DirectedAcyclicGraph {
+	
+	public int counter = 0;
+	
 	protected static Logger logger = Logger.getLogger(TTRLattice.class);
 	
 	public static void pause() {
@@ -34,13 +38,15 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		}
 
 	}
-
+	
 	public TTRLattice() {
 		super();
+		counter = 0;
 		// TODO Auto-generated constructor stub
 	}
 
 	public Node nodeFromTTRRecordType(TTRRecordType ttr) {
+		
 		for (Object i : this.nodes()) {
 			//System.out.println(((TTRLatticeNode) ((Node) i).getWeight()).getTTR());
 			if (((TTRLatticeNode) ((Node) i).getWeight()).getTTR() == null) {
@@ -73,7 +79,16 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		parents.retainAll(this.neighbors(node));//gets immediate parents
 		return parents;
 	}
-
+	
+	public TTRLatticeNode getTop(){
+		for (Object node : this.nodes()){
+			TTRLatticeNode myNode = (TTRLatticeNode) ((Node) node).getWeight();
+			if (myNode.top==true){
+				return myNode;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Uses the node IDs to remove edges, rather than edge IDs
@@ -81,11 +96,33 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 * @param node2
 	 */
 	public void removeEdge(Node node1, Node node2){
-		logger.debug("removing Edge from child " + String.valueOf(this.nodeLabel(node1)) + " to parent " + String.valueOf(this.nodeLabel(node2)));
+		logger.debug("Removing Edge from child Node" + String.valueOf(this.nodeLabel(node1)) + " to parent Node" + String.valueOf(this.nodeLabel(node2)));
+		boolean node2top = false;
+		TTRLatticeNode newnode = null;
+		if (((TTRLatticeNode) node1.getWeight()).top==true){
+			logger.debug("removing link from top!!");
+		}
+		
+		if (((TTRLatticeNode) node2.getWeight()).top==true){
+			logger.debug("removing link to top!!");
+			node2top = true;
+			//Node topnode = this.node(node2.getWeight()); //problem is it might not be in the graph at this point
+			newnode = (TTRLatticeNode) node2.getWeight();
+			newnode.setTop();
+		}
 		Object[] myedges = this.outputEdges(node1).toArray(); //TODO need a copy TODO make this a getEdge function
 		Collection<Object> edges = new HashSet<Object>(Arrays.asList(myedges));
 		edges.retainAll(this.incidentEdges(node2)); //TODO deep copy?? check
 		this.removeEdge((Edge) edges.toArray()[0]); //disconnect
+		if (node2top){
+			logger.debug("Re-making top due to removal");
+			logger.debug("top" + this.top());
+			logger.debug("top other" + this.getTop());
+			logger.debug(node2);
+
+			//this.node(node2.getWeight()).setWeight(newnode); //problem is it might not be in the graph
+			node2.setWeight(newnode);
+		}
 	}
 	
 	public Collection<Node> upperBound(Node node1, Node node2){
@@ -141,8 +178,22 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	}
 	
 	public Double probability(TTRRecordType ttr){
-		return ((TTRLatticeNode) this.nodeFromTTRRecordType(ttr).getWeight()).getProbabilityMass()/
-				((TTRLatticeNode) this.top()).getProbabilityMass();
+		System.out.println("top");
+		System.out.println(this.top());
+		Node node =  this.nodeFromTTRRecordType(ttr);
+		if (node==null){
+			logger.debug("No node, adding supertype");
+			this.addTypeJudgement(ttr, new HashSet<TTRAustinianProp>(), this.node(this.bottom()), false); //have to find its place..
+			node = this.nodeFromTTRRecordType(ttr);
+			for (Object pnode : this.predecessors(node)){
+				this.addAustinianJudgements(node, ((TTRLatticeNode) ((Node) pnode).getWeight()).getProps(), true);
+			}
+			logger.debug(this);
+		}
+		Double p = ((TTRLatticeNode) (node.getWeight())).getProbabilityMass();
+		logger.debug(p);
+		logger.debug(this.top());
+		return p/((TTRLatticeNode) this.top()).getProbabilityMass();
 	}
 	
 	public Double meetProbability(TTRRecordType ttr, TTRRecordType ttr1){
@@ -172,7 +223,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		}
 		if (this.nodeFromTTRRecordType(result)==null){
 			logger.debug("No result node");
-			if (result.subsumes(condition)){
+			if (result.subsumesStrictLabelIdentity(condition)){
 				logger.debug("No resulting node, but supertype of " + condition.toString());
 				return 1.0;
 			}
@@ -300,7 +351,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			newweight.addAll(props);
 		}
 		TTRRecordType ttr = ((TTRLatticeNode) mynode.getWeight()).getTTR();
-		mynode.setWeight(new TTRLatticeNode(ttr,newweight));
+		boolean istop = (((TTRLatticeNode) mynode.getWeight()).top) ? true : false;
+		mynode.setWeight(new TTRLatticeNode(ttr,newweight,istop));
 		if (mynode.equals(this.nodeFromTTRRecordType(TTRRecordType.parse("[]")))){
 			return;
 		}
@@ -326,122 +378,148 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		logger.debug("addTypeJudgement===========:");
 		logger.debug("ttr:" + ttr.toString());
 		logger.debug("props:" + props.toString());
-		logger.debug("child:" + child.toString());
-		logger.debug(addProps);
+		logger.debug("child:" + Integer.toString(this.nodeLabel(child)));
+		logger.debug("addprops:" + addProps);
+		logger.debug("currentTop:" + this.top());
+		logger.debug("currentTop other:" + this.getTop());
 		
 		Collection<Node> parents = this.getParents(child);
-		//System.out.print("PARENTS OF " + child.toString() + " are : ");
-		//System.out.println(parents);
 		Node myNode = new Node(new TTRLatticeNode(ttr, props)); //It's position/edges will be instantiated below if needed
 
-		this.addNode(myNode);
-		this.addEdge(child,myNode); //always add up
-		logger.debug("adding Node ");
-		logger.debug(this.nodeLabel(myNode));
+		this.addNode(myNode); //add new node
+		this.addEdge(child,myNode); //connect to the child
+		
+		logger.debug("adding new Node " + this.nodeLabel(myNode));
+		logger.debug("parents of child " + this.nodeLabel(child) + " " + child.toString() + " are :\n " + parents);
+		
+		boolean foundPredecessors = false; //point is to find the predecessors (all minimal common supertypes) of this new node
+		
 		for (Node parent: parents){
-
+			logger.debug("Parent loop: " + this.nodeLabel(parent));
 			TTRRecordType parentTTR = ((TTRLatticeNode) parent.getWeight()).getTTR();
-			if (parentTTR.equals(ttr)){ // we have a match, add props to its up set and return
-				logger.debug("already in here as parent" + myNode.toString());
-				logger.debug("preserving outgoing edges and removing Node ");
-				logger.debug(this.nodeLabel(myNode));
+			if (parentTTR.subsumesStrictLabelIdentity(ttr) && ttr.subsumesStrictLabelIdentity(parentTTR)){ // we have a match, add props to its up set and return
+				//Case 1:
+				logger.debug("CASE1: parent matches " + myNode.toString());
+				logger.debug("preserving outgoing edges and removing Node "+ this.nodeLabel(myNode));
 				
+				//TODO not sure about this- how can we guarantee all edges are still there?
 				Collection<Edge> collectedEdges = this.outputEdges(myNode); //preserving edges made to parents, if any
 				for (Edge edge : collectedEdges){
 					if (!this.edgeExists(parent, edge.sink())){
 						this.addEdge(parent,edge.sink());
 					} else {
 						logger.debug("Edge exists!");
+						//pause();
 					}
-					
 				}
 				
+				if (((TTRLatticeNode) myNode.getWeight()).top==true){
+					logger.debug("REMOVING TOP!");
+					break;
+				}
 				this.removeNode(myNode); 
 				myNode = parent;
-				break; //no need to search any further, nor connect at bottom
+				foundPredecessors = true;
+				//continue;
+
+				break; //TODO no need to search any further??, nor connect at bottom- have found intent
 			}
-			if (parentTTR.subsumes(ttr)){ 
+			if (parentTTR.subsumesStrictLabelIdentity(ttr)){ 
+				//Case 2:
 				//if myNode subsumes parent, reorder myNode between child and parent
-				logger.debug("parent" + parentTTR.toString() + " subsumes ttr " + ttr);
-				this.removeEdge(child, parent);
+				logger.debug("CASE 2: parent" + parentTTR.toString() + " subsumes ttr " + ttr);
+				this.removeEdge(child, parent); //removing existing edge first
 				logger.debug("adding edge from " + myNode.toString() + " to parent " + parent.toString());
 				if (!this.edgeExists(myNode, parent)){
 					this.addEdge(myNode,parent); //connect up to parent
 				} else {
-					logger.debug("Edge exists!");
+					logger.debug("Edge exists, not adding!");
 				}
-				continue;
+				logger.debug("adding edge from " + child.toString() + " to parent " + myNode.toString());
+				if (!this.edgeExists(child, myNode)){
+					this.addEdge(child,myNode); //connect up to parent
+				} else {
+					logger.debug("Edge exists, not adding!");
+				}
+				
+				if (((TTRLatticeNode) parent.getWeight()).top==true){
+					break; //TODO because we've found the predecessors
+				}
+				
+				//logger.debug("RERCURSIVE CALL upwards");
+				//myNode = this.addTypeJudgement(parentTTR, props, parent, addProps); //will be the eventual position of this node
+				//logger.debug("END RECURSIVE CALL upwards");
+				
+				foundPredecessors = true;
+				
+
+				//continue;
+				break;
 				
 			} 
-			//If we got here
-			//parent doesn't subsume myNode, needs to generate minimal common supertype (join), then search bottom up for this RT if in the lattice
+			//If we get here
+			//parent doesn't subsume myNode, generate minimal common supertype (join), then RECURSE search bottom up for this RT if in the lattice
 			
 			TTRRecordType minCommonSuper = ttr.minimumCommonSuperTypeBasic(parentTTR, new HashMap<Variable,Variable>());
-			logger.debug("Making new supertype between " + ttr.toString() + parentTTR.toString());
-			logger.debug(minCommonSuper);
+			logger.debug("Making new supertype between " + ttr.toString() + " and node " + this.nodeLabel(parent) + " " + parentTTR.toString() + " \n\tgiving : " + minCommonSuper);
 			Set<TTRAustinianProp> commonProps = new HashSet<TTRAustinianProp>(((TTRLatticeNode) myNode.getWeight()).getProps());
 			Set<TTRAustinianProp> parentProps = new HashSet<TTRAustinianProp>(((TTRLatticeNode) parent.getWeight()).getProps());;
 			commonProps.retainAll(parentProps);
-			//TODO it might be in here already, need to bottom up search for it...
 			
-			if (minCommonSuper.equals(ttr)){
+			if (minCommonSuper.subsumesStrictLabelIdentity(ttr)&&ttr.subsumesStrictLabelIdentity(minCommonSuper)){
+				//Case 3:
+				logger.debug("Case 3: min common supertype with parent's ttr IS the ttr record type of myNode");
+				//foundPredecessors = true;
+				//logger.debug("preserving outgoing edges and removing Node " + this.nodeLabel(myNode));
+				//TODO not sure about this- how can we guarantee all edges are still there?
 				
-				logger.debug("Matched min common super");
+				
+				//swap the order by detaching from child then reattaching to parent
 				if (this.edgeExists(child,myNode)){
-						this.removeEdge(child,myNode);
+					this.removeEdge(child,myNode);
 				}
 				
-				//boolean removeNode = false;
-				boolean foundIntent = false;
-				if (!this.successors(parent).isEmpty()&!this.successors(child).isEmpty()){
-					logger.debug("Checking upper bound! ");
-					logger.debug(parent);
-					logger.debug(child);
-
-					Collection<Node> nodes = this.upperBound(child,parent);
-					//System.out.println(nodes);
-					
-					for (Node grandparent : nodes){
-						if (((TTRLatticeNode) grandparent.getWeight()).getTTR().equals(minCommonSuper)){
-							logger.debug("Removing myNode " + this.nodeLabel(myNode));
-							//removeNode = true;
-							this.removeNode(myNode);
-							myNode = grandparent;
-							foundIntent = true;
-							//return myNode;
-							break;
-						}
-						
+				Collection<Edge> collectedEdges = this.inputEdges(myNode); //preserving edges made to children, if any
+				
+				//if (!this.edgeExists(parent, myNode)){
+				//	this.addEdge(parent,myNode);
+				//}
+				
+				if (((TTRLatticeNode) myNode.getWeight()).top==true){
+					continue;
+				}
+				this.removeNode(myNode);
+				logger.debug("RERCURSIVE CALL upwards");
+				myNode = this.addTypeJudgement(ttr, commonProps, parent, addProps); //will be the eventual position of this node
+				logger.debug("END RECURSIVE CALL upwards");
+				for (Edge edge : collectedEdges){
+					if (!this.predecessors(myNode).contains(edge.source())){
+						this.addEdge(edge.source(),myNode);
+					} else {
+						logger.debug("Path exists!");
+						//pause();
 					}
-				} 
-				
-				if (foundIntent){ //myNode is removed, so don't go on
-					break;
 				}
-				logger.debug("Matched min common super adding Edge from child ");
-				logger.debug(this.nodeLabel(parent));
-				logger.debug(" to parent ");
-				logger.debug(this.nodeLabel(myNode));
-				//this.addTypeJudgement(ttr, parentProps, myNode, true); 
-				if (!this.edgeExists(parent, myNode)){
-					this.addEdge(parent,myNode); //connect up to parent
-				} else {
-					logger.debug("Edge exists!");
+				//continue;
+				if (((TTRLatticeNode) myNode.getWeight()).top==true){
+					break; //TODO because we've found the predecessors
 				}
-				
-				
-				//break;
-				
-			} else {
-				//Not the same, is just a supertype, need to check if it's in the lattice already, if not, needs to be added
-				logger.debug("RECURSIVE CALL");
+				//continue;
+				break;//TODO because we've found the predecessors
+			}
+			
+			
+			//Not the same, if just a supertype, need to check if it's in the lattice already and that it has an intent, if not, needs to be added
+			logger.debug("Case 4: min common supertype with parent's ttr could be novel type in lattice");	
+			
+			logger.debug("RECURSIVE CALL start");
 				boolean addPropsHere = commonProps.isEmpty() ? true: false;
-				Node newparent = this.addTypeJudgement(minCommonSuper, parentProps, parent, addPropsHere); //This has to add the new one
-				logger.debug("recusive call end");
-				logger.debug("min common super adding Edge from child ");
-				logger.debug(this.nodeLabel(myNode));
-				logger.debug(" to parent ");
-				logger.debug(this.nodeLabel(newparent));
+				Node newparent = this.addTypeJudgement(minCommonSuper, parentProps, child, addPropsHere); //This has to add the new one
+				logger.debug("RECURSIVE CALL end");
+				logger.debug("min common supertype. Adding Edge from myNode " + this.nodeLabel(myNode) + " to new parent " + this.nodeLabel(newparent));
+				if (myNode.equals(newparent)){
+					continue;
+				}
 				//NB only add if no intervening edges
 				if (!this.reachableNodes(myNode).contains(newparent)){
 					//this.addAustinianJudgements(newparent, commonProps, true);
@@ -453,36 +531,51 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					}
 				}
 				
-				
 				//TODO bit hacky, but need to remove any unnecessary parents from myNode which are now redundant with newparent
 				//If it finds another node that isn't the new parent, remove the new parent?
-				Collection<Node> reachables = this.reachableNodes(myNode); //this is the upset
-				//System.out.println(reachables);
+				Collection<Node> reachables = this.reachableNodes(newparent); //this is the upset
+				logger.debug("Getting reachables of " + this.nodeLabel(newparent));
+				logger.debug(reachables);
 				for (Node parent_of_myNode : reachables){ //check through parents
 					TTRRecordType testTTR = ((TTRLatticeNode) parent_of_myNode.getWeight()).getTTR();
-					if (testTTR.subsumes(minCommonSuper)&!parent_of_myNode.equals(newparent)){
+					if (testTTR.subsumesStrictLabelIdentity(minCommonSuper)&!parent_of_myNode.equals(newparent)){
 				  		//Remove the link between parent and child
 						if (this.edgeExists(myNode, parent_of_myNode)){
-							logger.debug("subsumed min common super");
+							logger.debug("subsumed min common super inner loop, removing edge!");
 							this.removeEdge(myNode, parent_of_myNode);
 
 						}		
 					} 
 				} //end for
-			} //end else
+			//} //end else
 			
-		}
-
+		} //end parent loop
+		
+		//add the propositions to the node
 		if (addProps==true){
 			if (!this.cycleNodeCollection().isEmpty()){
 				logger.error(this.cycleNodeCollection());
 				logger.error(this);
 				pause();
 			}
+			logger.debug("Adding austinian props " + props);
 			this.addAustinianJudgements(myNode,props,true); //Add the type judgements to the child node as this has been checked before calling this- initially we know this is ok in the first call where child==bottom
 		}
 		
-
+		logger.debug("returning node " + this.nodeLabel(myNode) + " " + myNode);
+		
+		for (Object o : this.nodes()){
+			Node node = (Node) o;
+			System.out.println(this.nodeLabel(node) + " " + node);
+		}
+/*		if (counter>10000000){
+			TTRLatticeViewer ttrview = new TTRLatticeViewer(this,"test_lattice" + Integer.toString(counter) + ".png");
+			pause();
+		}*/
+	
+		counter++;
+		
+		
 		return myNode;
 		
 	}
@@ -514,8 +607,12 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			System.out.println("ADDING ATOM-----------");
 			System.out.println(propAtoms.get(i));
 			addTypeJudgement(ttrAtoms.get(i), propAtoms.get(i), this.node(this.bottom()), true);
-			System.out.println(this);
-			//pause();
+			logger.debug(this);
+			logger.debug("currentTop after atom:" + this.top());
+			logger.debug("currentTop other after atom:" + this.getTop());
+			
+			
+	
 		}
 
 		
@@ -527,10 +624,12 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 */
 	public static void main(String[] args) {
 
-		boolean shapes = true;//checking shapes or dialogue rules		
+		boolean shapes = false;//checking shapes or dialogue rules		
 		TTRRecordType ttr = null;
 		TTRRecordType ttr2 = null;
 		TTRRecordType ttr3 = null;
+		
+		
 		
 		if (shapes){
 			//small test on three shapes of equal probability
@@ -539,10 +638,21 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			ttr3 = TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]");
 		} else {
 			//simple dialogue rules
-			ttr = TTRRecordType.parse("[ pre : [ m1==hello : e ] | eff : [ m2==bye : e ] ]");
-			ttr2 = TTRRecordType.parse("[ pre : [ m==hi : e ] | eff : [ m1==bye : e ] ]");
+			TTRRecordType ttrtest = TTRRecordType.parse("[ pre : [ m1==hello : e ] | eff : [ m2==bye : e ] ]");
+			//ttr = TTRRecordType.parse("[ coachutt : [ hallo : e | complete: e ] | coachda : [ question : e | complete : e ] | skud : [ skillpastexperience : skud | sportexperience : skud ] | skillsraised : [] ]");
+			//ttr2 = TTRRecordType.parse("[ coachutt : [ handballokay : coachutt | complete : eventstatus ] | coachda : [ acknowledgeverbal : coachda | complete : event_status ] | skillsraised : [ skillpastexperience : skillsraised | sportexperience : skillsraised ] ]");
+			//ttr3 = TTRRecordType.parse("[ coachutt : [ handballokay : coachutt | complete : eventstatus ] | coachda : [ acknowledgeverbal : coachda | complete : event_status ] | skillsraised : [ skillpastexperience : skillsraised | sportexperience : skillsraised ] ]");
+			
+			
+			ttr = TTRRecordType.parse("[ pre : [ h2==hello : e ] | eff : [ x2==bye : e ] ]");
+			ttr2 = TTRRecordType.parse("[ pre : [ h2==hello : e ] | eff : [ x1==bye : e ] ]");
 			ttr3 = TTRRecordType.parse("[ pre : [ m==hi : e ] | eff : [ m1==byebye : e ] ]");
 		}
+		
+		TTRRecordType t1 = TTRRecordType.parse("[r : [x : e|head==x : e]]");
+		TTRRecordType t2 = TTRRecordType.parse("[r : [x : e|head==x : e]]");
+		System.out.println(t1.minimumCommonSuperTypeBasic(t2, new HashMap<Variable,Variable>()));
+		pause();
 		
 		//create simple type judgements with probability = 1 for each one
 		//double t = 1.0;
@@ -556,7 +666,11 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		myprops.add(s2);
 		myprops.add(s3);
 		//build lattice
-		lattice.constructIncrementally(myttr, myprops);
+		//lattice.constructIncrementally(myttr, myprops);
+		
+		
+		
+		//pause();
 		
 		if (shapes){
 			System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[ x : e |p1==square(x) : t]"),TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]")));
@@ -564,8 +678,14 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			System.out.println(lattice.probability(TTRRecordType.parse("[ x : e |p1==square(x) : t]")));
 			System.out.println(lattice.probability(TTRRecordType.parse("[ x : e |p1==square(x) : t|p==purple(x) : t]")));
 		} else {
-			System.out.println(lattice.probability(TTRRecordType.parse("[ pre : [ m1==hello : e ] | eff : [ m2==bye : e ] ]")));
-			System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[ pre : [ m==hi : e ]]"),TTRRecordType.parse("[ eff : [ m1==bye : e ] ]")));
+			//lattice.addTypeJudgement(TTRRecordType.parse("[ pre : [ m1==hello : e ] ]"), s, lattice.node(lattice.bottom()), false);
+			
+			//System.out.println(lattice.probability(TTRRecordType.parse("[ pre : [ m1==hello : e ] ]")));
+			//System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[ pre : [ m==hi : e ]]"),TTRRecordType.parse("[ eff : [ m1==bye : e ] ]")));
+			//Double p1 = lattice.probability(TTRRecordType.parse("[ coachutt : [ handballokay : coachutt ]]"));
+			//System.out.println(p1);
+			pause();
+			//System.exit(0);
 			
 		}
 		
@@ -585,13 +705,35 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			ttr = p.second().removeHead();
 			System.out.println("adding " + ttr.toString());
 			Set<TTRAustinianProp> s4 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, 1.0, i)));
-			lattice.addTypeJudgement(ttr, s4, lattice.node(lattice.bottom()), true);
+			try {
+				if (lattice.top()==null){
+					throw new Exception("No lattice top!");
+				}
+				lattice.addTypeJudgement(ttr, s4, lattice.node(lattice.bottom()), true);
+				TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
+				pause();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				System.out.println(lattice.top());
+				System.out.println(lattice.bottom());
+				TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
+				pause();
+				System.exit(0);
+			}
+			if (i % 10 == 0){
+				System.out.println(lattice.counter);
+				TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
+				pause();
+			}
 			i+=1;
 			
 		}
 		System.out.println(lattice.edgeCount());
 		System.out.println(lattice.nodeCount());
 		//probability of the subordinate event being cooking:
+		
+		
 		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[]"),TTRRecordType.parse("[ e2==cook : es ]")));
 		//probability that the speaker is the subject/agent, cycle through variations.. TODO labels should be determined
 		System.out.println(lattice.conditionalProbability(TTRRecordType.parse("[]"),TTRRecordType.parse("[ x==i : e|e1 : es|p1==subj(e1, x) : t ]")));

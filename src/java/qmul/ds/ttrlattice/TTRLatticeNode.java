@@ -16,6 +16,12 @@ public class TTRLatticeNode {
 		this.ttr = ttr;
 		this.props = props;
 	}
+	
+	public TTRLatticeNode(TTRRecordType ttr, Set<TTRAustinianProp> props, boolean top) {
+		this.ttr = ttr;
+		this.props = props;
+		this.top = top;
+	}
 
 	public Double getProbabilityMass(){
 		/**
@@ -40,8 +46,9 @@ public class TTRLatticeNode {
 			}
 			
 		}
+		String mytop = (top == true) ? " TOP" : "";
 			
-		return "TTRLatticeNode [ttr= " + ttr + "\n\t, props= " + propstring + "]";
+		return "TTRLatticeNode [ttr= " + ttr + "\n\t, props= " + propstring + "]" + mytop;
 		//return "TTRLatticeNode [ttr=" + ttr + "]";
 	}
 
