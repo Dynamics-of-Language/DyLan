@@ -224,7 +224,7 @@ public class InteractiveContextParser extends
 				Tree res = la.exec(pair.second.clone(), context);
 
 				if (res != null) {
-					logger.trace("success");
+					logger.debug("success:"+res);
 
 					ArrayList<Action> newActs = null;
 
