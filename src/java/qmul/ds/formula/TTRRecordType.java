@@ -625,20 +625,20 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public static void main(String[] a) {
-//		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
 //		TTRRecordType meta = TTRRecordType.parse("[L:e|PRED:cn|p1==shape(PRED):t|p2==subj(PRED,L):t]");
 //		System.out.println("meta:"+meta);
-//		//TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|x1==this:e|p7==subj(pred3,x1):t]");
+		TTRRecordType meta = TTRRecordType.parse("[pred3==triangle : cn|p5==color(pred3) : t|x1==this : e|p7==subj(pred3,x1) : t]");
+		
+		TTRRecordType nLC = TTRRecordType.parse("[pred4==square : cn|p8==shape(pred4) : t|"
+				+ "p9==class(pred4) : t|p10==subj(pred4, x1) : t| x1==this : e |pred1==red:cn|p3==color(pred1):t|p4==subj(pred1,x1):t]");
 //		
-//		TTRRecordType inst = TTRRecordType.parse("[pred3==triangle : cn|p5==shape(pred3) : t|p6==class(pred3) : t|pred4==square : cn|p8==shape(pred4) : t|"
-//				+ "p9==class(pred4) : t|pred1==black : cn|p0==color(pred1) : t|pred2==green : cn|p2==color(pred2) : t|e2==see : es|x==s : e|p==subj(e2, x) : t|"
-//				+ "x0==this : e|x1==o1:e|p11==obj(e2, x0) : t|p10==subj(pred4, x1) : t|p7==subj(pred3, x0) : t|p4==obj(e2, x0) : t|p1==subj(pred1, x0) : t|p3==subj(pred2, x0) : t]");
-//		
-//		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
-//		System.out.println("After:" + meta);
-//		System.out.println("map:"+map);
-//		System.out.println("instantiated:"+meta.instantiate());
-//		System.out.println("----------------");
+		System.out.println("Subsumes:" + meta.subsumesBasic(nLC));
+		System.out.println("Subsumes:" + meta.subsumesMapped(nLC, map));
+		System.out.println("After:" + meta);
+		System.out.println("map:"+map);
+		System.out.println("instantiated:"+meta.instantiate());
+		System.out.println("----------------");
 //		
 //		meta.backtrackMetas();
 //		map.clear();
@@ -663,6 +663,21 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 //		System.out.println("instantiated:"+meta.instantiate());
 //		System.out.println("----------------");
 //	
+
+		System.out.println("meta:" + meta.toString());
+		System.out.println("nLC:" + nLC.toString());
+		
+		HashSet<Variable> _set = meta.getListOfCommonFields(nLC, map);
+		if(_set != null){
+			System.out.println("Common Size:" + _set.size());
+			for(Variable _va : _set){
+				System.out.println("Variable:" + _va);
+			}
+
+			System.out.println("Common Map:" + map);
+			TTRRecordType _superTyp = meta.getCommonSuperType(_set);
+			System.out.println("Common Super Type:" + _superTyp.toString());
+		}
 		
 	}
 	
@@ -1942,5 +1957,72 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public TTRRecordType getValue() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Formula findFormulaByStr(String string) {
+		List<TTRField> _fList = this.getFields();
+		for(TTRField _f: _fList){
+			TTRLabel label = _f.getLabel();
+			if(label.toString().contains(string))
+				return _f.getType();
+		}
+		
+		return null;
+	}
+
+	public HashSet<Variable> getListOfCommonFields(TTRRecordType _currentVC, HashMap<Variable, Variable> _commonMap) {
+		HashMap<Variable, Variable> _copyMap = new HashMap<Variable, Variable>(_commonMap);
+		HashSet<Variable> _commonSet = new HashSet<Variable>();
+		
+		List<TTRField> _list = this.getFields();
+		if(_list != null && !_list.isEmpty()){
+			TTRField _keptField = null;
+			for(int i = 0; i < _list.size(); i++){
+				System.out.println("Stage : " + i);
+				
+				TTRRecordType _clone = this.clone();
+				_keptField = _list.get(i);
+				TTRLabel _label = _keptField.getLabel(); 
+				DSType _dsType = _keptField.getDSType();
+				
+				if(_keptField.getType() != null){
+					_clone.removeField(_keptField);
+					_clone.add(new TTRField(_label, _dsType));
+				
+					System.out.println("Clone : " + _clone);
+					
+					_copyMap.clear();
+					if(_clone.subsumesMapped(_currentVC, _copyMap)){
+						_commonMap.clear();
+						_commonMap.putAll(_copyMap);
+						_commonSet.clear();
+						_commonSet.add(_label);
+						return _commonSet;
+					}
+					else{
+						System.out.println("unSubsummed : " + _clone);
+						HashSet<Variable> _cset = _clone.getListOfCommonFields(_currentVC,_copyMap);
+						if(_cset != null){
+							_commonSet.addAll(_cset);
+							_commonMap.clear();
+							_commonMap.putAll(_copyMap);
+						}
+					}
+				}
+			}
+		}
+		return _commonSet;
+	}
+
+	public TTRRecordType getCommonSuperType(HashSet<Variable> _commonSet) {
+		TTRRecordType _clone = this.clone();
+		for(Variable _va : _commonSet){
+			TTRLabel _label = (TTRLabel)_va;
+			TTRField _f = _clone.getField(_label);
+			DSType _dsType = _f.getDSType();
+			_clone.removeField(_f);
+			_clone.add(new TTRField(_label, _dsType));
+		}
+		return _clone;
 	}
 }
