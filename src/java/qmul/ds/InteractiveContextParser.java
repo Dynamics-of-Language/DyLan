@@ -478,11 +478,11 @@ public class InteractiveContextParser extends
 
 			logger.info("Resetting to the state after the last parsable word");
 			logger.info("stack:" + state.wordStack());
-			state.wordStack().remove(0);
+			//state.wordStack().remove(0);
 			state.resetToFirstTupleAfterLastWord();
 			if (!state.repairProcessingEnabled()) {
 				logger.info("repair processing is disabled. Reset to state after last parsable word.");
-				return state;
+				return null;
 			}
 			logger.info("Now initiating local repair.");
 			state.wordStack().push(word);

@@ -224,20 +224,10 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	{
 		this.actions=actions;
 	}
+
 	
 
 	
-	/*public void traverse(DAG<DAGTuple,DAGEdge> dag)
-	{
-		DAGTuple source=dag.getSource(this);
-		if (!source.equals(dag.getCurrentTuple()))
-		{
-			logger.error("Didn't traverse edge:"+this);
-			logger.error("Because its source isn't the pointed tuple on the dag.");
-			return;
-		}
-		DAGTuple dest=dag.getDest(this);
-	}*/
 	
 
 }
