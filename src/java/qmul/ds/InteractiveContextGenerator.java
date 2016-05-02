@@ -198,20 +198,13 @@ public class InteractiveContextGenerator extends
 
 	}
 	
-	public void mergeStates()
-	{
-		DAGTuple cur=state.getCurrentTuple();
-		
-		
-		
-		
-	}
+	
 	
 	public static void main(String[] a)
 	{
 		InteractiveContextParser parser = new InteractiveContextParser(
 				"resource/2016-english-ttr-attribute-learning");
-		Utterance utt = new Utterance("A: is this red?");
+		Utterance utt = new Utterance("A: this is a yellow square.");
 		TTRFormula goal;
 		if (parser.parseUtterance(utt))
 			goal = parser.getState().getCurrentTuple().getSemantics();
@@ -221,6 +214,8 @@ public class InteractiveContextGenerator extends
 			System.out.println("Terminating....");
 			return;
 		}
+		
+		System.out.println(goal);
 
 		
 		InteractiveContextGenerator generator=new InteractiveContextGenerator(goal, "resource/2016-english-ttr-attribute-learning");

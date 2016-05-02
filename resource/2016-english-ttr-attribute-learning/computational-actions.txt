@@ -118,7 +118,9 @@ IF		Ex.tn(x)
 		<\/*>?Ex.tn(x)
 		ty(Y)
 		<\/*>ty(Y)
-THEN	merge(<\/*>)
+		Fo(X)
+THEN	delete(Fo(X))
+		merge(<\/*>)
 		delete(?Ex.tn(x))
 		unreduce
 ELSE	abort
@@ -138,12 +140,12 @@ THEN    conjoin(X)
 		ELSE	do_nothing
 ELSE    abort
 
-
+//*
 trp
 IF		complete
 THEN	addaxiom
 ELSE	abort
-
+*//
 
 substitution
 IF		?ty(cn)

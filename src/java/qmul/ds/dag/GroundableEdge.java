@@ -89,16 +89,7 @@ public class GroundableEdge extends DAGEdge {
 		}
 		DAGTuple dest = dag.getDest(this);
 
-		if (!dag.wordStack.isEmpty()
-				&& dag.wordStack.peek().equals(this.word()))
-			dag.wordStack().pop();
 		
-		else if (!dag.wordStack().isEmpty()) {
-			logger.error("Trying to pop word " + dag.wordStack.peek()
-					+ " off the stack when going along " + this);
-			throw new IllegalStateException(
-					"top of stack is not the same as word on this edge, or stack is empty");
-		}
 		logger.info("Going forward along: " + this);
 		setInContext(true);
 		

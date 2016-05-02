@@ -905,13 +905,13 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 
 			if (unfixedReduced != null) {
 
-				rootReduced = rootReduced.conjoin(unfixedReduced);
+				rootReduced = rootReduced.conjoin(unfixedReduced.removeHead());
 				logger.debug("found unfixed:"+unfixedReduced);
 				logger.debug("conjoining unfixed. result:"+rootReduced);
 
 			}
 			if (localUnfixedReduced != null) {
-				rootReduced = rootReduced.conjoin(localUnfixedReduced);
+				rootReduced = rootReduced.conjoin(localUnfixedReduced.removeHead());
 			}
 		}
 		else
@@ -919,13 +919,13 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 			// no fixed daughters.. only happens when we are at root of tree with
 			// unfixed nodes
 				if (unfixedReduced != null && localUnfixedReduced != null)
-					rootReduced = unfixedReduced
-					.conjoin(localUnfixedReduced);
+					rootReduced = unfixedReduced.removeHead()
+					.conjoin(localUnfixedReduced.removeHead());
 
 				else if (unfixedReduced != null && localUnfixedReduced == null)
-					rootReduced = unfixedReduced;
+					rootReduced = unfixedReduced.removeHead();
 				else if (localUnfixedReduced != null)
-					rootReduced = localUnfixedReduced;
+					rootReduced = localUnfixedReduced.removeHead();
 		}
 		//only evaluate link if it hasn't been evaluated before.
 		if (!getDaughters(root, "L").isEmpty()&&root.contains(LabelFactory.create("?+eval"))) {

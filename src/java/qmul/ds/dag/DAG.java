@@ -60,7 +60,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 	protected T root;
 	protected T cur;
 	protected Stack<UtteredWord> wordStack;
-	private T firstTupleAfterLastWord;
+	protected T firstTupleAfterLastWord;
 	private boolean exhausted = false;
 	protected List<Long> idPoolNodes = new ArrayList<Long>();
 	protected List<Long> idPoolEdges = new ArrayList<Long>();

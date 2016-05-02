@@ -41,43 +41,39 @@ det_indef_postcop(QUANT)
 IF		?ty(cn)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
+        ¬+indef
 THEN	delete(?Ex.fo(x))
-		make(\/1)
-		go(\/1)
-		put(ty(cn>cn))
-		ttrput(R1^(R1 ++ [head==R1.head:cn]))
-		go(/\1)
-		make(\/0)
-		go(\/0)
-		put(?ty(cn))
+		put(+indef)
 ELSE	abort
 
 adj(PRED,META)
 IF      ?ty(cn)
-		</\0\/1>ty(cn>cn)
-THEN    IF 		</\0>?Ex.tn(x)
-		THEN	go(/\0/\*/\0\/1)
+		+indef
+THEN    IF 		?Ex.tn(x)
+				¬</\*/\0\/1\/L>Ex.x 
+		THEN	go(/\*/\0\/1)
 				put(?+eval)
 				make(\/L)
  		     	go(\/L)
  		        put(ty(cn>(e>t)))
  		        ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
- 		        go(/\L/\1\/0\/*\/0)
-		ELSE    go(/\0/\0\/1)
-			    put(?+eval)
-				make(\/L)
-        		go(\/L)
-        		put(ty(cn>(e>t)))
-        		ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
-        		go(/\L/\1\/0\/0)
+ 		        go(/\L/\1\/0\/*)
+		ELSE    IF		¬</\0\/1\/L>Ex.x
+				THEN	go(/\0\/1)
+			    		put(?+eval)
+						make(\/L)
+        				go(\/L)
+        				put(ty(cn>(e>t)))
+        				ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
+        				go(/\L/\1\/0)
+        		ELSE	abort
 ELSE    IF		?ty(cn)
-				//</\0\/1>ty(cn>(e>t))
-THEN	ttrput([pred==PRED:cn|p2==META(pred):t|head==pred:cn])
-		put(ty(cn))
-		delete(?ty(cn))
-		delete(?Ex.fo(x))
-		put(!)
-ELSE	abort
+		THEN	ttrput([pred==PRED:cn|p2==META(pred):t|head==pred:cn])
+				put(ty(cn))
+				delete(?ty(cn))
+				delete(?Ex.fo(x))
+				put(!)
+		ELSE	abort
 
 
 		
@@ -100,7 +96,7 @@ THEN    make(\/1)
 ELSE    IF		?ty(cn)
 				¬<\/1>Ex.x
         		¬<\/0>Ex.x
-				</\*\/1>ty(cn>(e>t))
+        		+indef
 		THEN	ttrput([pred==PRED:cn|p==class(pred):t|head==pred:cn])
 				put(ty(cn))
 				delete(?ty(cn))
@@ -227,14 +223,9 @@ ELSE	abort
 
 cn_meta_cat(PRED)
 IF		?ty(cn)
-		¬!
-		+det
-THEN	put(?+eval)
-		put(ty(cn))
+		</\L>ty(cn)
+THEN	put(ty(cn))
 		delete(?ty(cn))
-		make(\/L)
-		go(\/L)
-		put(ty(t))
 		ttrput([head:cn|p==PRED(head):t])
 ELSE	abort
 
@@ -247,12 +238,15 @@ IF		?ty(t)
 		¬<\/1>Ex.x
 THEN	make(\/*)
 		go(\/*)
-		put(?ty(cn))
+		put(ty(cn))
 		put(?Ex.tn(x))
-		put(+det)
 		ttrput([pred:cn|head==pred:cn])
 		put(+Q)
 		put(class(CLASS))
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(?ty(cn))
 ELSE	abort
 
 pron_whq_cop(CLASS)
@@ -472,10 +466,91 @@ ELSE	IF		?ty(t)
 				put(?ty(e))
 		ELSE    abort
 
+
+
 copula(TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
 	 	¬<\/0>Ex.x
+	 	¬</\1\/*>?Ex.tn(x)//this will preclude relatives with the copula... "I don't know what this is."
+		</\1\/0>ty(e)
+THEN	make(\/1)
+		go(\/1)
+		put(ty(cn>(e>t)))
+		ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==subj(R1.head,head):t])))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(cn))
+		put(?Ex.fo(x))
+ELSE	abort
+
+
+
+copula_whq(TENSE,PERSON)
+IF		?ty(t)
+		¬<\/1>Ex.x
+	 	¬<\/0>Ex.x
+	 	<Y>?Ex.tn(x)
+	 	<Y>ty(cn)
+	 	<Y>+Q			
+THEN	make(\/0)
+		go(\/0)
+		put(?ty(e))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>t))
+		make(\/1)
+		go(\/1)
+		put(ty(cn>(e>t)))
+		ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==subj(R1.head,R2.head):t])))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(cn))
+		IF		<Z>?Ex.tn(x)
+	 			<Z>ty(cn)
+	 			<Z>+Q
+	 	THEN	merge(Z)
+	 			delete(?ty(cn))
+		ELSE	abort
+ELSE	abort
+
+copula_q(TENSE,PERSON)
+IF		?ty(t)
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x	
+THEN    IF		<Y>?Ex.tn(x)
+	 			<Y>ty(cn)
+	 			<Y>+Q
+	 	THEN	abort
+	 	ELSE	put(+Q)
+	 			make(\/1)
+				go(\/1)
+				put(?ty(e>t))
+				make(\/1)
+				go(\/1)
+				put(ty(cn>(e>t)))
+				ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==subj(R1.head,R2.head):t])))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+			    put(?ty(cn))
+				put(?Ex.fo(x))
+				go(/\0)
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+ELSE	abort
+
+//*
+copula(TENSE,PERSON)
+IF		?ty(e>t)
+		¬<\/1>Ex.x
+	 	¬<\/0>Ex.x
+	 	¬</\1\/*>?Ex.tn(x)//this will preclude relatives with the copula... "I don't know what this is."
 		</\1\/0>ty(e)
 THEN	make(\/1)
 		go(\/1)
@@ -534,7 +609,7 @@ ELSE	IF		?ty(t)
 						put(?ty(e))
 	 			ELSE	abort
 
-
+*//
 
 prep_es(PRED)
 IF		(?ty(t) || ty(t) || ty(e>t))
@@ -602,15 +677,20 @@ ELSE	abort
 assert(PRED)
 IF		ty(t)
 		complete
-THEN	do_nothing
+		¬!
+THEN	IF		<\/*>+Q
+		THEN	abort
+		ELSE	put(!)
 ELSE	abort
 
 question(PRED)
 IF		ty(t)
 		complete
+		¬!
 THEN	IF	  <\/*>+Q
-		THEN  do_nothing
-		ELSE  put(+Q)	
+		THEN  put(!)
+		ELSE  put(!)
+			  put(+Q)
 ELSE	abort
 
 
@@ -632,13 +712,21 @@ IF		ty(t)
 		complete
 		¬+Q
 		¬<\/*>+Q
-THEN	do_nothing
+		Speaker(X)
+		PrevSpeaker(Y)
+THEN	IF 		X=Y
+		THEN	abort
+		ELSE	do_nothing
 ELSE	abort
 
 yes(PRED)
 IF 		ty(t)
 		complete
 		+Q
-THEN	delete(+Q)
+		Speaker(X)
+		PrevSpeaker(Y)
+THEN	IF		X=Y
+		THEN    abort
+		ELSE	delete(+Q)
 ELSE	abort
 		
