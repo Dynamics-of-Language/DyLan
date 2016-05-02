@@ -77,6 +77,9 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import ptolemy.graph.Edge;
+import ptolemy.graph.Node;
+
 public class GraphViz
 {
 	/**
@@ -387,6 +390,57 @@ public class GraphViz
 		}
 
 		this.graph = sb;
+	}
+	
+	public static void main(String[] args){
+
+			String dotfile = "/Users/julianhough/git/simple_rnn_disf/rnn_disf_detection/disf_decoder/models/disfluency_trp_simple.dot";
+			String filename = "/Users/julianhough/git/simple_rnn_disf/rnn_disf_detection/disf_decoder/models/disfluency_trp_simple.png";
+			
+			
+			
+			
+			   //System.out.println(lattice);
+			   GraphViz gv = new GraphViz();
+			   gv.readSource(dotfile);
+				//gv.addln(gv.start_graph());
+				
+			//	for (Object o : lattice.edges()){
+				//	Edge edge = (Edge) o;
+				//	String connection = Integer.toString(lattice.nodeLabel(((Node) edge.sink()))) + " -> " + Integer.toString(lattice.nodeLabel(((Node) edge.source())));
+					//gv.addln(connection);
+					
+				//}
+				
+				//gv.addln("A -> B;");
+				//gv.addln("A -> C;");
+				//gv.addln(gv.end_graph());
+				//System.out.println(gv.getDotSource());
+
+				gv.increaseDpi();   // 106 dpi
+
+				//String type = "gif";
+				//      String type = "dot";
+				//      String type = "fig";    // open with xfig
+				//      String type = "pdf";
+				//      String type = "ps";
+				//      String type = "svg";    // open with inkscape
+				String type = "png";
+				//      String type = "plain";
+				
+				String repesentationType= "dot";
+				//		String repesentationType= "neato";
+				//		String repesentationType= "fdp";
+				//		String repesentationType= "sfdp";
+				// 		String repesentationType= "twopi";
+				// 		String repesentationType= "circo";
+				
+				File out = new File(filename);   // Linux
+				//      File out = new File("c:/eclipse.ws/graphviz-java-api/out." + type);    // Windows
+				gv.writeGraphToFile( gv.getGraph(gv.getDotSource(), type, repesentationType), out );
+			
+		
+		
 	}
 
 } // end of class GraphViz

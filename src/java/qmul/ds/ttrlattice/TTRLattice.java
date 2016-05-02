@@ -27,6 +27,7 @@ import qmul.ds.learn.RecordTypeCorpus;
 public class TTRLattice extends DirectedAcyclicGraph {
 	
 	public int counter = 0;
+	public TTRLatticeViewer latticeViewer = null;
 	
 	protected static Logger logger = Logger.getLogger(TTRLattice.class);
 	
@@ -42,6 +43,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	public TTRLattice() {
 		super();
 		counter = 0;
+		latticeViewer = new TTRLatticeViewer(this);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -514,7 +516,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			
 			logger.debug("RECURSIVE CALL start");
 				boolean addPropsHere = commonProps.isEmpty() ? true: false;
-				Node newparent = this.addTypeJudgement(minCommonSuper, parentProps, child, addPropsHere); //This has to add the new one
+				Node newparent = this.addTypeJudgement(minCommonSuper, parentProps, (Node) this.node(this.bottom()), addPropsHere); //This has to add the new one
 				logger.debug("RECURSIVE CALL end");
 				logger.debug("min common supertype. Adding Edge from myNode " + this.nodeLabel(myNode) + " to new parent " + this.nodeLabel(newparent));
 				if (myNode.equals(newparent)){
@@ -564,14 +566,14 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		
 		logger.debug("returning node " + this.nodeLabel(myNode) + " " + myNode);
 		
-		for (Object o : this.nodes()){
-			Node node = (Node) o;
-			System.out.println(this.nodeLabel(node) + " " + node);
+		if (counter>2710){
+			for (Object o : this.nodes()){
+				Node node = (Node) o;
+				logger.debug(this.nodeLabel(node) + " " + node);
+			}
+			latticeViewer.displayLattice("test_lattice" + Integer.toString(counter) + ".png");
+			//pause();
 		}
-/*		if (counter>10000000){
-			TTRLatticeViewer ttrview = new TTRLatticeViewer(this,"test_lattice" + Integer.toString(counter) + ".png");
-			pause();
-		}*/
 	
 		counter++;
 		
@@ -710,21 +712,21 @@ public class TTRLattice extends DirectedAcyclicGraph {
 					throw new Exception("No lattice top!");
 				}
 				lattice.addTypeJudgement(ttr, s4, lattice.node(lattice.bottom()), true);
-				TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
-				pause();
+				//TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
+				//pause();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
 				System.out.println(lattice.top());
 				System.out.println(lattice.bottom());
-				TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
-				pause();
+				//TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
+				//pause();
 				System.exit(0);
 			}
 			if (i % 10 == 0){
 				System.out.println(lattice.counter);
-				TTRLatticeViewer ttrview = new TTRLatticeViewer(lattice,"test_lattice" + Integer.toString(lattice.counter) + ".png");
-				pause();
+				//lattice.latticeViewer.displayLattice("test_lattice" + Integer.toString(lattice.counter) + ".png");
+				//pause();
 			}
 			i+=1;
 			

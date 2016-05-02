@@ -59,24 +59,33 @@ public class TTRLatticeViewer extends JFrame {
 		//      File out = new File("c:/eclipse.ws/graphviz-java-api/out." + type);    // Windows
 		gv.writeGraphToFile( gv.getGraph(gv.getDotSource(), type, repesentationType), out );
 	}
+   
+  public void displayLattice(String filename){
+	    if ( filename == null ) {
+	        filename = "a.png";
+	      }   
+	    this.printGraphVizToFile(filename);
+	    JPanel panel = new JPanel();  
+	    //panel.setSize(500,640);
+	    panel.setBackground(Color.CYAN);  
+	    System.out.println("loading "+ filename);
+	    ImageIcon icon = new ImageIcon(filename);  
+	    JLabel label = new JLabel();  
+	    label.setIcon(icon);  
+	    panel.add(label);
+	    this.getContentPane().removeAll();
+	    this.getContentPane().add(panel); 
+	    this.setVisible(true);
+  }
 	
 	
-  public TTRLatticeViewer(TTRLattice new_lattice,String argx) { 
-    if ( argx == null ) {
-      argx = "a.png";
-    }   
+  public TTRLatticeViewer(TTRLattice new_lattice) { 
+
     lattice = new_lattice;
-    this.printGraphVizToFile(argx);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
     this.setSize(1000,1000);
     JPanel panel = new JPanel();  
     //panel.setSize(500,640);
-    panel.setBackground(Color.CYAN);  
-    System.out.println("loading "+ argx);
-    ImageIcon icon = new ImageIcon(argx);  
-    JLabel label = new JLabel();  
-    label.setIcon(icon);  
-    panel.add(label); 
     this.getContentPane().add(panel);    
     this.setVisible(true);
     
@@ -84,7 +93,7 @@ public class TTRLatticeViewer extends JFrame {
   
   
   public static void main(String[] args) { 
-      new TTRLatticeViewer(null,args.length == 0 ? null : args[0]);
+      new TTRLatticeViewer(null);
   } 
 
   
