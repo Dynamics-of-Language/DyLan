@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.InteractiveContextParser;
+import qmul.ds.Utterance;
+
 /**
  * A 010*-style node address
  * 
@@ -189,9 +192,11 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 	 * @return can we get from this node to other via modality?
 	 */
 	public boolean to(Tree t, NodeAddress other, Modality modality) {
-		return to(t, other, modality.getOps());
+		logger.debug("can get from "+this+" to "+other+" via "+modality+"?");
+		boolean res= to(t, other, modality.getOps());
+		logger.debug(res);
+		return res;
 	}
-
 	/**
 	 * @param other
 	 * @param meta
@@ -242,8 +247,9 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 	 *         needed.
 	 */
 
+	
 	private boolean to(Tree t, NodeAddress other, List<BasicOperator> ops) {
-
+		
 		if (ops.isEmpty()) {
 			// logger.debug("Addresses equal, returning true from 'to' method");
 			return address.equals(other.address);
@@ -283,10 +289,11 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 			}
 		} else if (!op.getPath().isEmpty()) {
 			NodeAddress n = go(op);
-			if (op.isFixed() || t.containsKey(n)) {
+			if (op.isFixed()) {
 
 				return (n != null) && n.to(t, other, opsLeft);
-			} else if (op.isStar() && t.containsKey(go(BasicOperator.DOWN_LOCAL_UNFIXED))) {
+			}
+			else if (op.isStar() && t.containsKey(go(BasicOperator.DOWN_LOCAL_UNFIXED))) {
 
 				n = go(BasicOperator.DOWN_LOCAL_UNFIXED);
 				return (n != null) && n.to(t, other, opsLeft);
@@ -294,18 +301,23 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 			} else
 
 			{
-				// if we are here, op is not fixed, go(op) is not on the tree
-				// op is either \/U or \/* and none of these addresses have been
-				// throw exception if there are any more ops to the right of these
-				// in this situation
+				
+				// if we are here, op is not fixed
+				// op is either U or *
+				
+				if (!opsLeft.isEmpty()&&t.containsKey(n))
+					return (n != null) && n.to(t, other, opsLeft);
+				else if (!opsLeft.isEmpty())
+					throw new UnsupportedOperationException();
+				
+				
 				ArrayList<NodeAddress> nodesBelow;
 				if (op.isU())
 					nodesBelow = goDownLocalUnfixedExpand(t);
 				else
 					nodesBelow = goDownStarExpand(t);
 
-				if (!opsLeft.isEmpty())
-					throw new UnsupportedOperationException();
+				
 				
 				for (NodeAddress na : nodesBelow) {
 					if (na.equals(other))
@@ -330,6 +342,7 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 		
 		ArrayList<NodeAddress> result = new ArrayList<NodeAddress>();
 		for (NodeAddress na : t.keySet()) {
+			
 			if (na.getAddress().startsWith(this.address)) {
 				String rest = "";
 				if (na.getAddress().length() > this.address.length()) {
@@ -502,9 +515,19 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 	}
 
 	public static void main(String a[]) {
-		NodeAddress ad1 = new NodeAddress("0U");
-		NodeAddress ad2 = new NodeAddress("0110");
-		System.out.println(ad1.subsumes(ad2));
+		InteractiveContextParser parser=new InteractiveContextParser("resource/2015-english-ttr");
+		
+		Utterance utt=new Utterance("which student does");
+		parser.parseUtterance(utt);
+		Tree t=parser.getState().getCurrentTuple().getTree();
+		
+		System.out.println(t);
+		NodeAddress a1=new NodeAddress("0");
+		NodeAddress a2=new NodeAddress("0*1");
+		
+		List<BasicOperator> ops=new ArrayList<BasicOperator>();
+		ops.add(BasicOperator.DOWN_STAR);
+		System.out.println(a1.to(t, a2, ops));
 
 	}
 

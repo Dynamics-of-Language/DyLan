@@ -39,6 +39,7 @@ ELSE    abort
 
 det_indef_postcop(QUANT)
 IF		?ty(cn)
+		¬</\0>?ty(e)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
         ¬+indef
@@ -58,7 +59,8 @@ THEN    IF 		?Ex.tn(x)
  		        put(ty(cn>(e>t)))
  		        ttrput([head:e|pred==PRED:cn|p1==subj(pred,head):t|p2==META(pred):t])
  		        go(/\L/\1\/0\/*)
-		ELSE    IF		¬</\0\/1\/L>Ex.x
+		ELSE    IF		¬?Ex.tn(x)
+						¬</\0\/1\/L>Ex.x
 				THEN	go(/\0\/1)
 			    		put(?+eval)
 						make(\/L)

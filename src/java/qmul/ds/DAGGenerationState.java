@@ -11,12 +11,13 @@ import qmul.ds.dag.DAGEdge;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.Word;
-
+/**
+ *  @deprecated 
+ */
 public class DAGGenerationState extends GenerationState<ParserTuple> {
 	
-	/**
-	 * 
-	 */
+	
+	
 	private static final long serialVersionUID = 1L;
 	private DAGParseState state;
 	private List<Word> words;

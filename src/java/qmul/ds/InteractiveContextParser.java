@@ -4,11 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +26,7 @@ import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 
 /**
@@ -381,72 +380,38 @@ public class InteractiveContextParser extends
 	}
 
 	/**
-	 * Only generating to propositional semantics. But incrementally of course. 
+	 * Only generating to propositional semantics. And not incrementally - incremental generation
+	 * inevitably involves repair processing (not done yet for generation), and probabilistic, best first parsing/generation,
+	 * so that the best path is taken locally. We aren't there yet.
 	 * @param goal
-	 * @return
+	 * @return true of generation to propositional goal is successful.
 	 */
-	public boolean generateTo(TTRFormula goal)
+	public List<UtteredWord> generateTo(TTRFormula goal)
 	{
-		this.goal=goal;
-		this.generated.clear();
-		Pair<GroundableEdge, DAGTuple> genPair=generateNextWord();
-		if (genPair==null)
-			return false;
+		ArrayList<UtteredWord> result=new ArrayList<UtteredWord>();
+		DAGGenerator<DAGTuple, GroundableEdge> gen=getDAGGenerator();
+		gen.setGoal(goal);
 		
-		while(genPair!=null)
+		if (gen.generate())
 		{
-			if (genPair.second.isComplete()&&goal.subsumes(genPair.second.getSemantics()))
-				return true;
-			
-			genPair=generateNextWord();
+			result.addAll(state.wordStack());
+			state.wordStack().clear();
+			state.thisIsFirstTupleAfterLastWord();
+			return result;
 		}
+		state.resetToFirstTupleAfterLastWord();
+		return null;
+	}
 	
-		
-		return false;
+	public DAGGenerator<DAGTuple, GroundableEdge> getDAGGenerator()
+	{
+		return new InteractiveContextGenerator(this);
 	}
 	
 	public List<String> generated=new ArrayList<String>();
 	private TTRFormula goal;
 	
-	private Pair<GroundableEdge, DAGTuple> generateNextWord() {
-		List<Pair<GroundableEdge, DAGTuple>> localOptions = getLocalGenerationOptions(goal);
-		if (localOptions.isEmpty())
-			return null;
-		Random r = new Random(new Date().getTime());
-
-		Pair<GroundableEdge, DAGTuple> edgeTuple = localOptions.get(r
-				.nextInt(localOptions.size()));
-
-		LexicalAction la = (LexicalAction) edgeTuple.first.getActions().get(
-				edgeTuple.first.getActions().size() - 1);
-		UtteredWord w = edgeTuple.first.word();
-		state.addChild(edgeTuple.second, edgeTuple.first);
-
-		logger.debug("Added Edge:" + edgeTuple.first);
-		logger.debug("Child:" + edgeTuple.second);
-
-		/**
-		 * if the lexical action was acceptance/rejection, manually set
-		 * acceptance pointers.
-		 * 
-		 */
-		if (la.getLexicalActionType().equals("reject"))
-			state.setAcceptancePointer(w.speaker(), edgeTuple.second);
-		else if (la.getLexicalActionType().equals("accept")
-				|| la.getLexicalActionType().equals("assert")) {
-			state.setAcceptancePointer(w.speaker(), edgeTuple.second);
-			for (String spkr : state.getAcceptancePointers(state
-					.getParent(edgeTuple.second))) {
-				logger.info("setting acceptance pointer for:" + spkr);
-				state.setAcceptancePointer(spkr, edgeTuple.second);
-			}
-		}
-		logger.debug("Now traversing" + edgeTuple.first);
-		edgeTuple.first.traverse((WordLevelContextDAG) state);
-		generated.add(w.word());
-		return edgeTuple;
-
-	}
+	
 
 	/**
 	 * @param word
@@ -562,9 +527,7 @@ public class InteractiveContextParser extends
 					continue;
 				}
 
-				// if (!speakerOfFirstRepairable.equals(repairableEdge.word()
-				// .speaker()))
-				// break;
+				
 				/**
 				 * extracting the computational actions from repairable edge.
 				 * The same ones should be applicable before the repairing
@@ -606,33 +569,30 @@ public class InteractiveContextParser extends
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
 				"resource/2016-english-ttr-attribute-learning");
-		Utterance utt = new Utterance("A: this is a red square");
+		Utterance utt = new Utterance("A: what colour is this?");
 		TTRFormula goal;
 		if (parser.parseUtterance(utt))
 			goal = parser.getState().getCurrentTuple().getSemantics();
-		else
-		{
-			System.out.println("Failed to construct goal from:"+utt);
+		else {
+			System.out.println("Failed to construct goal from:" + utt);
 			System.out.println("Terminating....");
 			return;
 		}
 
-		parser.getState().init();
+		System.out.println("Goal constructed:"+goal);
 
-		if (parser.generateTo(goal))
-			System.out.println(parser.generated);
-		else
-		{
-			System.out.println("Generation to goal Failed.");
-			System.out.println("Generated:"+parser.generated);
-			System.out.println("final tuple:"+parser.getState().getCurrentTuple().getSemantics());
-		}
+		parser.init();
+		//Utterance firstHalf=new Utterance("A: what is this?");
+		//parser.parseUtterance(firstHalf);
 		
-//		System.out.println("Generated:" + parser.generateNextWord(goal));
-//		// System.out.println("Final Tuple:"+parser.getState().getCurrentTuple());
-//		System.out.println("Generated:" + parser.generateNextWord(goal));
-//		System.out.println("Generated:" + parser.generateNextWord(goal));
-//		System.out.println("Generated:" + parser.generateNextWord(goal));
+		List<UtteredWord> generated=parser.generateTo(goal);
+		
+		System.out.println("Generated:"+generated);
+		
+	
+
+
+		
 
 	}
 

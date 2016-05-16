@@ -22,11 +22,12 @@ import qmul.ds.action.Lexicon;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.FormulaMetavariable;
+import qmul.ds.formula.TTRFormula;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 
 /**
@@ -475,6 +476,10 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		throw new UnsupportedOperationException();
 
 	}
+	
+	public abstract DAGGenerator<T, E> getDAGGenerator();
+	
+	public abstract List<UtteredWord> generateTo(TTRFormula goal);
 
 	public abstract boolean parse();
 

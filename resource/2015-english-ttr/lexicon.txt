@@ -37,12 +37,13 @@ cooked						  v_tran_fin					cook						  past							per
 cooks						  v_tran_fin					cook						  pres							s3
 be                            v_be_inf                      be                            inf                           per
 be                            v_be_fin                      be                            pres                          nons3
-is                            v_aux_inf                     be                            pres                          s3
+is                            v_aux_be                      pres                          s3
 being                         v_be_ing                      be                            ing                           per
-was                           v_be_fin                      be                            past                          per
+was                           v_aux_be                      past                          s3
+were                          v_aux_be                      past                          per
 been                          v_be_pas                      be                            inf                           per
-am                            v_aux_inf                      be                            inf                           per
-are                           v_aux_inf                      be                            inf                           per
+am                            v_aux_be                      pres                           per
+are                           v_aux_be                      pres                           per
 begin                         v_intran_inf                  begin                         inf                           per
 begin                         v_intran_fin                  begin                         pres                          nons3
 begins                        v_intran_fin                  begin                         pres                          s3
@@ -348,36 +349,39 @@ travels                       v_pp_for_fin                  travel              
 travelling                    v_pp_for_ing                  travel                        ing                           per
 travelled                     v_pp_for_fin                  travel                        past                          per
 travelled                     v_pp_for_pas                  travel                        inf                           per
-want                          v_intran_inf                  want                          inf                           per
-want                          v_intran_fin                  want                          pres                          nons3
-wants                         v_intran_fin                  want                          pres                          s3
-wanting                       v_intran_ing                  want                          ing                           per
-wanted                        v_intran_fin                  want                          past                          per
-wanted                        v_intran_pas                  want                          inf                           per
+//want                          v_intran_inf                  want                          inf                           per
+//want                          v_intran_fin                  want                          pres                          nons3
+//wants                         v_intran_fin                  want                          pres                          s3
+//wanting                       v_intran_ing                  want                          ing                           per
+//wanted                        v_intran_fin                  want                          past                          per
+//wanted                        v_intran_pas                  want                          inf                           per
 want                          v_tran_inf                    want                          inf                           per
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3
-wanting                       v_tran_ing                    want                          ing                           per
-wanted                        v_tran_fin                    want                          past                          per
-wanted                        v_tran_pas                    want                          inf                           per
-want                          v_pp_to_inf                   want                          inf                           per
-want                          v_pp_to_fin                   want                          pres                          nons3
-wants                         v_pp_to_fin                   want                          pres                          s3
-wanting                       v_pp_to_ing                   want                          ing                           per
-wanted                        v_pp_to_fin                   want                          past                          per
-wanted                        v_pp_to_pas                   want                          inf                           per
-want                          v_pp_for_inf                  want                          inf                           per
-want                          v_pp_for_fin                  want                          pres                          nons3
-wants                         v_pp_for_fin                  want                          pres                          s3
-wanting                       v_pp_for_ing                  want                          ing                           per
-wanted                        v_pp_for_fin                  want                          past                          per
-wanted                        v_pp_for_pas                  want                          inf                           per
-want                          v_subjcon_inf                 want                          inf                           per
-want                          v_subjcon_fin                 want                          pres                          nons3
-wants                         v_subjcon_fin                 want                          pres                          s3
-wanting                       v_subjcon_ing                 want                          ing                           per
-wanted                        v_subjcon_fin                 want                          past                          per
-wanted                        v_subjcon_pas                 want                          inf                           per
+//wanting                       v_tran_ing                    want                          ing                           per
+//wanted                        v_tran_fin                    want                          past                          per
+//wanted                        v_tran_pas                    want                          inf                           per
+//want                          v_pp_to_inf                   want                          inf                           per
+//want                          v_pp_to_fin                   want                          pres                          nons3
+//wants                         v_pp_to_fin                   want                          pres                          s3
+//wanting                       v_pp_to_ing                   want                          ing                           per
+//wanted                        v_pp_to_fin                   want                          past                          per
+//wanted                        v_pp_to_pas                   want                          inf                           per
+//want                          v_pp_for_inf                  want                          inf                           per
+//want                          v_pp_for_fin                  want                          pres                          nons3
+//wants                         v_pp_for_fin                  want                          pres                          s3
+//wanting                       v_pp_for_ing                  want                          ing                           per
+//wanted                        v_pp_for_fin                  want                          past                          per
+//wanted                        v_pp_for_pas                  want                          inf                           per
+//want                          v_subjcon_inf                 want                          inf                           per
+want                            v_subjcon_fin                 want                          pres                          nons3
+wants                           v_subjcon_fin                 want                          pres                          s3
+want                            v_subjcon_inf                 want                          inf                          nons3
+//wanting                       v_subjcon_ing                 want                          ing                           per
+looking						    v_subjcon_ing				  look							ing 						  per
+lookingfor					    v_tran_ing				      look							ing							  per
+//wanted                        v_subjcon_fin                 want                          past                          per
+//wanted                        v_subjcon_pas                 want                          inf                           per
 //will                          v_intran_inf                  will                          inf                           per
 //will                          v_intran_fin                  will                          pres                          nons3
 //will                          v_intran_fin                  will                          pres                          s3
@@ -415,14 +419,14 @@ wonders                       v_pp_for_fin                  wonder              
 wondering                     v_pp_for_ing                  wonder                        ing                           per
 wondered                      v_pp_for_fin                  wonder                        past                          per
 wondered                      v_pp_for_pas                  wonder                        inf                           per
-would                         v_tran_inf                    would                         inf                           per
-would                         v_tran_fin                    would                         pres                          nons3
-would                         v_tran_fin                    would                         pres                          s3
-would                         v_tran_fin                    would                         past                          per
-would                         v_aux_inf                     would                         inf                           per
+//would                         v_tran_inf                    would                         inf                           per
+//would                         v_tran_fin                    would                         pres                          nons3
+//would                         v_tran_fin                    would                         pres                          s3
+//would                         v_tran_fin                    would                         past                          per
+//would                         v_aux_inf                     would                         inf                           per
 would                         v_aux_fin                     would                         pres                          nons3
-would                         v_aux_fin                     would                         pres                          s3
-would                         v_aux_fin                     would                         past                          per
+//would                         v_aux_fin                     would                         pres                          s3
+//would                         v_aux_fin                     would                         past                          per
 bill                          proper                        bill                          s3                            male
 john                          proper                        john                          s3                            male
 ruth						  proper						ruth						  s3							male
@@ -431,6 +435,8 @@ stergios					  proper						stergios					  s3							male
 mary                          proper                        mary                          s3                            female
 jill                          proper                        jill                          s3                            female
 europe                        proper                        europe                        s3                            loc
+samsung						  proper						samsung						  s3							obj
+apple						  proper						apple						  s3							obj
 london                        proper                        london                        s3                            dest
 paris                         proper                        paris                         s3                            dest
 //aeroplane                     mass                          aeroplane                     s3                            trans
@@ -438,6 +444,7 @@ paris                         proper                        paris               
 //my							 my								s1							  
 your						 your							s2							 
 cousin                    count                         cousin                     s3                            trans
+phone					  count							phone					   s3							obj
 guy						  count							guy						   s3							male
 girl					  count							girl					   s3							female
 group				      count							group					   s3							trans							
@@ -475,6 +482,8 @@ ticket                        count                         ticket              
 tickets                       count                         ticket                        plur                          obj
 trip                          count                         trip                          s3                            obj
 trips                         count                         trip                          plur                          obj
+brand						  count							brand						  s3							obj
+brands						  count							brands						  plur							obj
 boy                           count                         boy                           s3                            male
 boys                          count                         boy                           plur                          male
 girl                          count                         girl                          s3                            female
@@ -533,11 +542,13 @@ nice						  adj_be						nice
 thin						  adj							thin
 with						  prep_es						with
 with						  prep_e						with
-to 							  prep_es						to							  													  	
+to 							  prep_es						to
+to							  to_subjcon					to							  													  	
 //from						  prep_es						from						  
 from						  prep_e						from
 on							  prep_e						on							  			
 by							  prep_es						by							  	
+by							  prep_e						by
 slowly						  manner_adv					slow
 quickly						  manner_adv					quick
 madly						  manner_adv					mad
@@ -570,7 +581,9 @@ she                           pron_nom                      s3                  
 what                          pron_whq                      obj
 where						  pron_whq						loc
 what                          pron_whq_cop                  obj
+what						  pron_whq_det					obj
 which                         pron_whrel                    obj
+which						  pron_whq_det					obj
 that                          pron_whrel                    obj
 who                           pron_whq                      per
 who                           pron_whrel                    per
@@ -581,8 +594,8 @@ when                          pron_whmod                    tim
 where                         pron_whmod                    loc
 his                           pron_det                      male
 her                           pron_det                      female
-a                             det_quant                     eps
-an                            det_quant                     eps
+a                             det_indef                     eps
+an                            det_indef                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
 the                           det_quant                     iota
@@ -593,13 +606,13 @@ that						  det_demonst					there					      s3
 this						  demonst  						this						  s3
 that						  demonst						that						  s3
 every                         det_quant                     tau
-some                          det_quant                     eps
-which                         det_whq                       _
+some                          det_indef                     eps
 .							  assert						A
 ?							  question						Q
 uhu							  accept						uhu
 ok							  accept						ok
 yes							  accept						yes
+yes							  yes							yes
 okay						  accept						okay
 yeah						  accept						yeah
 wow							  accept						wow

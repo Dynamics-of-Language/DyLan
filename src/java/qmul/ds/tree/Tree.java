@@ -726,7 +726,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					if (dsType.equals(BasicType.cn)&&(motherType.equals(DSType.parse("e>t"))||motherType.equals(DSType.cn)))
 						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
 					else if (dsType.equals(DSType.parse("e>t"))&&n.contains(formReq))
-						n.addLabel(new FormulaLabel(Formula.create("R1^(R1 ++ [head:es|p==subj(head,R1.head):t])").freshenVars(this)));
+						n.addLabel(new FormulaLabel(Formula.create("R1^(R1 ++ [e1:es|head==e1:es|p==subj(e1,R1.head):t])").freshenVars(this)));
 					else
 						n.addLabel(new FormulaLabel(typeMap.get(dsType)
 							.freshenVars(this)));
@@ -762,7 +762,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					continue;
 				}
 				
-				logger.debug("found mergepoint"+mergePoint);		
+				logger.debug("considering merge point:"+mergePoint.getAddress());		
 				FormulaLabel mergePointF = mergePoint.getFormulaLabel();
 				FormulaLabel unfixedF=unfixed.getFormulaLabel();
 				//
@@ -791,7 +791,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					break;
 						
 				}
-				else logger.debug(mergePoint+" not unifiable with:"+unfixed);
+				else logger.debug(mergePoint.getAddress()+" not unifiable with:"+unfixed.getAddress());
 				
 				
 
@@ -819,7 +819,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
 		Tree merged = mergeUnfixed();
-		logger.debug("after merge"+merged);
+		logger.debug("after merge:"+merged);
 		
 		
 		merged.addUnderspecifiedFormulae();
@@ -927,8 +927,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 				else if (localUnfixedReduced != null)
 					rootReduced = localUnfixedReduced.removeHead();
 		}
-		//only evaluate link if it hasn't been evaluated before.
-		if (!getDaughters(root, "L").isEmpty()&&root.contains(LabelFactory.create("?+eval"))) {
+		//only evaluate link if it hasn't been evaluated before. ARASH, question to himself: Why would it have been evaluated  before?
+		//&&root.contains(LabelFactory.create("?+eval"))
+		//uncommented for now... let's see.
+		if (!getDaughters(root, "L").isEmpty()) {
 
 			Formula maxSemL = getMaximalSemantics(get(root.getAddress()
 					.downLink()));

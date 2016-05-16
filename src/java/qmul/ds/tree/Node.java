@@ -411,19 +411,19 @@ public class Node extends TreeSet<Label> {
 			}
 		}
 		
-//		Formula f = getFormula();
-//		if (f == null)
-//			f = getRequiredFormula();
-//		
-//		if (f != null) {
-//			Formula of = other.getFormula();
-//			if (of == null)
-//				of = other.getRequiredFormula();
-//			if ((of != null) && !f.subsumes(of)) {
-//				System.out.println("Formula subsumption failed");
-//				return false;
-//			}
-//		}
+		Formula f = getFormula();
+		if (f == null)
+			f = getRequiredFormula();
+		
+		if (f != null) {
+			Formula of = other.getFormula();
+			if (of == null)
+				of = other.getRequiredFormula();
+			if ((of != null) && !f.subsumes(of)) {
+				System.out.println("Formula subsumption failed");
+				return false;
+			}
+		}
 		return true;
 	}
 	

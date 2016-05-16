@@ -27,13 +27,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		
 		protected TTRFormula goal;
 		
-		protected DAG<T,E> state;
+		
 		
 		protected List<String> generated=new ArrayList<String>();
 		
-		protected String myName="self";
+		public static String myName="self";
 		
-		protected Context<T,E> localContext;
+		
 		
 		
 		public String[] interregna = { "uh", "I mean", "sorry", "rather" };
@@ -42,7 +42,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		public DAGGenerator(Lexicon lexicon, Grammar grammar) {
 			
 			parser = getParser(lexicon, grammar);
-			state = getNewState(new Tree());
+			
 			
 		}
 
@@ -55,7 +55,6 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		public DAGGenerator(DAGParser<T,E> parser)
 		{
 			this.parser=parser;
-			state = getNewState(parser.getState().getCurrentTuple().getTree());
 		}
 		
 
@@ -96,7 +95,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		 */
 		public DAG<T, E> getState() {
 			
-			return state;
+			return parser.state;
 		}
 
 		
@@ -105,7 +104,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		
 
 		public boolean generate() {
-			if (state.isExhausted()) {
+			if (parser.state.isExhausted()) {
 				logger.info("state exhausted");
 				return false;
 			}
@@ -113,13 +112,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 			do {
 
 				if (!adjustOnce()) {
-					logger.info("wordstack:" + state.wordStack());
-					logger.info("depth:" + state.getDepth());
-					state.setExhausted(true);
+					logger.info("wordstack:" + parser.state.wordStack());
+					logger.info("depth:" + parser.state.getDepth());
+					parser.state.setExhausted(true);
 					return false;
 				}
 				
-			} while (!(state.getCurrentTuple().isComplete()&&goal.subsumes(state.getCurrentTuple().getSemantics())));
+			} while (!(parser.state.getCurrentTuple().isComplete()&&goal.subsumes(parser.state.getCurrentTuple().getSemantics())));
 			
 			return true;
 		}
@@ -127,19 +126,19 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		
 		private boolean adjustOnce() {
 
-			if (state.outDegree(state.getCurrentTuple()) == 0)
+			if (parser.state.outDegree(parser.state.getCurrentTuple()) == 0)
 				applyAllOptions();
 
 			E result;
 			do {
 
-				result = state.goFirstGen();
+				result = parser.state.goFirst();
 
 				if (result != null) {
 
 					break;
 				}
-			} while (state.attemptBacktrackGen());
+			} while (parser.state.attemptBacktrack());
 
 			return (result != null);
 

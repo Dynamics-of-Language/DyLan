@@ -110,8 +110,6 @@ public class GroundableEdge extends DAGEdge {
 					"the edge to be backtracked does not have its destination as the current dag tuple");
 		}
 
-		dag.wordStack.push(word);
-		logger.info("adding word to stack, now:" + word);
 		
 		
 		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(dag

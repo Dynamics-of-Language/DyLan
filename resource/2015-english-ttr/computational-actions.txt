@@ -92,29 +92,27 @@ ELSE    abort
 
 late-star-adj-q
 IF      ty(t)
-		<\/*>+WH
-		<Y>+WH
-THEN	go(Y)
+		<\/*>+Q
+		<Z>+Q
+THEN	go(Z)
 		IF		</\*>tn(0)
         		¬!
         		ty(X)  // could restrict this to e/t but no way to do disjunction here yet
-        		¬<\/1>Ex.x
-        		¬<\/0>Ex.x
+        		//¬<\/1>Ex.x
+        		//¬<\/0>Ex.x
         		¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
         		Ex.tn(x)
-        THEN	make(\/*)
+        THEN	delete(+Q)
+        		make(\/*)
         		go(\/*)
-        		put(?ty(X))
         		put(?Ex.tn(x))
-        		IF		</\*>+BE
-        		THEN 	put(+BE)
-        		ELSE	do_nothing
+        		put(?ty(X))
         ELSE	abort
 ELSE    abort
 
-
 merge
 IF      Ex.tn(x)
+		¬<\/*>Ex.x
 		<Y>?Ex.tn(x)
 		subsumes(Y)		
 		<Y>ty(V)
@@ -128,9 +126,10 @@ IF		Ex.tn(x)
 		<\/*>?Ex.tn(x)
 		ty(Y)
 		<\/*>ty(Y)
-THEN	merge(<\/*>)
+		Fo(X)
+THEN	delete(Fo(X))
+		merge(<\/*>)
 		delete(?Ex.tn(x))
-		delete(+WH)
 		unreduce
 ELSE	abort
 

@@ -33,20 +33,26 @@ public class InteractiveContextGenerator extends
 		DAGGenerator<DAGTuple, GroundableEdge> {
 
 	protected static Logger logger=Logger.getLogger(InteractiveContextGenerator.class);
+	
 	public InteractiveContextGenerator(DAGParser<DAGTuple, GroundableEdge> parser, TTRFormula goal)
 	{
 		super(parser);
 		setGoal(goal);
-		localContext=new Context<DAGTuple, GroundableEdge>(state);
+		
 	}
 	public InteractiveContextGenerator(TTRFormula goal, String resourceDir)
 	{
 		super(resourceDir);
 		setGoal(goal);
-		localContext=new Context<DAGTuple, GroundableEdge>(state);
+		
 	}
 	
 	
+	public InteractiveContextGenerator(
+			DAGParser<DAGTuple, GroundableEdge> interactiveContextParser) {
+		super(interactiveContextParser);
+		
+	}
 	@Override
 	public DAG<DAGTuple, GroundableEdge> getNewState(Tree start) {
 		
@@ -69,7 +75,7 @@ public class InteractiveContextGenerator extends
 		List<Pair<GroundableEdge, DAGTuple>> genPairs=getLocalGenerationOptions();
 		for(Pair<GroundableEdge, DAGTuple> genPair: genPairs)
 		{
-			state.addChild(genPair.second, genPair.first);
+			parser.state.addChild(genPair.second, genPair.first);
 		}
 	}
 	
@@ -84,9 +90,9 @@ public class InteractiveContextGenerator extends
 					GroundableEdge wordEdge;
 					UtteredWord w = new UtteredWord(word, myName);
 					if (parser.getIndexOfTRP(res.first) >= 0)
-						wordEdge = state.getNewNewClauseEdge(res.first, w);
+						wordEdge = parser.state.getNewNewClauseEdge(res.first, w);
 					else
-						wordEdge = state.getNewEdge(res.first, w);
+						wordEdge = parser.state.getNewEdge(res.first, w);
 
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);
@@ -94,7 +100,7 @@ public class InteractiveContextGenerator extends
 							.getLexicalActionType()))
 						wordEdge.setRepairable(false);
 
-					DAGTuple newTuple = state.getNewTuple(res.second);
+					DAGTuple newTuple = parser.state.getNewTuple(res.second);
 					result.add(new Pair<GroundableEdge, DAGTuple>(wordEdge,
 							newTuple));
 
@@ -122,7 +128,7 @@ public class InteractiveContextGenerator extends
 
 		
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(
-				new ArrayList<Action>(), state.getCurrentTuple().tree.clone());
+				new ArrayList<Action>(), parser.state.getCurrentTuple().tree.clone());
 
 		initPair = parser.adjustWithNonOptionalGrammar(initPair);
 
@@ -166,7 +172,7 @@ public class InteractiveContextGenerator extends
 			//TODO: for lex action context is local
 			//but for computational action context is parser context
 			//this is a hack to make substitution and Speaker label work. Don't have time now.
-			Tree res = la.exec(pair.second.clone(), localContext);
+			Tree res = la.exec(pair.second.clone(), parser.context);
 
 			if (res == null) {
 				logger.debug("Failed");
@@ -207,7 +213,12 @@ public class InteractiveContextGenerator extends
 		Utterance utt = new Utterance("A: this is a yellow square.");
 		TTRFormula goal;
 		if (parser.parseUtterance(utt))
+		{
+			
+		
 			goal = parser.getState().getCurrentTuple().getSemantics();
+			System.out.println("Goal constructed:"+goal);
+		}
 		else
 		{
 			System.out.println("Failed to construct goal from:"+utt);
@@ -215,7 +226,7 @@ public class InteractiveContextGenerator extends
 			return;
 		}
 		
-		System.out.println(goal);
+		
 
 		
 		InteractiveContextGenerator generator=new InteractiveContextGenerator(goal, "resource/2016-english-ttr-attribute-learning");
