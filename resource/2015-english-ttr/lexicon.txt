@@ -424,7 +424,7 @@ wondered                      v_pp_for_pas                  wonder              
 //would                         v_tran_fin                    would                         pres                          s3
 //would                         v_tran_fin                    would                         past                          per
 //would                         v_aux_inf                     would                         inf                           per
-would                         v_aux_fin                     would                         pres                          nons3
+would                         v_aux_inf                     would                         pres                          nons3
 //would                         v_aux_fin                     would                         pres                          s3
 //would                         v_aux_fin                     would                         past                          per
 bill                          proper                        bill                          s3                            male
@@ -445,6 +445,7 @@ paris                         proper                        paris               
 your						 your							s2							 
 cousin                    count                         cousin                     s3                            trans
 phone					  count							phone					   s3							obj
+product					  count							product					   s3							obj
 guy						  count							guy						   s3							male
 girl					  count							girl					   s3							female
 group				      count							group					   s3							trans							

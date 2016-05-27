@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 import qmul.ds.type.BasicType;
 import edu.stanford.nlp.util.Pair;
@@ -148,6 +151,12 @@ public class TTRInfixExpression extends TTRFormula {
 	@Override
 	public TTRFormula freshenVars(Tree t) {
 		return new TTRInfixExpression(this.predicate, this.arg1.freshenVars(t), this.arg2.freshenVars(t));
+	}
+	
+	@Override
+	public <T extends DAGTuple, E extends DAGEdge> TTRInfixExpression freshenVars(Context<T,E> c)
+	{
+		return new TTRInfixExpression(this.predicate, this.arg1.freshenVars(c), this.arg2.freshenVars(c));
 	}
 
 	/*

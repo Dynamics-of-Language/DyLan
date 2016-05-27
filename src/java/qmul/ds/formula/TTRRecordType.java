@@ -12,7 +12,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.action.meta.Meta;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -626,13 +629,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	public static void main(String[] a) {
 		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-//		TTRRecordType meta = TTRRecordType.parse("[L:e|PRED:cn|p1==shape(PRED):t|p2==subj(PRED,L):t]");
-//		System.out.println("meta:"+meta);
+
 		TTRRecordType meta = TTRRecordType.parse("[pred3==triangle : cn|p5==color(pred3) : t|x1==this : e|p7==subj(pred3,x1) : t]");
 		
 		TTRRecordType nLC = TTRRecordType.parse("[pred4==square : cn|p8==shape(pred4) : t|"
 				+ "p9==class(pred4) : t|p10==subj(pred4, x1) : t| x1==this : e |pred1==red:cn|p3==color(pred1):t|p4==subj(pred1,x1):t]");
-//		
+		
 		System.out.println("Subsumes:" + meta.subsumesBasic(nLC));
 		System.out.println("Subsumes:" + meta.subsumesMapped(nLC, map));
 		System.out.println("After:" + meta);
@@ -861,6 +863,47 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 //		return false;
 //	}
 
+	public <T extends DAGTuple, E extends DAGEdge> TTRFormula freshenVars(Context<T,E> c) {
+		TTRRecordType fresh = new TTRRecordType(this);
+		for (TTRField f : this.fields) {
+			if (f.getLabel().equals(HEAD) || f.getLabel().equals(REF_TIME)) {
+				continue;
+			}
+
+			DSType dsType = f.getDSType();
+			if (dsType == null) {
+				TTRLabel newLabel = new TTRLabel(c.getFreshRecTypeVariable());
+				while (hasLabel(newLabel))
+					newLabel = new TTRLabel(c.getFreshRecTypeVariable());
+				fresh = fresh.substitute(f.getLabel(), newLabel);
+			} else if (dsType.equals(DSType.e)) {
+				TTRLabel newLabel = new TTRLabel(c.getFreshEntityVariable());
+				while (hasLabel(newLabel))
+					newLabel = new TTRLabel(c.getFreshEntityVariable());
+				fresh = fresh.substitute(f.getLabel(), newLabel);
+
+			} else if (dsType.equals(DSType.es)) {
+				TTRLabel newLabel = new TTRLabel(c.getFreshEventVariable());
+				while (hasLabel(newLabel))
+					newLabel = new TTRLabel(c.getFreshEventVariable());
+				fresh = fresh.substitute(f.getLabel(), newLabel);
+			} else if (dsType.equals(DSType.t)) {
+				TTRLabel newLabel = new TTRLabel(
+						c.getFreshPropositionVariable());
+				while (hasLabel(newLabel))
+					newLabel = new TTRLabel(c.getFreshPropositionVariable());
+				fresh = fresh.substitute(f.getLabel(), newLabel);
+			} else {
+				TTRLabel newLabel = new TTRLabel(c.getFreshPredicateVariable());
+				while (hasLabel(newLabel))
+					newLabel = new TTRLabel(c.getFreshPredicateVariable());
+				fresh = fresh.substitute(f.getLabel(), newLabel);
+			}
+		}
+		fresh.updateParentLinks();
+		return fresh;
+	}
+	
 	public TTRFormula freshenVars(Tree t) {
 		TTRRecordType fresh = new TTRRecordType(this);
 		for (TTRField f : this.fields) {

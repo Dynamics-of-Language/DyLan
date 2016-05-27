@@ -13,14 +13,21 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 
 public class LexicalMacro extends Effect {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2463169637199387307L;
 	private static Logger logger = Logger.getLogger(LexicalMacro.class);
 	String name;
 	List<Effect> actions;
@@ -44,6 +51,21 @@ public class LexicalMacro extends Effect {
 
 	}
 
+	
+	
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
+	{
+		for (Effect e : actions) {
+			e.exec(tree, context);
+			if (tree == null) {
+				logger.debug("Action in macro call" + name + " failed:" + e);
+			} else {
+				logger.debug("result: " + tree);
+			}
+		}
+		return tree;
+
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

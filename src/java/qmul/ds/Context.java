@@ -6,7 +6,8 @@ import java.util.List;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.WordLevelContextDAG;
+import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.Variable;
 import edu.uci.ics.jung.graph.Tree;
 
 /**
@@ -22,6 +23,12 @@ import edu.uci.ics.jung.graph.Tree;
 
 public class Context<T extends DAGTuple, E extends DAGEdge> {
 
+	public static final String ENTITY_VARIABLE_ROOT = qmul.ds.tree.Tree.ENTITY_VARIABLE_ROOT;
+	public static final String EVENT_VARIABLE_ROOT = qmul.ds.tree.Tree.EVENT_VARIABLE_ROOT;
+	public static final String PROPOSITION_VARIABLE_ROOT = qmul.ds.tree.Tree.PROPOSITION_VARIABLE_ROOT;
+	public static final String REC_TYPE_VARIABLE_ROOT = qmul.ds.tree.Tree.REC_TYPE_VARIABLE_ROOT;
+	public static final String PREDICATE_VARIABLE_ROOT = qmul.ds.tree.Tree.PREDICATE_VARIABLE_ROOT;
+	
 	/**
 	 * 
 	 */
@@ -44,7 +51,16 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	}
 	
 	
+	public TTRFormula getGroundedContent()
+	{
+		return dag.getGroundedContent(participants);
+		
+	}
 	
+	public TTRFormula getGroundedContent(String speaker)
+	{
+		return dag.getGroundedContent(speaker);
+	}
 	
 	
 	public void addParticipant(String name)
@@ -115,6 +131,71 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	{
 		dag.setAcceptancePointer(dag.getSpeakerOfPreviousWord());
 	}
+
+	
+	
+	
+	
+	
+	
+	/**
+	 * Methods for getting fresh Record Type variables relative to this context
+	 */
+	
+	private ArrayList<Variable> entityPool = new ArrayList<Variable>();
+	private ArrayList<Variable> eventPool = new ArrayList<Variable>();
+	private ArrayList<Variable> propositionPool = new ArrayList<Variable>();
+	private ArrayList<Variable> recordTypePool = new ArrayList<Variable>();
+	private ArrayList<Variable> predicatePool = new ArrayList<Variable>();
+	/**
+	 * A fresh entity variable x1, x2 etc
+	 */
+	public Variable getFreshEntityVariable() {
+		Variable v = new Variable(ENTITY_VARIABLE_ROOT
+				+ (entityPool.size() + 1));
+		entityPool.add(v);
+		return v;
+	}
+
+	/**
+	 * A fresh event variable e1, e2 etc
+	 */
+	public Variable getFreshEventVariable() {
+		
+		Variable v = new Variable(EVENT_VARIABLE_ROOT + (eventPool.size() + 1));
+		
+		eventPool.add(v);
+		return v;
+	}
+
+	/**
+	 * A fresh proposition variable p1, p2 etc
+	 */
+	public Variable getFreshPropositionVariable() {
+		Variable v = new Variable(PROPOSITION_VARIABLE_ROOT
+				+ (propositionPool.size() + 1));
+		propositionPool.add(v);
+		return v;
+	}
+
+	/**
+	 * A fresh record type variable r1, r2 etc
+	 */
+	public Variable getFreshRecTypeVariable() {
+		Variable v = new Variable(REC_TYPE_VARIABLE_ROOT
+				+ (recordTypePool.size() + 1));
+		recordTypePool.add(v);
+		return v;
+	}
+
+	public Variable getFreshPredicateVariable() {
+		Variable v = new Variable(PREDICATE_VARIABLE_ROOT
+				+ (predicatePool.size() + 1));
+		predicatePool.add(v);
+		return v;
+
+	}
+
 	
 	
 }

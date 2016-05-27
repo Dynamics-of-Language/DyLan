@@ -13,11 +13,12 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRLambdaAbstract;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;
@@ -62,6 +63,31 @@ public class TTRFreshPut extends Effect {
 		}
 	}
 
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
+	{
+		Node node = tree.getPointedNode();
+		FormulaLabel l = null;
+		for (Label label : node) {
+			if (label instanceof FormulaLabel) {
+				l = (FormulaLabel) label;
+				break;
+			}
+		}
+		logger.debug("Before freshening vars:"+ttrF);
+		Formula fresh = ttrF.freshenVars(context);
+		logger.debug("After freshening vars:"+fresh);
+		logger.debug("");
+		if (l != null) {
+			logger.warn("trying to add ttr formula:" + fresh + " to node with already existing formula:" + node);
+			logger.warn("returning tree intact");
+			return tree;
+		}
+		
+		node.add(new FormulaLabel(fresh.instantiate()));
+		return tree;
+		
+		
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -83,12 +109,7 @@ public class TTRFreshPut extends Effect {
 			logger.warn("returning tree intact");
 			return tree;
 		}
-		/*
-		 * FormulaLabel conjoined = null; if ((l != null) && (l.getFormula() != null)) { node.remove(l); Formula onNode
-		 * = l.getFormula(); conjoined = new FormulaLabel(onNode.conjoin(fresh));
-		 * 
-		 * } else { conjoined = new FormulaLabel(fresh); }
-		 */
+		
 		node.add(new FormulaLabel(fresh.instantiate()));
 		return tree;
 	}

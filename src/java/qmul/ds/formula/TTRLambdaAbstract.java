@@ -6,14 +6,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.tree.BasicOperator;
-import qmul.ds.tree.NodeAddress;
+import qmul.ds.Context;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
-import qmul.ds.tree.label.FormulaLabel;
-import qmul.ds.tree.label.Requirement;
-import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
-import qmul.ds.type.ConstructedType;
 import qmul.ds.type.DSType;
 import edu.stanford.nlp.util.Pair;
 
@@ -29,7 +26,9 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	private static Logger logger = Logger.getLogger(TTRLambdaAbstract.class);
 
 	protected static final String LAMBDA_FUNCTOR = "^";
-	private static final String UNICODE_LAMBDA_FUNCTOR = "\u03BB"; // lambda; also 1D6CC
+	private static final String UNICODE_LAMBDA_FUNCTOR = "\u03BB"; // lambda;
+																	// also
+																	// 1D6CC
 
 	/**
 	 * @return the high-level (DS) type of the final field of the body
@@ -45,6 +44,10 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	 */
 	public TTRFormula freshenVars(Tree t) {
 		return this.replaceCore(getCore().freshenVars(t));
+	}
+
+	public <T extends DAGTuple, E extends DAGEdge> TTRFormula freshenVars(Context<T, E> c) {
+		return this.replaceCore(getCore().freshenVars(c));
 	}
 
 	protected Variable variable;
@@ -85,7 +88,8 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	 */
 	public TTRFormula betaReduce(Formula argument) {
 		if (argument instanceof FOLLambdaAbstract) {
-			throw new RuntimeException("Not allowing higher-order argument: " + argument);
+			throw new RuntimeException("Not allowing higher-order argument: "
+					+ argument);
 		}
 
 		return formula.substitute(variable, argument).evaluate();
@@ -104,7 +108,8 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 
 	public TTRFormula replaceCore(TTRFormula f) {
 		if (formula instanceof TTRLambdaAbstract) {
-			return new TTRLambdaAbstract(this.variable, ((TTRLambdaAbstract) formula).replaceCore(f));
+			return new TTRLambdaAbstract(this.variable,
+					((TTRLambdaAbstract) formula).replaceCore(f));
 		} else {
 			return new TTRLambdaAbstract(this.variable, f);
 		}
@@ -123,31 +128,37 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.formula.Formula#substitute(qmul.ds.formula.Formula, qmul.ds.formula.Formula)
+	 * @see qmul.ds.formula.Formula#substitute(qmul.ds.formula.Formula,
+	 * qmul.ds.formula.Formula)
 	 */
 	@Override
 	public TTRFormula substitute(Formula f1, Formula f2) {
 		if (this.equals(f1)) {
 			return (TTRLambdaAbstract) f2;
 		}
-		return new TTRLambdaAbstract((Variable) variable.substitute(f1, f2), formula.substitute(f1, f2));
+		return new TTRLambdaAbstract((Variable) variable.substitute(f1, f2),
+				formula.substitute(f1, f2));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see qmul.ds.formula.Formula#subsumes(qmul.ds.formula.Formula, java.util.HashMap)
+	 * @see qmul.ds.formula.Formula#subsumes(qmul.ds.formula.Formula,
+	 * java.util.HashMap)
 	 */
 	@Override
-	protected boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
+	protected boolean subsumesMapped(Formula other,
+			HashMap<Variable, Variable> map) {
 		if (!(other instanceof TTRLambdaAbstract)) {
 			return false;
 		}
 		TTRLambdaAbstract eps = (TTRLambdaAbstract) other;
-		if (variable.subsumesBasic(eps.variable) && formula.subsumesBasic(eps.formula)) {
+		if (variable.subsumesBasic(eps.variable)
+				&& formula.subsumesBasic(eps.formula)) {
 			return true;
 		}
-		return (variable.subsumesMapped(eps.variable, map) && formula.subsumesMapped(eps.formula, map));
+		return (variable.subsumesMapped(eps.variable, map) && formula
+				.subsumesMapped(eps.formula, map));
 	}
 
 	/*
@@ -169,7 +180,8 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((formula == null) ? 0 : formula.hashCode());
-		result = prime * result + ((variable == null) ? 0 : variable.hashCode());
+		result = prime * result
+				+ ((variable == null) ? 0 : variable.hashCode());
 		return result;
 	}
 
@@ -219,7 +231,8 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 		// return super.toUnicodeString().replaceAll("(\\w)" +
 		// Pattern.quote(LAMBDA_FUNCTOR),
 		// UNICODE_LAMBDA_FUNCTOR + "$1.");
-		return UNICODE_LAMBDA_FUNCTOR + variable.toUnicodeString() + "." + formula.toUnicodeString();
+		return UNICODE_LAMBDA_FUNCTOR + variable.toUnicodeString() + "."
+				+ formula.toUnicodeString();
 	}
 
 	/*
@@ -235,7 +248,8 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	@Override
 	public TTRFormula asymmetricMerge(TTRFormula rt) {
 		if (rt == null) {
-			logger.warn("trying to merge a null formula with ttr lambda abstract:" + this);
+			logger.warn("trying to merge a null formula with ttr lambda abstract:"
+					+ this);
 			return this;
 		}
 
@@ -243,22 +257,24 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	}
 
 	@Override
-	public List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(BasicType dsType, int newVarSuffix) {
-		List<Pair<TTRRecordType, TTRLambdaAbstract>> coreAbstractions = getCore().getAbstractions(dsType,
-				this.numVariables() + 1);
+	public List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(
+			BasicType dsType, int newVarSuffix) {
+		List<Pair<TTRRecordType, TTRLambdaAbstract>> coreAbstractions = getCore()
+				.getAbstractions(dsType, this.numVariables() + 1);
 		List<Pair<TTRRecordType, TTRLambdaAbstract>> result = new ArrayList<Pair<TTRRecordType, TTRLambdaAbstract>>();
 		for (Pair<TTRRecordType, TTRLambdaAbstract> pair : coreAbstractions) {
-			TTRLambdaAbstract newAbs = new TTRLambdaAbstract(pair.second().getVariable(), this.replaceCore(pair
-					.second().getCore()));
-			result.add(new Pair<TTRRecordType, TTRLambdaAbstract>(pair.first(), newAbs));
+			TTRLambdaAbstract newAbs = new TTRLambdaAbstract(pair.second()
+					.getVariable(), this.replaceCore(pair.second().getCore()));
+			result.add(new Pair<TTRRecordType, TTRLambdaAbstract>(pair.first(),
+					newAbs));
 
 		}
 		return result;
 	}
 
 	/*
-	 * public List<Tree> getAbstractions(DSType funcType) { NodeAddress root=new NodeAddress(); for(int
-	 * i=0;i<numVariables();i++) root=root.down1();
+	 * public List<Tree> getAbstractions(DSType funcType) { NodeAddress root=new
+	 * NodeAddress(); for(int i=0;i<numVariables();i++) root=root.down1();
 	 * 
 	 * return getAbstractions(funcType, root); }
 	 */
@@ -272,34 +288,34 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 
 	@Override
 	public TTRField getHeadField() {
-		
+
 		return getCore().getHeadField();
 	}
-	
+
 	@Override
 	public int toUniqueInt() {
-		throw new UnsupportedOperationException("Shouldn't need to turn lambda abstracts to integers for now. They don't appear within record types.");
-		
+		throw new UnsupportedOperationException(
+				"Shouldn't need to turn lambda abstracts to integers for now. They don't appear within record types.");
+
 	}
 
-	public TTRLambdaAbstract instantiate()
-	{
-		return new TTRLambdaAbstract(new Variable(variable), this.formula.instantiate());
+	public TTRLambdaAbstract instantiate() {
+		return new TTRLambdaAbstract(new Variable(variable),
+				this.formula.instantiate());
 	}
+
 	@Override
 	public TTRFormula asymmetricMergeSameType(TTRFormula f) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	public static void main(String args[]) {
-		TTRLambdaAbstract l=(TTRLambdaAbstract)Formula.create("R2^(R2 ++ [head==R2.head : e])");
-		TTRRecordType l2=(TTRRecordType)Formula.create("[p==question(head):t]");
-		TTRRecordType l3=TTRRecordType.parse("[x:e|head==x:e]");
-		System.out.println(((TTRLambdaAbstract)l2.conjoin(l)).betaReduce(l3));
+		TTRLambdaAbstract l = (TTRLambdaAbstract) Formula
+				.create("R2^(R2 ++ [head==R2.head : e])");
+		TTRRecordType l2 = (TTRRecordType) Formula
+				.create("[p==question(head):t]");
+		TTRRecordType l3 = TTRRecordType.parse("[x:e|head==x:e]");
+		System.out.println(((TTRLambdaAbstract) l2.conjoin(l)).betaReduce(l3));
 	}
-	
-	
-	
-	
 
 }

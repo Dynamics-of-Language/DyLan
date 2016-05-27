@@ -22,10 +22,13 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.action.meta.MetaTTRRecordType;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.ExistentialLabelConjunction;
 import qmul.ds.tree.label.FormulaLabel;
@@ -298,6 +301,19 @@ public abstract class Formula implements Serializable {
 		return this;
 	}
 
+	/**
+	 * to be overridden by individual formula classes. The method is to return the same formula, with all variables
+	 * replaced such that they are all unique with respect to tree t.
+	 * 
+	 * For now only TTR related classes override this method. TODO: do it for all classes
+	 * 
+	 * @param t
+	 * @return
+	 */
+	public <T extends DAGTuple, E extends DAGEdge> Formula freshenVars(Context<T,E> c) {
+		return this;
+	}
+	
 	/**
 	 * @return an instantiated version of this {@link Formula}, with all meta-elements replaced by their values. By
 	 *         default, just return this {@link Formula} unchanged. This will be overridden by {@link MetaFormula}e and

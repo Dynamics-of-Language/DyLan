@@ -439,7 +439,7 @@ public class InteractiveContextParser extends
 		state.wordStack().push(word);
 		// state.clear();
 		if (!parse()) {
-			logger.info("OOPS! Cannot parse " + word);
+			logger.info("OOPS! Cannot parse:" + word.word());
 
 			logger.info("Resetting to the state after the last parsable word");
 			logger.info("stack:" + state.wordStack());
@@ -568,8 +568,23 @@ public class InteractiveContextParser extends
 
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
-				"resource/2016-english-ttr-attribute-learning");
-		Utterance utt = new Utterance("A: what colour is this?");
+				"resource/2015-english-ttr");
+		Utterance utt1 = new Utterance("A: john likes mary.");
+		Utterance utt2 = new Utterance("B: okay what do you want?");
+		Utterance utt3 = new Utterance("A: a ticket.");
+		
+		parser.parseUtterance(utt1);
+		parser.parseUtterance(utt2);
+		parser.parseUtterance(utt3);
+		
+		System.out.println(parser.context.getGroundedContent("A"));
+		
+	}
+		
+		/**
+		 * 
+		 * this following bit was testing generation..... not finished yet!
+		 
 		TTRFormula goal;
 		if (parser.parseUtterance(utt))
 			goal = parser.getState().getCurrentTuple().getSemantics();
@@ -588,7 +603,7 @@ public class InteractiveContextParser extends
 		List<UtteredWord> generated=parser.generateTo(goal);
 		
 		System.out.println("Generated:"+generated);
-		
+		/**
 	
 
 

@@ -2,8 +2,6 @@ package qmul.ds.dag;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,9 +14,10 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
-import qmul.ds.DAGParser;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
+import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Tree;
 import edu.uci.ics.jung.graph.DelegateTree;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
@@ -1143,6 +1142,32 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		
 	}
 
+	public TTRFormula getGroundedContent(List<String> participants) {
+		TTRFormula result=new TTRRecordType();
+		Set<T> accepted_by_all=this.acceptance_pointers.get(participants.get(0));
+		for(int i=1;i<participants.size();i++)
+		{
+			accepted_by_all.retainAll(this.acceptance_pointers.get(participants.get(i)));
+			
+		}
+		
+		for(T tuple: accepted_by_all)
+		{
+			result=result.conjoin(tuple.getSemantics());
+		}
+		return result;
+	}
+
+	public TTRFormula getGroundedContent(String speaker){
+		TTRFormula result=new TTRRecordType();
+		Set<T> accepted_tuples=this.acceptance_pointers.get(speaker);
+		for(T tuple: accepted_tuples)
+		{
+			result=result.conjoin(tuple.getSemantics());
+		}
+		return result;
+		
+	}
 	
 
 	

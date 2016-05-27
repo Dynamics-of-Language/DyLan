@@ -39,11 +39,11 @@ import edu.stanford.nlp.trees.TreeFactory;
 public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		Serializable {
 
-	private final String ENTITY_VARIABLE_ROOT = "x";
-	private final String EVENT_VARIABLE_ROOT = "e";
-	private final String PROPOSITION_VARIABLE_ROOT = "p";
-	private final String REC_TYPE_VARIABLE_ROOT = "r";
-	private final String PREDICATE_VARIABLE_ROOT = "pred";
+	public final static String ENTITY_VARIABLE_ROOT = "x";
+	public final static String EVENT_VARIABLE_ROOT = "e";
+	public final static String PROPOSITION_VARIABLE_ROOT = "p";
+	public final static String REC_TYPE_VARIABLE_ROOT = "r";
+	public final static String PREDICATE_VARIABLE_ROOT = "pred";
 	protected static Logger logger = Logger.getLogger(Tree.class);
 
 	private static final long serialVersionUID = 1L;

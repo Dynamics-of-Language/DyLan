@@ -494,7 +494,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public DAG<T, E> parseWords(List<UtteredWord> words) {
 		for (UtteredWord word : words) {
-			parseWord(word);
+			if (parseWord(word)==null)
+				return null;
 		}
 		return getState();
 	}

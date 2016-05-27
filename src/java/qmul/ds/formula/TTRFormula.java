@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
@@ -12,7 +15,6 @@ import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
-import qmul.ds.type.ConstructedType;
 import qmul.ds.type.DSType;
 import edu.stanford.nlp.util.Pair;
 
@@ -32,9 +34,10 @@ public abstract class TTRFormula extends Formula {
 
 	protected static final Logger logger = Logger.getLogger(TTRFormula.class);
 
-	public TTRFormula freshenVars(Tree t) {
-		return this;
-	}
+	public abstract TTRFormula freshenVars(Tree t);
+	
+	
+	public abstract <T extends DAGTuple, E extends DAGEdge> TTRFormula freshenVars(Context<T,E> c);
 
 	protected abstract List<TTRRecordType> getTypes();
 
