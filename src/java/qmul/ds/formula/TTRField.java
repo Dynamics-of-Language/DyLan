@@ -207,9 +207,10 @@ public class TTRField extends Formula{
 	 * @return
 	 */
 	public boolean isManifest() {
-		return (type != null) && (type instanceof PredicateArgumentFormula);
+		return type != null;
 	}
-
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 

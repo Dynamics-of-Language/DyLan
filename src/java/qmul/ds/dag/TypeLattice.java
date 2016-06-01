@@ -632,30 +632,19 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		
 		
 		TTRRecordType target = TTRRecordType
-				.parse("[x2==you : e|r : [x : e|p4==juice(x) : t|head==x : e]|x1==your(r.head, r) : e|e1==finish : es|p3==with(e1, x1) : t|p5==pres_feature(e1) : t|p6==be_aux_feature(e1) : t|p8==past_feature(e1) : t|p9==subj(e1, x2) : t|head==e1 : es]");
+				.parse("[x2==you:e|x1==me:e|p==like(x2,x1):t|p1==run(x1):t|head==p:t]");
 		
-				
+		
+		
 		
 		TypeLattice lattice=new TypeLattice(target);
-		
-		Set<List<TypeLatticeIncrement>> initIncs=lattice.getIncrements(lattice.recType.getHeadField().getLabel());
-		System.out.println("first:");
-		printIncs(initIncs);
-		//lattice.go(initIncs.iterator().next());
-		
-		//Set<List<TypeLatticeIncrement>> incsNext=lattice.getIncrements(TTRRecordType.HEAD);
-		
-		//System.out.println("r:");
-		//printIncs(incsNext);
-		
-//		lattice.go(incsNext.iterator().next());
-//		Set<List<TypeLatticeIncrement>> incsE1=lattice.getIncrements(new TTRLabel("e1"));
-//		System.out.println("e1:");
-//		printIncs(incsE1);
-//		lattice.go(incsE1.iterator().next());
-//		Set<List<TypeLatticeIncrement>> incsE2=lattice.getIncrements(new TTRLabel("e1"));
-//		System.out.println("another e1:");
-//		printIncs(incsE2);
+//		TTRRecordType inc=lattice.nextIncrement();
+//		while(inc!=null){
+//			
+//			System.out.println(inc);
+//			inc=lattice.nextIncrement();
+//		}
+
 	
 	}
 
