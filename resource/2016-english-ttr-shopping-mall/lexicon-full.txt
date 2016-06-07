@@ -568,8 +568,8 @@ Paris                         proper                        paris               
 Tuesday						  proper						tuesday						  s3                           
 casserole					  proper						caserole					  s3
 stew						  proper						stew						  s3
-i                             i				                nons3							per
-you							  you   						nons3							per
+i                             proper		                i							  s1							per
+you							  proper						you							  s2							per
 he                            pron_nom                      s3                            male
 it                            pron_nom                      s3                            obj
 it                            pron_acc                      s3                            obj

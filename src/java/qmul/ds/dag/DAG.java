@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,6 +135,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 			acceptance_pointers.put(other, new HashSet<T>());
 		
 		acceptance_pointers.get(other).add(cur);
+		context.conjoinAcceptedContent(other, cur.getSemantics());
 	}
 	
 	public void setAcceptancePointer(String other)
@@ -1142,12 +1144,12 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		
 	}
 
-	public TTRFormula getGroundedContent(List<String> participants) {
+	public TTRFormula getGroundedContent(Set<String> participants) {
 		TTRFormula result=new TTRRecordType();
-		Set<T> accepted_by_all=this.acceptance_pointers.get(participants.get(0));
-		for(int i=1;i<participants.size();i++)
-		{
-			accepted_by_all.retainAll(this.acceptance_pointers.get(participants.get(i)));
+		Iterator<String> iter=participants.iterator();
+		Set<T> accepted_by_all=this.acceptance_pointers.get(iter.next());
+		while(iter.hasNext()){
+			accepted_by_all.retainAll(this.acceptance_pointers.get(iter.next()));
 			
 		}
 		

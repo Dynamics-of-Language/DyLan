@@ -72,10 +72,10 @@ public class InteractiveContextParser extends
 	List<String> rightEdgeIndicators = Arrays.asList(punct);
 
 	public InteractiveContextParser(File resourceDir) {
-		super(resourceDir);
-		state = new WordLevelContextDAG();
-		context = new Context<DAGTuple, GroundableEdge>(state);
-		state.setContext(context);
+		super(resourceDir, false);
+		
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG());
+		
 
 	}
 
@@ -87,10 +87,8 @@ public class InteractiveContextParser extends
 	public InteractiveContextParser(String resourceDirNameOrURL,
 			boolean repairing) {
 		super(resourceDirNameOrURL, repairing);
-		state = new WordLevelContextDAG();
-		state.setRepairProcessing(repairing);
-		context = new Context<DAGTuple, GroundableEdge>(state);
-		state.setContext(context);
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG());
+		context.setRepairProcessing(repairing);
 
 	}
 
@@ -100,42 +98,42 @@ public class InteractiveContextParser extends
 
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
 		super(lexicon, grammar);
-		state = new WordLevelContextDAG();
-		context = new Context<DAGTuple, GroundableEdge>(state);
-		state.setContext(context);
+		
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG());
+		
 	}
 
 	protected boolean repairInitiated() {
-		return state.repairInitiated();
+		return context.repairInitiated();
 	}
 
 	private boolean adjustOnce() {
 
 		if (repairInitiated()) {
-			UtteredWord repairWord = state.wordStack().pop();
-			backtrackAndParse(state.wordStack().peek());
-			state.wordStack().push(repairWord);
+			UtteredWord repairWord = getState().wordStack().pop();
+			backtrackAndParse(getState().wordStack().peek());
+			getState().wordStack().push(repairWord);
 
-		} else if (state.outDegree(state.getCurrentTuple()) == 0)
+		} else if (getState().outDegree(getState().getCurrentTuple()) == 0)
 			applyAllPermutations();
 
 		DAGEdge result;
 		do {
 
-			result = state.goFirst();
+			result = getState().goFirst();
 
 			if (result != null) {
 
 				break;
 			}
-		} while (state.attemptBacktrack());
+		} while (getState().attemptBacktrack());
 
 		return (result != null);
 
 	}
 
 	public boolean parse() {
-		if (state.isExhausted()) {
+		if (getState().isExhausted()) {
 			logger.info("state exhausted");
 			return false;
 		}
@@ -143,35 +141,35 @@ public class InteractiveContextParser extends
 		do {
 
 			if (!adjustOnce()) {
-				logger.info("wordstack:" + state.wordStack());
-				logger.info("depth:" + state.getDepth());
-				state.setExhausted(true);
+				logger.info("wordstack:" + getState().wordStack());
+				logger.info("depth:" + getState().getDepth());
+				getState().setExhausted(true);
 				return false;
 			}
 
-		} while (!state.wordStack().isEmpty());
+		} while (!getState().wordStack().isEmpty());
 		// commitToContext();
 		return true;
 	}
 
 	private void applyAllPermutations() {
-		if (state.wordStack().isEmpty())
+		if (getState().wordStack().isEmpty())
 			return;
-		UtteredWord word = state.wordStack().peek();
+		UtteredWord word = getState().wordStack().peek();
 		// logger.debug("apply all for word:"+word);
 		if (this.rightEdgeIndicators.contains(word.word())) {
 			replayBacktrackedActions(word);
 		}
 
 		else if (this.acks.contains(word.word())) {
-			String lastSpkr = state.getParentEdge().word().speaker();
+			String lastSpkr = getState().getParentEdge().word().speaker();
 			DAGTuple completed = complete(word);
-			state.getParentEdge(completed).groundFor(lastSpkr);
+			getState().getParentEdge(completed).groundFor(lastSpkr);
 			return;
 		}
 
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(
-				new ArrayList<Action>(), state.getCurrentTuple().tree.clone());
+				new ArrayList<Action>(), getState().getCurrentTuple().tree.clone());
 
 		initPair = adjustWithNonOptionalGrammar(initPair);
 
@@ -210,8 +208,8 @@ public class InteractiveContextParser extends
 
 		for (Pair<List<Action>, Tree> pair : global) {
 
-			UtteredWord w = state.wordStack().peek();
-			logger.trace("top of stack:" + state.wordStack().peek());
+			UtteredWord w = getState().wordStack().peek();
+			logger.trace("top of stack:" + getState().wordStack().peek());
 			for (LexicalAction la : lexicon.get(w.word())) {
 				// set right-edge indicators (e.g. '.' or '?') and acceptances
 				// to not replayable
@@ -231,9 +229,9 @@ public class InteractiveContextParser extends
 					GroundableEdge wordEdge;
 					newActs.add(la.instantiate());
 					if (getIndexOfTRP(newActs) >= 0)
-						wordEdge = state.getNewNewClauseEdge(newActs, w);
+						wordEdge = getState().getNewNewClauseEdge(newActs, w);
 					else
-						wordEdge = state.getNewEdge(newActs, w);
+						wordEdge = getState().getNewEdge(newActs, w);
 
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);
@@ -241,9 +239,9 @@ public class InteractiveContextParser extends
 							.getLexicalActionType()))
 						wordEdge.setRepairable(repairable);
 
-					DAGTuple newTuple = state.getNewTuple(res);
+					DAGTuple newTuple = getState().getNewTuple(res);
 
-					state.addChild(newTuple, wordEdge);
+					getState().addChild(newTuple, wordEdge);
 
 					logger.debug("Added Edge:" + wordEdge.toDebugString());
 					logger.debug("Child:" + newTuple);
@@ -254,15 +252,15 @@ public class InteractiveContextParser extends
 					 * 
 					 */
 					if (la.getLexicalActionType().equals("reject"))
-						state.setAcceptancePointer(w.speaker(), newTuple);
+						getState().setAcceptancePointer(w.speaker(), newTuple);
 					else if (la.getLexicalActionType().equals("accept")
 							|| la.getLexicalActionType().equals("assert") || la.getLexicalActionType().equals("yes")) {
-						state.setAcceptancePointer(w.speaker(), newTuple);
-						for (String spkr : state.getAcceptancePointers(state
+						getState().setAcceptancePointer(w.speaker(), newTuple);
+						for (String spkr : getState().getAcceptancePointers(getState()
 								.getParent(newTuple))) {
 							logger.info("setting acceptance pointer for:"
 									+ spkr);
-							state.setAcceptancePointer(spkr, newTuple);
+							getState().setAcceptancePointer(spkr, newTuple);
 						}
 					}
 
@@ -287,15 +285,15 @@ public class InteractiveContextParser extends
 
 	public boolean replayBacktrackedActions(UtteredWord word) {
 
-		Tree start = state.getCurrentTuple().getTree().clone();
+		Tree start = getState().getCurrentTuple().getTree().clone();
 		List<Action> acts = new ArrayList<Action>();// this will be the actions
 													// that will be replayed..
 													// it will be added to as a
 													// result of call to
 													// trimuntil
-		logger.debug("Edges to be replayed:" + state.getBacktrackedEdges());
+		logger.debug("Edges to be replayed:" + getState().getBacktrackedEdges());
 		Pair<List<GroundableEdge>, Tree> edgeTreePair = trimUntilApplicable(
-				start, state.getBacktrackedEdges(), acts);
+				start, getState().getBacktrackedEdges(), acts);
 
 		// logger.debug("got edges back from trim:"
 		// + (edgeTreePair == null ? null : edgeTreePair.first));
@@ -306,44 +304,32 @@ public class InteractiveContextParser extends
 			return false;
 
 		}
-		ActionReplayEdge replayEdge = state.getNewActionReplayEdge(acts,
+		ActionReplayEdge replayEdge = getState().getNewActionReplayEdge(acts,
 				new UtteredWord(null, word.speaker()), edgeTreePair.first);
 		logger.info("adding replayEdge with actions:" + acts);
-		DAGTuple res = state.getNewTuple(edgeTreePair.second);
-		state.addChild(res, replayEdge);
-		state.getBacktrackedEdges().clear();
+		DAGTuple res = getState().getNewTuple(edgeTreePair.second);
+		getState().addChild(res, replayEdge);
+		getState().getBacktrackedEdges().clear();
 		return true;
 
 	}
 
-	@Override
-	public boolean parse(List<? extends HasWord> words) {
-		for (int i = 0; i < words.size(); i++) {
-			DAG<DAGTuple, GroundableEdge> result = parseWord(new UtteredWord(
-					words.get(i).word()));
-			if (result == null)
-				return false;
-
-		}
-
-		return true;
-	}
+	
 
 	@Override
 	public void newSentence() {
 
-		state.addAxiom();
+		getState().addAxiom();
 
 	}
 
 	public void init() {
-		state.init();
-		if (context == null)
-			context = new Context<DAGTuple, GroundableEdge>(state);
-		else
-			context.setDAG(state);
+		context.init();
+
 
 	}
+	
+	
 
 	public List<Pair<GroundableEdge, DAGTuple>> getLocalGenerationOptions(
 			TTRFormula goal) {
@@ -357,9 +343,9 @@ public class InteractiveContextParser extends
 					GroundableEdge wordEdge;
 					UtteredWord w = new UtteredWord(word, "self");
 					if (getIndexOfTRP(res.first) >= 0)
-						wordEdge = state.getNewNewClauseEdge(res.first, w);
+						wordEdge = getState().getNewNewClauseEdge(res.first, w);
 					else
-						wordEdge = state.getNewEdge(res.first, w);
+						wordEdge = getState().getNewEdge(res.first, w);
 
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);
@@ -367,7 +353,7 @@ public class InteractiveContextParser extends
 							.getLexicalActionType()))
 						wordEdge.setRepairable(false);
 
-					DAGTuple newTuple = state.getNewTuple(res.second);
+					DAGTuple newTuple = getState().getNewTuple(res.second);
 					result.add(new Pair<GroundableEdge, DAGTuple>(wordEdge,
 							newTuple));
 
@@ -394,12 +380,12 @@ public class InteractiveContextParser extends
 		
 		if (gen.generate())
 		{
-			result.addAll(state.wordStack());
-			state.wordStack().clear();
-			state.thisIsFirstTupleAfterLastWord();
+			result.addAll(getState().wordStack());
+			getState().wordStack().clear();
+			getState().thisIsFirstTupleAfterLastWord();
 			return result;
 		}
-		state.resetToFirstTupleAfterLastWord();
+		getState().resetToFirstTupleAfterLastWord();
 		return null;
 	}
 	
@@ -426,8 +412,8 @@ public class InteractiveContextParser extends
 		// logger.debug("after reset cur is" + state.getCurrentTuple());
 
 		if (this.repairanda.contains(word.word())) {
-			this.state.thisIsFirstTupleAfterLastWord();
-			return this.state;
+			this.getState().thisIsFirstTupleAfterLastWord();
+			return this.getState();
 		}
 
 		Collection<LexicalAction> actions = this.lexicon.get(word.word());
@@ -436,22 +422,20 @@ public class InteractiveContextParser extends
 			return null;
 		}
 
-		state.wordStack().push(word);
+		getState().wordStack().push(word);
 		// state.clear();
 		if (!parse()) {
-			logger.info("OOPS! Cannot parse:" + word.word());
-
-			logger.info("Resetting to the state after the last parsable word");
-			logger.info("stack:" + state.wordStack());
+			logger.info("OOPS! Cannot parse:" + word.word()+". Resetting to the state after the last parsable word");
+			logger.debug("stack:" + getState().wordStack());
 			//state.wordStack().remove(0);
-			state.resetToFirstTupleAfterLastWord();
-			if (!state.repairProcessingEnabled()) {
+			getState().resetToFirstTupleAfterLastWord();
+			if (!getState().repairProcessingEnabled()) {
 				logger.info("repair processing is disabled. Reset to state after last parsable word.");
 				return null;
 			}
 			logger.info("Now initiating local repair.");
-			state.wordStack().push(word);
-			state.initiateLocalRepair();
+			getState().wordStack().push(word);
+			getState().initiateLocalRepair();
 
 			if (!parse()) {
 				logger.info("OOPS! Couldn't parse word as local repair either");
@@ -462,11 +446,11 @@ public class InteractiveContextParser extends
 			}
 		}
 
-		this.state.thisIsFirstTupleAfterLastWord();
+		this.getState().thisIsFirstTupleAfterLastWord();
 		logger.info("Parsed " + word);
-		logger.info("Final Tuple:" + state.getCurrentTuple());
+		logger.info("Final Tuple:" + getState().getCurrentTuple());
 
-		return this.state;
+		return this.getState();
 	}
 
 	public Context<DAGTuple, GroundableEdge> getContext() {
@@ -481,12 +465,12 @@ public class InteractiveContextParser extends
 	private GroundableEdge getFirstRepairableEdge() {
 		logger.debug("finding first repairable edge:");
 
-		GroundableEdge parent = state.getParentEdge();
+		GroundableEdge parent = getState().getParentEdge();
 		while (parent != null) {
 			if (parent.isRepairable())
 				return parent;
 
-			parent = state.getParentEdge(state.getSource(parent));
+			parent = getState().getParentEdge(getState().getSource(parent));
 			logger.debug("inside loop");
 
 		}
@@ -499,8 +483,8 @@ public class InteractiveContextParser extends
 			if (non_repairing_action_types.contains(la.getLexicalActionType()))
 				return;
 
-			DAGTuple current = state.getCurrentTuple();
-			if (state.isClauseRoot(current))
+			DAGTuple current = getState().getCurrentTuple();
+			if (getState().isClauseRoot(current))
 				return;
 
 			// GroundableEdge firstRepairable = getFirstRepairableEdge();
@@ -517,8 +501,8 @@ public class InteractiveContextParser extends
 			List<GroundableEdge> backtracked = new ArrayList<GroundableEdge>();
 
 			do {
-				repairableEdge = state.getParentEdge(current);
-				current = state.getSource(repairableEdge);
+				repairableEdge = getState().getParentEdge(current);
+				current = getState().getSource(repairableEdge);
 				// shouldn't repair right edges like ? . ! <eot> etc.
 				backtracked.add(0, repairableEdge);
 
@@ -545,26 +529,23 @@ public class InteractiveContextParser extends
 				if (result != null) {
 					// now add backtracking edge
 
-					VirtualRepairingEdge repairing = state.getNewRepairingEdge(
+					VirtualRepairingEdge repairing = getState().getNewRepairingEdge(
 							new ArrayList<GroundableEdge>(backtracked),
 							actions, current, word);
-					DAGTuple to = state.getNewTuple(result);
-					state.addChild(to, repairing);
+					DAGTuple to = getState().getNewTuple(result);
+					getState().addChild(to, repairing);
 
 				} else
 					logger.debug("could not apply:" + actions + "\n at:"
 							+ current.getTree());
 
-			} while (!state.isClauseRoot(current)
-					&& !state.isBranching(current));
+			} while (!getState().isClauseRoot(current)
+					&& !getState().isBranching(current));
 		}
 
 	}
 
-	public boolean parseUtterance(Utterance utt) {
 
-		return parseWords(utt.words) != null;
-	}
 
 	public static void main(String[] a) {
 		InteractiveContextParser parser = new InteractiveContextParser(
@@ -572,12 +553,13 @@ public class InteractiveContextParser extends
 		Utterance utt1 = new Utterance("A: john likes mary.");
 		Utterance utt2 = new Utterance("B: okay what do you want?");
 		Utterance utt3 = new Utterance("A: a ticket.");
-		
+		Utterance utt4 = new Utterance("B: okay.");
 		parser.parseUtterance(utt1);
 		parser.parseUtterance(utt2);
 		parser.parseUtterance(utt3);
+		parser.parseUtterance(utt4);
 		
-		System.out.println(parser.context.getGroundedContent("A"));
+		System.out.println(parser.context.getGroundedContent("B"));
 		
 	}
 		
@@ -636,7 +618,7 @@ public class InteractiveContextParser extends
 		// }
 
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(
-				new ArrayList<Action>(), state.getCurrentTuple().tree.clone());
+				new ArrayList<Action>(), getState().getCurrentTuple().tree.clone());
 
 		initPair = adjustWithNonOptionalGrammar(initPair);
 
@@ -708,32 +690,25 @@ public class InteractiveContextParser extends
 		return null;
 
 	}
-
 	
-//	public class GenerationThread extends Thread {
-//		TTRFormula goal;
-//
-//		
-//
-//		public void generate(TTRFormula goal) {
-//			this.goal=goal;
-//			this.start();
-//		}
-//
-//		/**
-//		 * 
-//		 * @param goal
-//		 * @return
-//		 */
-//		public UtteredWord generateNextWord(TTRFormula goal) {
-//			this.goal = goal;
-//			return null;
-//		}
-//
-//		public void run() {
-//
-//		}
-//
-//	}
+	/**Resets state and parses the dialogue d
+	 * @param d
+	 * @return the resulting context
+	 */
+	public Context<DAGTuple, GroundableEdge> parseDialogue(Dialogue d)
+	{
+		context.init(d.getParticiapnts());
+		for(Utterance utt: d)
+		{
+			if (!parseUtterance(utt))
+			{
+				return null;
+			}
+		}
+		
+		return context;
+	}
+
+
 
 }

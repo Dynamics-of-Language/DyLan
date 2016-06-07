@@ -1,0 +1,54 @@
+what                          pron_whq                      obj
+what						  pron_whq_det					obj
+do                            v_aux_inf                     do                            pres                          nons3
+does                          v_aux_inf                     do                            pres                          s3
+did                           v_aux_inf                     did                           past                          per
+would                         v_aux_inf                     would                         pres                          nons3
+i                             proper		                i							  s1							per
+you							  proper						you							  s2							nons3
+buy		                      v_tran_inf                    buy                       inf                           per
+buy		                      v_tran_fin                    buy                       pres                          nons3
+buys  	                      v_tran_fin                    buy                       pres                          s3
+buying	                      v_tran_ing                    buy                       ing                           per
+phone					  	count							phone					   s3							obj
+computer					count							computer				   s3							obj
+smartphone					count							smartphone				   s3							obj
+product					 	 count							product					   s3							obj
+brand					  count							brand					   s3							obj
+make					  count							make					   s3							obj
+samsung						  proper						samsung						  s3							obj
+lg							  proper						lg							  s3							obj
+apple						  proper						apple						  s3							obj
+want                          v_tran_inf                    want                          inf                           per
+want                          v_tran_fin                    want                          pres                          nons3
+wants                         v_tran_fin                    want                          pres                          s3
+want                          v_subjcon_fin                 want                          pres                          nons3
+wants                         v_subjcon_fin                 want                          pres                          s3
+want                          v_subjcon_inf                 want                          inf                          nons3
+prefer                          v_tran_inf                    want                          inf                           per
+prefer                          v_tran_fin                    want                          pres                          nons3
+prefer                         v_tran_fin                    want                          pres                          s3
+prefer                          v_subjcon_fin                 want                          pres                          nons3
+prefer                         v_subjcon_fin                 want                          pres                          s3
+prefer                          v_subjcon_inf                 want                          inf                          nons3
+looking						  v_subjcon_ing				  look							ing 						  per
+lookingfor					  v_tran_ing				      look							ing							  per
+was                           v_aux_be                      past                          s3
+were                          v_aux_be                      past                          per
+am                            v_aux_be                      pres                           per
+are                           v_aux_be                      pres                           per
+.							  assert						A
+?							  question						Q
+uhu							  accept						uhu
+ok							  accept						ok
+yes							  accept						yes
+yes							  yes							yes
+okay						  accept						okay
+yeah						  accept						yeah
+right						  accept						right
+//no							  reject						not
+a                             det_indef                     eps
+an                            det_indef                     eps
+by							  prep_e						by
+from						  prep_e						from
+to							  to_subjcon					to

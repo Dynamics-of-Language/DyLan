@@ -75,7 +75,7 @@ public class InteractiveContextGenerator extends
 		List<Pair<GroundableEdge, DAGTuple>> genPairs=getLocalGenerationOptions();
 		for(Pair<GroundableEdge, DAGTuple> genPair: genPairs)
 		{
-			parser.state.addChild(genPair.second, genPair.first);
+			parser.getState().addChild(genPair.second, genPair.first);
 		}
 	}
 	
@@ -90,9 +90,9 @@ public class InteractiveContextGenerator extends
 					GroundableEdge wordEdge;
 					UtteredWord w = new UtteredWord(word, myName);
 					if (parser.getIndexOfTRP(res.first) >= 0)
-						wordEdge = parser.state.getNewNewClauseEdge(res.first, w);
+						wordEdge = parser.getState().getNewNewClauseEdge(res.first, w);
 					else
-						wordEdge = parser.state.getNewEdge(res.first, w);
+						wordEdge = parser.getState().getNewEdge(res.first, w);
 
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);
@@ -100,7 +100,7 @@ public class InteractiveContextGenerator extends
 							.getLexicalActionType()))
 						wordEdge.setRepairable(false);
 
-					DAGTuple newTuple = parser.state.getNewTuple(res.second);
+					DAGTuple newTuple = parser.getState().getNewTuple(res.second);
 					result.add(new Pair<GroundableEdge, DAGTuple>(wordEdge,
 							newTuple));
 
@@ -128,7 +128,7 @@ public class InteractiveContextGenerator extends
 
 		
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(
-				new ArrayList<Action>(), parser.state.getCurrentTuple().tree.clone());
+				new ArrayList<Action>(), parser.getState().getCurrentTuple().tree.clone());
 
 		initPair = parser.adjustWithNonOptionalGrammar(initPair);
 

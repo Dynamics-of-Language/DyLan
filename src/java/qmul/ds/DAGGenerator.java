@@ -95,7 +95,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		 */
 		public DAG<T, E> getState() {
 			
-			return parser.state;
+			return parser.getState();
 		}
 
 		
@@ -104,7 +104,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		
 
 		public boolean generate() {
-			if (parser.state.isExhausted()) {
+			if (parser.getState().isExhausted()) {
 				logger.info("state exhausted");
 				return false;
 			}
@@ -112,13 +112,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 			do {
 
 				if (!adjustOnce()) {
-					logger.info("wordstack:" + parser.state.wordStack());
-					logger.info("depth:" + parser.state.getDepth());
-					parser.state.setExhausted(true);
+					logger.info("wordstack:" + parser.getState().wordStack());
+					logger.info("depth:" + parser.getState().getDepth());
+					parser.getState().setExhausted(true);
 					return false;
 				}
 				
-			} while (!(parser.state.getCurrentTuple().isComplete()&&goal.subsumes(parser.state.getCurrentTuple().getSemantics())));
+			} while (!(parser.getState().getCurrentTuple().isComplete()&&goal.subsumes(parser.getState().getCurrentTuple().getSemantics())));
 			
 			return true;
 		}
@@ -126,19 +126,19 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		
 		private boolean adjustOnce() {
 
-			if (parser.state.outDegree(parser.state.getCurrentTuple()) == 0)
+			if (parser.getState().outDegree(parser.getState().getCurrentTuple()) == 0)
 				applyAllOptions();
 
 			E result;
 			do {
 
-				result = parser.state.goFirst();
+				result = parser.getState().goFirst();
 
 				if (result != null) {
 
 					break;
 				}
-			} while (parser.state.attemptBacktrack());
+			} while (parser.getState().attemptBacktrack());
 
 			return (result != null);
 

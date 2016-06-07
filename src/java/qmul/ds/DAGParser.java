@@ -22,6 +22,7 @@ import qmul.ds.action.Lexicon;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.formula.TTRFormula;
@@ -31,7 +32,7 @@ import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 
 /**
- * A generic parser with a Directed Asyclic Graph  as its parse state and context ({@link DAG<T,E>}, see Eshghi et. al. (2013)).
+ * A generic parser with a Directed Asyclic Graph  as its parse context.getDAG() and context ({@link DAG<T,E>}, see Eshghi et. al. (2013)).
  * 
  * @author arash, mpurver
  */
@@ -39,17 +40,18 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		implements DSParser {
 
 	private static Logger logger = Logger.getLogger(DAGParser.class);
-	/**
-	 * The parse state, which is a directed acyclic graph. This acts as the DS context.
-	 * See e.g. Eshghi et. al. (2015); Eshghi et. al. (2013)
-	 * 
-	 */
-	protected DAG<T, E> state;
+	
+	//protected DAG<T, E> state;
 	protected Lexicon lexicon;
 	/**
 	 * The non-optional set of computational actions.
 	 */
 	protected Grammar nonoptionalGrammar;// as determined by the prefix * in action files
+	/**
+	 * The context including the state as directed acyclic graph.
+	 * See e.g. Eshghi et. al. (2015); Eshghi et. al. (2013)
+	 * 
+	 */
 	protected Context<T, E> context;
 	
 	/**
@@ -89,6 +91,10 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		}
 	}
 
+	public Context<T,E> getContext()
+	{
+		return context;
+	}
 	/**
 	 * @param resourceDir
 	 *            the dir containing computational-actions.txt,
@@ -116,6 +122,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	}
 	
 	
+	public DAGParser(File resourceDir, boolean b) {
+		this(resourceDir);
+	}
 	/** BEGIN METHODS FOR RERUNNING ACTIONS________________________________________________________________________ 
 	 * The following methods are used for re-running actions having backtracked over them to do repair.
 	 * 
@@ -163,7 +172,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		if (edges.isEmpty())
 			return new Pair<List<E>,Tree>(new ArrayList<E>(), t);
 		
-		List<Action> actions=state.getAsActionList(edges);
+		List<Action> actions=context.getDAG().getAsActionList(edges);
 		int trpIndex=getIndexOfTRP(actions);
 		if (trpIndex>=0)
 			actions=new ArrayList<Action>(actions.subList(trpIndex+1, actions.size()));
@@ -251,14 +260,14 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public T complete(UtteredWord word)
 	{
-		Pair<List<Action>,Tree> completed=complete(state.getCurrentTuple().getTree());
+		Pair<List<Action>,Tree> completed=complete(context.getDAG().getCurrentTuple().getTree());
 		
 		
 		
-		E replayEdge = state.getNewEdge(completed.first, word);
+		E replayEdge = context.getDAG().getNewEdge(completed.first, word);
 		
-		T res = state.getNewTuple(completed.second);
-		state.addChild(res, replayEdge);
+		T res = context.getDAG().getNewTuple(completed.second);
+		context.getDAG().addChild(res, replayEdge);
 		return res;
 		// replayEdge.setInContext(true);
 		// setCurrentTuple(res);
@@ -421,7 +430,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public void init() {
 		FormulaMetavariable.resetPool();
-		state.init();
+		context.init();
 
 	}
 
@@ -432,32 +441,32 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 * @see init()
 	 */
 	public void newSentence() {
-		state.init();
+		context.getDAG().init();
 
 	}
 
 	public void setState(DAG<T, E> state) {
-		this.state = state;
+		this.context.setDAG(state);
 	}
 
 	/**
 	 * @return a shallow copy of the current state
 	 */
 	public DAG<T, E> getState() {
-		if (state == null) {
+		if (context == null) {
 			return null;
 		}
-		return state;
+		return context.getDAG();
 	}
 
 	@Override
 	public TreeSet<DAGTuple> getStateWithNBestTuples(int N) {
 
 		TreeSet<DAGTuple> result = new TreeSet<DAGTuple>();
-		result.add(state.getCurrentTuple());
+		result.add(context.getDAG().getCurrentTuple());
 		for (int i = 0; i < N; i++) {
 			if (parse())
-				result.add(state.getCurrentTuple());
+				result.add(context.getDAG().getCurrentTuple());
 			else
 				break;
 		}
@@ -467,7 +476,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	@Override
 	public ParserTuple getBestTuple() {
 
-		return state.getCurrentTuple();
+		return context.getDAG().getCurrentTuple();
 	}
 
 	@Override
@@ -487,26 +496,43 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 
 	public abstract DAG<T, E> parseWord(UtteredWord word);
 
-	/**
-	 * @param words
-	 * @return the resulting (possibly empty) state, or null if the state became
-	 *         empty before seeing the last word
-	 */
-	public DAG<T, E> parseWords(List<UtteredWord> words) {
-		for (UtteredWord word : words) {
-			if (parseWord(word)==null)
-				return null;
-		}
-		return getState();
-	}
+	
 
+	
+	public boolean parseUtterance(Utterance utt)
+	{
+		logger.info("Parsing Utterance \""+utt+"\"");
+		for (int i = 0; i < utt.words.size(); i++) {
+			DAG<T,E> result = parseWord(
+					utt.words.get(i));
+			if (result == null)
+			{
+				logger.warn("Failed to parse "+utt.words.get(i));
+				return false;
+			}
+
+		}
+
+		return true;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see edu.stanford.nlp.parser.Parser#parse(java.util.List)
 	 */
 	@Override
-	public abstract boolean parse(List<? extends HasWord> words);
+	public boolean parse(List<? extends HasWord> words)
+	{
+		for (int i = 0; i < words.size(); i++) {
+			DAG<T,E> result = parseWord(new UtteredWord(
+					words.get(i).word()));
+			if (result == null)
+				return false;
+
+		}
+
+		return true;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -522,18 +548,18 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public abstract boolean replayBacktrackedActions(UtteredWord w);
 
 	public Tree complete() {
-		return this.complete(state.getCurrentTuple().tree).second;
+		return this.complete(context.getDAG().getCurrentTuple().tree).second;
 	}
 	
 	public boolean isRepairProcessingEnabled()
 	{
-		return state.repairProcessingEnabled();
+		return context.getDAG().repairProcessingEnabled();
 	}
 	
 	public void setRepairProcessing(boolean b)
 	{
 		
-		this.state.setRepairProcessing(b);
+		this.context.getDAG().setRepairProcessing(b);
 	}
 	
 	

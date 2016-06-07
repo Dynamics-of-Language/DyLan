@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -459,16 +460,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		if (record.containsKey(f.getLabel()))
 			throw new IllegalArgumentException("Coinciding labels in:" + this
 					+ " when adding" + f);
-		
+
 		ArrayList<TTRField> list = new ArrayList<TTRField>();
 		Set<Variable> variables = new HashSet<Variable>(f.getVariables());
 		int i = 0;
-		boolean dep_satisfied=false;
+		boolean dep_satisfied = false;
 		for (; i < fields.size(); i++) {
 			if (variables.isEmpty())
-				dep_satisfied=true;
-			
-			if (dep_satisfied&&f.getVariables().size()<=fields.get(i).getVariables().size())
+				dep_satisfied = true;
+
+			if (dep_satisfied
+					&& f.getVariables().size() <= fields.get(i).getVariables()
+							.size())
 				break;
 
 			TTRField field = fields.get(i);
@@ -477,7 +480,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		}
 
-		
 		list.addAll(fields.subList(0, i));
 
 		list.add(f);
@@ -487,6 +489,50 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		record.put(f.getLabel(), f);
 		this.fields = list;
 		f.setParentRecType(this);
+	}
+
+	/**
+	 * Decomposes this record type into its constituent record types, R_1..R_N
+	 * such that the constinuents have minimal commonality, and, that, R1 ^ R2 ^
+	 * .. ^ R_N = @this
+	 * 
+	 * @return
+	 */
+	public List<TTRRecordType> decompose() {
+
+		List<TTRField> fieldList = getFields();
+		List<TTRRecordType> decomposedList = new ArrayList<TTRRecordType>();
+
+		// decompose the list on the basis of its dependent fields,
+		// this will result in constituent parts which contain fields
+		// grouped together based on their dependence relationship
+		for (int i = 0; i < fieldList.size(); i++) {
+			decomposedList.add(new TTRRecordType());
+
+			for (int j = 0; j < getFields().size(); j++) {
+				if (fieldList.get(i).dependsOn(getFields().get(j))) {
+					if (!decomposedList.get(decomposedList.size() - 1)
+							.getRecord()
+							.containsKey(fieldList.get(i).getLabel()))
+						decomposedList.get(decomposedList.size() - 1).add(
+								fieldList.get(i));
+					decomposedList.get(decomposedList.size() - 1).add(
+							getFields().get(j));
+				}
+			}
+		}
+
+		// cleaning up the list - i.e. removing empty record types
+		Iterator<TTRRecordType> iter = decomposedList.iterator();
+		while (iter.hasNext()) {
+			TTRRecordType recType = iter.next();
+
+			if (recType.getFields().size() == 0)
+				iter.remove();
+		}
+
+		return decomposedList;
+
 	}
 
 	/**
@@ -745,15 +791,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					return this.MCS(other, map);
 				}
 			} else {
-				TTRRecordType loneField=new TTRRecordType();
+				TTRRecordType loneField = new TTRRecordType();
 				loneField.add(f);
-				if (!loneField.subsumesMapped(other, map))
-				{
+				if (!loneField.subsumesMapped(other, map)) {
 					if (f.isManifest())
-							f.setType(null);
+						f.setType(null);
 					else
 						this.remove(f.getLabel());
-					
+
 					return this.MCS(other, map);
 				}
 
@@ -761,7 +806,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		}
 
 		return new TTRRecordType();
-		
 
 	}
 
@@ -792,7 +836,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				+ r1.mostSpecificCommonSuperType(r2, map));
 
 		System.out.println("map:" + map);
-	
 
 	}
 
@@ -2036,6 +2079,24 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public List<TTRLabel> getLabelsByStr(String str) {
+		List<TTRLabel> labelList = new ArrayList<TTRLabel>();
+
+		Iterator<TTRLabel> iterator = this.getLabels().iterator();
+		while (iterator.hasNext()) {
+			TTRLabel label = iterator.next();
+			if (label.toString().contains(str))
+				labelList.add(label);
+		}
+
+		return labelList;
 	}
 
 	public String toDebugString() {

@@ -1,12 +1,16 @@
 package qmul.ds;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
 import edu.uci.ics.jung.graph.Tree;
 
@@ -35,42 +39,58 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	private static final long serialVersionUID = -8765365147853341079L;
 
 
-	protected List<String> participants;
+	
+	/**
+	 * this is a map from dialogue participants to the content asserted/accepted by them. This is maintained as the dialogue goes 
+	 * forward. 
+	 * 
+	 */
+	protected Map<String, TTRFormula> accepted_contents=null;
 	protected DAG<T,E> dag;
 	
+	public void initParticipantContents(List<String> participants)
+	{
+		accepted_contents=new HashMap<String, TTRFormula>();
+		for(String s:participants)
+		{
+			accepted_contents.put(s, new TTRRecordType());
+		}
+		
+	}
 	public Context(DAG<T,E> dag)
 	{
 		this(dag, new ArrayList<String>());
+		dag.setContext(this);
 	}
 	
 	public Context(DAG<T,E> dag, List<String> part)
 	{
 		this.dag=dag;
-		participants=part;
-		
+		dag.setContext(this);
+		initParticipantContents(part);
 	}
 	
 	
 	public TTRFormula getGroundedContent()
 	{
-		return dag.getGroundedContent(participants);
+		return dag.getGroundedContent(accepted_contents.keySet());
 		
 	}
 	
 	public TTRFormula getGroundedContent(String speaker)
 	{
-		return dag.getGroundedContent(speaker);
+		return this.accepted_contents.get(speaker);
 	}
 	
 	
 	public void addParticipant(String name)
 	{
-		participants.add(name);
+		accepted_contents.put(name, new TTRRecordType());
 	}	
 	
 	public void removeParticipant(String name)
 	{
-		participants.remove(name);
+		accepted_contents.remove(name);
 	}
 	
 	public Tree<T,E> getActiveDAG()
@@ -132,7 +152,10 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		dag.setAcceptancePointer(dag.getSpeakerOfPreviousWord());
 	}
 
-	
+	public Set<String> getParticipants()
+	{
+		return accepted_contents.keySet();
+	}
 	
 	
 	
@@ -194,6 +217,50 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		predicatePool.add(v);
 		return v;
 
+	}
+
+	public String getCurrentAddressee() {
+		return (dag.wordStack().isEmpty())?null:dag.wordStack().peek().addressee();
+	}
+
+	
+	
+	public void init()
+	{
+		dag.init();
+	}
+	
+	public void init(List<String> participants)
+	{
+		dag.init();
+		initParticipantContents(participants);
+	}
+
+	public void setRepairProcessing(boolean repairing) {
+		dag.setRepairProcessing(repairing);
+		
+	}
+
+	public boolean repairInitiated() {
+		return dag.repairInitiated();
+	}
+	
+	public void conjoinAcceptedContent(String participant, TTRFormula semantics) {
+		if (this.accepted_contents.containsKey(participant))
+			this.accepted_contents.put(participant, semantics.conjoin(this.accepted_contents.get(participant)));
+		else
+			this.accepted_contents.put(participant, semantics);
+		
+	}
+	
+	public String printAcceptedContents()
+	{
+		String result="";
+		for(String speaker:this.accepted_contents.keySet())
+			result+=speaker+":"+accepted_contents.get(speaker)+"\n";
+		
+		return result;
+			
 	}
 
 	

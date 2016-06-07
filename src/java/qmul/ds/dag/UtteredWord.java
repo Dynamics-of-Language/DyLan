@@ -7,17 +7,18 @@ import qmul.ds.Utterance;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.util.Pair;
 
-public class UtteredWord extends Pair<String,String> implements HasWord{
+public class UtteredWord implements HasWord{
 
-	
-	/**
-	 * 
-	 */
+	private String word;
+	private String speaker;
+	private String addressee;
 	private static final long serialVersionUID = 5203636230819258201L;
 
 	public UtteredWord(String word, String speaker)
 	{
-		super(word,speaker);
+		this.word=word;
+		this.speaker=speaker;
+		this.addressee=Utterance.defaultAddressee;
 	}
 	
 	public UtteredWord(String word)
@@ -28,24 +29,26 @@ public class UtteredWord extends Pair<String,String> implements HasWord{
 
 	@Override
 	public void setWord(String arg0) {
-		first=arg0;
+		word=arg0;
 		
 	}
 
 	@Override
 	public String word() {
 		
-		return first;
+		return word;
 	}
 	
 	public String speaker()
 	{
-		return second;
+		return speaker;
 	}
 	
 	public String toString()
 	{
-		return second==null?first:second+": "+ first;
+		String result = speaker==null?speaker:speaker+": "+ word;
+		result+=addressee==null?"":"@"+addressee;
+		return result;
 	}
 	
 	public static List<UtteredWord> getAsUtteredWords(String sentence)
@@ -77,26 +80,23 @@ public class UtteredWord extends Pair<String,String> implements HasWord{
 			return false;
 		
 		UtteredWord other=(UtteredWord)o;
-		if (this.first==null&&this.second==null)
-		{
-			return other.first==null&&other.second==null;
-				
-		}
-		else if (this.first==null&&this.second!=null)
-		{
-			return other.first==null&&this.second.equals(other.second);
-		}if (this.first!=null&&this.second==null)
-		{
-			return other.second==null&&this.first.equals(other.first);
-				
-		}
 		
 		
-		return this.word().equals(other.word())&&this.speaker().equals(other.speaker());
+		
+		return this.word().equals(other.word())&&this.speaker().equals(other.speaker())&&this.addressee().equals(other.addressee());
 	}
 
 	public void setSpeaker(String speaker) {
-		setSecond(speaker);
+		this.speaker=speaker;
+		
+	}
+
+	public String addressee() {
+		return addressee;
+	}
+
+	public void setAddressee(String string) {
+		this.addressee=string;
 		
 	}
 

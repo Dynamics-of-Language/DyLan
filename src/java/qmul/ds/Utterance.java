@@ -17,6 +17,7 @@ public class Utterance {
 	protected static Logger logger=Logger.getLogger(Utterance.class);
 	public static final String SPEAKER_SEP=":";
 	public static final String defaultSpeaker = "Spkr";
+	public static final String defaultAddressee = "you";
 	String speaker;
 	List<UtteredWord> words;
 
@@ -75,6 +76,16 @@ public class Utterance {
 		return result.substring(0,result.length()-1);
 	}
 	
+	public String toDebugString()
+	{
+		String result=this.speaker+": ";
+		for(HasWord w:this.words)
+			result+=w+" ";
+		
+		return result.substring(0,result.length()-1);
+		
+	}
+	
 	public String getSpeaker()
 	{
 		return this.speaker;
@@ -94,6 +105,28 @@ public class Utterance {
 		this.speaker=speaker;
 		for(UtteredWord w: this.words)
 			w.setSpeaker(speaker);
+		
+	}
+
+	/**
+	 * Set addressee of words from begin to end (exclusive), to string 
+	 * @param string
+	 * @param begin
+	 * @param end
+	 */
+	public void setAddressee(String string, int begin, int end) {
+		for(int i=begin;i<end;i++)
+			this.words.get(i).setAddressee(string);
+		
+	}
+	/**
+	 * Set addressee of all words in this utterance to Addressee
+	 * @param addressee
+	 */
+	public void setAddressee(String addressee)
+	{
+		setAddressee(addressee, 0, words.size());
+		
 		
 	}
 

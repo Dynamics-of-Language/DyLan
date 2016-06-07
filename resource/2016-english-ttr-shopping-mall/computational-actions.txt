@@ -92,11 +92,11 @@ ELSE    abort
 
 late-star-adj-q
 IF      ty(t)
-		//<\/*>+Q
+		<\/*>+Q
 		<Z>+Q
 THEN	go(Z)
-		IF		¬!
-        		//</\*>tn(0)
+		IF		</\*>tn(0)
+        		¬!
         		ty(X)  // could restrict this to e/t but no way to do disjunction here yet
         		//¬<\/1>Ex.x
         		//¬<\/0>Ex.x
