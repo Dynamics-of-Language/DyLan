@@ -821,21 +821,34 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public static void main(String[] a) {
-		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
-		TTRRecordType r1 = TTRRecordType
-				.parse("[x==john:e|p==run(x):t|y==mary:e|p2==like(y,x):t|p1==fat(x):t|x3==arash:e]");
-
-		// TTRRecordType r2 = TTRRecordType
-		// .parse("[x1==john:e|y1:e|p4==like(x1,y1):t|p2==man(x1):t]");
-		TTRRecordType r2 = TTRRecordType
-				.parse("[x1==bill:e|y1==mary:e|p2==man(x1):t|p3==fat(y1):t|p4==like(x1,y1):t|x5==arash:e]");
-		System.out.println("r1=" + r1);
-		System.out.println("r2=" + r2);
-		System.out.println("MCS(r1,r2)="
-				+ r1.mostSpecificCommonSuperType(r2, map));
-
-		System.out.println("map:" + map);
+		HashMap<Variable, Variable> map=new HashMap<Variable,Variable>();
+		
+		TTRRecordType r=TTRRecordType.parse("[L==john:e]");
+		System.out.println(r);
+		TTRRecordType r2=TTRRecordType.parse("[x==john:e]");
+		System.out.println(r.subsumesMapped(r2, map));
+		System.out.println(r);
+		System.out.println(map);
+		
+		
+		
+		//Testing most specific common super type
+		//		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+//
+//		TTRRecordType r1 = TTRRecordType
+//				.parse("[x==john:e|p==run(x):t|y==mary:e|p2==like(y,x):t|p1==fat(x):t|x3==arash:e]");
+//
+//		// TTRRecordType r2 = TTRRecordType
+//		// .parse("[x1==john:e|y1:e|p4==like(x1,y1):t|p2==man(x1):t]");
+//		TTRRecordType r2 = TTRRecordType
+//				.parse("[x1==bill:e|y1==mary:e|p2==man(x1):t|p3==fat(y1):t|p4==like(x1,y1):t|x5==arash:e]");
+//		System.out.println("r1=" + r1);
+//		System.out.println("r2=" + r2);
+//		System.out.println("MCS(r1,r2)="
+//				+ r1.mostSpecificCommonSuperType(r2, map));
+//
+//		System.out.println("map:" + map);
 
 	}
 

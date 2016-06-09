@@ -1,0 +1,26 @@
+USR: I want to buy a phone.
+SYS: Which brand do you want?
+USR: Samsung.
+SYS: okay
+
+SYS: What do you want to buy?
+USR: A phone
+SYS: By which brand?
+USR: LG.
+SYS: okay.
+
+SYS: What do you want to buy?
+USR: I want a smartphone
+SYS: By Which brand?
+USR: HTC.
+SYS: okay.
+
+SYS: What would you like?
+USR: a computer.
+SYS: Which brand do you want?
+USR: Apple.
+
+USR: I need a computer.
+SYS: Which brand do you prefer?
+USR: Dell.
+SYS: okay.

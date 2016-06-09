@@ -240,7 +240,20 @@ IF		?ty(e)
 THEN	ttrput([x==X:e|head==x:e])
 		put(ty(e))
 		delete(?ty(e))
+		put(person(PERSON))
 ELSE	abort
+
+
+you(PERSON,CLASS)
+IF		?ty(e)
+		Addressee(X)
+THEN	ttrput([x==X:e|head==x:e])
+		put(ty(e))
+		delete(?ty(e))
+		put(person(PERSON))
+ELSE	abort
+
+
 
 //only clause initally
 pron_whq(CLASS)
@@ -256,7 +269,17 @@ THEN	make(\/*)
 		ttrput([x:e|head==x:e])
 		put(+Q)
 		put(class(CLASS))
-ELSE	abort
+ELSE	IF		?ty(e)
+				¬<\/1>Ex.x
+				¬<\/0>Ex.x
+				¬<\/*>Ex.x
+				¬</\L>Ex.x
+		THEN	delete(?ty(e))
+				put(ty(e))
+				ttrput([x:e|head==x:e])
+				put(+Q)
+				put(class(CLASS))
+		ELSE	abort
 
 //only clause initially
 pron_whq_det(CLASS)
@@ -287,69 +310,35 @@ THEN	make(\/*)
 		make(\/1)
 		go(\/1)
 		put(?ty(e>cn))
-ELSE	abort
-
-
-pron_whq(CLASS)
-IF		?ty(e)
-		¬<\/1>Ex.x
-		¬<\/0>Ex.x
-THEN	put(ty(e))
-		delete(?ty(e))
-		ttrput([x:e|head==x:e])
-		put(+Q)
-		put(class(CLASS))
-ELSE	abort
-
-
-pron_whq_det(CLASS)
-IF		?ty(e)
-		¬<\/1>Ex.x
-		¬<\/0>Ex.x
-THEN	make(\/1)
-		go(\/1)
-		ttrput(R^(R ++ [head==R.head:e]))
-		put(!)
-		put(ty(cn>e))
-		go(/\1)
-		make(\/0)
-		go(\/0)
-		put(?ty(cn))
-		make(\/0)
-		go(\/0)
-		put(+Q)
-		ttrput([x:e|head==x:e])
-		put(ty(e))
-		go(/\0)
-		make(\/1)
-		go(\/1)
-		put(?ty(e>cn))
-ELSE	abort
-
-//* 
-commenting out for now, so cannot parse, "john likes who?"
-IF		?ty(e)
-		THEN	put(?Ex.tn(x))
-				put(ty(e))
-				ttrput([x:e|head==x:e])
+ELSE	IF		?ty(e)
+				¬<\/1>Ex.x
+				¬<\/0>Ex.x
+				¬<\/*>Ex.x
+				¬</\L>Ex.x
+		THEN	make(\/1)
+				go(\/1)
+				ttrput(R^(R ++ [head==R.head:e]))
+				put(!)
+				put(ty(cn>e))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(cn))
+				make(\/0)
+				go(\/0)
 				put(+Q)
-				put(class(CLASS))
+				ttrput([x:e|head==x:e])
+				put(ty(e))
+				go(/\0)
+				make(\/1)
+				go(\/1)
+				put(?ty(e>cn))	
 		ELSE	abort
-*//
 
-//* this is not working well
-pron_whq_cop(CLASS)
-IF		?ty(t)
-		¬<\/*>Ex.x
-THEN	make(\/*)
-		go(\/*)
-		put(?Ex.tn(x))
-		put(ty(e>t))
-		ttrput(R2^(R2 ++ [head==R2.head:e]))
-		put(+Q)
-		put(class(CLASS))
-ELSE	abort
-*//
+
+
+
+
 
 //*
 pron_nom(PERSON,CLASS)
@@ -438,7 +427,7 @@ v_intran_fin(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-		//</\1\/0>person(PERSON)	
+		</\1\/0>person(PERSON)	
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -516,6 +505,7 @@ v_subjcon_fin(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
+        </\1\/0>person(PERSON)
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -588,7 +578,7 @@ v_tran_fin(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-		//</\1\/0>person(PERSON)
+		</\1\/0>person(PERSON)
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -757,20 +747,17 @@ ELSE	abort
 assert(PRED)
 IF		ty(t)
 		complete
-		¬!
-THEN	IF		<\/*>+Q
+THEN	IF		<Z>+Q
 		THEN	abort
-		ELSE	put(!)
+		ELSE	do_nothing
 ELSE	abort
 
 question(PRED)
 IF		ty(t)
 		complete
-		¬!
-THEN	IF	  <\/*>+Q
-		THEN  put(!)
-		ELSE  put(!)
-			  put(+Q)
+THEN	IF	  <Z>+Q
+		THEN  do_nothing
+		ELSE  put(+Q)
 ELSE	abort
 
 
@@ -778,7 +765,7 @@ ELSE	abort
 reject(PRED)
 IF		ty(t)
 		complete
-		¬<\/*>+Q
+		¬<Z>+Q
 THEN	IF	    +Q
 		THEN    delete(+Q)
 			    put(+neg)

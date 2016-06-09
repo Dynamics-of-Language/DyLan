@@ -57,9 +57,10 @@ public class TTRField extends Formula{
 
 			} else if (meta.matches()){
 				//can't have meta-Label, but have a type
-				logger.warn("illegal field string: the type should always be null/empty initially when using meta-label. Field String:"+s);
-				return null;
-				//label = MetaTTRLabel.get(labelS);
+				//logger.warn("illegal field string: the type should always be null/empty initially when using meta-label. Field String:"+s);
+				//return null;
+				//allow meta-label to have manifest value.
+				label = MetaTTRLabel.get(labelS);
 			}
 			else
 				return null;
