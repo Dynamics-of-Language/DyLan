@@ -69,7 +69,9 @@ public class Dialogue extends ArrayList<Utterance> {
 			} else
 				curDialogue.add(line);
 		}
-
+		if (!curDialogue.isEmpty())
+			result.add(new Dialogue(curDialogue));
+		
 		reader.close();
 		logger.debug("Read "+result.size()+" dialogues");
 		return result;

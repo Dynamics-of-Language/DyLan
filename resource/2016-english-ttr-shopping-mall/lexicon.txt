@@ -1,15 +1,20 @@
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
+which						  pron_whq_det					obj
 do                            v_aux_inf                     do                            pres                          nons3
-does                          v_aux_inf                     do                            pres                          s3
-did                           v_aux_inf                     did                           past                          per
+//does                          v_aux_inf                     do                            pres                          s3
+//did                           v_aux_inf                     did                           past                          per
 would                         v_aux_inf                     would                         pres                          nons3
-i                             proper		                i							  s1							per
-you							  proper						you							  s2							nons3
+i                             i							    nons3							per
+you							  you							nons3							per
 buy		                      v_tran_inf                    buy                       inf                           per
 buy		                      v_tran_fin                    buy                       pres                          nons3
 buys  	                      v_tran_fin                    buy                       pres                          s3
 buying	                      v_tran_ing                    buy                       ing                           per
+purchase		              v_tran_inf                    purchase                       inf                           per
+purchase		              v_tran_fin                    purchase                       pres                          nons3
+purchases 	                  v_tran_fin                    purchase                       pres                          s3
+purchasing	                  v_tran_ing                    purchase                       ing                           per
 phone					  	count							phone					   s3							obj
 computer					count							computer				   s3							obj
 smartphone					count							smartphone				   s3							obj

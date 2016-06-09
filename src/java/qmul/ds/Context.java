@@ -70,10 +70,13 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		initParticipantContents(part);
 	}
 	
-	
+	/**
+	 * 
+	 * @return grounded content without the head field.
+	 */
 	public TTRFormula getGroundedContent()
 	{
-		return dag.getGroundedContent(accepted_contents.keySet());
+		return dag.getGroundedContent(accepted_contents.keySet()).removeHead();
 		
 	}
 	
@@ -179,6 +182,15 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		entityPool.add(v);
 		return v;
 	}
+	
+	public void resetVariablePools()
+	{
+		entityPool.clear();
+		eventPool.clear();
+		propositionPool.clear();
+		recordTypePool.clear();
+		predicatePool.clear();
+	}
 
 	/**
 	 * A fresh event variable e1, e2 etc
@@ -228,11 +240,14 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	public void init()
 	{
 		dag.init();
+		resetVariablePools();
+		accepted_contents.clear();
 	}
 	
 	public void init(List<String> participants)
 	{
 		dag.init();
+		resetVariablePools();
 		initParticipantContents(participants);
 	}
 
