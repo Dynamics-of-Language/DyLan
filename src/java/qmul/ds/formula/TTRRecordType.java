@@ -13,10 +13,14 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
+import qmul.ds.InteractiveContextParser;
+import qmul.ds.Utterance;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.GroundableEdge;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -26,7 +30,6 @@ import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
 import qmul.ds.type.DSType;
-import edu.stanford.nlp.util.Pair;
 
 /**
  * A TTR record type
@@ -748,12 +751,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			TTRField f = fields.get(i);
 			Set<Variable> variables = f.getVariables();
 			if (!variables.isEmpty()) {
-				this.remove(f.getLabel());
+				TTRRecordType fRemoved=this.removeField(f);
 
 				for (TTRField otherF : other.fields) {
 					if (f.subsumesMapped(otherF, map)) {
+						logger.debug(f+" subsumed "+otherF);
 						map.remove(f.getLabel());
-						TTRRecordType subMCS = this.MCS(other, map);
+						TTRRecordType subMCS = fRemoved.MCS(other, map);
 
 						if (!subMCS.hasLabels(variables)) {
 							map.clear();
@@ -767,11 +771,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 						return subMCS;
 					}
 				}
+				logger.debug(f + " didn't subsume anything");
 				// if we are here f didn't subsume any of the other fields, so
 				// just
 				// ignore it and recurse on the remainder
 
-				TTRRecordType subMCS = this.MCS(other, map);
+				TTRRecordType subMCS = fRemoved.MCS(other, map);
 				logger.debug(".. is: " + subMCS);
 				return subMCS;
 			}
@@ -781,25 +786,33 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		// parent labels remain , e.g.
 		// [x:e|e==run:es ...] etc. now take MCS of this made one step less
 		// specific, with other.
-
+		TTRRecordType clone=new TTRRecordType(this);
 		for (TTRField f : fields) {
+			TTRField cloneF=clone.getField(f.getLabel());
 			if (map.containsKey(f.getLabel())) {
 				if (!f.subsumesMapped(other.getField(map.get(f.getLabel())),
 						map)) {
-
-					f.setType(null);
-					return this.MCS(other, map);
+					
+					if (f.getType()==null)
+					{
+						//the lack of subsumption is because of dsType. Just remove the field.
+						clone.remove(f.getLabel());
+						return clone.MCS(other, map);
+					}
+					
+					cloneF.setType(null);
+					return clone.MCS(other, map);
 				}
 			} else {
 				TTRRecordType loneField = new TTRRecordType();
 				loneField.add(f);
 				if (!loneField.subsumesMapped(other, map)) {
 					if (f.isManifest())
-						f.setType(null);
+						cloneF.setType(null);
 					else
-						this.remove(f.getLabel());
+						clone.remove(f.getLabel());
 
-					return this.MCS(other, map);
+					return clone.MCS(other, map);
 				}
 
 			}
@@ -837,19 +850,32 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		
 	    HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
-		TTRRecordType r1 = TTRRecordType
-				.parse("[x==john:e|p==run(x):t|y==mary:e|p2==like(x,y):t|p1==fat(x):t|x3==arash:e]");
+//		TTRRecordType r1 = TTRRecordType
+//				.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
 
-		// TTRRecordType r2 = TTRRecordType
-		// .parse("[x1==john:e|y1:e|p4==like(x1,y1):t|p2==man(x1):t]");
-		TTRRecordType r2 = TTRRecordType
-				.parse("[x1==bill:e|y1==mary:e|p2==man(x1):t|p3==fat(x1):t|p4==like(x1,y1):t|x5:e]");
+	    TTRRecordType r1=TTRRecordType.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
+	    TTRRecordType r3=TTRRecordType.parse("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy : es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) : t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) : t|p10==subj(e4, x1) : t]");
+	    //		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
+//		
+//		Utterance utt=new Utterance("USR: I want to buy a phone");
+//		
+//		parser.parseUtterance(utt);
+		
+		//Context<DAGTuple, GroundableEdge> c=parser.getContext();
+		
+		
+		//TTRRecordType r2 = (TTRRecordType)c.getCurrentTuple().getSemantics();
+		TTRRecordType r2=TTRRecordType.parse("[x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p2==pres(e2) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
 		System.out.println("r1=" + r1);
 		System.out.println("r2=" + r2);
+		TTRRecordType MCS=r3.mostSpecificCommonSuperType(r2, map);
 		System.out.println("MCS(r1,r2)="
-				+ r1.mostSpecificCommonSuperType(r2, map));
+				+ MCS);
 
 		System.out.println("map:" + map);
+//		map.clear();
+//		System.out.println("Subsumes:"+MCS.subsumesMapped(r2, map));
+//		System.out.println("map:"+map);
 
 	}
 
@@ -860,7 +886,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			return true;
 
 		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
-		logger.debug("testing subsumption for field:" + fields.get(thisIndex));
+		//logger.debug("testing subsumption for field:" + fields.get(thisIndex));
 
 		// is map already telling us we should map the field at thisIndex to a
 		// particular field in other?
@@ -883,8 +909,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				continue;
 
 			if (fields.get(thisIndex).subsumesMapped(field, map)) {
-				logger.debug("Subsumed " + field);
-				logger.debug("map is now:" + map);
+			//	logger.debug("Subsumed " + field);
+				//logger.debug("map is now:" + map);
 
 				if (subsumesMapped(other, thisIndex + 1, map))
 					return true;
@@ -894,8 +920,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				map.putAll(copy);
 
 			} else {
-				logger.debug(fields.get(thisIndex) + " failed against:" + field
-						+ " map:" + map);
+			//	logger.debug(fields.get(thisIndex) + " failed against:" + field
+			//			+ " map:" + map);
 				map.clear();
 				map.putAll(copy);
 			}

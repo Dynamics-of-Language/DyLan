@@ -87,7 +87,14 @@ public class Variable extends AtomicFormula {
 			Variable ov = (Variable) other;
 			if (map.containsKey(this)) {
 				return map.get(this).subsumesBasic(ov);
-			} else {
+			} else if (map.containsValue(ov))
+			{
+				//added much later than this method was created. this is the case where some variable is already being mapped to ov
+				//map should always be one to one.
+				return false;
+			}
+			else
+			{
 				map.put(this, ov);
 				return true;
 			}
