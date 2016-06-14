@@ -95,7 +95,12 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		this.wordStack.clear();
 		removeChildren();
 		if (atClauseRoot())
+		{
+			setExhausted(false);
 			return;
+			
+		}
+			
 
 		GroundableEdge parentEdge = getUniqueParentEdge();
 
