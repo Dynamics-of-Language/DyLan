@@ -5,6 +5,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,12 +16,9 @@ import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
-import qmul.ds.InteractiveContextParser;
-import qmul.ds.Utterance;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -782,6 +780,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			}
 		}
 
+		
 		// if we are here, we didn't find any dependent field, i.e. only the
 		// parent labels remain , e.g.
 		// [x:e|e==run:es ...] etc. now take MCS of this made one step less
@@ -799,6 +798,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 						clone.remove(f.getLabel());
 						return clone.MCS(other, map);
 					}
+					else if (f.getDSType().equals(DSType.es))
+					{
+						//we don't want to underspecify an event type. Just remove the field.
+						clone.remove(f.getLabel());
+						return clone.MCS(other, map);
+					}
 					
 					cloneF.setType(null);
 					return clone.MCS(other, map);
@@ -807,7 +812,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				TTRRecordType loneField = new TTRRecordType();
 				loneField.add(f);
 				if (!loneField.subsumesMapped(other, map)) {
-					if (f.isManifest())
+					if (f.isManifest() && !f.getDSType().equals(DSType.es))
 						cloneF.setType(null);
 					else
 						clone.remove(f.getLabel());
@@ -853,6 +858,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 //		TTRRecordType r1 = TTRRecordType
 //				.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
 
+	    long time1=new Date().getTime();
 	    TTRRecordType r1=TTRRecordType.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
 	    TTRRecordType r3=TTRRecordType.parse("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy : es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) : t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) : t|p10==subj(e4, x1) : t]");
 	    //		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
@@ -865,14 +871,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		
 		
 		//TTRRecordType r2 = (TTRRecordType)c.getCurrentTuple().getSemantics();
-		TTRRecordType r2=TTRRecordType.parse("[x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p2==pres(e2) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
+		TTRRecordType r2=TTRRecordType.parse("[x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p2==past(e2) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
 		System.out.println("r1=" + r1);
-		System.out.println("r2=" + r2);
-		TTRRecordType MCS=r3.mostSpecificCommonSuperType(r2, map);
-		System.out.println("MCS(r1,r2)="
+		System.out.println("r3=" + r3);
+		TTRRecordType MCS=r1.mostSpecificCommonSuperType(r3, map);
+		System.out.println("MCS(r1,r3)="
 				+ MCS);
 
 		System.out.println("map:" + map);
+		 long time2=new Date().getTime();
+		 System.out.println("it took "+(time2-time1)+" milliseconds");
 //		map.clear();
 //		System.out.println("Subsumes:"+MCS.subsumesMapped(r2, map));
 //		System.out.println("map:"+map);
