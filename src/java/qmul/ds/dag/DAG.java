@@ -129,13 +129,26 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 
 	}
 
+	public TTRFormula getSemantics(T tuple)
+	{
+		if (context==null)
+			return tuple.getSemantics();
+		
+		return tuple.getSemantics(context);
+		
+	}
+	
+	public Context<T,E> getContext()
+	{
+		return this.context;
+	}
 	
 	public void setAcceptancePointer(String other, T cur) {
 		if (!acceptance_pointers.containsKey(other))
 			acceptance_pointers.put(other, new HashSet<T>());
 		
 		acceptance_pointers.get(other).add(cur);
-		context.conjoinAcceptedContent(other, cur.getSemantics());
+		context.conjoinAcceptedContent(other, cur.getSemantics(context));
 	}
 	
 	public void setAcceptancePointer(String other)
@@ -1155,7 +1168,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		
 		for(T tuple: accepted_by_all)
 		{
-			result=result.conjoin(tuple.getSemantics());
+			result=result.conjoin(tuple.getSemantics(context));
 		}
 		return result;
 	}
@@ -1165,7 +1178,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends
 		Set<T> accepted_tuples=this.acceptance_pointers.get(speaker);
 		for(T tuple: accepted_tuples)
 		{
-			result=result.conjoin(tuple.getSemantics());
+			result=result.conjoin(tuple.getSemantics(context));
 		}
 		return result;
 		

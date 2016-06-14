@@ -13,12 +13,12 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.action.Action;
-import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRRecordType;
-import qmul.ds.tree.Tree;
 import edu.stanford.nlp.util.Pair;
+import qmul.ds.action.Action;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.TTRFormula;
+import qmul.ds.tree.Tree;
 
 /**
  * A parser tuple (member of a {@link ParseState}). At its simplest, just a
@@ -39,6 +39,20 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 			return semantics;
 
 		semantics = tree.getMaximalSemantics();
+		return semantics;
+	}
+	
+	public <T extends DAGTuple, E extends DAGEdge> TTRFormula getSemantics(Context<T,E> c) {
+		if (c==null)
+		{
+			logger.error("ERROR: null context when getting max sem");
+			return getSemantics();
+		}
+		
+		if (this.semantics != null)
+			return semantics;
+
+		semantics = tree.getMaximalSemantics(c);
 		return semantics;
 	}
 
@@ -212,7 +226,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	@Override
 	public String toString() {
 		String s = (tree == null) ? "Tree:null" : tree.toString();
-		s += "\nSem:" + (getSemantics() == null ? "null" : getSemantics());
+		//s += "\nSem:" + (getSemantics() == null ? "null" : getSemantics());
 		return s;
 	}
 

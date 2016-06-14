@@ -118,7 +118,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 					return false;
 				}
 				
-			} while (!(parser.getState().getCurrentTuple().isComplete()&&goal.subsumes(parser.getState().getCurrentTuple().getSemantics())));
+			} while (!(parser.getState().getCurrentTuple().isComplete()&&goal.subsumes(parser.getState().getCurrentTuple().getSemantics(parser.getContext()))));
 			
 			return true;
 		}

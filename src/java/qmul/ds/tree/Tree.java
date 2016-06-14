@@ -13,11 +13,11 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.action.Action;
-import qmul.ds.action.Grammar;
+import edu.stanford.nlp.trees.LabeledScoredTreeFactory;
+import edu.stanford.nlp.trees.TreeFactory;
+import qmul.ds.Context;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRInfixExpression;
 import qmul.ds.formula.TTRLambdaAbstract;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
@@ -28,8 +28,6 @@ import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
 import qmul.ds.type.DSType;
-import edu.stanford.nlp.trees.LabeledScoredTreeFactory;
-import edu.stanford.nlp.trees.TreeFactory;
 
 /**
  * A DS tree
@@ -136,8 +134,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * A fresh proposition variable p1, p2 etc
 	 */
 	public Variable getFreshPropositionVariable() {
+		System.out.println("getting fresh prop var");
 		Variable v = new Variable(PROPOSITION_VARIABLE_ROOT
 				+ (propositionPool.size() + 1));
+		System.out.println("got:"+v);
 		propositionPool.add(v);
 		return v;
 	}
@@ -674,6 +674,82 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * @param t
 	 * @return
 	 */
+	private void addUnderspecifiedFormulae(Context c) {
+		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
+		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
+		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
+		// typeMap.put(DSType.cn,
+		// Formula.create("[x:e|head==x:e]").freshenVars(this));
+		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
+		// typeMap.put(DSType.t, Formula.create("[p:t]"));
+		// for underspec VP
+		typeMap.put(DSType.parse("e>(es>cn)"),
+				Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
+		typeMap.put(DSType.parse("es>cn"),
+				Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		typeMap.put(DSType.parse("e>cn"),
+				Formula.create("R1^(R1 ++ [head==R1.head:e])"));
+		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
+		typeMap.put(DSType.parse("e>(e>t)"),
+				Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
+		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
+		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		typeMap.put(DSType.parse("es>(e>(e>t))"),
+				Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		typeMap.put(DSType.parse("e>(e>(e>t))"),
+				Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		// for underspec adjunct e>t, see below, special case
+		
+		typeMap.put(DSType.parse("cn>e"),
+				Formula.create("R1^[r:R1|x:e|head==x:e]"));
+		typeMap.put(DSType.parse("cn>es"),
+				Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+		
+		//Label copula=LabelFactory.create("+BE");
+		
+		Label formReq=LabelFactory.create("?Ex.fo(x)");
+		for (Node n : values()) {
+			if (!getDaughters(n, "01").isEmpty())
+				continue;
+			DSType dsType = n.getRequiredType() != null ? n.getRequiredType()
+					: n.getType();
+			Formula f = n.getFormula();
+			if (dsType != null && f == null) {
+				if (typeMap.containsKey(dsType)) {
+					Node mother=this.get(n.getAddress().go(Modality.parse("/\\")));
+					
+					//TODO: this is a hack. Checking for type of mother to determine the underspecified formula to be put on a ?cn node.
+					//I don't like this. ..... later.....
+					//another exception: if an e>t node is decorated with Copula (having parsed 'to be'), then we want a differnet underspecification for this node, not involving event type
+					
+					DSType motherType=mother.getType()==null?mother.getRequiredType():mother.getType();
+					if (dsType.equals(BasicType.cn)&&(motherType.equals(DSType.parse("e>t"))||motherType.equals(DSType.cn)))
+						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(c)));
+					else if (dsType.equals(DSType.parse("e>t"))&&n.contains(formReq))
+						n.addLabel(new FormulaLabel(Formula.create("R1^(R1 ++ [e1:es|head==e1:es|p==subj(e1,R1.head):t])").freshenVars(c)));
+					else
+						n.addLabel(new FormulaLabel(typeMap.get(dsType)
+							.freshenVars(c)));
+					
+				} else if (!dsType.equals(DSType.t))
+					logger.warn("could not add underspecified formula to node; ds type is not listed as underspecifiable:"
+							+ n);
+			}
+		}
+
+	}
+	
+	/**
+	 * 
+	 * Assumes grammar with event terms... @see{resource/2013-english-ttr}
+	 * 
+	 * Should make sure that, when doing induction, the getMaximalSemantics
+	 * method is only called after decorating a new node with a new hypothesis,
+	 * and not immediately after the node is created.... (?) maybe not TODO
+	 * 
+	 * @param t
+	 * @return
+	 */
 	private void addUnderspecifiedFormulae() {
 		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
 		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
@@ -814,8 +890,28 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * 
 	 * @return the maximal semantics of this tree
 	 */
-	public TTRFormula getMaximalSemantics() {
+	public TTRFormula getMaximalSemantics(Context c) {
 		
+		logger.debug("Merging unfixed if possible,");
+		logger.debug("before merge:"+this);
+		Tree merged = mergeUnfixed();
+		logger.debug("after merge:"+merged);
+		
+		
+		merged.addUnderspecifiedFormulae(c);
+		logger.debug("After adding underspecified formulae, tree is:"
+					+ merged);
+	
+		TTRFormula f = merged.getMaximalSemantics(
+					merged.getRootNode());
+
+		return f;
+		
+		
+	}
+	
+	public TTRFormula getMaximalSemantics()
+	{
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
 		Tree merged = mergeUnfixed();
@@ -830,7 +926,6 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 					merged.getRootNode());
 
 		return f;
-		
 		
 	}
 

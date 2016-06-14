@@ -8,8 +8,11 @@ import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.ParserTuple;
 import edu.stanford.nlp.trees.Tree;
+import qmul.ds.Context;
+import qmul.ds.ParserTuple;
+import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.GroundableEdge;
 
 @SuppressWarnings("serial")
 public class ParserTupleViewer extends JTabbedPane {
@@ -17,20 +20,26 @@ public class ParserTupleViewer extends JTabbedPane {
 	protected static Logger logger=Logger.getLogger(ParserTupleViewer.class);
 	TreePanel treePanel=new TreePanel();
 	FormulaPanel semPanel=new FormulaPanel();
-	
-	public ParserTupleViewer(ParserTuple tuple)
+	Context parserContext=null;//this is for the computation of maximal semantics only that is now relative to a context, rather than a tree
+	public ParserTupleViewer(ParserTuple tuple, Context c)
 	{
-		this();
+		this(c);
 		setTuple(tuple);
 	}
 	
 	public ParserTupleViewer()
+	{
+		this(null);
+	}
+	
+	public ParserTupleViewer(Context c)
 	{
 		
 		addTab("Tree", new JScrollPane(treePanel));
 		JScrollPane fs = new JScrollPane(semPanel);
 		semPanel.setContainer(fs);
 		addTab("Semantics", fs);
+		this.parserContext=c;
 		
 	}
 	
@@ -40,8 +49,8 @@ public class ParserTupleViewer extends JTabbedPane {
 		Tree tree = (tuple == null ? null : tuple.getTree().toStanfordTree());
 		
 		treePanel.setTree(tree);
-		if (tuple.getSemantics() != null)
-			semPanel.setFormula(tuple.getSemantics());
+		if (tuple.getSemantics(parserContext) != null)
+			semPanel.setFormula(tuple.getSemantics(parserContext));
 		else
 			logger.warn("setting null semantics");
 
@@ -65,6 +74,11 @@ public class ParserTupleViewer extends JTabbedPane {
 			treePanel.setBackground(c);
 			semPanel.setBackground(c);
 		}
+	}
+
+	public void setContext(Context context2) {
+		this.parserContext=context2;
+		
 	}
 	
 	

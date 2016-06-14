@@ -254,8 +254,6 @@ THEN	ttrput([x==X:e|head==x:e])
 ELSE	abort
 
 
-
-//only clause initally
 pron_whq(CLASS)
 IF		?ty(t)
 		¬<\/1>Ex.x
@@ -281,7 +279,7 @@ ELSE	IF		?ty(e)
 				put(class(CLASS))
 		ELSE	abort
 
-//only clause initially
+
 pron_whq_det(CLASS)
 IF		?ty(t)
 		¬<\/1>Ex.x

@@ -170,7 +170,7 @@ public class DAGViewer<T extends DAGTuple, E extends DAGEdge> implements GraphMo
 	public void graphClicked(T arg0, MouseEvent arg1) {
 		
 		logger.debug("Vertex Clicked:" + arg0);
-		ParserTupleViewer viewer=new ParserTupleViewer(arg0);
+		ParserTupleViewer viewer=new ParserTupleViewer(arg0, dag.getContext());
 		JDialog hypDisplay = new JDialog();
 		hypDisplay.setModalityType(ModalityType.MODELESS);
 		hypDisplay.add(viewer);

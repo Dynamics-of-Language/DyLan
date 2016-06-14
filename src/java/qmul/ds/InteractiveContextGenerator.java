@@ -178,7 +178,7 @@ public class InteractiveContextGenerator extends
 				logger.debug("Failed");
 				continue;
 			}
-			TTRFormula maxSem = res.getMaximalSemantics();
+			TTRFormula maxSem = res.getMaximalSemantics(parser.getContext());
 			// ------------------- successful parse
 
 			logger.debug("success");
@@ -216,7 +216,7 @@ public class InteractiveContextGenerator extends
 		{
 			
 		
-			goal = parser.getState().getCurrentTuple().getSemantics();
+			goal = parser.getState().getCurrentTuple().getSemantics(parser.getContext());
 			System.out.println("Goal constructed:"+goal);
 		}
 		else

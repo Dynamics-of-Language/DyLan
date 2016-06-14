@@ -590,8 +590,12 @@ public class ParserPanel extends JPanel {
 
 		treeNextButton.setEnabled(tupleNumber < (tuples.size() - 1));
 		// adding 2*
-		genToButton.setEnabled(tuple.isComplete()
-				|| tuple.getSemantics() != null);
+		if (this.parser instanceof InteractiveContextParser)
+		{
+			InteractiveContextParser p=(InteractiveContextParser)this.parser;
+			genToButton.setEnabled(tuple.isComplete()
+				|| tuple.getSemantics(p.getContext()) != null);
+		}
 	}
 
 	private ArrayList<ParserTuple> tuples = new ArrayList<ParserTuple>();
@@ -662,6 +666,7 @@ public class ParserPanel extends JPanel {
 		}
 		generateThread = new GenerateThread(tuples.get(tupleNumber)
 				.getSemantics());
+		//TODO: this is using getSemantics relative to tree, rather than context.
 		generateThread.start();
 		startProgressMonitor("Generating", GENERATE_TIME);
 
@@ -758,6 +763,7 @@ public class ParserPanel extends JPanel {
 					parser = new InteractiveContextParser(filename, repairingOption.isSelected());
 					resetToFTALW.setEnabled(true);
 					repairingOption.setEnabled(true);
+					tupleViewer.setContext(((InteractiveContextParser)parser).getContext());
 
 				} else {
 					JOptionPane.showMessageDialog(ParserPanel.this,
@@ -1217,6 +1223,7 @@ public class ParserPanel extends JPanel {
 		treeContainer.setForeground(new java.awt.Color(0, 0, 0));
 		treeContainer.setPreferredSize(new java.awt.Dimension(600, 500));
 
+		
 		tupleViewer = new ParserTupleViewer();
 
 		this.tabbedTuplePanel.addTab("Tuple", tupleViewer);
