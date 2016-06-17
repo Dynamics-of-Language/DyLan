@@ -681,25 +681,41 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public boolean subsumesBasic(Formula other) {
 		if (other == null || !(other instanceof TTRRecordType))
 			return false;
-		return subsumesBasic((TTRRecordType) other, 0, 0);
+		TTRRecordType othType=(TTRRecordType)other;
+		Set<Integer> all=new HashSet<Integer>();
+		for(int i=0;i<othType.getFields().size();i++)
+		{
+			all.add(i);
+		}
+		return subsumesBasic((TTRRecordType) other, 0, all);
 	}
 
 	public boolean subsumesBasic(TTRRecordType other, int thisIndex,
-			int otherIndex) {
+			Set<Integer> remainingOtherIndeces) {
 
+		
 		if (thisIndex == fields.size())
 			return true;
 
-		for (int i = otherIndex; i < other.fields.size(); i++) {
+		for (Integer i: remainingOtherIndeces) {
 			TTRField field = other.fields.get(i);
+			logger.debug(fields.get(thisIndex)+" subsumes "+field);
 			if (fields.get(thisIndex).subsumesBasic(field)) {
-
-				if (subsumesBasic(other, thisIndex + 1, i + 1))
+				logger.debug("success");
+				Set<Integer> remaining=new HashSet<Integer>(remainingOtherIndeces);
+				remaining.remove(i);
+				if (subsumesBasic(other, thisIndex + 1, remaining))
+				{
+					logger.debug("recursion succeeded");
+					
 					return true;
-
+				}
+				logger.debug("recursion failed");
 				fields.get(thisIndex).partialResetMeta();
 
 			}
+			else
+				logger.debug("failed");
 		}
 
 		return false;
@@ -854,13 +870,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	//	Testing most specific common super type
 		
 	    HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+	    
+	    TTRRecordType r1=TTRRecordType.parse("[x7 : e|x10 : e|p17==by(x7, x10) : t]");
+	    TTRRecordType r2=TTRRecordType.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
+	    
+	    System.out.println(r1.subsumesBasic(r2));
 
 //		TTRRecordType r1 = TTRRecordType
 //				.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
 
-	    long time1=new Date().getTime();
-	    TTRRecordType r1=TTRRecordType.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
-	    TTRRecordType r3=TTRRecordType.parse("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy : es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) : t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) : t|p10==subj(e4, x1) : t]");
+//	    long time1=new Date().getTime();
+//	    TTRRecordType r1=TTRRecordType.parse("[x10 : e|x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p19==brand(x10) : t|p2==pres(e2) : t|p17==by(x7, x10) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
+//	    TTRRecordType r3=TTRRecordType.parse("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy : es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) : t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) : t|p10==subj(e4, x1) : t]");
 	    //		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
 //		
 //		Utterance utt=new Utterance("USR: I want to buy a phone");
@@ -871,16 +892,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		
 		
 		//TTRRecordType r2 = (TTRRecordType)c.getCurrentTuple().getSemantics();
-		TTRRecordType r2=TTRRecordType.parse("[x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p2==past(e2) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
-		System.out.println("r1=" + r1);
-		System.out.println("r3=" + r3);
-		TTRRecordType MCS=r1.mostSpecificCommonSuperType(r3, map);
-		System.out.println("MCS(r1,r3)="
-				+ MCS);
-
-		System.out.println("map:" + map);
-		 long time2=new Date().getTime();
-		 System.out.println("it took "+(time2-time1)+" milliseconds");
+//		TTRRecordType r2=TTRRecordType.parse("[x7 : e|e6==buy : es|e2==want : es|x5==usr : e|p2==past(e2) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t]");
+//		System.out.println("r1=" + r1);
+//		System.out.println("r3=" + r3);
+//		TTRRecordType MCS=r1.mostSpecificCommonSuperType(r3, map);
+//		System.out.println("MCS(r1,r3)="
+//				+ MCS);
+//
+//		System.out.println("map:" + map);
+//		 long time2=new Date().getTime();
+//		 System.out.println("it took "+(time2-time1)+" milliseconds");
 //		map.clear();
 //		System.out.println("Subsumes:"+MCS.subsumesMapped(r2, map));
 //		System.out.println("map:"+map);

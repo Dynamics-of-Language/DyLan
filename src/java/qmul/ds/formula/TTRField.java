@@ -452,20 +452,10 @@ public class TTRField extends Formula{
 	}
 
 	public static void main(String[] a) {
-		TTRField meta = parse("L:e");
-		TTRField inst = parse("x==john:e");
-		// System.out.println(meta.toDebugString());
-		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
-		System.out.println("After:" + meta);
-		System.out.println("map: "+ map);
-		map.clear();
-		System.out.println("resetting meta");
-		meta.backtrack();
-		System.out.println("After reset meta:"+meta);
-		System.out.println("Subsumes:" + meta.subsumesMapped(inst, map));
-		System.out.println("After:" + meta);
-		System.out.println("map: "+ map);
+		TTRField one = parse("x15==usr:e");
+		TTRField two = parse("x15==usr:e");
+		System.out.println(one.subsumesBasic(two));
+		
 		
 
 	}
@@ -481,7 +471,7 @@ public class TTRField extends Formula{
 				|| (dsType != null && dsType.equals(otherField.dsType))) {
 
 			if ((type == null) || type.subsumesBasic(otherField.type)) {
-
+				//logger.debug("label subsumption "+label+"and"+otherField.label);
 				return label.subsumesBasic(otherField.label);
 			}
 
