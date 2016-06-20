@@ -140,12 +140,12 @@ THEN    conjoin(X)
 		ELSE	do_nothing
 ELSE    abort
 
-//*
+
 trp
 IF		complete
 THEN	addaxiom
 ELSE	abort
-*//
+
 
 substitution
 IF		?ty(cn)

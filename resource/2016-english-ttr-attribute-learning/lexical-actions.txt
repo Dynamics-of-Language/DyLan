@@ -311,7 +311,6 @@ ELSE	abort
 pron_nom(PERSON,CLASS)
 IF      ?ty(e)
         </\0>?ty(t)
-        //</\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+Q)
 THEN    put(ty(e))
         ttrput([x==this:e|head==x:e])
         put(!)
@@ -320,19 +319,8 @@ ELSE    abort
 pron_acc(PERSON,CLASS)
 IF      ?ty(e)
         </\0>?ty(e>X)
-        //</\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+Q)
 THEN    put(ty(e))
         ttrput([x==this:e|head==x:e])
-        put(!)
-ELSE    abort
-
-
-pron_nom(PERSON,CLASS)
-IF      ?ty(e)
-        </\0>?ty(t)
-        </\C>(ty(e)& fo(Y)& Class(CLASS)& ¬+Q)
-THEN    put(ty(e))
-        put(Fo(Y))
         put(!)
 ELSE    abort
 
@@ -679,20 +667,17 @@ ELSE	abort
 assert(PRED)
 IF		ty(t)
 		complete
-		¬!
-THEN	IF		<\/*>+Q
+THEN	IF		<Z>+Q
 		THEN	abort
-		ELSE	put(!)
+		ELSE	do_nothing
 ELSE	abort
 
 question(PRED)
 IF		ty(t)
 		complete
-		¬!
-THEN	IF	  <\/*>+Q
-		THEN  put(!)
-		ELSE  put(!)
-			  put(+Q)
+THEN	IF	  <Z>+Q
+		THEN  do_nothing
+		ELSE  put(+Q)
 ELSE	abort
 
 
