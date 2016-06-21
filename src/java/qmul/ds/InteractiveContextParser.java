@@ -78,15 +78,22 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 *            the dir containing computational-actions.txt,
 	 *            lexical-actions.txt, lexicon.txt
 	 */
-	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing) {
+	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing, String... participants) {
 		super(resourceDirNameOrURL, repairing);
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG());
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), Arrays.asList(participants));
 		context.setRepairProcessing(repairing);
+		
 
 	}
 
 	public InteractiveContextParser(String resourceDirOrURL) {
 		this(resourceDirOrURL, false);
+	}
+	
+	public InteractiveContextParser(String resourceDirOrURL, String... participants)
+	{
+		this(resourceDirOrURL, false, participants);
+		
 	}
 
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
@@ -130,7 +137,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			logger.info("state exhausted");
 			return false;
 		}
-		
+
 		do {
 
 			if (!adjustOnce()) {
@@ -266,7 +273,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					// types... the latter! (Matt... )
 
 				} else
-					logger.trace("unsuccessful");
+					logger.debug("unsuccessful");
 			}
 		}
 
@@ -313,6 +320,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public void init() {
 		context.init();
 
+	}
+
+	public void init(List<String> participants) {
+		context.init(participants);
 	}
 
 	/**
@@ -486,12 +497,27 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	public static void main(String[] a) {
 
-		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
-		Utterance utt1 = new Utterance("S: what do you want to buy?");
+		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-attribute-learning");
+		try {
+
+			List<Dialogue> ds = Dialogue.loadDialoguesFromFile("corpus/dialogue-test-sets/attribute-learning");
+			for (Dialogue d : ds) {
+				parser.parseDialogue(d);
+				parser.init();
+				edu.uci.ics.jung.graph.Tree<DAGTuple, GroundableEdge> inContext = parser.getState()
+						.getInContextSubgraph();
+				System.out.println("Vertices:" + inContext.getVertexCount());
+				System.out.println("Edges:" + inContext.getEdgeCount());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		// Utterance utt2 = new Utterance("S: okay. Which brand do you want?");
 		// Utterance utt3 = new Utterance("U: Samsung.");
 		// Utterance utt4 = new Utterance("S: okay.");
-		parser.parseUtteranceGetParsableWords(utt1);
+		// parser.parseUtteranceGetParsableWords(utt1);
 		// parser.parseUtteranceGetParsableWords(utt2);
 		// parser.parseUtteranceGetParsableWords(utt3);
 		// parser.parseUtteranceGetParsableWords(utt4);
@@ -504,10 +530,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		System.out.println("Parsing Utterance \"" + utt + "\"");
 		for (int i = 0; i < utt.words.size(); i++) {
-			//System.out.println("Before parsing: " + utt.words.get(i));
-			
+			// System.out.println("Before parsing: " + utt.words.get(i));
+
 			DAG<DAGTuple, GroundableEdge> result = parseWord(utt.words.get(i));
-			System.out.println("parsable words after parsing "+utt.words.get(i)+" :" + this.getLocalGenerationOptions());
+			System.out.println(
+					"parsable words after parsing " + utt.words.get(i) + " :" + this.getLocalGenerationOptions());
 			if (result == null) {
 				logger.warn("Failed to parse " + utt.words.get(i));
 				return false;
@@ -629,18 +656,18 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 * Used in MDP exploration/policy optimisation.
 	 * 
 	 * @return The sublexicon (list of words as strings) that is parsable at the
-	 *         right-most tuples of the state. This method should not ultimately change the parse state.
+	 *         right-most tuples of the state. This method should not ultimately
+	 *         change the parse state.
 	 */
 	public Set<String> getLocalGenerationOptions() {
 		HashSet<String> result = new HashSet<String>();
 		logger.info("Getting local Generation options");
 
 		do {
-			outer: for (String word : lexicon.keySet())
-			{
+			outer: for (String word : lexicon.keySet()) {
 				if (result.contains(word))
 					continue;
-				logger.info("trying "+word+ " at "+getState().getCurrentTuple());
+				logger.info("trying " + word + " at " + getState().getCurrentTuple());
 				for (LexicalAction la : lexicon.get(word)) {
 
 					if (leftAdjustAndApply(la)) {

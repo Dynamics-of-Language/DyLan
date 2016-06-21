@@ -507,8 +507,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 					utt.words.get(i));
 			if (result == null)
 			{
-				logger.warn("Failed to parse "+utt.words.get(i));
-				return false;
+				logger.error("Failed to parse "+utt.words.get(i));
+				logger.error("Skipping it");
+				//return false;
 			}
 
 		}

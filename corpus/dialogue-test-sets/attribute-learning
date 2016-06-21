@@ -1,0 +1,5 @@
+L: This is a red square.
+T: no, it is a orange square.
+L: ACT::WAIT
+T: what is this?
+L: okay.
