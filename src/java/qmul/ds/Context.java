@@ -2,17 +2,18 @@ package qmul.ds;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.uci.ics.jung.graph.Tree;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
-import edu.uci.ics.jung.graph.Tree;
 
 /**
  * This class encodes the dialogue context, containing a Directed Asyclic Graph, which
@@ -48,7 +49,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	protected Map<String, TTRFormula> accepted_contents=null;
 	protected DAG<T,E> dag;
 	
-	public void initParticipantContents(List<String> participants)
+	public void initParticipantContents(Set<String> participants)
 	{
 		accepted_contents=new HashMap<String, TTRFormula>();
 		for(String s:participants)
@@ -67,7 +68,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	{
 		this.dag=dag;
 		dag.setContext(this);
-		initParticipantContents(part);
+		initParticipantContents(new HashSet<String>(part));
 	}
 	
 	/**
@@ -241,14 +242,14 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	{
 		dag.init();
 		resetVariablePools();
-		accepted_contents.clear();
+		initParticipantContents(getParticipants());
 	}
 	
 	public void init(List<String> participants)
 	{
 		dag.init();
 		resetVariablePools();
-		initParticipantContents(participants);
+		initParticipantContents(new HashSet<String>(participants));
 	}
 
 	public void setRepairProcessing(boolean repairing) {
