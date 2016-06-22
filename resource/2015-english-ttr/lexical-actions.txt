@@ -602,11 +602,13 @@ v_aux_inf(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
 	 	¬<\/0>Ex.x
+	 	¬</\1/\0>Ex.x
 		</\1\/0>ty(e)
 THEN 	aux_content(PRED)
 ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
-	 			¬<\/0>Ex.x				
+	 			¬<\/0>Ex.x	
+	 			¬</\0>Ex.x			
 		THEN	IF 		<\/*>+Q
 				THEN    make(\/1)
 						go(\/1)
@@ -632,6 +634,7 @@ v_aux_be(TENSE,PERSON,NUMBER)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
 	 	¬<\/0>Ex.x
+	 	¬</\1/\0>Ex.x
 		</\1\/0>ty(e)
 THEN 	delete(?ty(e>t))
 		put(ty(e>t))
@@ -645,7 +648,8 @@ THEN 	delete(?ty(e>t))
 		put(+BE)
 ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
-	 			¬<\/0>Ex.x				
+	 			¬<\/0>Ex.x
+	 			¬</\0>Ex.x			
 		THEN	IF 		<\/*>+Q
 				THEN    make(\/1)
 						go(\/1)

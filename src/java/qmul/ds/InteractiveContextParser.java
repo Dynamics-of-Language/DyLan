@@ -502,32 +502,14 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	public static void main(String[] a) {
 
-		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-attribute-learning");
-		try {
+		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
+		parser.parseUtterance(new Utterance("A: i want to buy a phone"));
+		parser.parseUtteranceGetParsableWords(new Utterance("B: okay. you "));
+		
+		
+		
 
-			List<Dialogue> ds = Dialogue.loadDialoguesFromFile("corpus/dialogue-test-sets/attribute-learning");
-			for (Dialogue d : ds) {
-				parser.parseDialogue(d);
-				parser.init();
-				edu.uci.ics.jung.graph.Tree<DAGTuple, GroundableEdge> inContext = parser.getState()
-						.getInContextSubgraph();
-				System.out.println("Vertices:" + inContext.getVertexCount());
-				System.out.println("Edges:" + inContext.getEdgeCount());
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// Utterance utt2 = new Utterance("S: okay. Which brand do you want?");
-		// Utterance utt3 = new Utterance("U: Samsung.");
-		// Utterance utt4 = new Utterance("S: okay.");
-		// parser.parseUtteranceGetParsableWords(utt1);
-		// parser.parseUtteranceGetParsableWords(utt2);
-		// parser.parseUtteranceGetParsableWords(utt3);
-		// parser.parseUtteranceGetParsableWords(utt4);
-
-		// System.out.println(parser.context.getGroundedContent("B"));
+	
 
 	}
 
