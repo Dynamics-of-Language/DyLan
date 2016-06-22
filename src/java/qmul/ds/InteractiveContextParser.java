@@ -82,18 +82,16 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		super(resourceDirNameOrURL, repairing);
 		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), Arrays.asList(participants));
 		context.setRepairProcessing(repairing);
-		
 
 	}
 
 	public InteractiveContextParser(String resourceDirOrURL) {
 		this(resourceDirOrURL, false);
 	}
-	
-	public InteractiveContextParser(String resourceDirOrURL, String... participants)
-	{
+
+	public InteractiveContextParser(String resourceDirOrURL, String... participants) {
 		this(resourceDirOrURL, false, participants);
-		
+
 	}
 
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
@@ -363,9 +361,16 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord word) {
 		logger.info("Parsing word " + word);
-		// state.resetToFirstTupleAfterLastWord();
-		// logger.debug("after reset cur is" + state.getCurrentTuple());
+		// set addressee of utterance if inferrable (in the dyadic case):
+		List<String> participants = new ArrayList<String>(context.getParticipants());
+		if (context.getParticipants().size() == 2) {
+			if (participants.indexOf(word.speaker()) == 0)
+				word.setAddressee(participants.get(1));
+			else
+				word.setAddressee(participants.get(0));
+		}
 
+		
 		if (this.repairanda.contains(word.word())) {
 			this.getState().thisIsFirstTupleAfterLastWord();
 			return this.getState();

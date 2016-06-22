@@ -16,14 +16,20 @@ public class UtteredWord implements HasWord{
 
 	public UtteredWord(String word, String speaker)
 	{
-		this.word=word;
-		this.speaker=speaker;
-		this.addressee=Utterance.defaultAddressee;
+		this(word, speaker,Utterance.defaultAddressee);
 	}
 	
 	public UtteredWord(String word)
 	{
 		this(word,Utterance.defaultSpeaker);
+	}
+	
+	public UtteredWord(String word, String speaker, String addressee)
+	{
+		this.word=word;
+		this.speaker=speaker;
+		this.addressee=addressee;
+		
 	}
 	
 
