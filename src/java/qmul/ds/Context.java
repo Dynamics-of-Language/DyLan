@@ -89,6 +89,9 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	
 	public void addParticipant(String name)
 	{
+		if (accepted_contents.keySet().contains(name))
+			return;
+		
 		accepted_contents.put(name, new TTRRecordType());
 	}	
 	

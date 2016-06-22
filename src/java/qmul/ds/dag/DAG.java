@@ -988,16 +988,25 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	}
 
 	public TTRFormula getGroundedContent(Set<String> participants) {
-		if (participants == null) {
+		if (participants == null||participants.isEmpty()) {
 			throw new IllegalArgumentException(
-					"cannot get grounded content without a set of participants which is null here. returning null formula");
+					"cannot get grounded content without a set of participants which is null or empty here. returning null formula");
 
 		}
+		for(String p: participants)
+			if (!this.acceptance_pointers.containsKey(p)||this.acceptance_pointers.get(p).isEmpty())
+				return new TTRRecordType();
+			
+		//System.out.println("getting grounded content");
+		//System.out.println("accepted pointers:"+this.acceptance_pointers);
 		TTRFormula result = new TTRRecordType();
 		Iterator<String> iter = participants.iterator();
-		Set<T> accepted_by_all = this.acceptance_pointers.get(iter.next());
+		String firstPart=iter.next();
+		
+		Set<T> accepted_by_all = this.acceptance_pointers.get(firstPart);
 		while (iter.hasNext()) {
-			accepted_by_all.retainAll(this.acceptance_pointers.get(iter.next()));
+			String participant=iter.next();
+			accepted_by_all.retainAll(this.acceptance_pointers.get(participant));
 
 		}
 

@@ -502,6 +502,20 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public boolean parseUtterance(Utterance utt)
 	{
 		logger.info("Parsing Utterance \""+utt+"\"");
+		//add speaker to conversation if not already there
+		if (!context.getParticipants().contains(utt.speaker))
+			context.addParticipant(utt.speaker);
+		
+		//set addressee of utterance if inferrable (in the dyadic case):
+		List<String> participants=new ArrayList<String>(context.getParticipants());
+		if (context.getParticipants().size()==2)
+		{
+			if (participants.indexOf(utt.speaker) == 0)
+				utt.setAddressee(participants.get(1));
+			else
+				utt.setAddressee(participants.get(0));
+		}
+		
 		for (int i = 0; i < utt.words.size(); i++) {
 			DAG<T,E> result = parseWord(
 					utt.words.get(i));

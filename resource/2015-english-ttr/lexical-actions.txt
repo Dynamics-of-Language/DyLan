@@ -173,9 +173,10 @@ your(PERSON)
 IF      ?ty(e)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
+       	Addressee(X)
 THEN	make(\/1)
         go(\/1)
-        ttrput(R^[r:(R ++ [p==of(R.head,you):t]) | x1==(iota, r.head, r):e | head==x1:e])
+        ttrput(R^[r:(R ++ [p==of(R.head,X):t]) | x1==(iota, r.head, r):e | head==x1:e])
         put(ty(cn>e))
         put(!)
         go(/\1)
