@@ -87,7 +87,7 @@ IF      ?ty(cn)
         ¬<\/0>Ex.x
 THEN    make(\/1)
         go(\/1)
-        ttrput(R^(R ++ [pred==PRED:cn|p==class(pred):t|p1==subj(pred,R.head):t]))
+        ttrput(R^(R ++ [pred==PRED:cn|p==class(pred):t|p1==subj(pred,R.head):t|p2==CLASS(pred):t]))
         put(ty(e>cn))      
         put(!)
         go(/\1)
@@ -99,7 +99,7 @@ ELSE    IF		?ty(cn)
 				¬<\/1>Ex.x
         		¬<\/0>Ex.x
         		+indef
-		THEN	ttrput([pred==PRED:cn|p==class(pred):t|head==pred:cn])
+		THEN	ttrput([pred==PRED:cn|p==class(pred):t|p2==CLASS(pred):t|head==pred:cn])
 				put(ty(cn))
 				delete(?ty(cn))
 				put(!)
@@ -228,7 +228,7 @@ IF		?ty(cn)
 		</\L>ty(cn)
 THEN	put(ty(cn))
 		delete(?ty(cn))
-		ttrput([head:cn|p==PRED(head):t])
+		ttrput([head:cn|p==PRED(head):t|p1==class(head):t])
 ELSE	abort
 
 

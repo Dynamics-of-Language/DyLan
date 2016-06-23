@@ -1,9 +1,9 @@
 is                            copula                    	pres                          s3
 is                            copula_q                    	pres                          s3
 is                            copula_whq                  	pres                          s3
-square                          count                       square                        s3                            obj
-circle                          count                       circle                        s3                            obj
-triangle						count						triangle					  s3							obj
+square                          count                       square                        s3                            shape
+circle                          count                       circle                        s3                            shape
+triangle						count						triangle					  s3							shape
 blue                            adj	                       	blue						  color
 red							    adj							red							  color
 green							adj							green						  color

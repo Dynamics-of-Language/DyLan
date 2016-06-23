@@ -269,6 +269,7 @@ THEN	make(\/*)
 		put(+Q)
 		put(class(CLASS))
 ELSE	IF		?ty(e)
+				Ex.tn(x)
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
@@ -310,6 +311,7 @@ THEN	make(\/*)
 		go(\/1)
 		put(?ty(e>cn))
 ELSE	IF		?ty(e)
+				Ex.tn(x)
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
