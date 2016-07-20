@@ -998,21 +998,22 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 				return new TTRRecordType();
 			
 		//System.out.println("getting grounded content");
-		//System.out.println("accepted pointers:"+this.acceptance_pointers);
+		logger.trace("accepted pointers:"+this.acceptance_pointers);
 		TTRFormula result = new TTRRecordType();
 		Iterator<String> iter = participants.iterator();
 		String firstPart=iter.next();
 		
-		Set<T> accepted_by_all = this.acceptance_pointers.get(firstPart);
+		Set<T> accepted_by_all = new HashSet<T>(this.acceptance_pointers.get(firstPart));
 		while (iter.hasNext()) {
 			String participant=iter.next();
 			accepted_by_all.retainAll(this.acceptance_pointers.get(participant));
 
 		}
-
+		logger.trace("accepted by all:"+accepted_by_all);
 		for (T tuple : accepted_by_all) {
 			result = result.conjoin(tuple.getSemantics(context));
 		}
+		
 		return result;
 	}
 

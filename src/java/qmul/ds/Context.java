@@ -77,6 +77,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 */
 	public TTRFormula getGroundedContent()
 	{
+	
 		return dag.getGroundedContent(accepted_contents.keySet()).removeHead();
 		
 	}
