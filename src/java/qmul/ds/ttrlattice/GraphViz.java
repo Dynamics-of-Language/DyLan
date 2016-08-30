@@ -74,6 +74,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
@@ -90,7 +91,8 @@ public class GraphViz
 	/**
 	 * Load the config.properties file.
 	 */
-	private final static String cfgProp = "/Applications/graphviz-java-api-master/config/config.properties"; //Note make sure this is where the graphviz-java-api is
+	//private final static String cfgProp = "/Applications/graphviz-java-api-master/config/config.properties"; //Note make sure this is where the graphviz-java-api is
+	private final static String cfgProp = "C:\\Program Files\\graphviz-java-api-master\\config\\config.properties";
 	private final static Properties configFile = new Properties() {
 		private final static long serialVersionUID = 1L; {
 			try {
@@ -105,7 +107,8 @@ public class GraphViz
 	/**
 	 * The dir. where temporary files will be created.
 	 */
-	private static String TEMP_DIR = configFile.getProperty("tempDirFor" + osName);
+	private static String TEMP_DIR = System.getProperty("user.dir") + "\\..\\..\\..\\..\\Temp"; //windows
+			//configFile.getProperty("tempDirFor" + osName); //linux/mac
 
 	/**
 	 * Where is your dot program located? It will be called externally.
@@ -223,6 +226,7 @@ public class GraphViz
 					System.err.println("Warning: " + dot.getAbsolutePath() + " could not be deleted!");
 				return img_stream;
 			}
+			System.out.println("Failed to convert graph");
 			return null;
 		} catch (java.io.IOException ioe) { return null; }
 	}
@@ -320,6 +324,7 @@ public class GraphViz
 		File temp;
 		try {
 			temp = File.createTempFile("graph_", ".dot.tmp", new File(GraphViz.TEMP_DIR));
+			temp.deleteOnExit();
 			FileWriter fout = new FileWriter(temp);
 			fout.write(str);
 			fout.close();
@@ -390,32 +395,55 @@ public class GraphViz
 		}
 
 		this.graph = sb;
+		System.out.println(sb);
+		System.out.println("loaded");
 	}
 	
 	public static void main(String[] args){
-
-			String dotfile = "/Users/julianhough/git/simple_rnn_disf/rnn_disf_detection/disf_decoder/models/disfluency_trp_simple.dot";
-			String filename = "/Users/julianhough/git/simple_rnn_disf/rnn_disf_detection/disf_decoder/models/disfluency_trp_simple.png";
+			//String dotfile = "/Users/julianhough/git/simple_rnn_disf/rnn_disf_detection/disf_decoder/models/disfluency_trp_simple.dot";
+			//String filename = "/Users/julianhough/git/simple_rnn_disf/rnn_disf_detection/disf_decoder/models/disfluency_trp_simple.png";
+			String dotfile = "C:\\Users\\Julian\\git\\simple_rnn_disf\\rnn_disf_detection\\disf_decoder\\models\\disfluency_trp_simple.dot"; 
+			String filename = "C:\\Users\\Julian\\git\\simple_rnn_disf\\rnn_disf_detection\\disf_decoder\\models\\disfluency_trp_simple_new.png"; 
+			String adir = System.getProperty("user.dir");
+	        System.out.println("current dir = " + adir);
+			try {
+				System.out.println(GraphViz.TEMP_DIR);
+				File dir = new File(GraphViz.TEMP_DIR);
+				File temp = File.createTempFile("graph_", ".dot.tmp", dir);
+				temp.deleteOnExit();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			   
 			
 			
 			
 			
-			   //System.out.println(lattice);
+			
+			//System.out.println(lattice);
 			   GraphViz gv = new GraphViz();
-			   gv.readSource(dotfile);
-				//gv.addln(gv.start_graph());
+			   //gv.readSource(dotfile);
+			   System.out.println(gv.TEMP_DIR);
+			   System.out.println(gv.configFile);
+			   System.out.println(gv.osName);
+			   System.out.println(gv.DOT);
+	
+				gv.addln(gv.start_graph());
 				
-			//	for (Object o : lattice.edges()){
+				//for (Object o : lattice.edges()){
 				//	Edge edge = (Edge) o;
 				//	String connection = Integer.toString(lattice.nodeLabel(((Node) edge.sink()))) + " -> " + Integer.toString(lattice.nodeLabel(((Node) edge.source())));
-					//gv.addln(connection);
+				//	gv.addln(connection);
 					
 				//}
 				
-				//gv.addln("A -> B;");
-				//gv.addln("A -> C;");
-				//gv.addln(gv.end_graph());
-				//System.out.println(gv.getDotSource());
+				gv.addln("A -> B;");
+				gv.addln("A -> C;");
+				gv.addln(gv.end_graph());
+				System.out.println(gv.getDotSource());
 
 				gv.increaseDpi();   // 106 dpi
 
@@ -437,10 +465,9 @@ public class GraphViz
 				
 				File out = new File(filename);   // Linux
 				//      File out = new File("c:/eclipse.ws/graphviz-java-api/out." + type);    // Windows
+				System.out.println(gv.getGraph(gv.getDotSource(), type, repesentationType));
 				gv.writeGraphToFile( gv.getGraph(gv.getDotSource(), type, repesentationType), out );
 			
-		
-		
 	}
 
 } // end of class GraphViz

@@ -400,7 +400,6 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			logger.debug("Parent loop: " + this.nodeLabel(parent));
 			TTRRecordType parentTTR = ((TTRLatticeNode) parent.getWeight()).getTTR();
 			if (parentTTR.subsumesStrictLabelIdentity(ttr) && ttr.subsumesStrictLabelIdentity(parentTTR)){ // we have a match, add props to its up set and return
-				//Case 1:
 				logger.debug("CASE1: parent matches " + myNode.toString());
 				logger.debug("preserving outgoing edges and removing Node "+ this.nodeLabel(myNode));
 				
@@ -508,11 +507,15 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				}
 				//continue;
 				break;//TODO because we've found the predecessors
+			} else if (minCommonSuper.subsumesStrictLabelIdentity(parentTTR)&&parentTTR.subsumesStrictLabelIdentity(minCommonSuper)){
+				//Case 4:
+				logger.debug("Case 4: min common supertype with parent's ttr IS the parentTTR");
+				this.addAustinianJudgements(parent, props, true);
+				
+				
 			}
-			
-			
 			//Not the same, if just a supertype, need to check if it's in the lattice already and that it has an intent, if not, needs to be added
-			logger.debug("Case 4: min common supertype with parent's ttr could be novel type in lattice");	
+			logger.debug("Case 5: min common supertype with parent's ttr could be novel type in lattice");	
 			
 			logger.debug("RECURSIVE CALL start");
 				boolean addPropsHere = commonProps.isEmpty() ? true: false;
@@ -566,7 +569,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		
 		logger.debug("returning node " + this.nodeLabel(myNode) + " " + myNode);
 		
-		if (counter>2710){
+		/*if (counter>2710){
 			for (Object o : this.nodes()){
 				Node node = (Node) o;
 				logger.debug(this.nodeLabel(node) + " " + node);
@@ -574,7 +577,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			latticeViewer.displayLattice("test_lattice" + Integer.toString(counter) + ".png");
 			//pause();
 		}
-	
+		*/
+		//latticeViewer.displayLattice("test_lattice" + Integer.toString(counter) + ".png");
 		counter++;
 		
 		
@@ -632,6 +636,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		TTRRecordType ttr2 = null;
 		TTRRecordType ttr3 = null;
 		
+		TTRRecordType ttr4 = TTRRecordType.parse("[onet : e|coacheevaprogress==inprogress : e|coachda==acknowledgeme : e]");
 		
 		
 		if (shapes){
@@ -652,9 +657,15 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			ttr3 = TTRRecordType.parse("[ pre : [ m==hi : e ] | eff : [ m1==byebye : e ] ]");
 		}
 		
-		TTRRecordType t1 = TTRRecordType.parse("[r : [x : e|head==x : e]]");
-		TTRRecordType t2 = TTRRecordType.parse("[r : [x : e|head==x : e]]");
-		System.out.println(t1.minimumCommonSuperTypeBasic(t2, new HashMap<Variable,Variable>()));
+		TTRRecordType t1 = TTRRecordType.parse("[r : [x : e|head==x : e|p5==milk(x) : t]|x1==you : e|e1==drink : es|x2==your(r.head, r) : e|p3==subj(e1, x1) : t|p4==obj(e1, x2) : t]");
+		TTRRecordType t2 = TTRRecordType.parse("[r : [x : e|head==x : e]|x2==your(r.head, r) : e|p3==subj(e1, x1) : t|p4==obj(e1, x2) : t]");
+		TTRRecordType t3 = t1.minimumCommonSuperTypeBasic(t2, new HashMap<Variable,Variable>());
+		System.out.println(t2);
+		System.out.println(t3);
+		System.out.println(t2.subsumesStrictLabelIdentity(t2));
+		System.out.println(t2.subsumesStrictLabelIdentity(t3));
+		System.out.println(t3.subsumesStrictLabelIdentity(t2));
+		
 		pause();
 		
 		//create simple type judgements with probability = 1 for each one
@@ -695,7 +706,10 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		//Bigger experiment with 100+ RTs
 		RecordTypeCorpus corpus = new RecordTypeCorpus();
 		try {
-			corpus.loadCorpus(new File("/Users/julianhough/git/dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion100TestFinal.txt"));
+			//String corpusloc = "/Users/julianhough/git/dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion100TestFinal.txt";
+			//String corpusloc = "C:\\Users\\Julian\\git\\dsttr\\corpus\\CHILDES\\eveTrainPairs\\CHILDESconversion100TestFinal.txt";
+			String corpusloc = "C:\\Users\\Julian\\git\\icspace-corpus-analysis\\information_state_generation_2016\\code\\predicting_next_dialogue_move\\infostates.txt";
+			corpus.loadCorpus(new File(corpusloc));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -706,7 +720,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		int i = 1;
 		for (Pair<Sentence<Word>, TTRRecordType> p : corpus){
 			ttr = p.second().removeHead();
-			System.out.println("adding " + ttr.toString());
+			System.out.println("adding " + i + " " + ttr.toString());
 			Set<TTRAustinianProp> s4 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, 1.0, i)));
 			try {
 				if (lattice.top()==null){

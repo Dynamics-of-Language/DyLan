@@ -975,8 +975,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	public boolean subsumesMappedStrictLabelIdentity(TTRRecordType other,
 			int thisIndex, HashMap<Variable, Variable> map) {
-
-		if (thisIndex == fields.size())
+		
+		logger.debug(fields.size());
+		logger.debug(thisIndex);
+		if (thisIndex == fields.size()||map.keySet().contains(fields.get(thisIndex).getLabel()))
 			return true;
 
 		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
