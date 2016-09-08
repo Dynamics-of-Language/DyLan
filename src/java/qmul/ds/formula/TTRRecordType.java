@@ -988,25 +988,36 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			TTRField field = other.fields.get(i);
 			if (map.values().contains(field.getLabel()))
 				continue;
+			boolean subsumes = false;
+			if (fields.get(thisIndex).getLabel().equals(field.getLabel())) {
+			
+				if (((fields.get(thisIndex).getType() instanceof TTRRecordType && field.getType() instanceof TTRRecordType))){
+					if (((TTRRecordType) fields.get(thisIndex).getType()).subsumesStrictLabelIdentity(field.getType())){
+						subsumes = true;
+					}
+				} else if( fields.get(thisIndex).subsumesMapped(field, map)) {
+					subsumes = true;
+				}
+				if (subsumes){
+					logger.debug("Subsumed " + field);
+					logger.debug("map is now:" + map);
+	
+					if (subsumesMappedStrictLabelIdentity(other, thisIndex + 1, map))
+						return true;
+	
+					fields.get(thisIndex).partialResetMeta();
+					map.clear();
+					map.putAll(copy);
+					continue;
+				}
 
-			if (fields.get(thisIndex).getLabel().equals(field.getLabel())
-					&& fields.get(thisIndex).subsumesMapped(field, map)) {
-				logger.debug("Subsumed " + field);
-				logger.debug("map is now:" + map);
-
-				if (subsumesMappedStrictLabelIdentity(other, thisIndex + 1, map))
-					return true;
-
-				fields.get(thisIndex).partialResetMeta();
-				map.clear();
-				map.putAll(copy);
-
-			} else {
-				logger.debug(fields.get(thisIndex) + " failed against:" + field
-						+ " map:" + map);
-				map.clear();
-				map.putAll(copy);
-			}
+			} 
+			//get here failed to find mapping
+			logger.debug(fields.get(thisIndex) + " failed against:" + field
+					+ " map:" + map);
+			map.clear();
+			map.putAll(copy);
+			
 		}
 
 		return false;
