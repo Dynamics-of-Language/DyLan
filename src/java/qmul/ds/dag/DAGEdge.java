@@ -34,15 +34,12 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	 */
 	protected Long id = 0L;
 	
-	//protected Long pid = -1L;
+	
 	protected List<Action> actions = null;
 	protected UtteredWord word = null;
-	// protected boolean seen = false;
+	
 	protected double weight = 0.5;
-	// no longer dealing with a tree, but a graph, with multiple incident edges.
-	// We order them by recency
-	// so we can backtrack accordingly. This number is used there.
-	//protected int incidenceNumber = 0;
+	
 	protected Set<Integer> edge_properties = new HashSet<Integer>();
 	
 	

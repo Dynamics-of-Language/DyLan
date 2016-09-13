@@ -133,22 +133,7 @@ THEN	delete(Fo(X))
 		unreduce
 ELSE	abort
 
-//*
-*link-evaluation
-IF      ¬+evaluated
-		Ex.fo(x)
-		<\/L>Ex.x
-		<\/L>fo(X)
-THEN    conjoin(X)
-		put(+evaluated)
-		IF		</\L>Ex.x
-				</\L>+evaluated
-		THEN	go(/\L)
-				delete(+evaluated)
-		ELSE	do_nothing
-ELSE    abort
 
-*//
 
 *link-evaluation
 IF      ?+eval

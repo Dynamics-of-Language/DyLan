@@ -21,6 +21,8 @@ import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.BottomLabel;
 import qmul.ds.tree.label.FormulaLabel;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.DSType;
@@ -71,10 +73,12 @@ public class Unreduce extends Effect {
 		NodeAddress cur=tree.getPointer();
 		Modality up=Modality.parse("</\\>");
 		BottomLabel bottom=new BottomLabel();
+		Label evalLabel=LabelFactory.create("?+eval");
 		do{
 			cur=cur.go(up);
 			Node curNode=tree.get(cur);
 			DSType type=curNode.getType();
+		
 			if (type==null)
 			{
 				return tree;
@@ -82,11 +86,28 @@ public class Unreduce extends Effect {
 			TypeLabel tyl=curNode.getTypeLabel();
 			FormulaLabel fol=curNode.getFormulaLabel();
 			
-			if (tyl!=null)
-				curNode.remove(tyl);
-			if (fol!=null)
-				curNode.remove(fol);
-			curNode.add(new Requirement(new TypeLabel(type)));
+			if (tree.getDaughters(curNode, "01").size() == 2)
+			{
+				if (tyl!=null)
+				{
+					
+				
+					curNode.remove(tyl);
+					curNode.add(new Requirement(new TypeLabel(type)));
+				}
+				
+				if (fol!=null)
+					curNode.remove(fol);
+				
+				
+				
+			}
+			
+			if (!tree.getDaughters(curNode, "L").isEmpty())
+				curNode.add(evalLabel);
+				
+			
+			
 			if (curNode.contains(bottom))
 				curNode.remove(bottom);
 				

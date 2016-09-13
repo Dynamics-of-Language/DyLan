@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,19 +30,18 @@ import qmul.ds.formula.TTRFormula;
 import qmul.ds.tree.Tree;
 
 /**
- * An interactive parsing agent with a DAG context as per Eshghi et. al (2015).
+ * An interactive parser with a DAG context as per Eshghi et. al (2015).
  * 
  * Self-repair processing. CR processing. Acknowledgements. Question/Answer
  * pairs....
  * 
- * TODO: (1) Turn repair processing on/off TODO: (2) Fix how tree completion
- * works. Currently it is right-edge tokens like . or ? that take care of it. ??
- * TODO: (3) Add generation: Given current context, i.e. the DAG constructed so
- * far, and a goal concept, generate turn/string such that the maximal semantics
- * of the right-most node on the DAG equals the goal. Generally, there will be
- * two options: (a) local extension including repair/correction; and (b)
- * starting a new clause. At this point, we can force (a) to be preferred and
- * (b) only tried if (a) fails.
+ * TODO: (2) Fix how tree completion works. Currently it is right-edge tokens
+ * like . or ? that take care of it. ?? TODO: (3) Add generation: Given current
+ * context, i.e. the DAG constructed so far, and a goal concept, generate
+ * turn/string such that the maximal semantics of the right-most node on the DAG
+ * equals the goal. Generally, there will be two options: (a) local extension
+ * including repair/correction; and (b) starting a new clause. At this point, we
+ * can force (a) to be preferred and (b) only tried if (a) fails.
  * 
  * 
  * @author Arash
@@ -213,7 +213,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				// TODO: should be part of the lexical entry? Need to think
 				// about this.
 
-				boolean repairable = true;
+				// boolean repairable = true;
 				logger.debug("executing " + la + " on " + pair.second);
 				Tree res = la.exec(pair.second.clone(), context);
 
@@ -225,6 +225,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					newActs = new ArrayList<Action>(pair.first);
 					GroundableEdge wordEdge;
 					newActs.add(la.instantiate());
+					//
+
 					if (getIndexOfTRP(newActs) >= 0)
 						wordEdge = getState().getNewNewClauseEdge(newActs, w);
 					else
@@ -232,8 +234,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);
+
 					if (non_repairing_action_types.contains(la.getLexicalActionType()))
-						wordEdge.setRepairable(repairable);
+						wordEdge.setRepairable(false);
 
 					DAGTuple newTuple = getState().getNewTuple(res);
 
@@ -370,7 +373,6 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				word.setAddressee(participants.get(0));
 		}
 
-		
 		if (this.repairanda.contains(word.word())) {
 			this.getState().thisIsFirstTupleAfterLastWord();
 			return this.getState();
@@ -503,13 +505,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
-		parser.parseUtterance(new Utterance("A: i want to buy a phone"));
-		parser.parseUtteranceGetParsableWords(new Utterance("B: okay. you "));
-		
-		
-		
+		long now = new Date().getTime();
+		parser.parseUtteranceGetParsableWords(new Utterance("A: what do you want?"));
+		long after = new Date().getTime();
 
-	
+		System.out.println("It took:" + (after - now) + " milliseconds.");
 
 	}
 

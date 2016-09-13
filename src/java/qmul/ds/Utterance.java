@@ -16,7 +16,7 @@ public class Utterance {
 
 	protected static Logger logger=Logger.getLogger(Utterance.class);
 	public static final String SPEAKER_SEP=":";
-	public static final String defaultSpeaker = "Spkr";
+	public static final String defaultSpeaker = "Dylan";
 	public static final String defaultAddressee = "you";
 	String speaker;
 	List<UtteredWord> words;

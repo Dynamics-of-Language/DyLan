@@ -719,6 +719,17 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return true;
 	}
 
+	protected NewClauseEdge getClauseRoot()
+	{
+		for (E edge : getOutEdges()) {
+			if ((edge instanceof NewClauseEdge) && edge.hasBeenSeen())
+				return (NewClauseEdge)edge;
+
+		}
+		return null;
+		
+	}
+	
 	public boolean attemptBacktrackGen() {
 		while (!moreUnseenEdges()) {
 			if (!canBacktrack()) {
@@ -944,6 +955,21 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return false;
 	}
 
+	public boolean atGroundedClauseRoot()
+	{
+		if (atRoot())
+			return true;
+		for (E edge : getOutEdges()) {
+			if ((edge instanceof NewClauseEdge) && edge.hasBeenSeen())
+			{
+				
+				return ((NewClauseEdge)edge).isGrounded();
+			}
+
+		}
+		return false;
+		
+	}
 	public boolean atClauseRoot() {
 		if (atRoot())
 			return true;

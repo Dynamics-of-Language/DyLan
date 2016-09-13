@@ -100,7 +100,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		this.setCurrentTuple(firstTupleAfterLastWord);
 		this.wordStack.clear();
 		removeChildren();
-		if (atClauseRoot())
+		if (atGroundedClauseRoot())
 		{
 			setExhausted(false);
 			return;
@@ -110,7 +110,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 		GroundableEdge parentEdge = getUniqueParentEdge();
 
-		while (!atClauseRoot()) {
+		while (!atGroundedClauseRoot()) {
 			setCurrentTuple(getUniqueParent());
 			parentEdge.setSeen(false);
 			parentEdge.setInContext(false);
@@ -320,6 +320,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		}
 
 	}
+	
 
 	public void ungroundToClauseRootFor(String speaker, DAGTuple cur) {
 		GroundableEdge parent = getParentEdge(cur);
@@ -440,16 +441,28 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	}
 
+	
 	public boolean canBacktrack() {
-		if (getActiveParent() == null) {
+		GroundableEdge parent=getActiveParentEdge();
+		if (parent == null) {
 			logger.debug("no active parent");
 			logger.debug("in edges:" + getInEdges(cur));
 
 			return false;
 		}
-		if (atClauseRoot())
+		
+		if (this.wordStack().isEmpty())
+			return true;
+		
+//		if (parent.isGroundeFor(this.wordStack().peek().speaker()))
+//			return false;
+		
+		if (atGroundedClauseRoot())
+		{
+			logger.debug("Cannot backtrack. At grounded clause root."); 
 			return false;
 
+		}
 		return true;
 	}
 

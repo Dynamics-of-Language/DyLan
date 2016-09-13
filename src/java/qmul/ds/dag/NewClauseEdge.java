@@ -37,6 +37,21 @@ public class NewClauseEdge extends GroundableEdge {
 	}
 	
 	
-	
+	public void traverse(WordLevelContextDAG dag)
+	{
+		/**
+		 * If parent is "." or "?" ground this new clause edge. Once traversed it will be grounded and never traversed again.
+		 * Assumption is, as always, that new clause edges are always the last outgoing edge.
+		 */
+		
+		GroundableEdge parent=dag.getActiveParentEdge();
+		if (parent.getLexicalActionType().equalsIgnoreCase("assert")||parent.getLexicalActionType().equalsIgnoreCase("question"))
+		{
+			ground();
+		}
+		
+		super.traverse(dag);
+		
+	}
 	
 }

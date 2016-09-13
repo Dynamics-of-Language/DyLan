@@ -579,14 +579,14 @@ him                           pron_acc                      s3                  
 himself						  pron_ref						s3							  male
 me                            pron_acc                      s1                            spkr
 she                           pron_nom                      s3                            female
-what                          pron_whq                      obj
-where						  pron_whq						loc
-what                          pron_whq_cop                  obj
-what						  pron_whq_det					obj
+what                          pron_whq                      s3							  obj
+where						  pron_whq						s3							  loc
+what                          pron_whq_cop                  s3							  obj
+what						  pron_whq_det					s3							  obj
 which                         pron_whrel                    obj
-which						  pron_whq_det					obj
+which						  pron_whq_det					s3							  obj
 that                          pron_whrel                    obj
-who                           pron_whq                      per
+who                           pron_whq                      s3							  per
 who                           pron_whrel                    per
 them                          pron_acc                      plur                          per
 they                          pron_nom                      plur                          per

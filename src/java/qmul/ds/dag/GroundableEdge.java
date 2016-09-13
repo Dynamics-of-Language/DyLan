@@ -1,14 +1,17 @@
 package qmul.ds.dag;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.action.Action;
+import qmul.ds.action.LexicalAction;
 
 public class GroundableEdge extends DAGEdge {
 
+	protected Logger logger=Logger.getLogger(GroundableEdge.class);
 	protected Set<String> grounded_for = new HashSet<String>();
 	boolean repairable = true;
 
@@ -111,20 +114,33 @@ public class GroundableEdge extends DAGEdge {
 		}
 
 		
-		
+		/**
+		 * IMPORTANT: commented out because I am enforcing grounding of the previous turn upon continuation.
+		 * i.e. if I want to continue what you say, I PICK a particular interpretation, and then continue. I won't be able to
+		 * backtrack over/into it anymore.
+		 * TODO
+		**/
 		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(dag
 				.getSource(this));
+		
+		
 		if (prevPrevEdge != null
 				&& !word().speaker().equals(prevPrevEdge.word().speaker())) {
 			dag.ungroundToClauseRootFor(word().speaker(), dag.getSource(this));
 		}
-
+		
+		
 		setSeen(true);
 		setInContext(false);
 
 		dag.setCurrentTuple(dag.getSource(this));
 		logger.info("Backtracked over: " + this);
 
+	}
+	
+	public String getLexicalActionType()
+	{
+		return ((LexicalAction)actions.get(actions.size()-1)).getLexicalActionType();
 	}
 
 }

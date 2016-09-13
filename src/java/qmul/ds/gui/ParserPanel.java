@@ -1140,15 +1140,21 @@ public class ParserPanel extends JPanel {
 
 		resetToFTALW.setText("Reset to FRALW");
 		resetToFTALW
-				.setToolTipText("Tells the parser to reset the state to the first state after parsing the last word");
+				.setToolTipText("Tells the parser to reset the state to the FIRST state after the last parsable word");
 		resetToFTALW.setEnabled(false);
 		resetToFTALW.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (parser instanceof InteractiveContextParser) {
 					InteractiveContextParser p = (InteractiveContextParser) parser;
-
+					
 					p.getState().resetToFirstTupleAfterLastWord();
+					tuples.clear();
+					
+					tuples.add(p.getState().getCurrentTuple());
+					
+
 					conPanel.update(p.getState());
+					displayBestParse();
 				}
 			}
 		});

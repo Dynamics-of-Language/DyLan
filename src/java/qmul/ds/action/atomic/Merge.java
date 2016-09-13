@@ -76,10 +76,11 @@ public class Merge extends Effect {
 			return null;
 		}
 
-		if (!node.isUnifiable(other)) {
-			logger.error("unification failed");
-			return null;
-		}
+		//no longer checking this for lexically triggered merge, so that we can merge across link.
+		//if (!node.isUnifiable(other)) {
+		//	logger.error("unification failed");
+		//	return null;
+		//}
 		/**
 		 * making sure no duplicate type/formula labels
 		 * 

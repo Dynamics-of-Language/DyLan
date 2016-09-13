@@ -21,12 +21,12 @@ smartphone					count							smartphone				   s3							obj
 product					 	 count							product					   s3							obj
 brand					  count							brand					   s3							obj
 make					  count							make					   s3							obj
-samsung						  proper						samsung						  s3							obj
-lg							  proper						lg							  s3							obj
-apple						  proper						apple						  s3							obj
-htc							  proper						htc							  s3							obj
-dell						  proper						dell						  s3							obj
-want                          v_tran_inf                    want                          inf                           per
+samsung						  proper						samsung						  s3							brand
+lg							  proper						lg							  s3							brand
+apple						  proper						apple						  s3							brand
+htc							  proper						htc							  s3							brand
+dell						  proper						dell						  s3							brand
+want                          v_tran_inf                    want                          inf                           brand
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3
 want                          v_subjcon_fin                 want                          pres                          nons3
@@ -45,7 +45,7 @@ prefer                          v_subjcon_fin                 want              
 prefer                         v_subjcon_fin                 want                          pres                          s3
 prefer                          v_subjcon_inf                 want                          inf                          nons3
 looking						  v_subjcon_ing				  look							ing 						  per
-lookingfor					  v_tran_ing				      look							ing							  per
+looking						  v_intran_ing				      look							ing							  per
 was                           v_aux_be                      past                          s3
 were                          v_aux_be                      past                          per
 am                            v_aux_be                      pres                           per
@@ -65,3 +65,23 @@ an                            det_indef                     eps
 by							  prep_e						by
 from						  prep_e						from
 to							  to_subjcon					to
+for							  prep_es						for
+moderate 					  adj							cheap
+cheap						  adj							cheap
+expensive					  adj							expensive
+chinese						  adj							chinese
+cheap						  proper						cheap						  s3							range
+expensive					  proper						expensive					  s3							range
+moderate					  proper						moderate					  s3							range
+chinese                         proper						food						  s3							chinese
+italian						  adj							italian
+italian                         proper						food						  s3							italian
+thai						  adj							thai
+thai                         proper						food						  s3							thai
+persian						  adj							persian
+persian                         proper						food						  s3							persian
+cuisine						  count                     cuisine					   s3							obj
+price						  count						price					   s3							obj
+price						  noun_mod					price					
+food						  mass						food					   s3							trans
+range						  count						range					   s3							obj

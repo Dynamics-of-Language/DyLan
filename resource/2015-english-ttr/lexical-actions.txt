@@ -255,7 +255,7 @@ THEN	ttrput([x==X:e|head==x:e])
 ELSE	abort
 
 
-pron_whq(CLASS)
+pron_whq(PERSON,CLASS)
 IF		?ty(t)
 		¬<\/1>Ex.x
 		¬<\/0>Ex.x
@@ -268,6 +268,7 @@ THEN	make(\/*)
 		ttrput([x:e|head==x:e])
 		put(+Q)
 		put(class(CLASS))
+		put(person(PERSON))
 ELSE	IF		?ty(e)
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
@@ -278,10 +279,11 @@ ELSE	IF		?ty(e)
 				ttrput([x:e|head==x:e])
 				put(+Q)
 				put(class(CLASS))
+				put(person(PERSON))
 		ELSE	abort
 
 
-pron_whq_det(CLASS)
+pron_whq_det(PERSON,CLASS)
 IF		?ty(t)
 		¬<\/1>Ex.x
 		¬<\/0>Ex.x
@@ -291,6 +293,8 @@ THEN	make(\/*)
 		go(\/*)
 		put(?Ex.tn(x))
 		put(?ty(e))
+		put(person(PERSON))
+		put(class(CLASS))
 		make(\/1)
 		go(\/1)
 		ttrput(R^(R ++ [head==R.head:e]))
@@ -314,7 +318,9 @@ ELSE	IF		?ty(e)
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
 				¬</\L>Ex.x
-		THEN	make(\/1)
+		THEN	put(person(PERSON))
+				put(class(CLASS))
+				make(\/1)
 				go(\/1)
 				ttrput(R^(R ++ [head==R.head:e]))
 				put(!)
@@ -604,6 +610,7 @@ IF		?ty(e>t)
 	 	¬<\/0>Ex.x
 	 	¬</\1/\0>Ex.x
 		</\1\/0>ty(e)
+		</\1\/0>person(PERSON)
 THEN 	aux_content(PRED)
 ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
