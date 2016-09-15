@@ -5,6 +5,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,8 +19,6 @@ import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
-import qmul.ds.InteractiveContextParser;
-import qmul.ds.Utterance;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
@@ -85,6 +86,32 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				return null;
 			}
 			newRT.add(cur);
+		}
+		return newRT;
+	}
+
+	public static TTRRecordType parseStrictFieldOrder(String s1) {
+		TTRRecordType newRT = new TTRRecordType();
+		String s = s1.trim();
+		if (!s.startsWith(TTR_OPEN) || !s.endsWith(TTR_CLOSE))
+			return null;
+		if (s.substring(1, s.length() - 1).trim().isEmpty())
+			return new TTRRecordType();
+
+		String fieldsS = s.substring(TTR_OPEN.length(), s.length() - TTR_CLOSE.length());
+
+		ArrayList<String> fieldStrings = splitFields(fieldsS);
+
+		for (String fieldS : fieldStrings) {
+			// logger.info("Field: " + fieldS);
+
+			TTRField cur = TTRField.parse(fieldS);
+			if (cur == null) {
+				logger.error("Bad field, " + fieldS + ", in record type:" + s1);
+				logger.error("This will probably result in a nonsensical atomic formula being created!");
+				return null;
+			}
+			newRT.addAtEnd(cur);
 		}
 		return newRT;
 	}
@@ -411,62 +438,203 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		record.remove(oldLabel);
 
 	}
+
 	/**
 	 * relabel whole record type using map
+	 * 
 	 * @param map
 	 * @return new relabelled record type
 	 */
-	public TTRRecordType relabel(Map<Variable, Variable> map)
-	{
-		TTRRecordType mapped=new TTRRecordType();
-		List<TTRField> mappedFields=new ArrayList<TTRField>();
-		
-		for(TTRField f:this.fields)
-		{
-			
-			Variable v=new Variable(f.getLabel());
-			
-			Set<Variable> variables=f.getVariables();
-			Formula type=f.getType();
-			for(Variable var:variables)
-			{
+	public TTRRecordType relabel(Map<Variable, Variable> map) {
+		TTRRecordType mapped = new TTRRecordType();
+		List<TTRField> mappedFields = new ArrayList<TTRField>();
+
+		for (TTRField f : this.fields) {
+
+			Variable curLabel = new Variable(f.getLabel());
+
+			Set<Variable> variables = f.getVariables();
+			Formula type = f.getType();
+			for (Variable var : variables) {
 				if (map.containsKey(var))
-					type=type.substitute(var, map.get(var));
-				
+					type = type.substitute(var, map.get(var));
+
 			}
-			TTRField mappedField=new TTRField(map.containsKey(v)?new TTRLabel(map.get(v)):new TTRLabel(v), f.getDSType(), type);
-			
-		
+			TTRLabel newLabel;
+			// what if this record type already has the target variable as
+			// label?
+			if (map.containsKey(curLabel)) {
+				newLabel = new TTRLabel(map.get(curLabel));
+				System.out.println("mapping label to target.");
+			} else if (map.containsValue(curLabel)) {
+
+				Variable newVar = this.getFreshVariable(map.values(), curLabel.name.substring(0, 1));
+				map.put(curLabel, newVar);
+				newLabel = new TTRLabel(newVar);
+				System.out.println("mapping label to fresh label");
+
+			} else {
+				System.out.println("not mapping label");
+				newLabel = new TTRLabel(curLabel);
+			}
+
+			TTRField mappedField = new TTRField(newLabel, f.getDSType(), type);
+
 			mappedFields.add(mappedField);
+			System.out.println("Mapped " + f + "->" + mappedField);
 		}
-		
-		
-		for(TTRField f: mappedFields)
-		{
+
+		for (TTRField f : mappedFields) {
 			mapped.add(f);
 		}
-		
-		
+
 		return mapped;
-		
+
 	}
+
 	
-public static void main(String[] a) {
-		
+	/**
+	 * collapses duplicate super-types, i.e. super-types which are isomorphic.
+	 * Should Reduce to a minimum.... TODO
+	 * 
+	 * We can collapse entity variables with the same manifest content. But not
+	 * event terms, because their manifest content is really a type, not an
+	 * entity.
+	 * 
+	 * @return
+	 */
+	public void collapseIsomorphicSuperTypes(HashMap<Variable, Variable> map) {
+
+		for (int i = 0; i < fields.size(); i++) {
+			TTRField first = fields.get(i);
+			logger.debug("testing "+first);
+			if (first.getDSType().equals(DSType.es))
+			{
+				logger.debug("Skipping "+first);
+				continue;
+			}
+			for (Variable v : first.getVariables()) {
+				logger.debug("testing variable:"+v);
+				if (map.containsKey(v))
+				{
+					logger.debug(v+"->"+map.get(v));
+					Formula subst=first.getType().substitute(v, map.get(v));
+					remove(first.getLabel());
+					add(new TTRField(first.getLabel(), first.getDSType(), subst));
+					
+				}
+			}
+			
+			for (int j = i+1; j < fields.size(); j++) {
+				TTRField next = fields.get(j);
+				logger.debug("against "+next);
+				if (first.getDSType().equals(next.getDSType())&&first.getType() != null && first.getType().subsumesBasic(next.getType())) {
+					logger.debug("type subsumption.");
+					map.put(new Variable(first.getLabel()), new Variable(next.getLabel()));
+					this.remove(first.getLabel());
+
+				}
+			}
+
+		}
+
+	}
+
+	/**
+	 * A field is more specific than another if the maximal super type with that
+	 * field has more fields. (getMaximalSuperTypeWith method) This is used in
+	 * mostSpecificCommonSuperType to explore the super types in order from most
+	 * specific to least specific.
+	 * 
+	 * @return
+	 */
+	public TTRRecordType sortFieldsBySpecificity() {
+
+		ArrayList<TTRField> fields = new ArrayList<TTRField>();
+		fields.addAll(this.fields);
+		Collections.sort(fields, new SpecificityComparator(this));
+
+		return new TTRRecordType(fields);
+
+	}
+
+	class SpecificityComparator implements Comparator<TTRField> {
+
+		TTRRecordType rt;
+
+		SpecificityComparator(TTRRecordType rt) {
+			this.rt = rt;
+		}
+
+		@Override
+		public int compare(TTRField f1, TTRField f2) {
+
+			List<TTRField> o1Fields = rt.getMaximalSuperTypeWith(f1);
+			List<TTRField> o2Fields = rt.getMaximalSuperTypeWith(f2);
+			if (o1Fields.size() < o2Fields.size())
+				return -1;
+			if (o1Fields.size() < o2Fields.size())
+				return 1;
+
+			return 0;
+		}
+
+	}
+
+	public static void main(String[] a) {
 
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+		
+		
+		 
+		 
+//		 TTRRecordType sem2=TTRRecordType.parse("[x8==usr : e|e10==like :es|x9 : e|p4==brand(x9):t|p10==subj(e10,x8):t|p9==obj(e10,x9):t|p11==brand(x9):t]");
+//		 TTRRecordType sem1 = TTRRecordType.parseStrictFieldOrder(
+//		 "[x7 : e|e3==want : es|x5==usr : e|x13 : e|e7==want : es|x11==usr :
+//		 e|p19==subj(e7, x11) : t|p25==brand(x13) : t|p14==pres(e7) :
+//		 t|p7==subj(e3, x5) : t|p18==obj(e7, x13) : t|p13==brand(x13) :
+//		 t|p6==obj(e3, x7) : t|p2==pres(e3) : t]");
 
-		
-		//TTRRecordType sem1=TTRRecordType.parse("[x5==usr : e|e7==like : es|x7 : e|p4==brand(x7):t|p1==brand(x7):t|p2==subj(e7,x5):t|p3==obj(e7,x7):t]");
-		//TTRRecordType sem2=TTRRecordType.parse("[x8==usr : e|e10==like : es|x9 : e|p4==brand(x9):t|p10==subj(e10,x8):t|p9==obj(e10,x9):t|p11==brand(x9):t]");		
-		TTRRecordType sem1=TTRRecordType.parse("[x7 : e|e6==buy : es|e2==want : es|x5==usr : e|x13 : e|e9==want : es|x11==usr : e|p2==pres(e2) : t|p29==brand(x13) : t|p17==brand(x13) : t|p18==pres(e9) : t|p13==subj(e6, x5) : t|p12==obj(e6, x7) : t|p5==subj(e2, x5) : t|p4==obj(e2, e6) : t|p23==subj(e9, x11) : t|p22==obj(e9, x13) : t]");
-		TTRRecordType sem2=TTRRecordType.parse("[x5==usr : e|e7==like : es|x7 : e|x1==usr : e|e3==want : es|e4==buy : es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p26==brand(x7) : t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) : t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) : t|p10==subj(e4, x1) : t]");		
-		
-		TTRRecordType MCS=sem1.mostSpecificCommonSuperType(sem2, map);
-		
-		System.out.println("MCS:"+MCS);
-		System.out.println("map:"+map);
-		
+		// long before=new Date().getTime();
+		// TTRRecordType sorted=sem1.sortFieldsBySpecificity();
+		// long after=new Date().getTime();
+		//
+		// for(TTRField f:sorted.fields)
+		// System.out.println(f);
+		//
+		//
+		 TTRRecordType sem2 = TTRRecordType.parseStrictFieldOrder("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy: es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p26==brand(x7) :t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) :t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) :t|p10==subj(e4, x1) : t]");
+		 
+		 sem2.collapseIsomorphicSuperTypes(map);
+		 System.out.println(sem2);
+		 System.out.println(map);
+		 //
+		// long before=new Date().getTime();
+		// TTRRecordType MCS = sem2.mostSpecificCommonSuperType(sem1, map);
+		//
+		// System.out.println("MCS:" + MCS);
+		// System.out.println("map:" + map);
+		// long after=new Date().getTime();
+		// System.out.println("it took:"+(after-before));
+		// MCS1:[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|x2 :
+		// e|p6==pres(e3) : t|p15==pres(e7) : t|p19==obj(e7, x7) :
+		// t|p20==subj(e7, x5) : t|p8==subj(e3, x1) : t]
+		// map1:{e7=e3, p15=p2, p6=p14, p19=p6, p8=p19, x1=x11, x2=x13, x5=x5,
+		// p20=p7, e3=e7, x7=x7}
+		// -----------------------
+		// MCS2:[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|x2 :
+		// e|p6==pres(e3) : t|p15==pres(e7) : t|p26==brand(x7) :
+		// t|p14==brand(x7) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) :
+		// t|p8==subj(e3, x1) : t]
+		// map2:{p6=p2, p8=p7, p20=p19, e3=e3, e7=e7, p26=p25, p15=p14, p14=p25,
+		// p19=p18, x1=x5, x2=x7, x5=x11, x7=x13}
+
+		// context << [L==arash:e|p==participant(L):e]
+
+//		TTRRecordType i = TTRRecordType.parse("[L:e|p==part(L):t]");
+//		TTRRecordType context = TTRRecordType.parse("[x==arash:e|p==part(x):t]");
+//		System.out.println("subsumes:" + i.subsumesBasic(context));
+//		System.out.println(i);
 
 	}
 
@@ -495,6 +663,16 @@ public static void main(String[] a) {
 		return addAt(fields.size(), label, formula, dsType);
 	}
 
+	public void addAtEnd(TTRField f) {
+		if (record.containsKey(f.getLabel()))
+			throw new IllegalArgumentException("Coinciding labels in:" + this + " when adding:" + f);
+
+		record.put(f.getLabel(), f);
+		this.fields.add(f);
+		f.setParentRecType(this);
+
+	}
+
 	/**
 	 * Add this field at an index where all its variable dependencies are
 	 * satisfied. Add at end if they cannot be satisfied.
@@ -504,16 +682,7 @@ public static void main(String[] a) {
 	 */
 	public void add(TTRField f) {
 		if (record.containsKey(f.getLabel()))
-			throw new IllegalArgumentException("Coinciding labels in:" + this + " when adding" + f);
-
-		// first check to see if there is an existing field whose type is the
-		// same as f
-		// if so, no need to add duplicate
-		//TODO: it's more complicated than that!!!!! this should be implemented in the conjoin method itself, where existing structure is not added...... can use MCS. but it's not unique... mmmm
-		//
-	
-//		if (this.hasFieldOfType(f))
-//			return;
+			throw new IllegalArgumentException("Coinciding labels in:" + this + " when adding:" + f);
 
 		ArrayList<TTRField> list = new ArrayList<TTRField>();
 		Set<Variable> variables = new HashSet<Variable>(f.getVariables());
@@ -547,20 +716,18 @@ public static void main(String[] a) {
 
 		if (f.getType() instanceof MetaFormula)
 			return false;
-		
-		if (f.getType()==null && f.getDSType()==null)
-		{
-			logger.warn("DS type and type both null when adding:"+f);
+
+		if (f.getType() == null && f.getDSType() == null) {
+			logger.warn("DS type and type both null when adding:" + f);
 			return false;
 		}
-		
+
 		for (TTRField field : this.getFields()) {
 			if (field.getType() instanceof MetaFormula)
 				continue;
-			
-			if ((f.getDSType()==null&&field.getDSType()==null) || f.getDSType().equals(field.getDSType())) {
-				
-				
+
+			if ((f.getDSType() == null && field.getDSType() == null) || f.getDSType().equals(field.getDSType())) {
+
 				if (f.getType() != null && f.getType().subsumesBasic(field.getType())
 
 						&& field.getType().subsumesBasic(f.getType()))
@@ -569,7 +736,7 @@ public static void main(String[] a) {
 			}
 
 		}
-		
+
 		return false;
 	}
 
@@ -807,8 +974,9 @@ public static void main(String[] a) {
 	 *         labels.
 	 */
 	public TTRRecordType mostSpecificCommonSuperType(TTRRecordType other, HashMap<Variable, Variable> map) {
-		TTRRecordType copy = new TTRRecordType(this);
-		return copy.MCS(other, map);
+		TTRRecordType sorted1 = this.sortFieldsBySpecificity();
+		TTRRecordType sorted2 = other.sortFieldsBySpecificity();
+		return sorted1.MCS(sorted2, map);
 	}
 
 	/**
@@ -835,16 +1003,17 @@ public static void main(String[] a) {
 			TTRField f = fields.get(i);
 			Set<Variable> variables = f.getVariables();
 			if (!variables.isEmpty()) {
-				TTRRecordType fRemoved = this.removeField(f);
-				//!map.values().contains(new Variable(otherF.getLabel()))&&
-				for (TTRField otherF : other.fields) {
+				TTRRecordType fRemoved = this.removeField(f).sortFieldsBySpecificity();
+				// !map.values().contains(new Variable(otherF.getLabel()))&&
+				for (int j = other.fields.size() - 1; j >= 0; j--) {
+					TTRField otherF = other.fields.get(j);
 					if (f.subsumesMapped(otherF, map)) {
 						logger.debug(f + " subsumed " + otherF);
 						map.remove(f.getLabel());
 						TTRRecordType subMCS = fRemoved.MCS(other, map);
-						logger.debug("RETURN Submcs removing "+f+"="+subMCS);
-						logger.debug("map="+map);
-						if (!subMCS.hasLabels(variables)||map.values().contains(new Variable(otherF.getLabel()))) {
+						logger.debug("RETURN Submcs removing " + f + "=" + subMCS);
+						logger.debug("map=" + map);
+						if (!subMCS.hasLabels(variables) || map.values().contains(new Variable(otherF.getLabel()))) {
 							map.clear();
 							map.putAll(copy);
 							continue;
@@ -919,8 +1088,6 @@ public static void main(String[] a) {
 		copy.getField(f.getLabel()).setType(null);
 		return copy;
 	}
-
-	
 
 	public boolean subsumesMapped(TTRRecordType other, int thisIndex, HashMap<Variable, Variable> map) {
 
@@ -1122,6 +1289,19 @@ public static void main(String[] a) {
 		}
 		fresh.updateParentLinks();
 		return fresh;
+	}
+
+	/**
+	 * A fresh variable with a root (e.g. e, x, y, etc) - with respect to this
+	 * rectype and the set toAvoid
+	 */
+	public Variable getFreshVariable(Collection<Variable> toAvoid, String root) {
+		int i = 1;
+		Variable v = new Variable(root + i);
+		while (this.hasLabel(v) || toAvoid.contains(v))
+			v = new Variable(root + (++i));
+
+		return v;
 	}
 
 	public TTRFormula freshenVars(Tree t) {
@@ -1606,11 +1786,11 @@ public static void main(String[] a) {
 		if (!this.hasField(field))
 			return new TTRRecordType();
 
-		List<TTRField> fields = getDepandents(field);
+		List<TTRField> fields = getDependents(field);
 		return new TTRRecordType(fields);
 	}
 
-	public List<TTRField> getDepandents(TTRField field) {
+	public List<TTRField> getDependents(TTRField field) {
 		List<TTRField> result = new ArrayList<TTRField>();
 		for (int i = 0; i < fields.size(); i++) {
 			TTRField f = fields.get(i);
@@ -1639,6 +1819,17 @@ public static void main(String[] a) {
 		List<TTRField> fields = getParents(f);
 		fields.add(f);
 		return new TTRRecordType(fields);
+	}
+
+	private List<TTRField> getMaximalSuperTypeWith(TTRField f) {
+		List<TTRField> parents = getParents(f);
+		List<TTRField> result = new ArrayList<TTRField>();
+		for (TTRField parent : parents)
+			result.addAll(getDependents(parent));
+
+		result.addAll(parents);
+
+		return result;
 	}
 
 	public List<TTRField> getParents(TTRField field) {
@@ -2219,58 +2410,50 @@ public static void main(String[] a) {
 		return null;
 	}
 
-	public HashSet<Variable> getListOfCommonFields(TTRRecordType _currentVC, HashMap<Variable, Variable> _commonMap) {
-		HashMap<Variable, Variable> _copyMap = new HashMap<Variable, Variable>(_commonMap);
-		HashSet<Variable> _commonSet = new HashSet<Variable>();
+	// public HashSet<Variable> getListOfCommonFields(TTRRecordType _currentVC,
+	// HashMap<Variable, Variable> _commonMap) {
+	// HashMap<Variable, Variable> _copyMap = new HashMap<Variable,
+	// Variable>(_commonMap);
+	// HashSet<Variable> _commonSet = new HashSet<Variable>();
+	//
+	// List<TTRField> _list = this.getFields();
+	// if (_list != null && !_list.isEmpty()) {
+	// TTRField _keptField = null;
+	// for (int i = 0; i < _list.size(); i++) {
+	// System.out.println("Stage : " + i);
+	//
+	// TTRRecordType _clone = this.clone();
+	// _keptField = _list.get(i);
+	// TTRLabel _label = _keptField.getLabel();
+	// DSType _dsType = _keptField.getDSType();
+	//
+	// if (_keptField.getType() != null) {
+	// _clone.removeField(_keptField);
+	// _clone.add(new TTRField(_label, _dsType));
+	//
+	// System.out.println("Clone : " + _clone);
+	//
+	// _copyMap.clear();
+	// if (_clone.subsumesMapped(_currentVC, _copyMap)) {
+	// _commonMap.clear();
+	// _commonMap.putAll(_copyMap);
+	// _commonSet.clear();
+	// _commonSet.add(_label);
+	// return _commonSet;
+	// } else {
+	// System.out.println("unSubsummed : " + _clone);
+	// HashSet<Variable> _cset = _clone.getListOfCommonFields(_currentVC,
+	// _copyMap);
+	// if (_cset != null) {
+	// _commonSet.addAll(_cset);
+	// _commonMap.clear();
+	// _commonMap.putAll(_copyMap);
+	// }
+	// }
+	// }
+	// }
+	// }
+	// return _commonSet;
+	// }
 
-		List<TTRField> _list = this.getFields();
-		if (_list != null && !_list.isEmpty()) {
-			TTRField _keptField = null;
-			for (int i = 0; i < _list.size(); i++) {
-				System.out.println("Stage : " + i);
-
-				TTRRecordType _clone = this.clone();
-				_keptField = _list.get(i);
-				TTRLabel _label = _keptField.getLabel();
-				DSType _dsType = _keptField.getDSType();
-
-				if (_keptField.getType() != null) {
-					_clone.removeField(_keptField);
-					_clone.add(new TTRField(_label, _dsType));
-
-					System.out.println("Clone : " + _clone);
-
-					_copyMap.clear();
-					if (_clone.subsumesMapped(_currentVC, _copyMap)) {
-						_commonMap.clear();
-						_commonMap.putAll(_copyMap);
-						_commonSet.clear();
-						_commonSet.add(_label);
-						return _commonSet;
-					} else {
-						System.out.println("unSubsummed : " + _clone);
-						HashSet<Variable> _cset = _clone.getListOfCommonFields(_currentVC, _copyMap);
-						if (_cset != null) {
-							_commonSet.addAll(_cset);
-							_commonMap.clear();
-							_commonMap.putAll(_copyMap);
-						}
-					}
-				}
-			}
-		}
-		return _commonSet;
-	}
-
-	public TTRRecordType getCommonSuperType(HashSet<Variable> _commonSet) {
-		TTRRecordType _clone = this.clone();
-		for (Variable _va : _commonSet) {
-			TTRLabel _label = (TTRLabel) _va;
-			TTRField _f = _clone.getField(_label);
-			DSType _dsType = _f.getDSType();
-			_clone.removeField(_f);
-			_clone.add(new TTRField(_label, _dsType));
-		}
-		return _clone;
-	}
 }

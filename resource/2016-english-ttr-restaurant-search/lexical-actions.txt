@@ -13,7 +13,7 @@ IF      ?ty(e)
 THEN    put(person(PERSON))
         put(ty(e))
         delete(?ty(e))
-        ttrput([x==NAME:e|p==CLASS(x):t|head==x:e])
+        ttrput([x:e|p==CLASS(x):t|p1==NAME(x):t|head==x:e])
 ELSE    abort
 
 
@@ -181,7 +181,7 @@ THEN    put(ty(e))
         put(!)
 ELSE    abort
 
-noun_mod(PRED,PREP,CLASS)
+noun_mod(PRED)
 IF      ?ty(e>cn)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
@@ -189,7 +189,7 @@ IF      ?ty(e>cn)
 THEN	put(?+eval)
 		make(\/L)
         go(\/L)
-        ttrput([head:e|x==PRED:e|p3==PREP(head,x):t|p4==CLASS(x):t])
+        ttrput([head:e|p3==of(head,PRED):t])
         put(ty(e>cn))
         go(/\L)
 ELSE	IF		?ty(e)
@@ -210,7 +210,7 @@ ELSE	IF		?ty(e)
   		        go(/\0)
         		make(\/1)
         		go(\/1)
-       		    ttrput(R^(R ++ [x==PRED:e|p3==PREP(head,x):t|p4==CLASS(x):t]))
+       		    ttrput(R^(R ++ [p==of(head,PRED):t]))
        		    put(ty(e>cn))
       	 ELSE	abort	
 
@@ -823,17 +823,7 @@ IF		ty(t)
 THEN	IF	  <Z>+Q
 		THEN  do_nothing
 		ELSE  put(+Q)
-ELSE	IF		¬+Q
-				?ty(e)
-				Ex.tn(x)
-				¬</\0>?ty(t)
-		THEN	IF		<Z>?Ex.tn(x)
-				THEN	abort	
-				ELSE	put(+Q)
-						put(ty(e))
-						ttrput([x:e|head==x:e])
-						delete(?ty(e))
-		ELSE	abort
+ELSE	abort
 
 
 

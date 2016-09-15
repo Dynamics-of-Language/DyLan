@@ -78,7 +78,12 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	public TTRFormula getGroundedContent()
 	{
 	
-		return dag.getGroundedContent(accepted_contents.keySet()).removeHead();
+		TTRFormula accepted=dag.getGroundedContent(accepted_contents.keySet()).removeHead();
+		if (!(accepted instanceof TTRRecordType))
+			throw new UnsupportedOperationException("accepted content not a record type");
+		
+		((TTRRecordType)accepted).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
+		return accepted;
 		
 	}
 	
@@ -267,7 +272,11 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	
 	public void conjoinAcceptedContent(String participant, TTRFormula semantics) {
 		if (this.accepted_contents.containsKey(participant))
-			this.accepted_contents.put(participant, semantics.conjoin(this.accepted_contents.get(participant)));
+		{
+			TTRFormula conjoined=semantics.conjoin(this.accepted_contents.get(participant));
+			conjoined.collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
+			this.accepted_contents.put(participant, conjoined);
+		}
 		else
 			this.accepted_contents.put(participant, semantics);
 		

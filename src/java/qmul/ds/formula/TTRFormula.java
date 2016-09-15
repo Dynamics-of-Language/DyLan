@@ -1,10 +1,12 @@
 package qmul.ds.formula;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
@@ -16,7 +18,6 @@ import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.BasicType;
 import qmul.ds.type.DSType;
-import edu.stanford.nlp.util.Pair;
 
 /**
  * an interface where TTR specific methods could go
@@ -48,6 +49,12 @@ public abstract class TTRFormula extends Formula {
 
 	public abstract TTRFormula asymmetricMerge(TTRFormula rt);
 
+	
+	public void collapseIsomorphicSuperTypes(HashMap<Variable, Variable> map)
+	{
+		throw new UnsupportedOperationException();
+	
+	}
 	@Override
 	public TTRFormula conjoin(Formula f) {
 		if (f == null)

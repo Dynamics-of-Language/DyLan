@@ -1,7 +1,6 @@
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
 which						  pron_whq_det					obj
-who							  pron_whq						obj
 do                            v_aux_inf                     do                            pres                          nons3
 //does                          v_aux_inf                     do                            pres                          s3
 //did                           v_aux_inf                     did                           past                          per
@@ -27,12 +26,7 @@ lg							  proper						lg							  s3							brand
 apple						  proper						apple						  s3							brand
 htc							  proper						htc							  s3							brand
 dell						  proper						dell						  s3							brand
-samsung						  noun_mod						samsung						  by							brand
-lg							  noun_mod						lg							  by							brand
-apple						  noun_mod						apple						  by							brand
-htc							  noun_mod						htc							  by							brand
-dell						  noun_mod						dell						  by							brand
-want                          v_tran_inf                    want                          inf                           per
+want                          v_tran_inf                    want                          inf                           brand
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3
 want                          v_subjcon_fin                 want                          pres                          nons3
@@ -44,12 +38,12 @@ likes                         v_tran_fin                    like                
 like                          v_subjcon_fin                 like                          pres                          nons3
 likes                         v_subjcon_fin                 like                          pres                          s3
 like                          v_subjcon_inf                 like                          inf                          nons3
-prefer                          v_tran_inf                    prefer                          inf                           per
-prefer                          v_tran_fin                    prefer                          pres                          nons3
-prefer                         v_tran_fin                    prefer                          pres                          s3
-prefer                          v_subjcon_fin                 prefer                          pres                          nons3
-prefer                         v_subjcon_fin                 prefer                          pres                          s3
-prefer                          v_subjcon_inf                 prefer                          inf                          nons3
+prefer                          v_tran_inf                    want                          inf                           per
+prefer                          v_tran_fin                    want                          pres                          nons3
+prefer                         v_tran_fin                    want                          pres                          s3
+prefer                          v_subjcon_fin                 want                          pres                          nons3
+prefer                         v_subjcon_fin                 want                          pres                          s3
+prefer                          v_subjcon_inf                 want                          inf                          nons3
 looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
 was                           v_aux_be                      past                          s3
@@ -72,3 +66,22 @@ by							  prep_e						by
 from						  prep_e						from
 to							  to_subjcon					to
 for							  prep_es						for
+moderate 					  adj							cheap
+cheap						  adj							cheap
+expensive					  adj							expensive
+chinese						  adj							chinese
+cheap						  proper						cheap						  s3							range
+expensive					  proper						expensive					  s3							range
+moderate					  proper						moderate					  s3							range
+chinese                         proper						food						  s3							chinese
+italian						  adj							italian
+italian                         proper						food						  s3							italian
+thai						  adj							thai
+thai                         proper						food						  s3							thai
+persian						  adj							persian
+persian                         proper						food						  s3							persian
+cuisine						  count                     cuisine					   s3							obj
+price						  count						price					   s3							obj
+price						  noun_mod					price					
+food						  mass						food					   s3							trans
+range						  count						range					   s3							obj
