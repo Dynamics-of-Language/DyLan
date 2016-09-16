@@ -466,23 +466,23 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			// label?
 			if (map.containsKey(curLabel)) {
 				newLabel = new TTRLabel(map.get(curLabel));
-				System.out.println("mapping label to target.");
+				//System.out.println("mapping label to target.");
 			} else if (map.containsValue(curLabel)) {
 
 				Variable newVar = this.getFreshVariable(map.values(), curLabel.name.substring(0, 1));
 				map.put(curLabel, newVar);
 				newLabel = new TTRLabel(newVar);
-				System.out.println("mapping label to fresh label");
+				//System.out.println("mapping label to fresh label");
 
 			} else {
-				System.out.println("not mapping label");
+				//System.out.println("not mapping label");
 				newLabel = new TTRLabel(curLabel);
 			}
 
 			TTRField mappedField = new TTRField(newLabel, f.getDSType(), type);
 
 			mappedFields.add(mappedField);
-			System.out.println("Mapped " + f + "->" + mappedField);
+			//System.out.println("Mapped " + f + "->" + mappedField);
 		}
 
 		for (TTRField f : mappedFields) {

@@ -49,7 +49,7 @@ public class Dialogue extends ArrayList<Utterance> {
 
 	/**
 	 * Reads a bunch of dialogues from text file. Empty line marks the end of a
-	 * dialogue.
+	 * dialogue. Lines beginning  with // are ignored.
 	 * 
 	 * @param file
 	 * @return
@@ -61,7 +61,9 @@ public class Dialogue extends ArrayList<Utterance> {
 		String line;
 		List<String> curDialogue = new ArrayList<String>();
 		while ((line = reader.readLine()) != null) {
-			if (line.trim().isEmpty()) {
+			if (line.trim().startsWith("//"))
+				continue;
+			else if (line.trim().isEmpty()) {
 				if (!curDialogue.isEmpty())
 					result.add(new Dialogue(curDialogue));
 
@@ -69,6 +71,7 @@ public class Dialogue extends ArrayList<Utterance> {
 			} else
 				curDialogue.add(line);
 		}
+		
 		if (!curDialogue.isEmpty())
 			result.add(new Dialogue(curDialogue));
 		

@@ -515,7 +515,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			else
 				utt.setAddressee(participants.get(0));
 		}
-		
+		boolean success=true;
 		for (int i = 0; i < utt.words.size(); i++) {
 			DAG<T,E> result = parseWord(
 					utt.words.get(i));
@@ -523,12 +523,12 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			{
 				logger.error("Failed to parse "+utt.words.get(i));
 				logger.error("Skipping it");
-				//return false;
+				success=false;
 			}
 
 		}
 
-		return true;
+		return success;
 	}
 	/*
 	 * (non-Javadoc)
