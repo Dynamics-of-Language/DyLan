@@ -129,5 +129,23 @@ public class Utterance {
 		
 		
 	}
+	
+	public List<UtteredWord> getwords()
+	{
+		return this.words;
+	}
+	
+	public UtteredWord lastWord()
+	{
+		return this.words.get(this.words.size()-1);
+	}
+	
+	public void append(UtteredWord w)
+	{
+		if (w==null|| w.speaker()==null||!speaker.equals(w.speaker()))
+			throw new IllegalArgumentException("Trying to append a word by a different speaker than the speaker of this utterance, or speaker or utterance null");
+		
+		this.words.add(w);
+	}
 
 }

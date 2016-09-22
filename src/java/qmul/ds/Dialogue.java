@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import qmul.ds.dag.UtteredWord;
 
 /**
  * 
@@ -22,7 +25,15 @@ public class Dialogue extends ArrayList<Utterance> {
 	private static final long serialVersionUID = -8253079104724886968L;
 	protected static final Logger logger=Logger.getLogger(Dialogue.class);
 	private List<String> participants = new ArrayList<String>();
-
+	
+	
+	
+	public Dialogue(String... participants)
+	{
+		this.participants=Arrays.asList(participants);
+		
+	}
+	
 	public Dialogue(List<String> lines) {
 		// first extract particpants and add utterances
 		for (String line : lines) {
@@ -122,5 +133,26 @@ public class Dialogue extends ArrayList<Utterance> {
 	public List<String> getParticiapnts() {
 		
 		return participants;
+	}
+
+	public UtteredWord lastWord()
+	{
+		return this.lastUtterance().lastWord();
+	}
+	
+	public Utterance lastUtterance()
+	{
+		return this.get(this.size()-1);
+	}
+	
+	public void append(UtteredWord w) {
+		if (w.speaker().equals(lastUtterance().speaker))
+			lastUtterance().append(w);
+		else
+		{
+			Utterance utt=new Utterance(w.speaker(), w.word());
+			add(utt);
+		}
+		
 	}
 }
