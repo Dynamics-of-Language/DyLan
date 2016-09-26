@@ -311,67 +311,47 @@ ELSE	abort
 
 
 pron_whq(CLASS)
-IF		?ty(t)
-		¬<\/1>Ex.x
-		¬<\/0>Ex.x
-		¬<\/*>Ex.x
-		¬</\L>Ex.x
-THEN	make(\/*)
-		go(\/*)
-		put(?Ex.tn(x))
-		put(ty(e))
-		ttrput([x:e|head==x:e])
-		put(+Q)
-		put(class(CLASS))
-ELSE	IF		?ty(e)
-				Ex.tn(x)
+IF		<Y>+Q
+THEN	abort
+ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
 				¬</\L>Ex.x
-		THEN	delete(?ty(e))
+		THEN	make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
 				put(ty(e))
 				ttrput([x:e|head==x:e])
 				put(+Q)
 				put(class(CLASS))
-		ELSE	abort
+		ELSE	IF		?ty(e)
+						Ex.tn(x)
+						¬<\/1>Ex.x
+						¬<\/0>Ex.x
+						¬<\/*>Ex.x
+						¬</\L>Ex.x
+				THEN	delete(?ty(e))
+						put(ty(e))
+						ttrput([x:e|head==x:e])
+						put(+Q)
+						put(class(CLASS))
+				ELSE	abort
 
 
 pron_whq_det(CLASS)
-IF		?ty(t)
-		¬<\/1>Ex.x
-		¬<\/0>Ex.x
-		¬<\/*>Ex.x
-		¬</\L>Ex.x
-THEN	make(\/*)
-		go(\/*)
-		put(?Ex.tn(x))
-		put(?ty(e))
-		make(\/1)
-		go(\/1)
-		ttrput(R^(R ++ [head==R.head:e]))
-		put(!)
-		put(ty(cn>e))
-		go(/\1)
-		make(\/0)
-		go(\/0)
-		put(?ty(cn))
-		make(\/0)
-		go(\/0)
-		put(+Q)
-		ttrput([x:e|head==x:e])
-		put(ty(e))
-		go(/\0)
-		make(\/1)
-		go(\/1)
-		put(?ty(e>cn))
-ELSE	IF		?ty(e)
-				Ex.tn(x)
+IF		<Y>+Q
+THEN	abort
+ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
 				¬</\L>Ex.x
-		THEN	make(\/1)
+		THEN	make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
+				put(?ty(e))
+				make(\/1)
 				go(\/1)
 				ttrput(R^(R ++ [head==R.head:e]))
 				put(!)
@@ -388,8 +368,32 @@ ELSE	IF		?ty(e)
 				go(/\0)
 				make(\/1)
 				go(\/1)
-				put(?ty(e>cn))	
-		ELSE	abort
+				put(?ty(e>cn))
+		ELSE	IF		?ty(e)
+						Ex.tn(x)
+						¬<\/1>Ex.x
+						¬<\/0>Ex.x
+						¬<\/*>Ex.x
+						¬</\L>Ex.x
+				THEN	make(\/1)
+						go(\/1)
+						ttrput(R^(R ++ [head==R.head:e]))
+						put(!)
+						put(ty(cn>e))
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(cn))
+						make(\/0)
+						go(\/0)
+						put(+Q)
+						ttrput([x:e|head==x:e])
+						put(ty(e))
+						go(/\0)
+						make(\/1)
+						go(\/1)
+						put(?ty(e>cn))	
+				ELSE	abort
 
 
 

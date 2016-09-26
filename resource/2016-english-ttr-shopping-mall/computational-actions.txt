@@ -140,9 +140,8 @@ ELSE    abort
 merge
 IF      Ex.tn(x)
 		¬<\/*>Ex.x
-		<Y>?Ex.tn(x)
-		subsumes(Y)		
-		<Y>ty(V)
+		<Y>(?Ex.tn(x) & ty(V))
+		subsumes(Y)
 		?ty(V)		           
 THEN    merge(Y)
 		delete(?Ex.tn(x))	

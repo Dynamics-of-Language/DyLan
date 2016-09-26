@@ -84,7 +84,7 @@ public abstract class Formula implements Serializable {
 	public static String ATOMIC_FORMULA_PATTERN = "[a-z]+[a-z_0-9]*";
 
 	private HashSet<Variable> variables = new HashSet<Variable>();
-	protected TTRRecordType parentRecType = null;// the record type in one of whose fields this formula is directly
+	protected TTRRecordType parentRecType = null;	// the record type in one of whose fields this formula is directly
 													// embedded.... all Formulas have it....
 													// null if this is a root record type, or if we are using
 													// Epsilon-Calculus ds.
@@ -382,23 +382,7 @@ public abstract class Formula implements Serializable {
 		return false;
 	}
 
-	// protected boolean subsumes(List<Formula> l1, List<Formula> l2) {
-	// // must be same length
-	// if (l1.size() != l2.size()) {
-	// return false;
-	// }
-	// // base case of recursion: empty list means we've checked everything
-	// if (l1.isEmpty()) {
-	// return true;
-	// }
-	// // check head, recurse
-	// if (l1.get(0).subsumes(l2.get(0))) {
-	// return subsumes(l1.subList(1, l1.size()), l2.subList(1, l2.size()));
-	// }
-	// // if head fails, fail
-	// return false;
-	// }
-
+	
 	/**
 	 * @param l1
 	 * @param l2
