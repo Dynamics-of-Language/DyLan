@@ -290,11 +290,8 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	public String getTupleLabel(DAGTuple t) {
-		Set<String> pointers = new HashSet<String>();
-		for (String spkr : this.acceptance_pointers.keySet()) {
-			if (this.acceptance_pointers.get(spkr).contains(t))
-				pointers.add(spkr);
-		}
+		Set<String> pointers = getAcceptancePointers(t);
+		
 		String result = "";
 		if (pointers.isEmpty())
 			return result;

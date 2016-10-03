@@ -72,8 +72,6 @@ public class EffectFactory {
 	public static Effect create(String line) {
 		if (line.toLowerCase().startsWith(Abort.FUNCTOR.toLowerCase())) {
 			return new Abort();
-		}else if (line.toLowerCase().startsWith(SetAccPointer.FUNCTOR.toLowerCase())) {
-			return new SetAccPointer();
 		} else if (line.toLowerCase().startsWith(AddAxiom.FUNCTOR.toLowerCase())) {
 			return new AddAxiom();
 		}else if (line.toLowerCase().startsWith(Unreduce.FUNCTOR.toLowerCase())) {

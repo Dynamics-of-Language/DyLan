@@ -245,34 +245,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					logger.debug("Added Edge:" + wordEdge.toDebugString());
 					logger.debug("Child:" + newTuple);
 
-					/**
-					 * if the lexical action was acceptance/rejection, manually
-					 * set acceptance pointers.
-					 * 
-					 */
-					if (la.getLexicalActionType().equals("reject"))
-						getState().setAcceptancePointer(w.speaker(), newTuple);
-					else if (la.getLexicalActionType().equals("accept") || la.getLexicalActionType().equals("assert")
-							|| la.getLexicalActionType().equals("yes")) {
-						getState().setAcceptancePointer(w.speaker(), newTuple);
-						for (String spkr : getState().getAcceptancePointers(getState().getParent(newTuple))) {
-							logger.info("setting acceptance pointer for:" + spkr);
-							getState().setAcceptancePointer(spkr, newTuple);
-						}
-					}
-
-					// TODO: the problem with doing this in the lexical actions
-					// is that
-					// the acceptance pointer is a tuple level annotation,
-					// rather than a tree-level one.
-					// so it cannot be done in the lexical actions, but only
-					// after the tuple has been
-					// constructed here.
-					// Solution: have ds atomic actions return tuples??
-					// (probably NOT!) Or make acceptance
-					// an annotation on the trees? Or in a ctxt field in the rec
-					// types... the latter! (Matt... )
-
+					
 				} else
 					logger.debug("unsuccessful");
 			}
@@ -449,15 +422,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			if (getState().isClauseRoot(current))
 				return;
 
-			// GroundableEdge firstRepairable = getFirstRepairableEdge();
-			// if (firstRepairable == null) {
-			// logger.debug("didn't find repairable edge.");
-			// return;
-			// }
-			// logger.debug("first repariable edge:" + firstRepairable);
-			// String speakerOfFirstRepairable =
-			// firstRepairable.word().speaker();
-			// we want to repair only either the current turn, or the previous.
+		
 
 			GroundableEdge repairableEdge;
 			List<GroundableEdge> backtracked = new ArrayList<GroundableEdge>();

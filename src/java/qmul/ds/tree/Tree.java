@@ -21,6 +21,7 @@ import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRLambdaAbstract;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.tree.label.AssertionLabel;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
@@ -764,7 +765,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		typeMap.put(DSType.parse("es>cn"),
 				Formula.create("R1^(R1 ++ [head==R1.head:es])"));
 		typeMap.put(DSType.parse("e>cn"),
-				Formula.create("R1^(R1 ++ [head==R1.head:e])"));
+				Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
 		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
 		typeMap.put(DSType.parse("e>(e>t)"),
 				Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
@@ -1078,6 +1079,27 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 
 	public boolean isAxiom() {
 		return equals(new Tree());
+	}
+
+	/**Currently assumes only complete, ty(t) content can be asserted. This will need to change in the future
+	 * where we want to be able to handle more fragmentary dialogue.... 
+	 * 
+	 * @return the asserters of this tree according to Assert(speaker) AssertionLabels
+	 */
+	public Set<String> getAsserters() {
+		if (!this.isComplete())
+			return new HashSet<String>();
+		
+		Set<String> asserters=new HashSet<String>();
+		for(Label l:this.getRootNode())
+		{
+			if (l instanceof AssertionLabel)
+			{
+				asserters.add(((AssertionLabel)l).getSpeaker());
+			}
+		}
+		
+		return asserters;
 	}
 
 }

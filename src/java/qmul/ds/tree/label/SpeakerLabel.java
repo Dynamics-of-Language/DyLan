@@ -26,7 +26,7 @@ import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.tree.Tree;
 
 /**
- * Speaker of last word: Speaker(X), where X is a meta that instantiates to the last speaker.
+ * Speaker the current word: Speaker(X), where X is a meta that instantiates to the current speaker.
  * 
  * @author arash
  */

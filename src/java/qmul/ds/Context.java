@@ -157,13 +157,13 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		return dag.getParent(cur);
 	}
 	
-	/**
-	 * deems the current tuple to have been asserted by the last speaker.
-	 */
-	public void setAcceptancePointer()
-	{
-		dag.setAcceptancePointer(dag.getSpeakerOfPreviousWord());
-	}
+//	/**
+//	 * deems the current tuple to have been asserted by the last speaker.
+//	 */
+//	public void setAcceptancePointer()
+//	{
+//		dag.setAcceptancePointer(dag.getSpeakerOfPreviousWord());
+//	}
 
 	public Set<String> getParticipants()
 	{

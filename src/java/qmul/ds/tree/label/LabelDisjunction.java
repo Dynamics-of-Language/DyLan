@@ -10,7 +10,7 @@ import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 
 /**
- * A disjunction of labels, e.g. (?ty(e) | ?ty(t) | ty(t))
+ * A disjunction of labels, e.g. (?ty(e) || ?ty(t) || ty(t))
  * 
  * True if one of them is true.
  * 
@@ -20,6 +20,10 @@ import qmul.ds.tree.Tree;
  */
 public class LabelDisjunction extends EmbeddedLabelGroup {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6933030081622609556L;
 	public static String DISJ_FUNCTOR = "\\|\\|";
 
 	public LabelDisjunction(List<Label> sl, IfThenElse ite) {

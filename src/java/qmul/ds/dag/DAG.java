@@ -2,11 +2,9 @@ package qmul.ds.dag;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
@@ -14,15 +12,18 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
+import edu.uci.ics.jung.graph.DelegateTree;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Forest;
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
-import edu.uci.ics.jung.graph.DelegateTree;
-import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
-import edu.uci.ics.jung.graph.Forest;
+import qmul.ds.tree.label.AssertionLabel;
+import qmul.ds.tree.label.Label;
 
 /**
  * A generic DS (parse) Directed Acyclic Graph. Edges correspond minimally to
@@ -69,7 +70,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	// protected DAGParser<T,E> parser;
 
-	protected Map<String, Set<T>> acceptance_pointers = new HashMap<String, Set<T>>();
+	//protected Map<String, Set<T>> acceptance_pointers = new HashMap<String, Set<T>>();
 
 	public abstract T getNewTuple(Tree t);
 
@@ -114,10 +115,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public abstract RepairingWordEdge getNewRepairingWordEdge(List<Action> actions, UtteredWord word);
 
-	public void setSelfPointer() {
-		this.setAcceptancePointer("self");
-
-	}
+//	public void setSelfPointer() {
+//		this.setAcceptancePointer("self");
+//
+//	}
 
 	public TTRFormula getSemantics(T tuple) {
 		if (context == null)
@@ -131,17 +132,17 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return this.context;
 	}
 
-	public void setAcceptancePointer(String other, T cur) {
-		if (!acceptance_pointers.containsKey(other))
-			acceptance_pointers.put(other, new HashSet<T>());
+//	public void setAcceptancePointer(String other, T cur) {
+//		if (!acceptance_pointers.containsKey(other))
+//			acceptance_pointers.put(other, new HashSet<T>());
+//
+//		acceptance_pointers.get(other).add(cur);
+//		context.conjoinAcceptedContent(other, cur.getSemantics(context));
+//	}
 
-		acceptance_pointers.get(other).add(cur);
-		context.conjoinAcceptedContent(other, cur.getSemantics(context));
-	}
-
-	public void setAcceptancePointer(String other) {
-		setAcceptancePointer(other, cur);
-	}
+//	public void setAcceptancePointer(String other) {
+//		setAcceptancePointer(other, cur);
+//	}
 
 	public boolean atRoot() {
 		return cur == root;
@@ -238,7 +239,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		// lastN.add(cur.getTree());
 		thisIsFirstTupleAfterLastWord();
 		actionReplay.clear();
-		acceptance_pointers.clear();
+		//acceptance_pointers.clear();
 	}
 
 	/*
@@ -914,12 +915,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	}
 
 	public Set<String> getAcceptancePointers(T tuple) {
-		Set<String> pointers = new HashSet<String>();
-		for (String spkr : this.acceptance_pointers.keySet()) {
-			if (this.acceptance_pointers.get(spkr).contains(tuple))
-				pointers.add(spkr);
-		}
-		return pointers;
+		return tuple.getTree().getAsserters();
 
 	}
 
@@ -1019,25 +1015,34 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 					"cannot get grounded content without a set of participants which is null or empty here. returning null formula");
 
 		}
-		for(String p: participants)
-			if (!this.acceptance_pointers.containsKey(p)||this.acceptance_pointers.get(p).isEmpty())
-				return new TTRRecordType();
-			
-		//System.out.println("getting grounded content");
-		logger.trace("accepted pointers:"+this.acceptance_pointers);
-		TTRFormula result = new TTRRecordType();
-		Iterator<String> iter = participants.iterator();
-		String firstPart=iter.next();
 		
-		Set<T> accepted_by_all = new HashSet<T>(this.acceptance_pointers.get(firstPart));
-		while (iter.hasNext()) {
-			String participant=iter.next();
-			accepted_by_all.retainAll(this.acceptance_pointers.get(participant));
-
+		if (!context.getParticipants().containsAll(participants))
+		{
+			throw new IllegalArgumentException("Trying to get grounded content for participants that are not all part of the conversation: "+participants);
 		}
+			
+		
+		
+		TTRFormula result = new TTRRecordType();
+		
+		
+		Set<T> accepted_by_all = new HashSet<T>();
+		T tuple=getCurrentTuple();
+		
+		do{
+			
+			Set<String> asserters=tuple.getTree().getAsserters();
+			if (asserters.containsAll(participants))
+			{
+				accepted_by_all.add(tuple);
+			}
+				
+			tuple=getParent(tuple);
+		}while(tuple!=null);
+		
 		logger.trace("accepted by all:"+accepted_by_all);
-		for (T tuple : accepted_by_all) {
-			result = result.conjoin(tuple.getSemantics(context));
+		for (T tu : accepted_by_all) {
+			result = result.conjoin(tu.getSemantics(context));
 		}
 		
 		return result;
@@ -1045,9 +1050,25 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public TTRFormula getGroundedContent(String speaker) {
 		TTRFormula result = new TTRRecordType();
-		Set<T> accepted_tuples = this.acceptance_pointers.get(speaker);
-		for (T tuple : accepted_tuples) {
-			result = result.conjoin(tuple.getSemantics(context));
+		Set<T> accepted_tuples = new HashSet<T>();
+		
+		
+		T tuple=getCurrentTuple();
+		
+		do{
+			
+			Set<String> asserters=tuple.getTree().getAsserters();
+			if (asserters.contains(speaker))
+			{
+				accepted_tuples.add(tuple);
+			}
+				
+			tuple=getParent(tuple);
+		}while(tuple!=null);
+		
+		
+		for (T tu : accepted_tuples) {
+			result = result.conjoin(tu.getSemantics(context));
 		}
 		return result;
 
