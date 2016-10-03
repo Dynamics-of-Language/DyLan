@@ -816,17 +816,20 @@ ELSE	abort
 assert(PRED)
 IF		ty(t)
 		complete
-THEN	IF		<Z>+Q
+		Speaker(X)
+THEN	IF		(<Z>+Q || Assert(Y))
 		THEN	abort
-		ELSE	do_nothing
+		ELSE	put(Assert(X))
 ELSE	abort
 
 question(PRED)
 IF		ty(t)
 		complete
-THEN	IF	  <Z>+Q
-		THEN  do_nothing
-		ELSE  put(+Q)
+THEN	IF	  	Assert(X)
+		THEN  	abort
+		ELSE    IF	  	<Z>+Q
+			    THEN  	do_nothing
+				ELSE  	put(+Q)
 ELSE	IF		¬+Q
 				?ty(e)
 				Ex.tn(x)
@@ -858,11 +861,12 @@ IF		ty(t)
 		complete
 		¬+Q
 		¬<\/*>+Q
-		Speaker(X)
 		PrevSpeaker(Y)
+		Assert(Y)
+		Speaker(X)
 THEN	IF 		X=Y
 		THEN	abort
-		ELSE	do_nothing
+		ELSE	put(Assert(X))
 ELSE	abort
 
 yes(PRED)
@@ -874,6 +878,7 @@ IF 		ty(t)
 THEN	IF		X=Y
 		THEN    abort
 		ELSE	delete(+Q)
+				put(Assert(X))
 ELSE	abort
 
 not(PRED)
