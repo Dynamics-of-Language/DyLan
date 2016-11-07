@@ -761,9 +761,9 @@ THEN	put(?+eval)
 		make(\/0)
 		go(\/0)
 		put(?ty(e))
-		IF		<Z>?Ex.tn(x)
-				<Z>ty(e)
-		THEN	merge(Z)
+		IF		</\0/\L\/*>?Ex.tn(x)
+				</\0/\L\/*>ty(e)
+		THEN	merge(</\0/\L\/*>)
 				delete(?ty(e))
 		ELSE	do_nothing
 ELSE	abort

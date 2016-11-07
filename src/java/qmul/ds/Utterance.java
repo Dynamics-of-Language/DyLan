@@ -2,6 +2,7 @@ package qmul.ds;
 
 import java.io.CharArrayReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,9 @@ public class Utterance {
 	public static final String SPEAKER_SEP=":";
 	public static final String defaultSpeaker = "Dylan";
 	public static final String defaultAddressee = "you";
+	
+	private static final String[] delimitersArray = { ".", "?", "!" };
+	public static final List<String> SENTENCE_DELIMITERS = Arrays.asList(delimitersArray);
 	String speaker;
 	List<UtteredWord> words;
 
@@ -55,8 +59,16 @@ public class Utterance {
 
 	}
 
+	
+
+	public Utterance() {
+		this.speaker=null;
+		this.words=new ArrayList<UtteredWord>();
+	}
+
 	public static void main(String a[]) {
-		Utterance utt = new Utterance("A: john likes mary");
+		Utterance utt = new Utterance("A: do you like me? yes?");
+		System.out.println("words: "+utt.words);
 		System.out.println(utt);
 		
 		
@@ -69,11 +81,19 @@ public class Utterance {
 	
 	public String toString()
 	{
+		return this.speaker+": "+this.getText();
+	}
+	/**
+	 * puts space between each word and returns the resulting string.
+	 * @return
+	 */
+	public String getAsString()
+	{
 		String result=this.speaker+": ";
 		for(HasWord w:this.words)
 			result+=w.word()+" ";
 		
-		return result.substring(0,result.length()-1);
+		return result.substring(0, result.length()-1);
 	}
 	
 	public String toDebugString()
@@ -93,9 +113,23 @@ public class Utterance {
 	
 	public String getText()
 	{
+		if (words.isEmpty())
+			return "";
+		
+		if (this.words.size()<2)
+			return this.words.get(0).word();
+		
 		String result="";
 		for(UtteredWord w:this.words)
-			result+=w.word()+" ";
+		{
+			if (SENTENCE_DELIMITERS.contains(w.word())&&!result.isEmpty())
+			{
+				result=result.substring(0,result.length()-1)+w.word()+" ";
+				
+			}
+			else
+				result+=w.word()+" ";
+		}
 		
 		return result.substring(0,result.length()-1);
 		
@@ -130,10 +164,12 @@ public class Utterance {
 		
 	}
 	
-	public List<UtteredWord> getwords()
+	public List<UtteredWord> getWords()
 	{
 		return this.words;
 	}
+	
+	
 	
 	public UtteredWord lastWord()
 	{
@@ -147,5 +183,18 @@ public class Utterance {
 		
 		this.words.add(w);
 	}
+
+
+
+	public UtteredWord pollWordAndPop() {
+		if (this.isEmpty())
+			return null;
+		
+		UtteredWord word=this.words.get(0);
+		this.words.remove(0);
+		return word;
+	}
+	
+	
 
 }

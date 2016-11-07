@@ -58,7 +58,7 @@ am                            v_aux_be                      pres                
 are                           v_aux_be                      pres                           per
 .							  assert						A
 ?							  question						Q
-uhu							  accept						uhu
+//uhu							  accept						uhu
 ok							  accept						ok
 yes							  accept						yes
 yes							  yes							yes

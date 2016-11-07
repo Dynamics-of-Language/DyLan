@@ -1,6 +1,7 @@
 package qmul.ds;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import edu.uci.ics.jung.graph.Tree;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
@@ -37,6 +39,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -8765365147853341079L;
 
 
@@ -48,6 +51,8 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 */
 	protected Map<String, TTRFormula> accepted_contents=null;
 	protected DAG<T,E> dag;
+	protected String myName;
+	protected String whoHasFloor=null;
 	
 	public void initParticipantContents(Set<String> participants)
 	{
@@ -58,17 +63,14 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		}
 		
 	}
-	public Context(DAG<T,E> dag)
-	{
-		this(dag, new ArrayList<String>());
-		dag.setContext(this);
-	}
 	
-	public Context(DAG<T,E> dag, List<String> part)
+	
+	public Context(DAG<T,E> dag, String... participants)
 	{
 		this.dag=dag;
 		dag.setContext(this);
-		initParticipantContents(new HashSet<String>(part));
+		this.myName=participants[0];
+		initParticipantContents(new HashSet<String>(Arrays.asList(participants)));
 	}
 	
 	/**
@@ -87,10 +89,23 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		
 	}
 	
+	
+	
 	public TTRFormula getGroundedContent(String speaker)
 	{
 		return this.accepted_contents.get(speaker);
 	}
+	
+	public boolean floorIsOpen()
+	{
+		return whoHasFloor==null;
+	}
+	
+	public String whoHasFloor()
+	{
+		return whoHasFloor;
+	}
+
 	
 	
 	public void addParticipant(String name)
@@ -290,6 +305,34 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		
 		return result;
 			
+	}
+	public void openFloor() {
+		this.whoHasFloor=null;
+		
+	}
+	
+	
+	public void setWhoHasFloor(String speaker) {
+		this.whoHasFloor=speaker;		
+	}
+
+
+	public String getName() {
+		return myName;
+	}
+	/**
+	 * 
+	 * @return 0 if floor is open, 1 if I have floor, 2 if another has floor
+	 */
+	public int floorStatus()
+	{
+		if (floorIsOpen())
+			return 0;
+		
+		if (myName.equals(this.whoHasFloor))
+			return 1;
+		else 
+			return 2;
 	}
 
 	

@@ -420,7 +420,7 @@ public class Node extends TreeSet<Label> {
 			if (of == null)
 				of = other.getRequiredFormula();
 			if ((of != null) && !f.subsumes(of)) {
-				System.out.println("Formula subsumption failed");
+				logger.debug("Formula subsumption failed");
 				return false;
 			}
 		}

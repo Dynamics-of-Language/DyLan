@@ -12,6 +12,7 @@ intro-pred
 IF		?ty(t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
+        ¬<\/*>+Q
 THEN	make(\/1)
 		go(\/1)
 		put(?ty(e>t))

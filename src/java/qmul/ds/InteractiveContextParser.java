@@ -49,6 +49,8 @@ import qmul.ds.tree.Tree;
  */
 public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge> {
 
+	public static final String DEFAULT_NAME=Utterance.defaultSpeaker;
+	
 	public static final String repair_init_prefix = qmul.ds.dag.BacktrackingEdge.repair_init_prefix;
 
 	static String[] non_repairing = { "accept", "reject", "assert", "question" };
@@ -66,10 +68,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	String[] punct = { ".", "?", "!" };
 	List<String> rightEdgeIndicators = Arrays.asList(punct);
 
+	public static final String RELEASE_TURN="release-turn";
+	
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir, false);
 
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG());
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+		
 
 	}
 
@@ -80,27 +85,36 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing, String... participants) {
 		super(resourceDirNameOrURL, repairing);
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), Arrays.asList(participants));
+		if (participants.length>0)
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), participants);
+		else
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+		
 		context.setRepairProcessing(repairing);
+		
 
-	}
-
-	public InteractiveContextParser(String resourceDirOrURL) {
-		this(resourceDirOrURL, false);
 	}
 
 	public InteractiveContextParser(String resourceDirOrURL, String... participants) {
 		this(resourceDirOrURL, false, participants);
-
+	}
+	public InteractiveContextParser(String resourceDirOrURL) {
+		this(resourceDirOrURL, false, DEFAULT_NAME);
 	}
 
+	
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
 		super(lexicon, grammar);
 
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG());
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
 
 	}
 
+	public String getName()
+	{
+		return context.getName();
+	}
+	
 	protected boolean repairInitiated() {
 		return context.repairInitiated();
 	}
@@ -328,8 +342,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return new InteractiveContextGenerator(this);
 	}
 
-	/**
-	 * @param word
+	
+	/**@param word
 	 *            , speaker
 	 * @return the state which results from extending the current state with all
 	 *         possible lexical actions corresponding to the given word; or null
@@ -344,6 +358,18 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				word.setAddressee(participants.get(1));
 			else
 				word.setAddressee(participants.get(0));
+		}
+		
+		if (word.word().equals(RELEASE_TURN))
+		{
+			if (this.context.floorIsOpen() || !word.speaker().equals(context.getPrevSpeaker()))
+				return getState();
+			
+			
+			this.context.openFloor();
+			return getState();
+			
+			
 		}
 
 		if (this.repairanda.contains(word.word())) {
@@ -381,6 +407,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			}
 		}
 
+		this.context.setWhoHasFloor(word.speaker());
 		this.getState().thisIsFirstTupleAfterLastWord();
 		logger.info("Parsed " + word);
 		logger.info("Final Tuple:" + getState().getCurrentTuple());

@@ -142,17 +142,21 @@ public class Dialogue extends ArrayList<Utterance> {
 	
 	public Utterance lastUtterance()
 	{
+		if (isEmpty())
+			return null;
 		return this.get(this.size()-1);
 	}
 	
 	public void append(UtteredWord w) {
-		if (w.speaker().equals(lastUtterance().speaker))
-			lastUtterance().append(w);
-		else
+		logger.debug("Appending:"+w);
+		if (isEmpty()||!w.speaker().equals(lastUtterance().getSpeaker()))
 		{
 			Utterance utt=new Utterance(w.speaker(), w.word());
 			add(utt);
 		}
+		else	
+			lastUtterance().append(w);
+		
 		
 	}
 }
