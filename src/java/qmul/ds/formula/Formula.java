@@ -8,7 +8,6 @@
  *******************************************************************************/
 package qmul.ds.formula;
 
-
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -48,51 +47,73 @@ public abstract class Formula implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String EPSILON_FUNCTOR = "eps";
-	public static final String UNICODE_EPSILON_FUNCTOR = "\u03B5"; // epsilon; also 03F5, 025B, 1D6C6
+	public static final String UNICODE_EPSILON_FUNCTOR = "\u03B5"; // epsilon;
+																	// also
+																	// 03F5,
+																	// 025B,
+																	// 1D6C6
 	public static final String TAU_FUNCTOR = "tau";
-	public static final String UNICODE_TAU_FUNCTOR = "\u03C4"; // tau; also 1D6D5
+	public static final String UNICODE_TAU_FUNCTOR = "\u03C4"; // tau; also
+																// 1D6D5
 	public static final String IOTA_FUNCTOR = "iota";
-	public static final String UNICODE_IOTA_FUNCTOR = "\u0269"; // iota; also 03B9, 1D6CA
+	public static final String UNICODE_IOTA_FUNCTOR = "\u0269"; // iota; also
+																// 03B9, 1D6CA
 	public static final String ETA_FUNCTOR = "eta";
-	public static final String UNICODE_ETA_FUNCTOR = "\u03B7"; // eta; also 1D6C8
+	public static final String UNICODE_ETA_FUNCTOR = "\u03B7"; // eta; also
+																// 1D6C8
 	public static final String EPSILON_FUNCTORS = "(eps|tau|iota|notexists)";
 	public static final String CONJUNCTION_OPERATOR = "&";
 	public static final String DISJUNCTION_OPERATOR = "\\|";
-	public static final String UNICODE_CONJUNCTION_OPERATOR = "\u2227"; // logical and; also 22C0
+	public static final String UNICODE_CONJUNCTION_OPERATOR = "\u2227"; // logical
+																		// and;
+																		// also
+																		// 22C0
 	public static final String UNICODE_SUBSET_OPERATOR = "\u2286";
 	public static final String UNICODE_OVERLAP_OPERATOR = "\u229D";
 	public static final String OVERLAP_OPERATOR = "overlap";
 	public static final String SUBSET_OPERATOR = "subset";
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
-	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free Formula
-	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN;																								// variable
-	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula metavariable
+	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free
+																													// Formula
+	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN; // variable
+	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula
+																					// metavariable
 	public static final Pattern REC_METAVARIABLE_PATTERN = Pattern.compile("REC\\d*");
-	public static final Pattern LAMBDA_ABSTRACT_PATTERN = Pattern.compile("(" + VARIABLE_PATTERN + ")"
-			+ Pattern.quote(FOLLambdaAbstract.LAMBDA_FUNCTOR) + "(.*)");
+	public static final Pattern LAMBDA_ABSTRACT_PATTERN = Pattern
+			.compile("(" + VARIABLE_PATTERN + ")" + Pattern.quote(FOLLambdaAbstract.LAMBDA_FUNCTOR) + "(.*)");
 
 	public static final Pattern FRESH_VARIABLE_PATTERN = Pattern.compile("VAR");
 	public static final Pattern FRESH_EVENT_VARIABLE_PATTERN = Pattern.compile("EVENTVAR");
 	public static final Pattern FRESH_PROPOSITION_VARIABLE_PATTERN = Pattern.compile("PROPVAR");
-	public static final Pattern CN_ORDERED_PAIR_PATTERN = Pattern.compile("\\s*(" + VARIABLE_PATTERN
-			+ ")\\s*,\\s*(.+)\\s*");
+	public static final Pattern CN_ORDERED_PAIR_PATTERN = Pattern
+			.compile("\\s*(" + VARIABLE_PATTERN + ")\\s*,\\s*(.+)\\s*");
 	public static final Pattern EPSILON_TERM_PATTERN = Pattern.compile("\\(" + EPSILON_FUNCTORS + "\\s*,\\s*(.+)\\)");
-	public static final Pattern PREDICATE_PATTERN = Pattern.compile("[a-z][a-z][a-z_0-9]*|<|>|="); // 2 alpha chars or
+	public static final Pattern PREDICATE_PATTERN = Pattern.compile("[a-z][a-z][a-z_0-9]*|<|>|="); // 2
+																									// alpha
+																									// chars
+																									// or
 																									// more
 	public static final Pattern PRED_ARG_PATTERN = Pattern.compile("([a-z][a-z][a-z_0-9]*)\\((.+)\\)");
-
+	public static final Pattern META_PRED_ARG_PATTERN = Pattern.compile("(P[0-9]*)\\((.+)\\)");
 	public static String ATOMIC_FORMULA_PATTERN = "[a-z]+[a-z_0-9]*";
 
 	private HashSet<Variable> variables = new HashSet<Variable>();
-	protected TTRRecordType parentRecType = null;	// the record type in one of whose fields this formula is directly
-													// embedded.... all Formulas have it....
-													// null if this is a root record type, or if we are using
+	protected TTRRecordType parentRecType = null; // the record type in one of
+													// whose fields this formula
+													// is directly
+													// embedded.... all Formulas
+													// have it....
+													// null if this is a root
+													// record type, or if we are
+													// using
 													// Epsilon-Calculus ds.
 
 	/**
 	 * @param string
-	 *            a formula spec as used in lexicon specs e.g. john, x^y^like(x,y)
-	 * @return a {@link AtomicFormula} for atomic strings, {@link FOLLambdaAbstract} otherwise
+	 *            a formula spec as used in lexicon specs e.g. john,
+	 *            x^y^like(x,y)
+	 * @return a {@link AtomicFormula} for atomic strings,
+	 *         {@link FOLLambdaAbstract} otherwise
 	 */
 	public static Formula create(String string) {
 		return create(string, false);
@@ -112,12 +133,15 @@ public abstract class Formula implements Serializable {
 
 	/**
 	 * @param string
-	 *            a formula spec as used in lexicon specs e.g. john, X^Y^like(X,Y)
+	 *            a formula spec as used in lexicon specs e.g. john,
+	 *            X^Y^like(X,Y)
 	 * @param inExConj
-	 *            whether we're inside an {@link ExistentialLabelConjunction} - a temporary (I hope) hack to allow
-	 *            existentially quantified label variables to be written lower-case letters, the same as standard
-	 *            {@link Formula} variables
-	 * @return a {@link AtomicFormula} for atomic strings, {@link FOLLambdaAbstract} otherwise
+	 *            whether we're inside an {@link ExistentialLabelConjunction} -
+	 *            a temporary (I hope) hack to allow existentially quantified
+	 *            label variables to be written lower-case letters, the same as
+	 *            standard {@link Formula} variables
+	 * @return a {@link AtomicFormula} for atomic strings,
+	 *         {@link FOLLambdaAbstract} otherwise
 	 */
 	public static Formula create(String string1, boolean inExConj) {
 		logger.debug("creating formula from string: " + string1);
@@ -127,17 +151,18 @@ public abstract class Formula implements Serializable {
 
 		if (!inExConj && VARIABLE_PATTERN.matcher(string).matches()) {
 			v = new Variable(string);
-			
+
 		}
 		// lexical/computational action rule metavariable (as in e.g. IF fo(X)
 		// THEN ...)
 		else if (string.matches("^" + LabelFactory.METAVARIABLE_PATTERN + "$")) {
 			v = MetaFormula.get(string);
 
-		} //else if (string.matches("^" + FRESHPUT_METAVARIABLE_PATTERN + "$")) {
-		//	v = MetaFormula.get(string);
+		} // else if (string.matches("^" + FRESHPUT_METAVARIABLE_PATTERN + "$"))
+			// {
+			// v = MetaFormula.get(string);
 
-	//	} commented out because of redundancy.
+		// } commented out because of redundancy.
 		else if (string.matches("^" + REC_METAVARIABLE_PATTERN + "$")) {
 			v = MetaTTRRecordType.get(string);
 		}
@@ -151,9 +176,8 @@ public abstract class Formula implements Serializable {
 		else if (string.matches("^" + METAVARIABLE_PATTERN + "$")) {
 			v = FormulaMetavariable.get(string);
 
-		}//Meta TTR Label 
-		else if (string.matches("^" + META_LABEL_PATTERN+ "$"))
-		{
+		} // Meta TTR Label
+		else if (string.matches("^" + META_LABEL_PATTERN + "$")) {
 			v = MetaTTRLabel.get(string);
 		}
 		// fresh (bound) formula variable of type es
@@ -169,9 +193,8 @@ public abstract class Formula implements Serializable {
 			v = Variable.getFreshPropositionVariable();
 		}
 
-		if (v != null)
-		{
-			logger.debug("Created:"+v+":"+v.getClass());
+		if (v != null) {
+			logger.debug("Created:" + v + ":" + v.getClass());
 			return v;
 		}
 		TTRPath path = TTRPath.parse(string);
@@ -217,11 +240,11 @@ public abstract class Formula implements Serializable {
 		f = InfixPredicateArgumentFormula.parse(string);
 		if (f != null)
 			return f;
-		
-		f=TTRInfixExpression.parse(string);
-		if(f!=null)
+
+		f = TTRInfixExpression.parse(string);
+		if (f != null)
 			return f;
-		
+
 		// predicate formula
 		m = PRED_ARG_PATTERN.matcher(string);
 		if (m.matches()) {
@@ -235,22 +258,40 @@ public abstract class Formula implements Serializable {
 
 			return f;
 		}
+		// meta predicate formula
+		m = META_PRED_ARG_PATTERN.matcher(string);
+		if (m.matches()) {
+			Predicate p = MetaPredicate.get(m.group(1));
+			String[] args = m.group(2).split(",");
+			Formula[] fargs = new Formula[args.length];
+			for (int i = 0; i < args.length; i++) {
+				fargs[i] = create(args[i]);
+			}
+			f = new PredicateArgumentFormula(p, fargs);
+
+			return f;
+		}
+
 		if (string.matches(ATOMIC_FORMULA_PATTERN))
 			return new AtomicFormula(string);
 		logger.error("could not parse formula string:" + string);
 		return null;
 
 	}
+
 	/**
-	 * true by default... variables will return false.. also record types without any manifest content on the head label 
-	 * will return false... e.g. [x:e|head:x] will return false... while [x:e|head:x|p==man(x):t] or [x==john:e|head:x] will not.
+	 * true by default... variables will return false.. also record types
+	 * without any manifest content on the head label will return false... e.g.
+	 * [x:e|head:x] will return false... while [x:e|head:x|p==man(x):t] or
+	 * [x==john:e|head:x] will not.
+	 * 
 	 * @return
 	 */
-	public boolean hasManifestContent()
-	{
+	public boolean hasManifestContent() {
 		return true;
-		
+
 	}
+
 	/**
 	 * @return the set of variables (free or bound) involved
 	 */
@@ -261,17 +302,21 @@ public abstract class Formula implements Serializable {
 	/**
 	 * @param f1
 	 * @param f2
-	 * @return a new {@link Formula} resulting from substituting sub-formula f1 by f2 in this {@link Formula}.
+	 * @return a new {@link Formula} resulting from substituting sub-formula f1
+	 *         by f2 in this {@link Formula}.
 	 */
 	public abstract Formula substitute(Formula f1, Formula f2);
 
 	/**
-	 * Evaluates the formula, e.g. if it is an expression, such as 1+2, it evaluates to 3... by default just return the
-	 * formula itself..... for paths this will return the pointed type. For asymmetric merge it returns the resulting
-	 * rec type.. for epsilon terms, perhaps it will return the chosen entity itself (with the restrictor having been
-	 * checked etc..).... for propositions, well it should just return true or false.....
+	 * Evaluates the formula, e.g. if it is an expression, such as 1+2, it
+	 * evaluates to 3... by default just return the formula itself..... for
+	 * paths this will return the pointed type. For asymmetric merge it returns
+	 * the resulting rec type.. for epsilon terms, perhaps it will return the
+	 * chosen entity itself (with the restrictor having been checked etc..)....
+	 * for propositions, well it should just return true or false.....
 	 * 
-	 * TODO: this should take a context argument to evaluate the formula against... but for now this is enough...
+	 * TODO: this should take a context argument to evaluate the formula
+	 * against... but for now this is enough...
 	 * 
 	 * @return
 	 */
@@ -281,7 +326,8 @@ public abstract class Formula implements Serializable {
 
 	/**
 	 * @param f
-	 * @return a new {@link Formula} which is the conjunction of this {@link Formula} with f
+	 * @return a new {@link Formula} which is the conjunction of this
+	 *         {@link Formula} with f
 	 */
 	public Formula conjoin(Formula f) {
 		// by default just return the conjunction
@@ -290,10 +336,12 @@ public abstract class Formula implements Serializable {
 	}
 
 	/**
-	 * to be overridden by individual formula classes. The method is to return the same formula, with all variables
-	 * replaced such that they are all unique with respect to tree t.
+	 * to be overridden by individual formula classes. The method is to return
+	 * the same formula, with all variables replaced such that they are all
+	 * unique with respect to tree t.
 	 * 
-	 * For now only TTR related classes override this method. TODO: do it for all classes
+	 * For now only TTR related classes override this method. TODO: do it for
+	 * all classes
 	 * 
 	 * @param t
 	 * @return
@@ -303,22 +351,25 @@ public abstract class Formula implements Serializable {
 	}
 
 	/**
-	 * to be overridden by individual formula classes. The method is to return the same formula, with all variables
-	 * replaced such that they are all unique with respect to tree t.
+	 * to be overridden by individual formula classes. The method is to return
+	 * the same formula, with all variables replaced such that they are all
+	 * unique with respect to tree t.
 	 * 
-	 * For now only TTR related classes override this method. TODO: do it for all classes
+	 * For now only TTR related classes override this method. TODO: do it for
+	 * all classes
 	 * 
 	 * @param t
 	 * @return
 	 */
-	public <T extends DAGTuple, E extends DAGEdge> Formula freshenVars(Context<T,E> c) {
+	public <T extends DAGTuple, E extends DAGEdge> Formula freshenVars(Context<T, E> c) {
 		return this;
 	}
-	
+
 	/**
-	 * @return an instantiated version of this {@link Formula}, with all meta-elements replaced by their values. By
-	 *         default, just return this {@link Formula} unchanged. This will be overridden by {@link MetaFormula}e and
-	 *         the like
+	 * @return an instantiated version of this {@link Formula}, with all
+	 *         meta-elements replaced by their values. By default, just return
+	 *         this {@link Formula} unchanged. This will be overridden by
+	 *         {@link MetaFormula}e and the like
 	 */
 	public Formula instantiate() {
 		return this;
@@ -326,8 +377,8 @@ public abstract class Formula implements Serializable {
 
 	/**
 	 * @param other
-	 * @return true if this subsumes other, false otherwise. Don't override this, override subsumesBasic and/or
-	 *         subsumesMapped
+	 * @return true if this subsumes other, false otherwise. Don't override
+	 *         this, override subsumesBasic and/or subsumesMapped
 	 */
 	public final boolean subsumes(Formula other) {
 		if (this.toString().equals(other.toString())) {
@@ -340,8 +391,8 @@ public abstract class Formula implements Serializable {
 	}
 
 	/**
-	 * A quick check without bothering with recursion & variable substitution, if available. By default, an equality
-	 * check
+	 * A quick check without bothering with recursion & variable substitution,
+	 * if available. By default, an equality check
 	 * 
 	 * @param other
 	 * @return true if this subsumes other, false otherwise
@@ -374,22 +425,23 @@ public abstract class Formula implements Serializable {
 	/**
 	 * @param other
 	 * @param map
-	 * @return true if this subsumes other, modulo the variable substitutions in map - possibly adding to map if a new
-	 *         substitution is needed. Can assume that subsumesBasic has been called first and failed (so the default is
-	 *         for this to fail)
+	 * @return true if this subsumes other, modulo the variable substitutions in
+	 *         map - possibly adding to map if a new substitution is needed. Can
+	 *         assume that subsumesBasic has been called first and failed (so
+	 *         the default is for this to fail)
 	 */
 	protected boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		return false;
 	}
 
-	
 	/**
 	 * @param l1
 	 * @param l2
 	 * @param map
-	 * @return true if l1 subsumes l2 modulo the variable substitutions in map, optionally adding to map as new
-	 *         substitutions are required. Calls subsumesBasic first, then subsumesMapped on failure, on each element in
-	 *         turn
+	 * @return true if l1 subsumes l2 modulo the variable substitutions in map,
+	 *         optionally adding to map as new substitutions are required. Calls
+	 *         subsumesBasic first, then subsumesMapped on failure, on each
+	 *         element in turn
 	 */
 	protected boolean subsumesMapped(List<Formula> l1, List<Formula> l2, HashMap<Variable, Variable> map) {
 		// must be same length
@@ -401,9 +453,10 @@ public abstract class Formula implements Serializable {
 			return true;
 		}
 		// check head, recurse
-		//l1.get(0).subsumesBasic(l2.get(0)) ||   
-		//commented out from the below if conditions. This was a bug. Don't know how we got away with it till now.
-		if ( l1.get(0).subsumesMapped(l2.get(0), map)) {
+		// l1.get(0).subsumesBasic(l2.get(0)) ||
+		// commented out from the below if conditions. This was a bug. Don't
+		// know how we got away with it till now.
+		if (l1.get(0).subsumesMapped(l2.get(0), map)) {
 			return subsumesMapped(l1.subList(1, l1.size()), l2.subList(1, l2.size()), map);
 		}
 		// if head fails, fail
@@ -448,36 +501,36 @@ public abstract class Formula implements Serializable {
 		System.out.println(l);
 
 	}
+
 	/**
-	 * Convert this formula to a unique integer, but such that, a.toUniqueIntRespectSubsumption() = b.toUniqueIntRespectSubsumption()
-	 * iff a.subsumes(b) && b.subsumes(a)
+	 * Convert this formula to a unique integer, but such that,
+	 * a.toUniqueIntRespectSubsumption() = b.toUniqueIntRespectSubsumption() iff
+	 * a.subsumes(b) && b.subsumes(a)
 	 * 
-	 * Used to translate Trees and Record types of TTR (effectively ParserTuples) to (atomic) states in an MDP. 
+	 * Used to translate Trees and Record types of TTR (effectively
+	 * ParserTuples) to (atomic) states in an MDP.
+	 * 
 	 * @return Unique integer constructed from this formula.
 	 */
 	public abstract int toUniqueInt();
 
 	public String toDebugString() {
-		
+
 		return toString();
 	}
-	
-	
+
 	public ArrayList<Meta<?>> getMetas() {
 		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		return metas;
 	}
-	
 
-	public void resetMetas()
-	{
-		for(Meta<?> meta:getMetas())
+	public void resetMetas() {
+		for (Meta<?> meta : getMetas())
 			meta.reset();
 	}
-	
-	public void partialResetMetas()
-	{
-		for(Meta<?> meta:getMetas())
+
+	public void partialResetMetas() {
+		for (Meta<?> meta : getMetas())
 			meta.partialReset();
 	}
 }

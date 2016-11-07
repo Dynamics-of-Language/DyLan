@@ -126,11 +126,11 @@ public class PredicateArgumentFormula extends Formula {
 		if (!(other instanceof PredicateArgumentFormula)) {
 			return false;
 		}
-		PredicateArgumentFormula eps = (PredicateArgumentFormula) other;
-		if (!predicate.subsumesBasic(eps.predicate) && !predicate.subsumesMapped(eps.predicate, map)) {
+		PredicateArgumentFormula paf = (PredicateArgumentFormula) other;
+		if (!predicate.subsumesBasic(paf.predicate) && !predicate.subsumesMapped(paf.predicate, map)) {
 			return false;
 		}
-		return subsumesMapped(arguments, eps.arguments, map);
+		return subsumesMapped(arguments, paf.arguments, map);
 	}
 	
 	public ArrayList<Meta<?>> getMetas()
@@ -273,7 +273,7 @@ public class PredicateArgumentFormula extends Formula {
 
 	public String toDebugString()
 	{
-		String s=predicate.toString();
+		String s=predicate.toString()+"["+predicate.getClass()+"]";
 		if (arguments.isEmpty()) {
 			
 			return s;
@@ -311,7 +311,7 @@ public class PredicateArgumentFormula extends Formula {
 		{
 			insArgs.add(f.instantiate());
 		}
-		return new PredicateArgumentFormula(new Predicate(this.predicate), insArgs);
+		return new PredicateArgumentFormula(this.predicate.instantiate(), insArgs);
 		
 	}
 	

@@ -196,8 +196,8 @@ public class MetaElement<X> implements Serializable, Meta<X> {
 	 */
 	@Override
 	public String toString() {
-
-		return name + ((value==null)?"":"=" + value + "[" + hashCode() + "]");
+		
+		return name + ((value==null)?"":"=" + value);
 
 	}
 

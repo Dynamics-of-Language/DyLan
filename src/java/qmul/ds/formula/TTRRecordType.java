@@ -586,8 +586,20 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 		
+		TTRRecordType rt1=TTRRecordType.parse("[x:e|p==P(x):t]");
+		TTRRecordType rt2=TTRRecordType.parse("[x2:e|p5==phone(x2):t|p8==computer(x2):t]");
 		
-		 
+		System.out.println("rt1:"+rt1);
+		System.out.println("rt2:"+rt2);
+		System.out.println("rt1 subsumes rt2:"+rt1.subsumesMapped(rt2, map)+" with map "+map);
+		System.out.println("rt1 after check:"+rt1);
+		rt1.backtrackMetas();
+		map.clear();
+		System.out.println("rt1 after backtracking metas:"+rt1);
+		System.out.println("rt1 subsumes rt2:"+rt1.subsumesMapped(rt2, map)+" with map "+map);
+		System.out.println("rt1 after check:"+rt1);
+		
+		
 		 
 //		 TTRRecordType sem2=TTRRecordType.parse("[x8==usr : e|e10==like :es|x9 : e|p4==brand(x9):t|p10==subj(e10,x8):t|p9==obj(e10,x9):t|p11==brand(x9):t]");
 //		 TTRRecordType sem1 = TTRRecordType.parseStrictFieldOrder(
@@ -604,12 +616,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		// System.out.println(f);
 		//
 		//
-		 TTRRecordType sem2 = TTRRecordType.parseStrictFieldOrder("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy: es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p26==brand(x7) :t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) :t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) :t|p10==subj(e4, x1) : t]");
-		 
-		 sem2.collapseIsomorphicSuperTypes(map);
-		 System.out.println(sem2);
-		 System.out.println(map);
-		 //
+//		 TTRRecordType sem2 = TTRRecordType.parseStrictFieldOrder("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy: es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p26==brand(x7) :t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) :t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) :t|p10==subj(e4, x1) : t]");
+//		 
+//		 sem2.collapseIsomorphicSuperTypes(map);
+//		 System.out.println(sem2);
+//		 System.out.println(map);
+//		 //
 		// long before=new Date().getTime();
 		// TTRRecordType MCS = sem2.mostSpecificCommonSuperType(sem1, map);
 		//
@@ -685,6 +697,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		if (record.containsKey(f.getLabel()))
 			throw new IllegalArgumentException("Coinciding labels in:" + this + " when adding:" + f);
 
+		if (!f.getMetas().isEmpty() && f.isMeta())
+			throw new IllegalArgumentException("Illegal field:"+f+" - cannot have meta-label at the same time as meta-vairables in the type");
+		
 		ArrayList<TTRField> list = new ArrayList<TTRField>();
 		Set<Variable> variables = new HashSet<Variable>(f.getVariables());
 		int i = 0;
@@ -904,6 +919,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					return false;
 				}
 			}
+			
 		}
 		return true;
 	}
@@ -914,11 +930,15 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * @return true if all metas can be backtracked.
 	 */
 	public boolean backtrackMetas() {
-		if (!canBackTrackMetas())
-			return false;
+//		if (!canBackTrackMetas())
+//			return false;
 
 		for (TTRField f : fields) {
-			f.backtrack();
+			if (!f.backtrackMetas())
+			{
+				logger.warn("Couldn't backtrack "+f);
+				return false;
+			}
 		}
 		return true;
 	}
@@ -952,7 +972,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					return true;
 				}
 				logger.debug("recursion failed");
-				fields.get(thisIndex).partialResetMeta();
+				
+				fields.get(thisIndex).partialResetMetas();
 
 			} else
 				logger.debug("failed");
@@ -1090,6 +1111,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return copy;
 	}
 
+	
+	
 	public boolean subsumesMapped(TTRRecordType other, int thisIndex, HashMap<Variable, Variable> map) {
 
 		if (thisIndex == fields.size())
@@ -1107,7 +1130,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				if (subsumesMapped(other, thisIndex + 1, map))
 					return true;
 
-				fields.get(thisIndex).partialResetMeta();
+		
+				fields.get(thisIndex).partialResetMetas();
 				map.clear();
 				map.putAll(copy);
 			}
@@ -1125,7 +1149,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				if (subsumesMapped(other, thisIndex + 1, map))
 					return true;
 
-				fields.get(thisIndex).partialResetMeta();
+			
+				fields.get(thisIndex).partialResetMetas();
 				map.clear();
 				map.putAll(copy);
 
@@ -1177,7 +1202,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				if (subsumesMappedStrictLabelIdentity(other, thisIndex + 1, map))
 					return true;
 
-				fields.get(thisIndex).partialResetMeta();
+				fields.get(thisIndex).partialResetMetas();
 				map.clear();
 				map.putAll(copy);
 
@@ -2347,26 +2372,26 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	// backtracking index
-	private int bindex;
+	protected int bindex;
 
 	@Override
 	public boolean backtrack() {
 		if (fields.get(bindex).canBacktrack())
-			return fields.get(bindex).backtrack();
+			return fields.get(bindex).backtrackMetas();
 
 		if (bindex == 0)
 			return false;
 		// can't backtrack last meta
 		// reset all below, and backtrack the previous one.
 		for (int i = bindex; i < fields.size(); i++) {
-			fields.get(i).resetMeta();
+			fields.get(i).resetMetas();
 		}
 
 		for (int i = bindex - 1; i >= 0; i--) {
 			if (fields.get(i).isMeta()) {
 				bindex = i;
 
-				return fields.get(i).backtrack();
+				return fields.get(i).backtrackMetas();
 			}
 
 		}

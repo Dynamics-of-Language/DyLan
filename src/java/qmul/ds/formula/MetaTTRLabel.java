@@ -8,16 +8,15 @@
  *******************************************************************************/
 package qmul.ds.formula;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import qmul.ds.action.meta.MetaFormula;
+import qmul.ds.action.meta.Meta;
 
 /**
- * A formula metavariable as used for e.g. anaphora. Keeping this distinct from {@link MetaFormula} (a rule metavariable
- * which ranges over formulae) as they are formally distinct - but the implementation is identical.
- * 
- * @author mpurver
+ * A Meta-TTR Label, as in e.g. [L:e|p==phone(L):t] - these are instantiated through subsumption (subtype) checks.
+ * @author arash
  */
 public class MetaTTRLabel extends TTRLabel {
 
@@ -268,6 +267,8 @@ public class MetaTTRLabel extends TTRLabel {
 		return this.value==null?name.hashCode():name.hashCode()+value.toUniqueInt();
 		
 	}
+	
+	
 	
 
 }

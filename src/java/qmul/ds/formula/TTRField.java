@@ -296,7 +296,8 @@ public class TTRField extends Formula{
 						map.clear();
 						map.putAll(copy);
 						//don't want to have instantiated metalabel if the field is failing to subsume
-						partialResetMeta();
+						
+						partialResetMetas();
 						return false;
 					}
 					
@@ -308,7 +309,8 @@ public class TTRField extends Formula{
 				
 				map.clear();
 				map.putAll(copy);
-				partialResetMeta();
+				
+				partialResetMetas();//resets metas
 				logger.debug("DS type failed subsume:" + this);
 				return false;
 			}
@@ -633,13 +635,16 @@ public class TTRField extends Formula{
 
 	public ArrayList<Meta<?>> getMetas() {
 		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
-		metas.addAll(label.getMetas());
+		//metas.addAll(label.getMetas());
+		if (type==null)
+			return metas;
 		metas.addAll(type.getMetas());
 		return metas;
 
 	}
 
-	public void resetMeta() {
+	
+	public void resetMetaLabel() {
 		if (label instanceof MetaTTRLabel)
 		{
 			
@@ -649,7 +654,13 @@ public class TTRField extends Formula{
 		
 	}
 
-	public void partialResetMeta() {
+	public void partialResetMetas()
+	{
+		super.partialResetMetas();
+		partialResetMetaLabel();
+	}
+	
+	private void partialResetMetaLabel() {
 		if (label instanceof MetaTTRLabel)
 		{
 			((MetaTTRLabel) label).partialReset();
@@ -658,7 +669,7 @@ public class TTRField extends Formula{
 		
 	}
 
-	public boolean backtrack() {
+	public boolean backtrackMetas() {
 		if (label instanceof MetaTTRLabel)
 		{
 			MetaTTRLabel meta=(MetaTTRLabel)label;
@@ -667,10 +678,17 @@ public class TTRField extends Formula{
 				this.type=null;
 				return true;
 			}
+			else return false;
 			
 			
 		}
-		return false;
+		for(Meta<?> meta:getMetas())
+		{
+			if (!meta.backtrack())
+				return false;
+		}
+		
+		return true;
 		
 	}
 
@@ -691,6 +709,10 @@ public class TTRField extends Formula{
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return true if this field is meta, i.e. if its label is a {@link MetaTTRLabel}.
+	 */
 	public boolean isMeta() {
 		return label instanceof MetaTTRLabel;
 	}

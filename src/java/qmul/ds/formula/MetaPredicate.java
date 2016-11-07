@@ -17,34 +17,34 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 
 /**
- * A {@link Formula} metavariable as used in rule specs e.g. X, Y
+ * A {@link Predicate} metavariable as used e.g. PredicateArgumentFormulae, e.g. P(x,y).
  * 
  * @author arash
  */
-public class FormulaMetavariable extends Formula implements Serializable {
+public class MetaPredicate extends Predicate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private MetaElement<Formula> meta;
+	private MetaElement<Predicate> meta;
 
 	/**
 	 * @param meta
 	 */
-	protected FormulaMetavariable(MetaElement<Formula> meta) {
+	protected MetaPredicate(MetaElement<Predicate> meta) {
 		this.meta = meta;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public Formula getValue() {
+	public Predicate getValue() {
 		return meta.getValue();
 	}
 
 	/**
 	 * @return the meta-element
 	 */
-	public MetaElement<Formula> getMeta() {
+	public MetaElement<Predicate> getMeta() {
 		return meta;
 	}
 
@@ -66,8 +66,8 @@ public class FormulaMetavariable extends Formula implements Serializable {
 	 * @param name
 	 * @return the existing metavariable of this name (with its value), a new one otherwise
 	 */
-	public static FormulaMetavariable get(String name) {
-		return new FormulaMetavariable(MetaElement.get(name, Formula.class));
+	public static MetaPredicate get(String name) {
+		return new MetaPredicate(MetaElement.get(name, Predicate.class));
 
 	}
 
@@ -77,7 +77,7 @@ public class FormulaMetavariable extends Formula implements Serializable {
 	 * @see qmul.ds.formula.Formula#instantiate()
 	 */
 	@Override
-	public Formula instantiate() {
+	public Predicate instantiate() {
 		if (getValue() == null) {
 			return this;
 		}
@@ -115,8 +115,8 @@ public class FormulaMetavariable extends Formula implements Serializable {
 			return false;
 		// SIDE-EFFECT: checking equality sets metavariable value! (no hashCode)
 
-		if (obj instanceof FormulaMetavariable) {
-			return meta.equals(((FormulaMetavariable) obj).meta.getValue());
+		if (obj instanceof MetaPredicate) {
+			return meta.equals(((MetaPredicate) obj).meta.getValue());
 		} else {
 			return meta.equals(obj);
 		}
@@ -132,7 +132,7 @@ public class FormulaMetavariable extends Formula implements Serializable {
 		return meta.toString();
 	}
 
-	public FormulaMetavariable clone() {
+	public MetaPredicate clone() {
 		return this;
 	}
 	
@@ -149,18 +149,18 @@ public class FormulaMetavariable extends Formula implements Serializable {
 		if (other == null)
 			return false;
 		
-		if (other instanceof FormulaMetavariable) {
-			FormulaMetavariable oth = (FormulaMetavariable) other;
+		if (other instanceof MetaPredicate) {
+			MetaPredicate oth = (MetaPredicate) other;
 			if (oth.getValue() == null && getValue() == null)
 				return true;
 		}
 		
 		// SIDE-EFFECT: checking subsumption sets metavariable value! 
-		if (other instanceof FormulaMetavariable) {
+		if (other instanceof MetaPredicate) {
 			if (meta.getValue()==null)
-				return meta.equals(((FormulaMetavariable)other).meta.getValue());
+				return meta.equals(((MetaPredicate)other).meta.getValue());
 			
-			return meta.getValue().subsumesBasic(((FormulaMetavariable) other).meta.getValue());
+			return meta.getValue().subsumesBasic(((MetaPredicate) other).meta.getValue());
 		} else {
 			if (meta.getValue()==null)
 				return meta.equals(other);
@@ -178,18 +178,18 @@ public class FormulaMetavariable extends Formula implements Serializable {
 		if (other == null)
 			return false;
 		
-		if (other instanceof FormulaMetavariable) {
-			FormulaMetavariable oth = (FormulaMetavariable) other;
+		if (other instanceof MetaPredicate) {
+			MetaPredicate oth = (MetaPredicate) other;
 			if (oth.getValue() == null && getValue() == null)
 				return true;
 		}
 		
 		// SIDE-EFFECT: checking subsumption sets metavariable value! 
-		if (other instanceof FormulaMetavariable) {
+		if (other instanceof MetaPredicate) {
 			if (meta.getValue()==null)
-				return meta.equals(((FormulaMetavariable)other).meta.getValue());
+				return meta.equals(((MetaPredicate)other).meta.getValue());
 			
-			return meta.getValue().subsumesMapped(((FormulaMetavariable) other).meta.getValue(),map);
+			return meta.getValue().subsumesMapped(((MetaPredicate) other).meta.getValue(),map);
 		} else {
 			if (meta.getValue()==null)
 				return meta.equals(other);

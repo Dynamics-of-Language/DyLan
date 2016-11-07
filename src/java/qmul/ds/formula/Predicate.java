@@ -27,5 +27,15 @@ public class Predicate extends AtomicFormula {
 	public Predicate(Predicate predicate) {
 		super(predicate.name);
 	}
+	
+	public Predicate()
+	{
+		super(null);
+	}
+	
+	public Predicate instantiate()
+	{
+		return new Predicate(this);
+	}
 
 }
