@@ -33,8 +33,8 @@ public class TTRField extends Formula{
 							// LambdaAbstract ...
 	private DSType dsType;
 
-	
-	public static TTRField parse(String s) {
+	public static TTRField parse(String s)
+	{
 		TTRLabel label = null;
 		Formula type = null;
 		DSType dsType = null;
@@ -60,7 +60,10 @@ public class TTRField extends Formula{
 				//logger.warn("illegal field string: the type should always be null/empty initially when using meta-label. Field String:"+s);
 				//return null;
 				//allow meta-label to have manifest value.
-				label = MetaTTRLabel.get(labelS);
+				
+
+				
+				label = new MetaTTRLabel(labelS);
 			}
 			else
 				return null;
@@ -99,7 +102,11 @@ public class TTRField extends Formula{
 				label = new TTRLabel(labelS);
 
 			} else if (meta.matches())
-				label = MetaTTRLabel.get(labelS);
+			{
+				
+				
+				label = new MetaTTRLabel(labelS);
+			}
 			else
 				return null;
 
@@ -128,8 +135,10 @@ public class TTRField extends Formula{
 		TTRField result = new TTRField(label, dsType, type);
 
 		return result;
-
+		
 	}
+	
+	
 
 	private static int indexOfLabelSep(String s) {
 		int depth = 0;

@@ -37,5 +37,10 @@ public class Predicate extends AtomicFormula {
 	{
 		return new Predicate(this);
 	}
+	
+	public Predicate clone()
+	{
+		return new Predicate(this.name);
+	}
 
 }

@@ -75,9 +75,10 @@ public abstract class Formula implements Serializable {
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
 	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free
 																													// Formula
-	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN; // variable
-	public static final Pattern METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula
-																					// metavariable
+	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN; // meta ttr label
+	public static final Pattern TTR_LABEL_PATTERN = TTRLabel.LABEL_PATTERN; // ttr label
+	public static final Pattern FORMULA_METAVARIABLE_PATTERN = Pattern.compile("[S-U]"); // Formula meta-variable
+																					
 	public static final Pattern REC_METAVARIABLE_PATTERN = Pattern.compile("REC\\d*");
 	public static final Pattern LAMBDA_ABSTRACT_PATTERN = Pattern
 			.compile("(" + VARIABLE_PATTERN + ")" + Pattern.quote(FOLLambdaAbstract.LAMBDA_FUNCTOR) + "(.*)");
@@ -94,7 +95,7 @@ public abstract class Formula implements Serializable {
 																									// or
 																									// more
 	public static final Pattern PRED_ARG_PATTERN = Pattern.compile("([a-z][a-z][a-z_0-9]*)\\((.+)\\)");
-	public static final Pattern META_PRED_ARG_PATTERN = Pattern.compile("(P[0-9]*)\\((.+)\\)");
+	public static final Pattern META_PRED_ARG_PATTERN = Pattern.compile("([P-Q][0-9]*)\\((.+)\\)");//e.g. P1(x,y)
 	public static String ATOMIC_FORMULA_PATTERN = "[a-z]+[a-z_0-9]*";
 
 	private HashSet<Variable> variables = new HashSet<Variable>();
@@ -173,13 +174,13 @@ public abstract class Formula implements Serializable {
 
 		}
 		// formula metavariable (as in e.g. put(fo(A)))
-		else if (string.matches("^" + METAVARIABLE_PATTERN + "$")) {
+		else if (string.matches("^" + FORMULA_METAVARIABLE_PATTERN + "$")) {
 			v = FormulaMetavariable.get(string);
 
 		} // Meta TTR Label
-		else if (string.matches("^" + META_LABEL_PATTERN + "$")) {
-			v = MetaTTRLabel.get(string);
-		}
+		//else if (string.matches("^" + META_LABEL_PATTERN + "$")) {
+		//	v = MetaTTRLabel.get(string);
+		//}
 		// fresh (bound) formula variable of type es
 		else if (string.matches("^" + FRESH_EVENT_VARIABLE_PATTERN + "$")) {
 			v = Variable.getFreshEventVariable();

@@ -17,7 +17,7 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 
 /**
- * A {@link Formula} metavariable as used in rule specs e.g. X, Y
+ * A {@link Formula} metavariable as used within, other, bigger formulae, such as a TTRRecordType.
  * 
  * @author arash
  */

@@ -31,28 +31,7 @@ public class TTRLabel extends Variable {
 	protected TTRLabel() {
 	}
 
-	/**
-	 * @return the next label with the same basic root e.g. x -> x1, x42 -> x43 etc
-	 */
-	public TTRLabel next() {
-		Matcher m = LABEL_PATTERN.matcher(toString());
-		Matcher meta= META_LABEL_PATTERN.matcher(toString());
-		
-		if (m.matches()) {
-			
-		
-		int myNum = (m.group(2).isEmpty() ? 0 : Integer.parseInt(m.group(2)));
-		return new TTRLabel(m.group(1) + ++myNum);
-		}
-		else if (meta.matches())
-		{
-			int myNum = (m.group(2).isEmpty() ? 0 : Integer.parseInt(m.group(2)));
-			return MetaTTRLabel.get(m.group(1) + ++myNum);
-		}
-		else
-			throw new RuntimeException("strange TTRLabel " + this);
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

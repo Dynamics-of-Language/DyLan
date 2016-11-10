@@ -39,8 +39,8 @@ public class PredicateArgumentFormula extends Formula {
 	}
 
 	public PredicateArgumentFormula(PredicateArgumentFormula f) {
-		Predicate p = new Predicate(f.predicate);
-		this.predicate = p;
+		
+		this.predicate = f.predicate.clone();
 
 		for (Formula fo : f.arguments) {
 			this.arguments.add(fo.clone());

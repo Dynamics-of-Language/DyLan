@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
 
@@ -61,6 +61,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public static final TTRLabel HEAD = new TTRLabel("head");
 	private static final TTRLabel REF_TIME = new TTRLabel("reftime");
 
+	//pool of this record type's MetaTTRLabels
+	//pool used to be static. That's wrong. Meta variables are bound, and their scope is the rec type within which 
+	//they are embedded.
+	protected HashMap<String, MetaTTRLabel> pool = new HashMap<String, MetaTTRLabel>();
+
+
+	
 	private ArrayList<TTRField> fields = new ArrayList<TTRField>();
 
 	private HashMap<TTRLabel, TTRField> record = new HashMap<TTRLabel, TTRField>();
@@ -182,16 +189,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return result;
 	}
 
-	/**
-	 * @param label
-	 * @param formula
-	 */
-	public TTRRecordType(String label, String formula) {
-		TTRLabel ttrlabel = new TTRLabel(label);
-		Formula ttrformula = (formula == null ? null : Formula.create(formula));
-		add(ttrlabel, ttrformula, null);
-	}
-
+	
 	public TTRRecordType(String label, String formula, String dsTypeS) {
 		TTRLabel ttrlabel = new TTRLabel(label);
 		Formula ttrformula = (formula == null ? null : Formula.create(formula));
@@ -553,17 +551,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		ArrayList<TTRField> fields = new ArrayList<TTRField>();
 		fields.addAll(this.fields);
-		Collections.sort(fields, new SpecificityComparator(this));
-
+		Collections.sort(fields, new FieldSpecificityComparator(this));
 		return new TTRRecordType(fields);
 
 	}
 
-	class SpecificityComparator implements Comparator<TTRField> {
+	private class FieldSpecificityComparator implements Comparator<TTRField> {
 
 		TTRRecordType rt;
 
-		SpecificityComparator(TTRRecordType rt) {
+		FieldSpecificityComparator(TTRRecordType rt) {
 			this.rt = rt;
 		}
 
@@ -586,19 +583,25 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 		
-		TTRRecordType rt1=TTRRecordType.parse("[x:e|p==P(x):t]");
-		TTRRecordType rt2=TTRRecordType.parse("[x2:e|p5==phone(x2):t|p8==computer(x2):t]");
-		
+		//TTRRecordType rt1=TTRRecordType.parse("[pred1==V : cn|x10==U : e|x8 : e|e3==like : es|x5==usr : e|p15==brand(x10) : t|p2==pres(e3) : t|p14==by(x8, x10) : t|p7==subj(e3, x5) : t|p6==obj(e3, x8) : t|p1==subj(pred1, x8) : t]");
+		TTRRecordType rt1=TTRRecordType.parse("[x10==U : e|x8 : e|e3==like : es|x5==usr : e|p15==brand(x10) : t|p2==pres(e3) : t|pred1==P(x8) : cn|p14==by(x8, x10) : t|p7==subj(e3, x5) : t|p6==obj(e3, x8) : t]");
+		TTRRecordType rt2=TTRRecordType.parse("[x9 : e|x8 : e|e3==like : es|x5==usr : e|p==question(x9) : t|pred2==brand(x9) : cn|pred1==phone(x8) : cn|head==e3 : es|p2==pres(e3) : t|p12==by(x8, x9) : t|p7==subj(e3, x5) : t|p6==obj(e3, x8) : t]");
+
+		//				
+//				
 		System.out.println("rt1:"+rt1);
 		System.out.println("rt2:"+rt2);
-		System.out.println("rt1 subsumes rt2:"+rt1.subsumesMapped(rt2, map)+" with map "+map);
-		System.out.println("rt1 after check:"+rt1);
-		rt1.backtrackMetas();
-		map.clear();
-		System.out.println("rt1 after backtracking metas:"+rt1);
-		System.out.println("rt1 subsumes rt2:"+rt1.subsumesMapped(rt2, map)+" with map "+map);
+		System.out.println("MCS(rt1,rt2):"+rt1.mostSpecificCommonSuperType(rt2, map));
+//		System.out.println(rt1.subsumesMapped(rt2,map));
+		System.out.println("..with map:"+map);
 		System.out.println("rt1 after check:"+rt1);
 		
+		
+		//rt1.backtrackMetas();
+		//map.clear();
+		//System.out.println("rt1 after backtracking metas:"+rt1);
+		//System.out.println("rt1 subsumes rt2:"+rt1.subsumesMapped(rt2, map)+" with map "+map);
+		//System.out.println("rt1 after check:"+rt1);
 		
 		 
 //		 TTRRecordType sem2=TTRRecordType.parse("[x8==usr : e|e10==like :es|x9 : e|p4==brand(x9):t|p10==subj(e10,x8):t|p9==obj(e10,x9):t|p11==brand(x9):t]");
@@ -659,7 +662,22 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 */
 	public TTRLabel getFreeLabel(TTRLabel label) {
 		while (record.containsKey(label)) {
-			label = label.next();
+			Matcher m = TTR_LABEL_PATTERN.matcher(toString());
+			Matcher meta= META_LABEL_PATTERN.matcher(toString());
+			
+			if (m.matches()) {
+				
+			
+			int myNum = (m.group(2).isEmpty() ? 0 : Integer.parseInt(m.group(2)));
+			return new TTRLabel(m.group(1) + ++myNum);
+			}
+			else if (meta.matches())
+			{
+				int myNum = (m.group(2).isEmpty() ? 0 : Integer.parseInt(m.group(2)));
+				return new MetaTTRLabel(m.group(1) + ++myNum);
+			}
+			else
+				throw new RuntimeException("strange TTRLabel " + this);
 		}
 		return label;
 	}
@@ -973,10 +991,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				}
 				logger.debug("recursion failed");
 				
-				fields.get(thisIndex).partialResetMetas();
+				
 
 			} else
 				logger.debug("failed");
+			//if we are here, subsumption for thisIndex failed.
+			fields.get(thisIndex).partialResetMetas();
 		}
 
 		return false;
@@ -1119,8 +1139,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			return true;
 
 		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
-		// logger.debug("testing subsumption for field:" +
-		// fields.get(thisIndex));
+		//logger.debug("testing subsumption for field:" + fields.get(thisIndex));
 
 		// is map already telling us we should map the field at thisIndex to a
 		// particular field in other?
@@ -1135,6 +1154,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				map.clear();
 				map.putAll(copy);
 			}
+			
 		}
 
 		for (int i = 0; i < other.fields.size(); i++) {
@@ -1143,8 +1163,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				continue;
 
 			if (fields.get(thisIndex).subsumesMapped(field, map)) {
-				// logger.debug("Subsumed " + field);
-				// logger.debug("map is now:" + map);
+				//logger.debug("Subsumed " + field);
+				//logger.debug("map is now:" + map);
 
 				if (subsumesMapped(other, thisIndex + 1, map))
 					return true;
@@ -1155,9 +1175,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				map.putAll(copy);
 
 			} else {
-				// logger.debug(fields.get(thisIndex) + " failed against:" +
-				// field
-				// + " map:" + map);
+				 //logger.debug(fields.get(thisIndex) + " failed against:" + field + " map:" + map);
+				//fields.get(thisIndex).partialResetMetas();
 				map.clear();
 				map.putAll(copy);
 			}

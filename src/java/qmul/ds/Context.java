@@ -248,6 +248,10 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		return v;
 	}
 
+	/** A fresh predicate variable (of cn type)
+	 * 
+	 * @return
+	 */
 	public Variable getFreshPredicateVariable() {
 		Variable v = new Variable(PREDICATE_VARIABLE_ROOT
 				+ (predicatePool.size() + 1));

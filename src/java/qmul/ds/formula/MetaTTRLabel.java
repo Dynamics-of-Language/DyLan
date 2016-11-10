@@ -30,14 +30,16 @@ public class MetaTTRLabel extends TTRLabel {
 
 	/**
 	 * @param name
-	 *            a String name e.g. "L1", "L2", ...
+	 *            a String name e.g. "L1", "L2", "P1", "P2", "PRED1", "PRED2"...
 	 */
-	private MetaTTRLabel(String name) {
+	public MetaTTRLabel(String name) {
 		this.name = name;
 		this.value = null;
 		this.backtrack = new HashSet<String>();
 		this.last = null;
 	}
+	
+	
 
 	/**
 	 * @return the name
@@ -91,18 +93,7 @@ public class MetaTTRLabel extends TTRLabel {
 		value = null;
 	}
 
-	private static HashMap<String, MetaTTRLabel> pool = new HashMap<String, MetaTTRLabel>();
-
-	/**
-	 * @param name
-	 * @return the existing metavariable of this name (with its value), a new one otherwise
-	 */
-	public static MetaTTRLabel get(String name) {
-		if (!pool.containsKey(name)) {
-			pool.put(name, new MetaTTRLabel(name));
-		}
-		return pool.get(name);
-	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -117,9 +108,7 @@ public class MetaTTRLabel extends TTRLabel {
 		return new TTRLabel(value.instantiate());
 	}
 
-	public static void resetPool() {
-		pool.clear();
-	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -174,15 +163,7 @@ public class MetaTTRLabel extends TTRLabel {
 			
 		}
 		return super.subsumesMapped(other, map);
-//		if (other instanceof MetaTTRLabel) {
-//			MetaTTRLabel oth = (MetaTTRLabel) other;
-//			if (oth.value == null)
-//				return false;
-//			else
-//				return value.subsumesMapped(oth.value, map);
-//		} else {
-//			return value.subsumesMapped(other, map);
-//		}
+
 	}
 
 	/*

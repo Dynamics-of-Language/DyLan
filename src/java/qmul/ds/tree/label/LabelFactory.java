@@ -296,8 +296,8 @@ public class LabelFactory {
 
 	public static void main(String a[]) {
 
-		Formula l=Formula.create("x^y^y, (x < now)");
-		System.out.println(l+":"+l.getClass().toString());
+		FormulaLabel l=(FormulaLabel)LabelFactory.create("Fo(X)");
+		System.out.println(l.getFormula().getClass());
 
 	}
 
