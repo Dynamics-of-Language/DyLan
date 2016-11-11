@@ -43,7 +43,7 @@ public class DAGViewer<T extends DAGTuple, E extends DAGEdge> implements GraphMo
 		
 	}
 	
-	public DAGViewer(DAG<T,E> dag)
+	public DAGViewer(final DAG<T,E> dag)
 	{
 		this.dag=dag;
 		vv=new VisualizationViewer<T,E>(new HorizontalTreeLayout<T,E>(this.dag.getInContextSubgraph()));
