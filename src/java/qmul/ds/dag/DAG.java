@@ -2,8 +2,8 @@ package qmul.ds.dag;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -20,10 +20,7 @@ import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
-import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
-import qmul.ds.tree.label.AssertionLabel;
-import qmul.ds.tree.label.Label;
 
 /**
  * A generic DS (parse) Directed Acyclic Graph. Edges correspond minimally to
@@ -439,9 +436,28 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	}
 
 	// ------------------End of LastN Methods
+	
+	
 
 	public SortedSet<E> getOutEdges(T node) {
+		
+		//Collection<E> outEdges=super.getOutEdges(node);
+		
+		
 		return new TreeSet<E>(super.getOutEdges(node));
+	}
+	
+	class EdgeComparatorByEndPointCompleteness implements Comparator<E>{
+
+		
+		//TODO
+		@Override
+		public int compare(E o1, E o2) {
+			
+			
+			return 0;
+		}
+		
 	}
 
 	public E goFirst() {

@@ -192,7 +192,10 @@ THEN	put(?+eval)
         ttrput([head:e|x==PRED:e|p3==PREP(head,x):t|pred==CLASS(x):cn])
         put(ty(e>cn))
         go(/\L)
-ELSE	IF		?ty(e)
+ELSE	abort
+
+//*noun-mod //modifier in the case of a following mass noun. Commented out for now. (it works)
+IF		?ty(e)
 				¬<\/1>Ex.x
         		¬<\/0>Ex.x
         THEN	make(\/1)
@@ -213,7 +216,7 @@ ELSE	IF		?ty(e)
        		    ttrput(R^(R ++ [x==PRED:e|p3==PREP(head,x):t|pred==CLASS(x):cn]))
        		    put(ty(e>cn))
       	 ELSE	abort	
-
+*//
 
 
 
