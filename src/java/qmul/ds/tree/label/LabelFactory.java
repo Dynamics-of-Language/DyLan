@@ -127,6 +127,8 @@ public class LabelFactory {
 			return upa;
 		}else if (string.toLowerCase().startsWith(CompleteTreeLabel.PREFIX)) {
 			return new CompleteTreeLabel();
+		}else if (string.toLowerCase().startsWith(FloorIsOpen.PREFIX)) {
+			return new FloorIsOpen();
 		} else if (string.toLowerCase().startsWith(ScopeStatement.FUNCTOR.toLowerCase())) {
 			return new ScopeStatement(string, ite);
 		} else if (string.toLowerCase().startsWith(ScopeDepSaturationLabel.FUNCTOR.toLowerCase())) {

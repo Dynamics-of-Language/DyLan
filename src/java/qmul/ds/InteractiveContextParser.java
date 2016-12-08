@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +67,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	String[] punct = { ".", "?", "!" };
 	List<String> rightEdgeIndicators = Arrays.asList(punct);
 
-	public static final String RELEASE_TURN="release-turn";
+	public static final String RELEASE_TURN=Utterance.RELEASE_TURN_TOKEN;
 	
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir, false);
@@ -497,12 +496,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-shopping-mall");
-		long now = new Date().getTime();
-		parser.parseUtteranceGetParsableWords(new Utterance("A: what do you want?"));
-		long after = new Date().getTime();
-
-		System.out.println("It took:" + (after - now) + " milliseconds.");
-
+		Utterance utt=new Utterance("usr: I want a phone");
+		//utt.append(new UtteredWord(RELEASE_TURN, "usr"));
+		parser.parseUtterance(utt);
+		TTRFormula f=parser.getContext().getCurrentTuple().getSemantics();
+		System.out.println(f);
+		
+		
 	}
 
 	public boolean parseUtteranceGetParsableWords(Utterance utt) {
@@ -662,5 +662,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return result;
 
 	}
+	
+	
 
 }

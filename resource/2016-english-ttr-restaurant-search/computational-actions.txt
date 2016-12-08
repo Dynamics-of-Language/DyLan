@@ -12,6 +12,7 @@ intro-pred
 IF		?ty(t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
+        ¬<\/*>+Q
 THEN	make(\/1)
 		go(\/1)
 		put(?ty(e>t))
@@ -89,7 +90,32 @@ THEN    put(?+eval)
 ELSE    abort
 
 *//
+//anticipating wh-response
+anticipation-res
+IF		ty(t)
+		complete
+		<Z>+Q
+THEN	go(Z)
+ELSE	abort
 
+late-star-adj-q
+IF		¬!
+		+Q
+ 		//</\*>tn(0)
+        ty(X)  
+   		//¬<\/1>Ex.x
+        //¬<\/0>Ex.x
+      	¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
+        Ex.tn(x)
+THEN	delete(+Q)
+        make(\/*)
+        go(\/*)
+       	put(?Ex.tn(x))
+       	put(?ty(X))
+ELSE	abort
+
+
+//*
 late-star-adj-q
 IF      ty(t)
 		//<\/*>+Q
@@ -109,28 +135,32 @@ THEN	go(Z)
         		put(?ty(X))
         ELSE	abort
 ELSE    abort
+*//
+
 
 merge
 IF      Ex.tn(x)
 		¬<\/*>Ex.x
-		<Y>?Ex.tn(x)
-		subsumes(Y)		
-		<Y>ty(V)
+		<Y>(?Ex.tn(x) & ty(V))
+		subsumes(Y)
 		?ty(V)		           
 THEN    merge(Y)
 		delete(?Ex.tn(x))	
 ELSE    abort
 
 *late-star-merge
-IF		Ex.tn(x)
+IF		ty(Y)
+		Ex.tn(x)
 		<\/*>?Ex.tn(x)
-		ty(Y)
 		<\/*>ty(Y)
-		Fo(X)
-THEN	delete(Fo(X))
-		merge(<\/*>)
-		delete(?Ex.tn(x))
-		unreduce
+THEN	IF		Fo(X)
+		THEN	delete(Fo(X))
+				merge(<\/*>)
+				delete(?Ex.tn(x))
+				unreduce
+		ELSE	merge(<\/*>)
+				delete(?Ex.tn(x))
+				unreduce
 ELSE	abort
 
 

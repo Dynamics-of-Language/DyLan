@@ -19,7 +19,7 @@ public class Utterance {
 	public static final String SPEAKER_SEP=":";
 	public static final String defaultSpeaker = "Dylan";
 	public static final String defaultAddressee = "you";
-	
+	public static final String RELEASE_TURN_TOKEN= "<release-turn>";
 	private static final String[] delimitersArray = { ".", "?", "!" };
 	public static final List<String> SENTENCE_DELIMITERS = Arrays.asList(delimitersArray);
 	String speaker;
@@ -57,6 +57,7 @@ public class Utterance {
 			this.words.add(new UtteredWord(w.word(),spk));
 		}
 
+		//add release-turn token
 	}
 
 	

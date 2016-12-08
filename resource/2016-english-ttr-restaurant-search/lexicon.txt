@@ -1,32 +1,42 @@
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
+where						  where							loc
+howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
+who							  pron_whq						obj
 do                            v_aux_inf                     do                            pres                          nons3
 //does                          v_aux_inf                     do                            pres                          s3
 //did                           v_aux_inf                     did                           past                          per
 would                         v_aux_inf                     would                         pres                          nons3
+should						  v_aux_inf						should						  should						nons3
+can                         v_aux_inf                    	can                         can                          nons3
 i                             i							    nons3							per
 you							  you							nons3							per
-buy		                      v_tran_inf                    buy                       inf                           per
-buy		                      v_tran_fin                    buy                       pres                          nons3
-buys  	                      v_tran_fin                    buy                       pres                          s3
-buying	                      v_tran_ing                    buy                       ing                           per
+it							  proper						it						   s3							 obj
+make		                  v_tran_inf                    make                       inf                           per
+make		                  v_tran_fin                    make                       pres                          nons3
+makes  	                      v_tran_fin                    make                       pres                          s3
+making	                      v_tran_ing                    make                       ing                           per
+love		                  v_tran_inf                    love                       inf                           per
+love		                  v_tran_fin                    love                       pres                          nons3
+loves  	                      v_tran_fin                    love                       pres                          s3
+loving	                      v_tran_ing                    love                       ing                           per
+help		                  v_tran_inf                    help                       inf                           per
+help		                  v_tran_fin                    help                       pres                          nons3
+book		                  v_tran_inf                    book                       inf                           per
+book		                  v_tran_fin                    book                       pres                          nons3
+booking						  v_tran_ing					book						   ing							per
 purchase		              v_tran_inf                    purchase                       inf                           per
 purchase		              v_tran_fin                    purchase                       pres                          nons3
 purchases 	                  v_tran_fin                    purchase                       pres                          s3
 purchasing	                  v_tran_ing                    purchase                       ing                           per
-phone					  	count							phone					   s3							obj
-computer					count							computer				   s3							obj
-smartphone					count							smartphone				   s3							obj
-product					 	 count							product					   s3							obj
-brand					  count							brand					   s3							obj
-make					  count							make					   s3							obj
-samsung						  proper						samsung						  s3							brand
+restaurant					  	count					    restaurant					   s3							obj
+boy							  	count					    boy					   		  s3						    obj
+restaurants						count						restaurant					  plur							obj
+table							count						table						  s3							obj
 lg							  proper						lg							  s3							brand
-apple						  proper						apple						  s3							brand
-htc							  proper						htc							  s3							brand
-dell						  proper						dell						  s3							brand
-want                          v_tran_inf                    want                          inf                           brand
+lg							  noun_mod						lg							  by							brand
+want                          v_tran_inf                    want                          inf                           per
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3
 want                          v_subjcon_fin                 want                          pres                          nons3
@@ -38,21 +48,22 @@ likes                         v_tran_fin                    like                
 like                          v_subjcon_fin                 like                          pres                          nons3
 likes                         v_subjcon_fin                 like                          pres                          s3
 like                          v_subjcon_inf                 like                          inf                          nons3
-prefer                          v_tran_inf                    want                          inf                           per
-prefer                          v_tran_fin                    want                          pres                          nons3
-prefer                         v_tran_fin                    want                          pres                          s3
-prefer                          v_subjcon_fin                 want                          pres                          nons3
-prefer                         v_subjcon_fin                 want                          pres                          s3
-prefer                          v_subjcon_inf                 want                          inf                          nons3
+prefer                          v_tran_inf                    prefer                          inf                           per
+prefer                          v_tran_fin                    prefer                          pres                          nons3
+prefer                         v_tran_fin                    prefer                          pres                          s3
+prefer                          v_subjcon_fin                 prefer                          pres                          nons3
+prefer                         v_subjcon_fin                 prefer                          pres                          s3
+prefer                          v_subjcon_inf                 prefer                          inf                          nons3
 looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
 was                           v_aux_be                      past                          s3
 were                          v_aux_be                      past                          per
 am                            v_aux_be                      pres                           per
+am							  v_be							pres						   per
 are                           v_aux_be                      pres                           per
 .							  assert						A
 ?							  question						Q
-uhu							  accept						uhu
+//uhu							  accept						uhu
 ok							  accept						ok
 yes							  accept						yes
 yes							  yes							yes
@@ -61,27 +72,35 @@ yeah						  accept						yeah
 right						  accept						right
 //no							  reject						not
 a                             det_indef                     eps
+a							  det_indef_postcop				eps
 an                            det_indef                     eps
+one							  det_num						one						s3
+two							  det_num						two						plur
+three					      det_num						three		     		plur
+four						  det_num						four				    plur
+five						  det_num						five				    plur
+six							  det_num						six						plur
+seven						  det_num						seven				    plur
+eight						  det_num						eight				    plur
 by							  prep_e						by
 from						  prep_e						from
 to							  to_subjcon					to
 for							  prep_es						for
-moderate 					  adj							cheap
-cheap						  adj							cheap
-expensive					  adj							expensive
-chinese						  adj							chinese
-cheap						  proper						cheap						  s3							range
-expensive					  proper						expensive					  s3							range
-moderate					  proper						moderate					  s3							range
-chinese                         proper						food						  s3							chinese
+with						  prep_es						with
+on							  prep_postcop					on
+today					      manner_adv					today
+good						  adj							good
+good						  adj_be						good
 italian						  adj							italian
-italian                         proper						food						  s3							italian
-thai						  adj							thai
-thai                         proper						food						  s3							thai
+italian						  adj_be						italian
+spanish						  adj							spanish
+spanish						  adj_be						spanish
 persian						  adj							persian
-persian                         proper						food						  s3							persian
-cuisine						  count                     cuisine					   s3							obj
-price						  count						price					   s3							obj
-price						  noun_mod					price					
-food						  mass						food					   s3							trans
-range						  count						range					   s3							obj
+persian						  adj_be						persian
+chinese						  adj							chinese
+chinese						  adj_be						chinese
+japanese					  adj							japanese
+japanese					  adj_be						japanese
+indian						  adj							indian
+indian						  adj_be						indian
+food						  mass							food					s3				obj

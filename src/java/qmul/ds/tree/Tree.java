@@ -1102,4 +1102,24 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		return asserters;
 	}
 
+	public int countIncompleteNodes() {
+		int count=0;
+		for(Node n:this.values())
+		{
+			if (!n.hasType())
+				count++;
+		}
+		return count;
+	}
+	
+	/**
+	 * measures incompleteness of this tree. Max 1, for e.g. the axiom tree.
+	 * @return between 0 and 1. 0 for a complete tree, 1 for e.g. the axiom tree.
+	 */
+	public float getIncompletenessMeasure()
+	{
+		float num_requirements=(float)countIncompleteNodes();
+		return num_requirements/values().size();
+	}
+
 }

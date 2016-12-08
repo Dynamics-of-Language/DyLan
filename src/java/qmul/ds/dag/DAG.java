@@ -442,20 +442,35 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	public SortedSet<E> getOutEdges(T node) {
 		
 		//Collection<E> outEdges=super.getOutEdges(node);
+		TreeSet<E> outEdges=new TreeSet<E>(new EdgeComparatorByEndPointCompleteness());
+		outEdges.addAll(super.getOutEdges(node));
 		
-		
-		return new TreeSet<E>(super.getOutEdges(node));
+		return outEdges;
 	}
-	
+	/**
+	 * Comparator for edges. Sorts edges based on their end-point completeness.
+	 * @author Arash
+	 *
+	 */
 	class EdgeComparatorByEndPointCompleteness implements Comparator<E>{
 
 		
-		//TODO
+		
 		@Override
 		public int compare(E o1, E o2) {
+			T end1=getDest(o1);
+			T end2=getDest(o2);
+			Tree t1=end1.getTree();
+			Tree t2=end2.getTree();
+			if (t1.getIncompletenessMeasure()>t2.getIncompletenessMeasure())
+				return +1;
+			else if (t2.getIncompletenessMeasure()>t1.getIncompletenessMeasure())
+				return -1;
 			
 			
 			return 0;
+			
+			
 		}
 		
 	}
