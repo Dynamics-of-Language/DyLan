@@ -76,16 +76,13 @@ ELSE    abort
 
 
 det_indef_postcop(QUANT)
-IF		ty(e>t)
-		?Ex.fo(x)
+IF		?ty(e>t)
 		+BE
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
         </\1\/0>ty(e)
         </\1\/0>fo(X)
 THEN	delete(?Ex.fo(x))
-		delete(ty(e>t))
-		put(?ty(e>t))
 		make(\/1)
 		go(\/1)
 		put(ty(e>(e>t)))
@@ -311,11 +308,12 @@ ELSE    IF		?ty(e)
 
 
 adj_be(PRED)
-IF		ty(e>t)
+IF		?ty(e>t)
 		+BE
-		?Ex.fo(x)
-THEN	ttrput(R^(R ++ [p==PRED(R.head):cn|head==p:cn]))
-		delete(?Ex.fo(x))
+THEN	delete(?Ex.fo(x))
+		delete(?ty(e>t))
+		put(ty(e>t))
+		ttrput(R^(R ++ [p==PRED(R.head):t]))
 ELSE	abort
 
 i(PERSON,CLASS)
@@ -336,6 +334,26 @@ THEN	ttrput([x==X:e|head==x:e])
 		delete(?ty(e))
 		put(person(PERSON))
 ELSE	abort
+
+
+
+
+pron_whq_mod(CLASS)
+IF		<Y>+Q
+THEN	abort
+ELSE	IF		?ty(t)
+				¬<\/1>Ex.x
+				¬<\/0>Ex.x
+				¬<\/*>Ex.x
+				¬</\L>Ex.x
+		THEN	make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
+				put(ty(e>t))
+				ttrput(R^(R ++ [head==R.head:e]))
+				put(+Q)
+				put(class(CLASS))
+		ELSE	abort
 
 
 pron_whq(CLASS)
@@ -812,9 +830,7 @@ IF		?ty(e>t)
 	 	¬<\/0>Ex.x
 	 	¬</\1/\0>Ex.x
 		</\1\/0>ty(e)
-THEN 	delete(?ty(e>t))
-		put(ty(e>t))
-		put(?Ex.fo(x))
+THEN 	put(?Ex.fo(x))
 		put(+BE)
 ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
@@ -823,7 +839,7 @@ ELSE	IF		?ty(t)
 		THEN	IF 		<\/*>+Q
 				THEN    make(\/1)
 						go(\/1)
-						put(ty(e>t))
+						put(?ty(e>t))
 						put(?Ex.fo(x))
 						put(+BE)
 						go(/\1)
@@ -833,7 +849,7 @@ ELSE	IF		?ty(t)
 				ELSE	put(+Q)
 						make(\/1)
 						go(\/1)
-						put(ty(e>t))
+						put(?ty(e>t))
 						put(?Ex.fo(x))
 						put(+BE)
 						go(/\1)
@@ -866,12 +882,9 @@ THEN	put(?+eval)
 ELSE	abort
 
 prep_postcop(PRED)
-IF		ty(e>t)
-		?Ex.fo(x)
+IF		?ty(e>t)
 		+BE
 THEN	delete(?Ex.fo(x))
-		delete(ty(e>t))
-		put(?ty(e>t))
 		make(\/1)
 		go(\/1)
 		ttrput(R1^R2^(R1 ++ (R2 ++ [p==PRED(R2.head,R1.head):t])))

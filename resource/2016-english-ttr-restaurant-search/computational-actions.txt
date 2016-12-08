@@ -112,6 +112,9 @@ THEN	delete(+Q)
         go(\/*)
        	put(?Ex.tn(x))
        	put(?ty(X))
+       	IF		</\*>+BE
+       	THEN	put(+BE)
+       	ELSE	do_nothing
 ELSE	abort
 
 
@@ -143,7 +146,7 @@ IF      Ex.tn(x)
 		¬<\/*>Ex.x
 		<Y>(?Ex.tn(x) & ty(V))
 		subsumes(Y)
-		?ty(V)		           
+		(?ty(V) || ty(V))		           
 THEN    merge(Y)
 		delete(?Ex.tn(x))	
 ELSE    abort

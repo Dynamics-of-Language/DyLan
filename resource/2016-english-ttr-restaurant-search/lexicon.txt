@@ -1,6 +1,6 @@
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
-where						  where							loc
+where						  pron_whq_mod				    loc
 howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
 who							  pron_whq						obj
@@ -61,6 +61,7 @@ were                          v_aux_be                      past                
 am                            v_aux_be                      pres                           per
 am							  v_be							pres						   per
 are                           v_aux_be                      pres                           per
+are                           v_be                          pres                           per
 .							  assert						A
 ?							  question						Q
 //uhu							  accept						uhu
@@ -88,6 +89,7 @@ to							  to_subjcon					to
 for							  prep_es						for
 with						  prep_es						with
 on							  prep_postcop					on
+in							  prep_postcop					in	
 today					      manner_adv					today
 good						  adj							good
 good						  adj_be						good
