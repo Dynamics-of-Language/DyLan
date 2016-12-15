@@ -9,14 +9,21 @@ do                            v_aux_inf                     do                  
 //did                           v_aux_inf                     did                           past                          per
 would                         v_aux_inf                     would                         pres                          nons3
 should						  v_aux_inf						should						  should						nons3
-can                         v_aux_inf                    	can                         can                          nons3
+can                           v_aux_inf                    	can                         modal                          nons3
+will						  v_aux_inf						will						future							 nons3
 i                             i							    nons3							per
+we							  i								nons3							per				
 you							  you							nons3							per
+your						  your							your
 it							  proper						it						   s3							 obj
 make		                  v_tran_inf                    make                       inf                           per
 make		                  v_tran_fin                    make                       pres                          nons3
 makes  	                      v_tran_fin                    make                       pres                          s3
 making	                      v_tran_ing                    make                       ing                           per
+have		                  v_tran_inf                    have                       inf                           per
+have		                  v_tran_fin                    have                       pres                          nons3
+has  	                      v_tran_fin                    have                       pres                          s3
+having	                      v_tran_ing                    have                       ing                           per
 love		                  v_tran_inf                    love                       inf                           per
 love		                  v_tran_fin                    love                       pres                          nons3
 loves  	                      v_tran_fin                    love                       pres                          s3
@@ -31,11 +38,12 @@ purchase		              v_tran_fin                    purchase                  
 purchases 	                  v_tran_fin                    purchase                       pres                          s3
 purchasing	                  v_tran_ing                    purchase                       ing                           per
 restaurant					  	count					    restaurant					   s3							obj
+preference					  	count					    preference					   s3							obj
 boy							  	count					    boy					   		  s3						    obj
 restaurants						count						restaurant					  plur							obj
+people							count						person						  plur						    per
 table							count						table						  s3							obj
-lg							  proper						lg							  s3							brand
-lg							  noun_mod						lg							  by							brand
+price							noun_mod				    price						  of
 want                          v_tran_inf                    want                          inf                           per
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3
@@ -54,14 +62,17 @@ prefer                         v_tran_fin                    prefer             
 prefer                          v_subjcon_fin                 prefer                          pres                          nons3
 prefer                         v_subjcon_fin                 prefer                          pres                          s3
 prefer                          v_subjcon_inf                 prefer                          inf                          nons3
-looking						  v_subjcon_ing				  look							ing 						  per
+//looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
 was                           v_aux_be                      past                          s3
 were                          v_aux_be                      past                          per
 am                            v_aux_be                      pres                           per
-am							  v_be							pres						   per
+//am							  v_be							pres						   per
+is                            v_aux_be                      pres                           per
+//is							  v_be							pres						   per
 are                           v_aux_be                      pres                           per
-are                           v_be                          pres                           per
+//are                           v_be                          pres                           per
+be							  v_be_inf						inf							   per
 .							  assert						A
 ?							  question						Q
 //uhu							  accept						uhu
@@ -83,13 +94,23 @@ five						  det_num						five				    plur
 six							  det_num						six						plur
 seven						  det_num						seven				    plur
 eight						  det_num						eight				    plur
+one							  det_num_postcop				one						s3
+two							  det_num_postcop				two						plur
+three					      det_num_postcop				three		     		plur
+four						  det_num_postcop				four				    plur
+five						  det_num_postcop				five				    plur
+six							  det_num_postcop				six						plur
+seven						  det_num_postcop				seven				    plur
+eight						  det_num_postcop				eight				    plur
 by							  prep_e						by
 from						  prep_e						from
 to							  to_subjcon					to
 for							  prep_es						for
 with						  prep_es						with
 on							  prep_postcop					on
+on							  prep_e						on
 in							  prep_postcop					in	
+in							  prep_e						in
 today					      manner_adv					today
 good						  adj							good
 good						  adj_be						good
@@ -105,4 +126,13 @@ japanese					  adj							japanese
 japanese					  adj_be						japanese
 indian						  adj							indian
 indian						  adj_be						indian
+cheap						  adj							cheap
+expensive				      adj_be						expensive
+expensive					  adj							expensive
+cheap						  adj_be						cheap
 food						  mass							food					s3				obj
+cuisine						  mass							cuisine					s3				obj
+range						  count							range					s3				obj
+party						  count							party					s3				obj
+london                        proper                        london                        s3                            loc
+paris                         proper                        paris                         s3                            loc

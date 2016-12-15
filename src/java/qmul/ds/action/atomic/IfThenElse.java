@@ -186,17 +186,24 @@ public class IfThenElse extends Effect implements Serializable {
 	public static void main(String a[]) {
 		// test for ite initialisation.
 		ArrayList<String> lines = new ArrayList<String>();
-		lines.add("IF		(?ty(t) || ty(e>t))");
-		lines.add("THEN		IF		¬<\\/L>Ex.x");
-		lines.add("			THEN 	make(\\/L)");
-		lines.add("			ELSE	do_nothing");
+		lines.add("IF		ty(t)");
+		lines.add("			¬<\\/L>Ex.x");		
+		lines.add("THEN		put(?+eval)");
+		lines.add("			make(\\/L)");
 		lines.add("			go(\\/L)");
-		lines.add("			put(ty(t))");
-		lines.add("			ttrput([head:es|p==slow(head):t])");
+		lines.add("		    put(?ty(t))");
+		lines.add("			make(\\/1)");
+		lines.add("			IF	  </\\0/\\L\\/*>?Ex.tn(x)");
+		lines.add("				  </\\0/\\L\\/*>ty(e)");
+		lines.add("			THEN  merge(</\\0/\\L\\/*>)");
+		lines.add("				  delete(?ty(e))");
+		lines.add("			ELSE  do_nothing");
 		lines.add("ELSE		abort");
 
 		IfThenElse copy = new IfThenElse(lines);
-		System.out.println(copy);
+		for(Effect e: copy.THEN)
+		System.out.println(e);
+		
 	}
 
 	private static int findEndIndexOfEmbeddedITE(List<String> strings, int indexOfIF) {
@@ -347,6 +354,7 @@ public class IfThenElse extends Effect implements Serializable {
 		// get & reset metavariables for this application
 
 		// if (embeddingLevel==0) addAndResetMetas(null);
+		logger.debug("Executing ITE:"+this);
 		MetaElement.resetBoundMetas();
 		if (this.embeddingLevel == 0)
 			setupBacktrackers(new ArrayList<Meta<?>>());
