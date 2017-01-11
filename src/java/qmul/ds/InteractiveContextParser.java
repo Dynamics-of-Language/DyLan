@@ -68,6 +68,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	List<String> rightEdgeIndicators = Arrays.asList(punct);
 
 	public static final String RELEASE_TURN=Utterance.RELEASE_TURN_TOKEN;
+	public static final String WAIT=Utterance.WAIT;
 	
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir, false);
@@ -369,6 +370,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			return getState();
 			
 			
+		} else if (word.word().equals(WAIT))
+		{
+			return getState();
 		}
 
 		if (this.repairanda.contains(word.word())) {
