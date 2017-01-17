@@ -746,7 +746,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * 
 	 * Should make sure that, when doing induction, the getMaximalSemantics
 	 * method is only called after decorating a new node with a new hypothesis,
-	 * and not immediately after the node is created.... (?) maybe not TODO
+	 * and not immediately after the node is created.... (?) maybe not 
 	 * 
 	 * @param t
 	 * @return
@@ -826,6 +826,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		return result;
 	}
 
+	/**
+	 * Merges unfixed nodes. Returns resutling tree.
+	 * 
+	 * Currently doesn't merge into subject node. (this is to avoid disjunctive types as max sem).
+	 * This is as HACK. TODO
+	 * With current grammar, only wh terms are on unfixed nodes. *-adj is lexicalised completely.
+	 * For subject, assumes path via intro-pred
+	 * @return
+	 */
 	private Tree mergeUnfixed() {
 
 		Tree result = clone();
@@ -838,6 +847,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 				if (!mergePoint.isLocallyFixed()) {
 					continue;
 				}
+				if (mergePoint.getAddress().getAddress().equals("00"))
+					continue;
 				
 				logger.debug("considering merge point:"+mergePoint.getAddress());		
 				FormulaLabel mergePointF = mergePoint.getFormulaLabel();

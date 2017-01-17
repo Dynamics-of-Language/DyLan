@@ -228,7 +228,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				// about this.
 
 				// boolean repairable = true;
-				logger.debug("executing " + la + " on " + pair.second);
+				logger.debug("applying la '" + la + "' on " + pair.second);
 				Tree res = la.exec(pair.second.clone(), context);
 
 				if (res != null) {

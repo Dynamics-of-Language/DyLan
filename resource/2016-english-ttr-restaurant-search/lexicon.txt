@@ -65,14 +65,17 @@ prefer                          v_subjcon_inf                 prefer            
 //looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
 was                           v_aux_be                      past                          s3
+was                           v_be                      past                          s3
 were                          v_aux_be                      past                          per
+were                          v__be                      past                          per
 am                            v_aux_be                      pres                           per
-//am							  v_be							pres						   per
+am							  v_be							pres						   per
 is                            v_aux_be                      pres                           per
-//is							  v_be							pres						   per
+is							  v_be							pres						   per
 are                           v_aux_be                      pres                           per
-//are                           v_be                          pres                           per
-be							  v_be_inf						inf							   per
+are                           v_be                          pres                           per
+be							  v_aux_be_inf				    inf							   per
+be							  v_be_inf						inf
 .							  assert						A
 ?							  question						Q
 //uhu							  accept						uhu
@@ -86,6 +89,7 @@ right						  accept						right
 a                             det_indef                     eps
 a							  det_indef_postcop				eps
 an                            det_indef                     eps
+an                            det_indef_postcop             eps
 one							  det_num						one						s3
 two							  det_num						two						plur
 three					      det_num						three		     		plur
@@ -94,14 +98,14 @@ five						  det_num						five				    plur
 six							  det_num						six						plur
 seven						  det_num						seven				    plur
 eight						  det_num						eight				    plur
-one							  det_num_postcop				one						s3
-two							  det_num_postcop				two						plur
-three					      det_num_postcop				three		     		plur
-four						  det_num_postcop				four				    plur
-five						  det_num_postcop				five				    plur
-six							  det_num_postcop				six						plur
-seven						  det_num_postcop				seven				    plur
-eight						  det_num_postcop				eight				    plur
+one							  adj_be						one						s3
+two							  adj_be						two
+three					      adj_be						three
+four						  adj_be					    four
+five						  adj_be						five
+six							  adj_be						six
+seven						  adj_be						seven
+eight						  adj_be						eight
 by							  prep_e						by
 from						  prep_e						from
 to							  to_subjcon					to
