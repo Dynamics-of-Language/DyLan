@@ -98,7 +98,7 @@ five						  det_num						five				    plur
 six							  det_num						six						plur
 seven						  det_num						seven				    plur
 eight						  det_num						eight				    plur
-one							  adj_be						one						s3
+one							  adj_be						one
 two							  adj_be						two
 three					      adj_be						three
 four						  adj_be					    four
