@@ -49,13 +49,15 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	public boolean removeChild(DAGTuple child) {
 		if (!containsVertex(child))
+		{
+			logger.warn("asked to remove child, but graph doesn't contain it:"+child);
 			return false;
-
-		logger.debug("removing child recursively:"+child);
-		logger.debug("Depth:"+child.getDepth());
+		}
+		logger.trace("removing child recursively:"+child);
+		logger.trace("Depth:"+child.getDepth());
 		if (getOutEdgesForTraversal(child).size() == 0)
 		{
-			logger.debug("removing single vertex"+child);
+			logger.trace("removing single vertex: "+child);
 			return removeVertex(child);
 		}
 
@@ -69,13 +71,14 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 				this.removeChild(getDest(outEdge));
 		}
 		
-		logger.debug("removing single vertex"+child);
+		logger.trace("removing single vertex: "+child);
 		return removeVertex(child);
 	}
 
 	public void removeChildren(DAGTuple current) {
-		logger.debug("removing children of:" + current);
-		logger.debug("depth:" + getDepth());
+		logger.trace("removing children of:" + current);
+		
+		logger.trace("depth:" + getDepth());
 		for (GroundableEdge outEdge : getOutEdgesForTraversal(current)) {
 
 			if (outEdge instanceof VirtualRepairingEdge) {

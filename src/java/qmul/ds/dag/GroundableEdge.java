@@ -54,7 +54,7 @@ public class GroundableEdge extends DAGEdge {
 	}
 
 	public String toString() {
-		return grounded_for + ":" + word.word();
+		return this.id+ ":"+ (grounded_for + ":" + word.word());
 	}
 	public String toDebugString()
 	{

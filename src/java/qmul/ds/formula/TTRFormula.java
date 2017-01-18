@@ -31,6 +31,7 @@ public abstract class TTRFormula extends Formula {
 	 * 
 	 * 
 	 */
+
 	private static final long serialVersionUID = 1L;
 
 	protected static final Logger logger = Logger.getLogger(TTRFormula.class);

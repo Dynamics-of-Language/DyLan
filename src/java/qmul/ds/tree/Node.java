@@ -113,6 +113,8 @@ public class Node extends TreeSet<Label> {
 		return contains(LabelFactory.getRequirement(type));
 	}
 
+	
+	
 	/**
 	 * @param label
 	 * @return false if the label was already present, overwrites existing formula and type labels with warning.

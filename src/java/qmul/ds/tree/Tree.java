@@ -16,6 +16,10 @@ import org.apache.log4j.Logger;
 import edu.stanford.nlp.trees.LabeledScoredTreeFactory;
 import edu.stanford.nlp.trees.TreeFactory;
 import qmul.ds.Context;
+import qmul.ds.InteractiveContextParser;
+import qmul.ds.Utterance;
+import qmul.ds.dag.UtteredWord;
+import qmul.ds.formula.DisjunctiveType;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRLambdaAbstract;
@@ -135,10 +139,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	 * A fresh proposition variable p1, p2 etc
 	 */
 	public Variable getFreshPropositionVariable() {
-		System.out.println("getting fresh prop var");
+		//System.out.println("getting fresh prop var");
 		Variable v = new Variable(PROPOSITION_VARIABLE_ROOT
 				+ (propositionPool.size() + 1));
-		System.out.println("got:"+v);
+		//System.out.println("got:"+v);
 		propositionPool.add(v);
 		return v;
 	}
@@ -655,13 +659,32 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 
 	public static void main(String args[]) {
 
-		Tree t = new Tree();
-		t.make(BasicOperator.DOWN_1);
-
-		Tree t1 = new Tree();
-		t1.make(BasicOperator.DOWN_1);
-		t1.go(BasicOperator.DOWN_1);
-		System.out.println(t.subsumes(t1));
+		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
+		Utterance utt=new Utterance("usr: what can i help you with?");
+		
+		
+		parser.parseUtterance(utt);
+		
+		
+		TTRFormula f=parser.getContext().getCurrentTuple().getSemantics().removeHead();
+		System.out.println(f);
+		parser.init();
+		boolean subsumed=true;
+		for(UtteredWord w:utt.getWords())
+		{
+			parser.parseWord(w);
+			TTRFormula partial=parser.getContext().getCurrentTuple().getSemantics(parser.getContext()).removeHead();
+			System.out.println(partial);
+			subsumed=partial.subsumes(f);
+			if (!subsumed)
+			{
+				System.out.println("Failed after:"+w);
+				break;
+			}
+			
+		}
+		System.out.println("Subsumed:"+subsumed);
+		
 	}
 
 	/**
@@ -820,25 +843,29 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		Set<Node> result = new HashSet<Node>();
 		for (Node n : values())
 			if (n.getAddress().isStarUnfixed()
-					|| n.getAddress().isStarUnfixed())
+					|| n.getAddress().isLocallyUnfixed())
 				result.add(n);
 
 		return result;
 	}
 
+	
+	
 	/**
-	 * Merges unfixed nodes. Returns resutling tree.
+	 * Merges unfixed nodes. Returns resulting trees (one without any merge and one when merged if possible).
 	 * 
-	 * Currently doesn't merge into subject node. (this is to avoid disjunctive types as max sem).
-	 * This is as HACK. TODO
-	 * With current grammar, only wh terms are on unfixed nodes. *-adj is lexicalised completely.
-	 * For subject, assumes path via intro-pred
 	 * @return
 	 */
-	private Tree mergeUnfixed() {
-
+	private List<Tree> mergeUnfixed() {
+		if (getUnfixedNodes().size()>1)
+			throw new UnsupportedOperationException("Currently not supporting more than one unfixed node at the same time.");
+		
+		List<Tree> results=new ArrayList<Tree>();
+		
+		Tree original= clone();
 		Tree result = clone();
-
+		boolean merged=false;
+		boolean isLateUnfixed=false;
 		for (Node unfixed : result.getUnfixedNodes()) {
 			logger.debug("found unfixed node:"+unfixed);
 			FormulaLabel mergePointFChosen=null;
@@ -847,8 +874,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 				if (!mergePoint.isLocallyFixed()) {
 					continue;
 				}
-				if (mergePoint.getAddress().getAddress().equals("00"))
-					continue;
+				//if (mergePoint.getAddress().getAddress().equals("00"))
+				//	continue;
 				
 				logger.debug("considering merge point:"+mergePoint.getAddress());		
 				FormulaLabel mergePointF = mergePoint.getFormulaLabel();
@@ -874,7 +901,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 						
 						
 					}
+					isLateUnfixed=unfixed.getAddress().isLateUnfixed();
 					result.merge(unfixed);
+					//returns tree with unfixed node merged into THE FIRST merge point found.
+					merged=true;
 					
 					break;
 						
@@ -886,11 +916,26 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 			}
 			if (mergePointChosen!=null && mergePointFChosen!=null)
 				mergePointChosen.remove(mergePointFChosen);
+			
+			
 
 		}
+		if (merged&&!isLateUnfixed)
+		{
+			results.add(original);
+			results.add(result);
+			
+		}
+		else if (merged&&isLateUnfixed)
+		{
+			results.add(result);
+		}
+		else
+			results.add(original);
+		
 		
 
-		return result;
+		return results;
 
 	}
 
@@ -906,18 +951,27 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
-		Tree merged = mergeUnfixed();
+		List<Tree>  merged = mergeUnfixed();
 		logger.debug("after merge:"+merged);
 		
+		if (merged.size()>2)
+			throw new UnsupportedOperationException("Can't have more than two results after merging unfixed node");
 		
-		merged.addUnderspecifiedFormulae(c);
-		logger.debug("After adding underspecified formulae, tree is:"
-					+ merged);
-	
-		TTRFormula f = merged.getMaximalSemantics(
-					merged.getRootNode());
-
-		return f;
+		merged.get(0).addUnderspecifiedFormulae(c);
+		if (merged.size()==1)
+		{
+			
+			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode());
+		}
+		
+		merged.get(1).addUnderspecifiedFormulae(c);
+		
+		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode()), 
+				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode()));
+		
+		
+			
+		
 		
 		
 	}
@@ -926,18 +980,27 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	{
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
-		Tree merged = mergeUnfixed();
+		List<Tree>  merged = mergeUnfixed();
 		logger.debug("after merge:"+merged);
 		
+		if (merged.size()>2)
+			throw new UnsupportedOperationException("Can't have more than two results after merging unfixed node");
 		
-		merged.addUnderspecifiedFormulae();
-		logger.debug("After adding underspecified formulae, tree is:"
-					+ merged);
-	
-		TTRFormula f = merged.getMaximalSemantics(
-					merged.getRootNode());
-
-		return f;
+		merged.get(0).addUnderspecifiedFormulae();
+		if (merged.size()==1)
+		{
+			
+			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode());
+		}
+		
+		merged.get(1).addUnderspecifiedFormulae();
+		
+		System.out.println("Tree 1 after under:"+merged.get(0));
+		System.out.println("Tree 2 after under:"+merged.get(1));
+		
+		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode()), 
+				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode()));
+		
 		
 	}
 

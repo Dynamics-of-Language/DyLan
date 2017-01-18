@@ -220,11 +220,12 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	}
 
 	public void init() {
-		logger.debug("initialising dag state");
+		logger.debug("initialising DAG");
 		cur = getRoot();
-		logger.debug("root is:" + cur);
-
+		
 		removeChildren();
+		logger.trace("After removing children, dag has nodes:"+this.getVertexCount()+" and "+this.getEdgeCount()+" edges.");
+		
 		cur.setTree(new Tree());
 		cur.setMaximalSemantics(null);
 		wordStack.clear();
@@ -362,6 +363,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		if (!this.containsVertex(from))
 			throw new IllegalArgumentException("Cannot add child. The parent doesn't exist");
 
+		logger.debug("Adding child:"+to);
+		logger.debug("From:"+from);
+		logger.debug("with edge:"+edge);
 		// if (this.containsVertex(to))
 		// {
 		//
@@ -377,7 +381,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		// else
 		// edge.setParentEdgeId(this.getActiveParentEdge(from).id);
 
-		addEdge(edge, from, to);
+		if (addEdge(edge, from, to))
+			logger.debug("succcess");
+		
 		return to;
 
 	}
@@ -441,9 +447,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public SortedSet<E> getOutEdges(T node) {
 		
-		//Collection<E> outEdges=super.getOutEdges(node);
-		TreeSet<E> outEdges=new TreeSet<E>(new EdgeComparatorByEndPointCompleteness());
-		outEdges.addAll(super.getOutEdges(node));
+		Collection<E> outEdges1=super.getOutEdges(node);
+	
+		TreeSet<E> outEdges=new TreeSet<E>(new EdgeComparatorByEndPointCompleteness());//
+		outEdges.addAll(outEdges1);
 		
 		return outEdges;
 	}
@@ -468,7 +475,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 				return -1;
 			
 			
-			return 0;
+			return +1;
 			
 			
 		}

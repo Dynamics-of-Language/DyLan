@@ -198,6 +198,7 @@ public class TTRInfixExpression extends TTRFormula {
 		}
 		if (!(other1 instanceof TTRInfixExpression))
 			return false;
+		
 		TTRInfixExpression other = (TTRInfixExpression) other1;
 
 		return this.predicate.equals(other.predicate) && this.arg1.subsumesMapped(other.arg1, map)

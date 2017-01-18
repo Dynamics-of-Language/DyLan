@@ -79,6 +79,17 @@ public class NodeAddress implements Comparable<NodeAddress>, Serializable {
 
 	}
 
+	public boolean isLateUnfixed()
+	{
+		
+		String lastTwoChars=this.address.substring(this.address.length()-2, this.address.length());
+		
+		if (lastTwoChars.equals(SUFFIX_LINK+SUFFIX_STAR))
+			return false;
+		
+		return this.isStarUnfixed()&&!this.address.equals(ROOT+SUFFIX_STAR);
+		
+	}
 	/**
 	 * 
 	 * @return true if the address is not within some unfixed subtree
