@@ -64,7 +64,7 @@ public class MetaElement<X> implements Serializable, Meta<X> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <Y> MetaElement<Y> get(String name, Class<Y> cls) {
-
+		
 		String key = cls.toString() + name;
 		if (!pool.containsKey(key)) {
 			pool.put(key, new MetaElement<Y>(name, cls));

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import edu.uci.ics.jung.graph.Tree;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
@@ -20,8 +22,12 @@ import qmul.ds.formula.Variable;
 /**
  * This class encodes the dialogue context, containing a Directed Asyclic Graph, which
  * as per Eshghi et. al. (2015), encodes the DS procedural context with information about 
- * speaker/hearer coordination, and grounding. Importantly, this is where the grammar
- * would interface with the non-linguistic, situational context. In situated dialogue, subclasses of this class can encode non-linguistic
+ * speaker/hearer coordination, and grounding. It also encodes information about dialogue participants,
+ * floor status, etc. (could include time/place). It also provides methods for getting the grounded content of the 
+ * conversation (optimistically or otherwise, akin to Ginzburgh (2009)'s FACTS), or content asserted by a speaker.
+ * 
+ * This is where the grammar would interface with the non-linguistic, situational context. 
+ * In situated dialogue, subclasses of this class can encode non-linguistic,
  * contextual information, e.g. sets of individuated, typed objects in a scene.
  * 
  * 
@@ -41,6 +47,8 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 */
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -8765365147853341079L;
+	
+	protected Logger logger=Logger.getLogger(Context.class);
 
 
 	
@@ -74,8 +82,9 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	}
 	
 	/**
-	 * 
-	 * @return grounded content without the head field.
+	 * Returns the grounded content of the conversation aith a strict grounding strategy 
+	 * (requires explicit acceptance from other). Contrast {@link getCautiouslyOptimisticGroundedContent}
+	 * @return 
 	 */
 	public TTRFormula getGroundedContent()
 	{
@@ -87,6 +96,32 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		((TTRRecordType)accepted).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
 		return accepted;
 		
+	}
+	
+	/**
+	 * get cautiously optimistic grounded content - all asserted content on the path back to root.
+	 * Assumes all rejections/corrections are on repaired paths (and so not on the path back to root).
+	 * @param speaker
+	 * @return Cautiously optimistic grounded content
+	 */
+	
+	public TTRFormula getCautiouslyOptimisticGroundedContent()
+	{
+		TTRFormula result=new TTRRecordType();
+		for(String participant: this.accepted_contents.keySet())
+		{
+			logger.debug("conjoining content for "+participant);
+			
+			TTRFormula assertedContent=dag.getGroundedContent(participant);
+			result=result.conjoin(assertedContent);
+			
+		}
+		TTRFormula headless=result.removeHead();
+		if (!(headless instanceof TTRRecordType))
+			throw new UnsupportedOperationException("accepted content not a record type");
+		
+		((TTRRecordType)headless).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
+		return headless;
 	}
 	
 	
@@ -144,7 +179,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	
 
 	/**
-	 * TODO: this isn't going work in generation as the stack will be empty.
+	 * WARNING: this isn't going work in generation as the stack will be empty.
 	 * @return
 	 */
 	public String getCurrentSpeaker()

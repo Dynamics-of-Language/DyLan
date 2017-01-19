@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,6 +20,7 @@ import org.apache.log4j.Logger;
 import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.action.meta.Meta;
+import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
@@ -64,9 +64,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	//pool of this record type's MetaTTRLabels
 	//pool used to be static. That's wrong. Meta variables are bound, and their scope is the rec type within which 
 	//they are embedded.
-	protected HashMap<String, MetaTTRLabel> pool = new HashMap<String, MetaTTRLabel>();
-
-
+	
+	protected HashMap<String, MetaElement<?>> metaVariablePool = new HashMap<String, MetaElement<?>>();
+	
+	
 	
 	private ArrayList<TTRField> fields = new ArrayList<TTRField>();
 
@@ -494,7 +495,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	
 	/**
 	 * collapses duplicate super-types, i.e. super-types which are isomorphic.
-	 * Should Reduce to a minimum.... TODO
+	 * Should Reduce to a minimum....
 	 * 
 	 * We can collapse entity variables with the same manifest content. But not
 	 * event terms, because their manifest content is really a type, not an
@@ -583,74 +584,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 		
-		//TTRRecordType rt1=TTRRecordType.parse("[pred1==V : cn|x10==U : e|x8 : e|e3==like : es|x5==usr : e|p15==brand(x10) : t|p2==pres(e3) : t|p14==by(x8, x10) : t|p7==subj(e3, x5) : t|p6==obj(e3, x8) : t|p1==subj(pred1, x8) : t]");
-		TTRRecordType rt1=TTRRecordType.parse("[x10==U : e|x8 : e|e3==like : es|x5==usr : e|p15==brand(x10) : t|p2==pres(e3) : t|pred1==P(x8) : cn|p14==by(x8, x10) : t|p7==subj(e3, x5) : t|p6==obj(e3, x8) : t]");
-		TTRRecordType rt2=TTRRecordType.parse("[x9 : e|x8 : e|e3==like : es|x5==usr : e|p==question(x9) : t|pred2==brand(x9) : cn|pred1==phone(x8) : cn|head==e3 : es|p2==pres(e3) : t|p12==by(x8, x9) : t|p7==subj(e3, x5) : t|p6==obj(e3, x8) : t]");
-
-		//				
-//				
-		System.out.println("rt1:"+rt1);
-		System.out.println("rt2:"+rt2);
-		System.out.println("MCS(rt1,rt2):"+rt1.mostSpecificCommonSuperType(rt2, map));
-//		System.out.println(rt1.subsumesMapped(rt2,map));
-		System.out.println("..with map:"+map);
-		System.out.println("rt1 after check:"+rt1);
-		
-		
-		//rt1.backtrackMetas();
-		//map.clear();
-		//System.out.println("rt1 after backtracking metas:"+rt1);
-		//System.out.println("rt1 subsumes rt2:"+rt1.subsumesMapped(rt2, map)+" with map "+map);
-		//System.out.println("rt1 after check:"+rt1);
-		
-		 
-//		 TTRRecordType sem2=TTRRecordType.parse("[x8==usr : e|e10==like :es|x9 : e|p4==brand(x9):t|p10==subj(e10,x8):t|p9==obj(e10,x9):t|p11==brand(x9):t]");
-//		 TTRRecordType sem1 = TTRRecordType.parseStrictFieldOrder(
-//		 "[x7 : e|e3==want : es|x5==usr : e|x13 : e|e7==want : es|x11==usr :
-//		 e|p19==subj(e7, x11) : t|p25==brand(x13) : t|p14==pres(e7) :
-//		 t|p7==subj(e3, x5) : t|p18==obj(e7, x13) : t|p13==brand(x13) :
-//		 t|p6==obj(e3, x7) : t|p2==pres(e3) : t]");
-
-		// long before=new Date().getTime();
-		// TTRRecordType sorted=sem1.sortFieldsBySpecificity();
-		// long after=new Date().getTime();
-		//
-		// for(TTRField f:sorted.fields)
-		// System.out.println(f);
-		//
-		//
-//		 TTRRecordType sem2 = TTRRecordType.parseStrictFieldOrder("[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|e4==buy: es|x2 : e|p15==pres(e7) : t|p14==brand(x7) : t|p26==brand(x7) :t|p6==pres(e3) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) :t|p7==obj(e3, e4) : t|p8==subj(e3, x1) : t|p9==obj(e4, x2) :t|p10==subj(e4, x1) : t]");
-//		 
-//		 sem2.collapseIsomorphicSuperTypes(map);
-//		 System.out.println(sem2);
-//		 System.out.println(map);
-//		 //
-		// long before=new Date().getTime();
-		// TTRRecordType MCS = sem2.mostSpecificCommonSuperType(sem1, map);
-		//
-		// System.out.println("MCS:" + MCS);
-		// System.out.println("map:" + map);
-		// long after=new Date().getTime();
-		// System.out.println("it took:"+(after-before));
-		// MCS1:[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|x2 :
-		// e|p6==pres(e3) : t|p15==pres(e7) : t|p19==obj(e7, x7) :
-		// t|p20==subj(e7, x5) : t|p8==subj(e3, x1) : t]
-		// map1:{e7=e3, p15=p2, p6=p14, p19=p6, p8=p19, x1=x11, x2=x13, x5=x5,
-		// p20=p7, e3=e7, x7=x7}
-		// -----------------------
-		// MCS2:[x5==usr : e|e7==want : es|x7 : e|x1==usr : e|e3==want : es|x2 :
-		// e|p6==pres(e3) : t|p15==pres(e7) : t|p26==brand(x7) :
-		// t|p14==brand(x7) : t|p19==obj(e7, x7) : t|p20==subj(e7, x5) :
-		// t|p8==subj(e3, x1) : t]
-		// map2:{p6=p2, p8=p7, p20=p19, e3=e3, e7=e7, p26=p25, p15=p14, p14=p25,
-		// p19=p18, x1=x5, x2=x7, x5=x11, x7=x13}
-
-		// context << [L==arash:e|p==participant(L):e]
-
-//		TTRRecordType i = TTRRecordType.parse("[L:e|p==part(L):t]");
-//		TTRRecordType context = TTRRecordType.parse("[x==arash:e|p==part(x):t]");
-//		System.out.println("subsumes:" + i.subsumesBasic(context));
-//		System.out.println(i);
+		Formula f=Formula.create("U1");
+		System.out.println(f+":"+f.getClass());
+	
 
 	}
 
@@ -1348,6 +1284,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		return v;
 	}
+	
+	//public MetaElement<?> getFreshVa
 
 	public TTRFormula freshenVars(Tree t) {
 		TTRRecordType fresh = new TTRRecordType(this);
@@ -2454,51 +2392,24 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		return null;
 	}
+	
+	
+	int lastIndexOfAtomicFormulaMeta=0;
+	
+	public FormulaMetavariable getFreshAtomicMetaVariable() {
+		lastIndexOfAtomicFormulaMeta++;
+		
+		return FormulaMetavariable.get(Formula.FORMULA_METAVARIABLE_ROOT+lastIndexOfAtomicFormulaMeta);
+	}
+	
+	int lastIndexOfPredicateMeta=0;
+	public MetaPredicate getFreshPredicateMetaVariable() {
+		lastIndexOfPredicateMeta++;
+		
+		return MetaPredicate.get(Formula.METAPREDICATE_ROOT+lastIndexOfPredicateMeta);
+		
+	}
 
-	// public HashSet<Variable> getListOfCommonFields(TTRRecordType _currentVC,
-	// HashMap<Variable, Variable> _commonMap) {
-	// HashMap<Variable, Variable> _copyMap = new HashMap<Variable,
-	// Variable>(_commonMap);
-	// HashSet<Variable> _commonSet = new HashSet<Variable>();
-	//
-	// List<TTRField> _list = this.getFields();
-	// if (_list != null && !_list.isEmpty()) {
-	// TTRField _keptField = null;
-	// for (int i = 0; i < _list.size(); i++) {
-	// System.out.println("Stage : " + i);
-	//
-	// TTRRecordType _clone = this.clone();
-	// _keptField = _list.get(i);
-	// TTRLabel _label = _keptField.getLabel();
-	// DSType _dsType = _keptField.getDSType();
-	//
-	// if (_keptField.getType() != null) {
-	// _clone.removeField(_keptField);
-	// _clone.add(new TTRField(_label, _dsType));
-	//
-	// System.out.println("Clone : " + _clone);
-	//
-	// _copyMap.clear();
-	// if (_clone.subsumesMapped(_currentVC, _copyMap)) {
-	// _commonMap.clear();
-	// _commonMap.putAll(_copyMap);
-	// _commonSet.clear();
-	// _commonSet.add(_label);
-	// return _commonSet;
-	// } else {
-	// System.out.println("unSubsummed : " + _clone);
-	// HashSet<Variable> _cset = _clone.getListOfCommonFields(_currentVC,
-	// _copyMap);
-	// if (_cset != null) {
-	// _commonSet.addAll(_cset);
-	// _commonMap.clear();
-	// _commonMap.putAll(_copyMap);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// return _commonSet;
-	// }
+	
 
 }

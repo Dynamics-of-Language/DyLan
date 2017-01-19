@@ -34,8 +34,12 @@ public class PredicateArgumentFormula extends Formula {
 	}
 
 	public PredicateArgumentFormula(Predicate predicate, ArrayList<Formula> arguments) {
-		this.predicate = new Predicate(predicate.name);
-		this.arguments = arguments;
+		this.predicate = predicate;
+		this.arguments = new ArrayList<Formula>();
+		for (int i = 0; i < arguments.size(); i++) {
+			this.arguments.add(arguments.get(i));
+			this.getVariables().addAll(arguments.get(i).getVariables());
+		}
 	}
 
 	public PredicateArgumentFormula(PredicateArgumentFormula f) {
@@ -199,7 +203,7 @@ public class PredicateArgumentFormula extends Formula {
 			}
 
 		}
-		PredicateArgumentFormula result = new PredicateArgumentFormula(p, arguments);
+		PredicateArgumentFormula result = new PredicateArgumentFormula(new Predicate(p.name), arguments);
 		result.getVariables().addAll(newVars);
 		return result;
 	}

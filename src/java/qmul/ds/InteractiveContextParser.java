@@ -577,6 +577,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		context.init(d.getParticiapnts());
 		for (Utterance utt : d) {
 			if (!parseUtterance(utt)) {
+				logger.warn("couldn't parse utterance"+utt);
 				return null;
 			}
 		}
