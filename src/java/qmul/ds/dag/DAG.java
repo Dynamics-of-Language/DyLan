@@ -1088,7 +1088,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public TTRFormula getGroundedContent(String speaker) {
 		TTRFormula result = new TTRRecordType();
-		Set<T> accepted_tuples = new HashSet<T>();
+		Set<T> asserted_tuples = new HashSet<T>();
 		
 		
 		T tuple=getCurrentTuple();
@@ -1098,23 +1098,54 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			Set<String> asserters=tuple.getTree().getAsserters();
 			if (asserters.contains(speaker))
 			{
-				accepted_tuples.add(tuple);
+				asserted_tuples.add(tuple);
 			}
 				
 			tuple=getParent(tuple);
 		}while(tuple!=null);
 		
 		
-		for (T tu : accepted_tuples) {
+		for (T tu : asserted_tuples) {
 			result = result.conjoin(tu.getSemantics(context));
 		}
 		return result;
 
 	}
+	
+	public TTRFormula conjoinAllTurnContent() {
+		
+		
+		
+		T tuple=getCurrentTuple();
+		TTRFormula result = tuple.getSemantics(context);
+		System.out.println("Conjoining:"+result);
+		System.out.println("result:"+result);
+		System.out.println();
+		
+		E parentEdge=this.getParentEdge(tuple);
+		
+		while(parentEdge!=null)
+		{
+			tuple=getSource(parentEdge);
+			E parentOfParent=getParentEdge(tuple);
+			
+			if (parentOfParent!=null&&!parentOfParent.word.speaker().equals(parentEdge.word.speaker()))
+			{
+				System.out.println("Conjoining:"+tuple.getSemantics(context));
+				result=result.conjoin(tuple.getSemantics(context));
+				System.out.println("result:"+result);
+				System.out.println();
+			}
+			parentEdge=parentOfParent;
+			
+		}
+		
+		
+		return result;
 
-	// public String toString()
-	// {
-	// String result="";
-	// }
-	//
+	}
+
+	
+
+	
 }

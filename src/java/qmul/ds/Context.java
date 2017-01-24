@@ -374,6 +374,18 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 			return 2;
 	}
 
+
+	public TTRFormula conjoinAllTurnContent() {
+		TTRFormula allContent=dag.conjoinAllTurnContent().removeHead();
+		
+		if (!(allContent instanceof TTRRecordType))
+			throw new UnsupportedOperationException("accepted content not a record type");
+		
+		return allContent;
+		//((TTRRecordType)allContent).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
+		//return allContent;
+	}
+
 	
 	
 }

@@ -574,5 +574,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		return parent.word.speaker();
 
 	}
+	
+	
 
 }

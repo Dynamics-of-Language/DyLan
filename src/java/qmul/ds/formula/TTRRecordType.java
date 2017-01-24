@@ -505,24 +505,32 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 */
 	public void collapseIsomorphicSuperTypes(HashMap<Variable, Variable> map) {
 
+		
 		for (int i = 0; i < fields.size(); i++) {
 			TTRField first = fields.get(i);
 			logger.debug("testing "+first);
+			logger.debug("map:"+map);
 			if (first.getDSType().equals(DSType.es))
 			{
 				logger.debug("Skipping "+first);
 				continue;
 			}
+			
 			for (Variable v : first.getVariables()) {
 				logger.debug("testing variable:"+v);
-				if (map.containsKey(v))
+				
+				Variable v1=v;
+				Formula subst=first.getType();//type is non-empty
+				
+				while(map.containsKey(v1))
 				{
-					logger.debug(v+"->"+map.get(v));
-					Formula subst=first.getType().substitute(v, map.get(v));
-					remove(first.getLabel());
-					add(new TTRField(first.getLabel(), first.getDSType(), subst));
+					logger.debug(v1+"->"+map.get(v1));
+					subst=subst.substitute(v1, map.get(v1));
+					v1=map.get(v1);
 					
 				}
+				remove(first.getLabel());
+				add(new TTRField(first.getLabel(), first.getDSType(), subst));
 			}
 			
 			for (int j = i+1; j < fields.size(); j++) {
@@ -531,7 +539,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				if (first.getDSType().equals(next.getDSType())&&first.getType() != null && first.getType().subsumesBasic(next.getType())) {
 					logger.debug("type subsumption.");
 					map.put(new Variable(first.getLabel()), new Variable(next.getLabel()));
-					this.remove(first.getLabel());
+					logger.debug("removing"+first);
+					if (this.remove(first.getLabel()))
+					{
+						i--;
+						break;
+						
+					}
+					
 
 				}
 			}
