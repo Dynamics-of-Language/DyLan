@@ -11,6 +11,7 @@ import qmul.ds.InteractiveContextParser;
 import qmul.ds.babi.BabiDialogue;
 
 public class TestDialogueCorpus implements Serializable {
+	private static final long serialVersionUID = -5694785894427522351L;
 	private static Logger logger = Logger.getLogger(TestDialogueCorpus.class);
 	private InteractiveContextParser parser;
 
@@ -24,8 +25,8 @@ public class TestDialogueCorpus implements Serializable {
 			overall = 0;
 		for (File file: new File(inCorpusRoot).listFiles()) {
 			BabiDialogue dialogue = BabiDialogue.loadFromBabbleFile(file.getAbsolutePath());
-			Pair<Integer, Integer> dialogueParseResult = TestDialogue.test(parser, dialogue);
-			if (!dialogueParseResult.a.equals(dialogueParseResult.b)) {
+			Pair<Integer, Integer> parseResult = TestDialogue.test(parser, dialogue);
+			if (!parseResult.a.equals(parseResult.b)) {
 				logger.error("Failed parsing for file " + file.getAbsolutePath());
 			}
 			else {

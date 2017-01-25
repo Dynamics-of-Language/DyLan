@@ -8,8 +8,10 @@ import csli.util.Pair;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
 import qmul.ds.babi.BabiDialogue;
+import qmul.ds.dag.UtteredWord;
 
 public class TestDialogue implements Serializable {
+	private static final long serialVersionUID = 3255682835234980378L;
 	private static Logger logger = Logger.getLogger(TestSentence.class);
 
 	/**
@@ -26,10 +28,18 @@ public class TestDialogue implements Serializable {
 		int overall = 0;
 		for (Utterance[] turn: inDialogue.getTurns()) {
 			for (Utterance utterance: turn) {
-				if (parser.parseUtterance(utterance)) {
-					++parsed;
+				boolean parsingSuccessful = true;
+				for(UtteredWord word: utterance.getWords()) {
+					if (parser.parseWord(word) == null) {
+						logger.error(
+							"Parsing failed on the word: " + word.word() + " (utterance: "+ utterance.getText() + ")"
+						);
+						parsingSuccessful = false;
+						break;
+					}
 				}
 				++overall;
+				parsed += parsingSuccessful ? 1 : 0;
 			}
 		}
 		return new Pair<Integer, Integer>(parsed, overall);

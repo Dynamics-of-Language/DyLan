@@ -8,11 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
-import qmul.ds.formula.TTRRecordType;
 
 public class BabiDialogue {
 	public static final String[] AGENTS = new String[]{"usr", "sys"};
@@ -39,12 +36,14 @@ public class BabiDialogue {
 					agentName = AGENTS[index],
 					utterance = utterances[index];
 				if (utterance.startsWith("api_call")) {
-					utterance = "done";
+					utterance = "<wait>";
 				}
+				utterance += " " + Utterance.RELEASE_TURN_TOKEN;
 				turn[index] = new Utterance(agentName, utterance);
 			}
 			result.get(result.size() - 1).addTurn(turn);
 		}
+		in.close();
 		return result;
 	}
 
@@ -68,7 +67,9 @@ public class BabiDialogue {
 			currentTurn[lineCounter % 2] = new Utterance(agentName, utterance);
 			if (lineCounter % 2 == 1) {
 				result.addTurn(currentTurn);
+				currentTurn = new Utterance[]{null, null};
 			}
+			++lineCounter;
 		}
 		return result;
 	}
