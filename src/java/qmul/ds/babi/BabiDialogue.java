@@ -25,7 +25,9 @@ public class BabiDialogue {
 				result.add(new BabiDialogue());
 				continue;
 			}
-			line = line.toLowerCase().replace("<silence>", "<wait>");
+			line = line.toLowerCase()
+				.replace("<silence>", "<wait>")
+				.replace("how many", "howmany");
 			String[] lineParts = line.split(" ", 2);
 			String[] utterances = lineParts[1].split("\t");
 			assert 2 == utterances.length: "Invalid bAbI data: " + line;
@@ -71,6 +73,7 @@ public class BabiDialogue {
 			}
 			++lineCounter;
 		}
+		in.close();
 		return result;
 	}
 
@@ -111,7 +114,6 @@ public class BabiDialogue {
 	public void save(String inFileName) throws IOException {
 		BufferedWriter out = new BufferedWriter(new FileWriter(new File(inFileName)));
 
-		String line;
 		for (Utterance[] turn: turns) {
 			for (Utterance utterance: turn) {
 				out.write(String.format("%s:\t%s\n", utterance.getSpeaker(), utterance.getText()));

@@ -1,10 +1,11 @@
 package qmul.ds.test;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import csli.util.Pair;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
 import qmul.ds.babi.BabiDialogue;
@@ -23,25 +24,49 @@ public class TestDialogue implements Serializable {
 	 *         or NaN if none matches. If sentence is ungrammatical, failure to parse returns 1.0 and 1.0 (so as to keep
 	 *         overall stats happy) - otherwise, NaN and NaN.
 	 */
-	public static Pair<Integer, Integer> test(InteractiveContextParser parser, BabiDialogue inDialogue) {
-		int parsed = 0;
-		int overall = 0;
+	public static List<String[]> test(InteractiveContextParser parser, BabiDialogue inDialogue) {
+		List<String[]> errors = new ArrayList<>();
+
+		Utterance previousUtterance = new Utterance();
 		for (Utterance[] turn: inDialogue.getTurns()) {
 			for (Utterance utterance: turn) {
-				boolean parsingSuccessful = true;
-				for(UtteredWord word: utterance.getWords()) {
-					if (parser.parseWord(word) == null) {
-						logger.error(
-							"Parsing failed on the word: " + word.word() + " (utterance: "+ utterance.getText() + ")"
-						);
-						parsingSuccessful = false;
-						break;
+				String[] resultAsIs = parseUtterance(parser, utterance);
+				if (resultAsIs.length != 0) {
+					String[] resultGivenContext = parseUtteranceGivenContext(parser, utterance, previousUtterance);
+					if (resultGivenContext.length != 0) {
+						errors.add(resultGivenContext);
 					}
 				}
-				++overall;
-				parsed += parsingSuccessful ? 1 : 0;
+				previousUtterance = utterance;
 			}
 		}
-		return new Pair<Integer, Integer>(parsed, overall);
+		return errors;
+	}
+
+	private static String[] parseUtterance(InteractiveContextParser parser, Utterance utterance) {
+		parser.init();
+		for(UtteredWord word: utterance.getWords()) {
+			if (parser.parseWord(word) == null) {
+				return new String[]{utterance.getText(), word.word()};
+			}
+		}
+		return new String[]{};
+	}
+
+	private static String[] parseUtteranceGivenContext(
+		InteractiveContextParser parser,
+		Utterance utterance,
+		Utterance context
+	) {
+		String[] contextParseResult = parseUtterance(parser, context);
+		if (contextParseResult.length != 0) {
+			return new String[]{utterance.getText(), "<context parse error>"};
+		}
+		for(UtteredWord word: utterance.getWords()) {
+			if (parser.parseWord(word) == null) {
+				return new String[]{utterance.getText(), word.word()};
+			}
+		}
+		return new String[]{};
 	}
 }
