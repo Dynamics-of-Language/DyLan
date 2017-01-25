@@ -47,6 +47,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 	public final static String PROPOSITION_VARIABLE_ROOT = "p";
 	public final static String REC_TYPE_VARIABLE_ROOT = "r";
 	public final static String PREDICATE_VARIABLE_ROOT = "pred";
+	final static Label questionLabel=LabelFactory.create("+Q");
+	final static Label negatedLabel=LabelFactory.create("+neg");
 	protected static Logger logger = Logger.getLogger(Tree.class);
 
 	private static final long serialVersionUID = 1L;
@@ -957,27 +959,25 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		if (merged.size()>2)
 			throw new UnsupportedOperationException("Can't have more than two results after merging unfixed node");
 		
+		
+		System.out.println("freshened: "+questionRec);
 		merged.get(0).addUnderspecifiedFormulae(c);
 		if (merged.size()==1)
 		{
 			
-			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode());
+			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), c);
 		}
 		
 		merged.get(1).addUnderspecifiedFormulae(c);
 		
-		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode()), 
-				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode()));
-		
-		
-			
-		
-		
+		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(),c), 
+				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode(),c));
 		
 	}
 	
 	public TTRFormula getMaximalSemantics()
 	{
+		System.out.println("Running max sem without context");
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:"+this);
 		List<Tree>  merged = mergeUnfixed();
@@ -990,31 +990,29 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		if (merged.size()==1)
 		{
 			
-			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode());
+			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(),null);
 		}
 		
 		merged.get(1).addUnderspecifiedFormulae();
 		
-		System.out.println("Tree 1 after under:"+merged.get(0));
-		System.out.println("Tree 2 after under:"+merged.get(1));
+	
 		
-		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode()), 
-				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode()));
+		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(),null), 
+				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode(),null));
 		
 		
 	}
 
 	
-	static Label questionLabel=LabelFactory.create("+Q");
-	static Label negatedLabel=LabelFactory.create("+neg");
-	static TTRRecordType questionRec=(TTRRecordType)Formula.create("[p==question(head):t]");
-	static TTRRecordType negatedRec=(TTRRecordType)Formula.create("[p==not(head):t]");
+	
+	TTRFormula questionRec=(TTRRecordType)Formula.create("[p==question(head):t]");
+	TTRFormula negatedRec=(TTRRecordType)Formula.create("[p==not(head):t]");
 	/**
 	 * Preconditions: all mergeable unfixed nodes are merged already
 	 * 
 	 * @return a record type expressing the maximal semantics of this tree
 	 */
-	public TTRFormula getMaximalSemantics(Node root) {
+	public TTRFormula getMaximalSemantics(Node root, Context c) {
 		// ignore unfixed.
 		if (getDaughters(root, "01").size() == 1) {
 			logger.error("node with only one fixed daughter.." + root);
@@ -1025,7 +1023,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		Node localUnfixed = get(root.getAddress().downLocalUnfixed());
 		TTRFormula unfixedReduced = null;
 		if (unfixed != null) {
-			unfixedReduced = getMaximalSemantics(unfixed);
+			unfixedReduced = getMaximalSemantics(unfixed,c);
 			//we now have unfixed nodes of type e->t. To get the maxSem we can just assume there is an argument node of type e, and reduce the e>t function to get the maxSem
 			//WARNING: currently not supporting unfixed nodes of any other type (e.g. e>e>t, etc.)
 			if (unfixedReduced instanceof TTRLambdaAbstract)
@@ -1043,7 +1041,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		if (localUnfixed != null) {
 			//we now have unfixed nodes of type e->t. To get the maxSem we can just assume there is an argument node of type e, and reduce the e>t function to get the maxSem
 			//WARNING: currently not supporting unfixed nodes of any other type (e.g. e>e>t, etc.)
-			localUnfixedReduced=getMaximalSemantics(localUnfixed);
+			localUnfixedReduced=getMaximalSemantics(localUnfixed,c);
 			if (localUnfixedReduced instanceof TTRLambdaAbstract)
 			{
 				//maxSem is a function. Now create an underspecified rectype of type e to reduce
@@ -1064,9 +1062,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 			// at local root
 
 			TTRFormula argMax = getMaximalSemantics(get(root.getAddress()
-					.down0()));
+					.down0()),c);
 			TTRLambdaAbstract functMax = (TTRLambdaAbstract) getMaximalSemantics(get(root
-					.getAddress().down1()));
+					.getAddress().down1()),c);
 			logger.debug("beta-reducing. Funct:" + functMax);
 			logger.debug("beta-reducing. Arg:" + argMax);
 			rootReduced = functMax.betaReduce(argMax);
@@ -1103,17 +1101,20 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable,
 		if (!getDaughters(root, "L").isEmpty()) {
 
 			Formula maxSemL = getMaximalSemantics(get(root.getAddress()
-					.downLink()));
+					.downLink()),c);
 
 			rootReduced = rootReduced.conjoin(maxSemL);
 		}
 		logger.debug("done: " + rootReduced);
 		
 		if (root.contains(questionLabel))
-			rootReduced= questionRec.conjoin(rootReduced);
+		{
+			
+			rootReduced= questionRec.freshenVars(c).conjoin(rootReduced);
+		}
 		
 		if (root.contains(negatedLabel))
-			rootReduced=negatedRec.conjoin(rootReduced);
+			rootReduced=negatedRec.freshenVars(c).conjoin(rootReduced);
 		
 		return rootReduced;
 

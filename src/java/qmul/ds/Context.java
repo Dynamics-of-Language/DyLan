@@ -381,9 +381,9 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		if (!(allContent instanceof TTRRecordType))
 			throw new UnsupportedOperationException("accepted content not a record type");
 		
+		
+		((TTRRecordType)allContent).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
 		return allContent;
-		//((TTRRecordType)allContent).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
-		//return allContent;
 	}
 
 	

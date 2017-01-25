@@ -1114,8 +1114,6 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	
 	public TTRFormula conjoinAllTurnContent() {
 		
-		
-		
 		T tuple=getCurrentTuple();
 		TTRFormula result = tuple.getSemantics(context);
 		System.out.println("Conjoining:"+result);
