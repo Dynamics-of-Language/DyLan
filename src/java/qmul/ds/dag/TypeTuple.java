@@ -87,4 +87,8 @@ public class TypeTuple {
 
 	}
 
+	public boolean twoWaySubsumes(TypeTuple tuple) {
+		return tuple.type.subsumesBasic(type)&&type.subsumesBasic(tuple.type);
+	}
+
 }

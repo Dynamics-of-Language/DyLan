@@ -187,7 +187,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		Node node =  this.nodeFromTTRRecordType(ttr);
 		if (node==null){
 			logger.debug("No node, adding supertype");
-			this.addTypeJudgement(ttr, new HashSet<TTRAustinianProp>(), this.node(this.bottom()), false); //have to find its place..
+			this.addTypeJudgement(ttr, new HashSet<AustinianProbabilisticProp>(), this.node(this.bottom()), false); //have to find its place..
 			node = this.nodeFromTTRRecordType(ttr);
 			for (Object pnode : this.predecessors(node)){
 				this.addAustinianJudgements(node, ((TTRLatticeNode) ((Node) pnode).getWeight()).getProps(), true);
@@ -218,7 +218,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		
 		if (conditionNode==null){
 			logger.debug("No condition node");
-			this.addTypeJudgement(condition, new HashSet<TTRAustinianProp>(), this.node(this.bottom()), false); //have to find its place..
+			this.addTypeJudgement(condition, new HashSet<AustinianProbabilisticProp>(), this.node(this.bottom()), false); //have to find its place..
 			conditionNode = this.nodeFromTTRRecordType(condition);
 			for (Object node : this.predecessors(conditionNode)){
 				this.addAustinianJudgements(conditionNode, ((TTRLatticeNode) ((Node) node).getWeight()).getProps(), true);
@@ -231,7 +231,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				logger.debug("No resulting node, but supertype of " + condition.toString());
 				return 1.0;
 			}
-			this.addTypeJudgement(result, new HashSet<TTRAustinianProp>(), this.node(this.bottom()), false); //have to find its place..
+			this.addTypeJudgement(result, new HashSet<AustinianProbabilisticProp>(), this.node(this.bottom()), false); //have to find its place..
 			resultNode = this.nodeFromTTRRecordType(result);
 			for (Object node : this.predecessors(resultNode)){
 				this.addAustinianJudgements(resultNode, ((TTRLatticeNode) ((Node) node).getWeight()).getProps(), true);
@@ -246,7 +246,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	}
 	
 	
-	public void constructFromAtoms(List<TTRRecordType> myttr, List<Set<TTRAustinianProp>> myprops) {
+	public void constructFromAtoms(List<TTRRecordType> myttr, List<Set<AustinianProbabilisticProp>> myprops) {
 		/*
 		 * Constructs the TTR lattice from the bottom up as in Hough and Purver 2014 TTNLS
 		 */
@@ -281,7 +281,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 				// create minimal common supertype/join element (could be empty, in which case it's top).
 				TTRRecordType ttr = ((TTRLatticeNode) obj).ttr.minimumCommonSuperTypeBasic(ttrLat.ttr,
 						new HashMap<Variable, Variable>());
-				TTRLatticeNode nweight = new TTRLatticeNode(ttr, new HashSet<TTRAustinianProp>()); // need to start
+				TTRLatticeNode nweight = new TTRLatticeNode(ttr, new HashSet<AustinianProbabilisticProp>()); // need to start
 																									// anew!
 				nweight.props.addAll(ttrLat.getProps());
 				nweight.props.addAll(((TTRLatticeNode) obj).getProps());
@@ -347,8 +347,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 * @param props the new judgements
 	 * @param addUpSet whether to add the props to upset of the node too
 	 */
-	public void addAustinianJudgements(Node mynode, Set<TTRAustinianProp> props, boolean addUpSet){
-		Set<TTRAustinianProp> newweight = ((TTRLatticeNode) mynode.getWeight()).getProps();
+	public void addAustinianJudgements(Node mynode, Set<AustinianProbabilisticProp> props, boolean addUpSet){
+		Set<AustinianProbabilisticProp> newweight = ((TTRLatticeNode) mynode.getWeight()).getProps();
 		if (newweight == null){
 			newweight = props;
 		} else {
@@ -375,7 +375,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	 * Function inspired by Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'.
 	 * Adds the intent (Record Type) and the extents (objects, which are Austinian propositions which are judgements of situations being of that type with a given probability)
 	 */
-	public Node addTypeJudgement(TTRRecordType ttr,Set<TTRAustinianProp> props, Node child, boolean addProps){
+	public Node addTypeJudgement(TTRRecordType ttr,Set<AustinianProbabilisticProp> props, Node child, boolean addProps){
 		//Turn @ttr record type and @props of that type into a new Node if needed, else adding to existing node
 		//Takes as given that the @child node is a child of the new Node
 		//Get the maximal intent (all minimal common supertypes/upper bound) of @ttr in lattice
@@ -465,8 +465,8 @@ public class TTRLattice extends DirectedAcyclicGraph {
 			
 			TTRRecordType minCommonSuper = ttr.minimumCommonSuperTypeBasic(parentTTR, new HashMap<Variable,Variable>());
 			logger.debug("Making new supertype between " + ttr.toString() + " and node " + this.nodeLabel(parent) + " " + parentTTR.toString() + " \n\tgiving : " + minCommonSuper);
-			Set<TTRAustinianProp> commonProps = new HashSet<TTRAustinianProp>(((TTRLatticeNode) myNode.getWeight()).getProps());
-			Set<TTRAustinianProp> parentProps = new HashSet<TTRAustinianProp>(((TTRLatticeNode) parent.getWeight()).getProps());;
+			Set<AustinianProbabilisticProp> commonProps = new HashSet<AustinianProbabilisticProp>(((TTRLatticeNode) myNode.getWeight()).getProps());
+			Set<AustinianProbabilisticProp> parentProps = new HashSet<AustinianProbabilisticProp>(((TTRLatticeNode) parent.getWeight()).getProps());;
 			commonProps.retainAll(parentProps);
 			
 			if (minCommonSuper.subsumesStrictLabelIdentity(ttr)&&ttr.subsumesStrictLabelIdentity(minCommonSuper)){
@@ -606,7 +606,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 	/**
 	 * The createLatticeIncrementally using the AddIntent Function from Van der Merwe et al. (2004) 'AddIntent: A New Incremental Algorithm for Constructing Concept Lattices'
 	 */
-	public void constructIncrementally(List<TTRRecordType> ttrAtoms, List<Set<TTRAustinianProp>> propAtoms) {
+	public void constructIncrementally(List<TTRRecordType> ttrAtoms, List<Set<AustinianProbabilisticProp>> propAtoms) {
 
 		//Initialize a lattice with just a top (empty record type) and bottom (absurdity)
 		this.init();
@@ -673,11 +673,11 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		//create simple type judgements with probability = 1 for each one
 		//double t = 1.0;
 		TTRLattice lattice = new TTRLattice();
-		Set<TTRAustinianProp> s = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, 1.0, 1)));
-		Set<TTRAustinianProp> s2 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr2, 1.0, 2)));
-		Set<TTRAustinianProp> s3 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr3, 1.0, 3)));
+		Set<AustinianProbabilisticProp> s = new HashSet(Arrays.asList(new AustinianProbabilisticProp(ttr, 1.0, 1)));
+		Set<AustinianProbabilisticProp> s2 = new HashSet(Arrays.asList(new AustinianProbabilisticProp(ttr2, 1.0, 2)));
+		Set<AustinianProbabilisticProp> s3 = new HashSet(Arrays.asList(new AustinianProbabilisticProp(ttr3, 1.0, 3)));
 		List<TTRRecordType> myttr = Arrays.asList(ttr, ttr2, ttr3);
-		List<Set<TTRAustinianProp>> myprops = new ArrayList<Set<TTRAustinianProp>>();
+		List<Set<AustinianProbabilisticProp>> myprops = new ArrayList<Set<AustinianProbabilisticProp>>();
 		myprops.add(s);
 		myprops.add(s2);
 		myprops.add(s3);
@@ -766,7 +766,7 @@ public class TTRLattice extends DirectedAcyclicGraph {
 		for (Pair<Sentence<Word>, TTRRecordType> p : corpus){
 			ttr = p.second().removeHead();
 			System.out.println("adding " + i + " " + ttr.toString());
-			Set<TTRAustinianProp> s4 = new HashSet(Arrays.asList(new TTRAustinianProp(ttr, 1.0, i)));
+			Set<AustinianProbabilisticProp> s4 = new HashSet(Arrays.asList(new AustinianProbabilisticProp(ttr, 1.0, i)));
 			try {
 				if (lattice.top()==null){
 					throw new Exception("No lattice top!");

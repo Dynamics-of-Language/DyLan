@@ -377,8 +377,9 @@ public class ParserPanel extends JPanel {
 	 * Tokenizes the highlighted text (using a tokenizer appropriate for the
 	 * selected language, and initiates the ParseThread to parse the tokenized
 	 * text.
+	 * @param turn_released indicates whether to parse a <release-turn> token
 	 */
-	public void parse() {
+	public void parse(boolean turn_released) {
 
 		if (pTextPane.getText().length() == 0) {
 			logger.info("nothing to parse");
@@ -386,7 +387,7 @@ public class ParserPanel extends JPanel {
 		}
 
 		// use endIndex+1 because substring subtracts 1
-		String text = pTextPane.getText();
+		String text = pTextPane.getText().trim()+(turn_released?" "+Utterance.RELEASE_TURN_TOKEN:"");
 		// logger.debug("got text " + text);
 
 		if (parser != null && text.length() > 0) {
@@ -837,7 +838,7 @@ public class ParserPanel extends JPanel {
 				JOptionPane
 						.showMessageDialog(
 								ParserPanel.this,
-								"Could not parse selected sentence\n(sentence probably too long)",
+								"Could not parse selected sentence - exception thrown by parser",
 								null, JOptionPane.ERROR_MESSAGE);
 				setStatus("Error parsing");
 				return;
@@ -1201,7 +1202,7 @@ public class ParserPanel extends JPanel {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 					highlightEditedSentence();
-					parse();
+					parse(true);
 					pTextPane.setText("");
 				}
 			}
@@ -1386,7 +1387,7 @@ public class ParserPanel extends JPanel {
 
 	private void parseNextButtonActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_parseNextButtonActionPerformed
 	{// GEN-HEADEREND:event_parseNextButtonActionPerformed
-		parse();
+		parse(false);
 		scrollWhenDone = true;
 	}// GEN-LAST:event_parseNextButtonActionPerformed
 
@@ -1420,7 +1421,7 @@ public class ParserPanel extends JPanel {
 
 	private void parseButtonActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_parseButtonActionPerformed
 	{// GEN-HEADEREND:event_parseButtonActionPerformed
-		parse();
+		parse(false);
 		scrollWhenDone = false;
 	}// GEN-LAST:event_parseButtonActionPerformed
 

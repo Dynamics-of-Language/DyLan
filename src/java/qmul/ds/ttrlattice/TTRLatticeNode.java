@@ -8,16 +8,16 @@ import qmul.ds.formula.TTRRecordType;
 public class TTRLatticeNode {
 
 	TTRRecordType ttr = null;
-	Set<TTRAustinianProp> props = null;
+	Set<AustinianProbabilisticProp> props = null;
 	boolean bottom = false;
 	boolean top = false;
 	
-	public TTRLatticeNode(TTRRecordType ttr, Set<TTRAustinianProp> props) {
+	public TTRLatticeNode(TTRRecordType ttr, Set<AustinianProbabilisticProp> props) {
 		this.ttr = ttr;
 		this.props = props;
 	}
 	
-	public TTRLatticeNode(TTRRecordType ttr, Set<TTRAustinianProp> props, boolean top) {
+	public TTRLatticeNode(TTRRecordType ttr, Set<AustinianProbabilisticProp> props, boolean top) {
 		this.ttr = ttr;
 		this.props = props;
 		this.top = top;
@@ -28,7 +28,7 @@ public class TTRLatticeNode {
 		 * The unnormalised probability mass of this particular node
 		 */
 		Double prob = 0.0;
-		for (TTRAustinianProp austin : props){
+		for (AustinianProbabilisticProp austin : props){
 			prob+=austin.prob;
 		}
 		return prob;
@@ -41,7 +41,7 @@ public class TTRLatticeNode {
 		String propstring = "empty_props";
 		if (!props.isEmpty()&&!props.equals(null)){
 			propstring = "";
-			for (TTRAustinianProp prop : props){
+			for (AustinianProbabilisticProp prop : props){
 				propstring+=String.valueOf(prop.recordNumber)+",";
 			}
 			
@@ -60,16 +60,16 @@ public class TTRLatticeNode {
 		this.ttr = ttr;
 	}
 
-	public Set<TTRAustinianProp> getProps() {
+	public Set<AustinianProbabilisticProp> getProps() {
 		return props;
 	}
 
-	public void setProps(Set<TTRAustinianProp> props) {
+	public void setProps(Set<AustinianProbabilisticProp> props) {
 		this.props = props;
 	}
 
 	public TTRLatticeNode() {
-		this.props = new HashSet<TTRAustinianProp>();
+		this.props = new HashSet<AustinianProbabilisticProp>();
 		this.ttr  = new TTRRecordType();
 		// TODO Auto-generated constructor stub
 	}

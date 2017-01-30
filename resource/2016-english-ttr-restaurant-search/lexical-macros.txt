@@ -17,6 +17,9 @@ event_restrictor(modal)
 event_restrictor(should)
 	ttrput([head:es|p1==should(head):t])
 
+event_restrictor(imper)
+	ttrput([head:es|p1==imper(head):t])
+
 v_intran_content(PRED)
 	ttrput(R1^(R1 ++ [e1==PRED:es|head==e1:es|p2==subj(e1, R1.head):t]))
 	put(!)

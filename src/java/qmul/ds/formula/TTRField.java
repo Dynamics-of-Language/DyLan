@@ -139,6 +139,14 @@ public class TTRField extends Formula{
 	}
 	
 	
+	/**
+	 * Relabels this field according to map
+	 * @return
+	 */
+//	public TTRField relabel(HashMap<Variable,Variable> map)
+//	{
+//		return new TTRField()
+//	}
 
 	private static int indexOfLabelSep(String s) {
 		int depth = 0;
@@ -417,7 +425,7 @@ public class TTRField extends Formula{
 	 * @return the set of variables (free or bound) involved in the type of this
 	 *         field
 	 */
-	protected Set<Variable> getVariables() {
+	public Set<Variable> getVariables() {
 
 		return type == null ? new HashSet<Variable>() : type.getVariables();
 	}
@@ -443,9 +451,7 @@ public class TTRField extends Formula{
 					+ TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
 		else
 			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " " + (type==null?"":type);
-		// return
-		// s+(type==null?"(typenull)":(type.parentRecType==this.parentRecType &&
-		// type.parentRecType!=null)?"(linked)":"notLinked");
+		
 
 	}
 

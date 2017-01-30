@@ -21,6 +21,7 @@ import qmul.ds.action.Action;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Tree;
+import qmul.ds.ttrlattice.AustinianProp;
 
 /**
  * A generic DS (parse) Directed Acyclic Graph. Edges correspond minimally to
@@ -1047,6 +1048,43 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	}
 
+	
+	
+	public TreeSet<AustinianProp> getAssertions(Set<String> participants)
+	{
+		if (participants == null||participants.isEmpty()) {
+			throw new IllegalArgumentException(
+					"cannot get grounded content without a set of participants which is null or empty here. returning null formula");
+
+		}
+		
+		if (!context.getParticipants().containsAll(participants))
+		{
+			throw new IllegalArgumentException("Trying to get grounded content for participants that are not all part of the conversation: "+participants);
+		}
+			
+		
+		
+		TreeSet<AustinianProp> result = new TreeSet<AustinianProp>();
+
+		T tuple=getCurrentTuple();
+		
+		do{
+			
+			Set<String> asserters=tuple.getTree().getAsserters();
+			if (!asserters.isEmpty())
+			{
+				result.add(new AustinianProp((TTRRecordType)tuple.getSemantics(context), tuple.id));
+			}
+				
+			tuple=getParent(tuple);
+		}while(tuple!=null);
+		
+		
+		
+		return result;
+		
+	}
 	public TTRFormula getGroundedContent(Set<String> participants) {
 		if (participants == null||participants.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -1086,6 +1124,28 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return result;
 	}
 
+	public TreeSet<AustinianProp> getAssertions(String speaker)
+	{
+		TreeSet<AustinianProp> asserted_tuples = new TreeSet<AustinianProp>();
+		
+		
+		T tuple=getCurrentTuple();
+		
+		do{
+			
+			Set<String> asserters=tuple.getTree().getAsserters();
+			if (asserters.contains(speaker))
+			{
+				asserted_tuples.add(new AustinianProp((TTRRecordType)tuple.getSemantics(context), tuple.id));
+			}
+				
+			tuple=getParent(tuple);
+		}while(tuple!=null);
+		
+		return asserted_tuples;
+		
+	}
+	
 	public TTRFormula getGroundedContent(String speaker) {
 		TTRFormula result = new TTRRecordType();
 		Set<T> asserted_tuples = new HashSet<T>();
@@ -1114,14 +1174,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	
 	public TTRFormula conjoinAllTurnContent() {
 		
-		
-		
 		T tuple=getCurrentTuple();
-		TTRFormula result = tuple.getSemantics(context);
-		System.out.println("Conjoining:"+result);
-		System.out.println("result:"+result);
-		System.out.println();
-		
+		TTRFormula result = tuple.getSemantics(context);	
 		E parentEdge=this.getParentEdge(tuple);
 		
 		while(parentEdge!=null)
@@ -1131,10 +1185,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			
 			if (parentOfParent!=null&&!parentOfParent.word.speaker().equals(parentEdge.word.speaker()))
 			{
-				System.out.println("Conjoining:"+tuple.getSemantics(context));
+				
 				result=result.conjoin(tuple.getSemantics(context));
-				System.out.println("result:"+result);
-				System.out.println();
+				
 			}
 			parentEdge=parentOfParent;
 			
@@ -1143,6 +1196,39 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		
 		return result;
 
+	}
+	
+	
+	public List<TTRRecordType> getAllClauseContents()
+	{
+		T tuple=getCurrentTuple();
+		TTRRecordType cur = (TTRRecordType) tuple.getSemantics(context).removeHead();
+		
+		List<TTRRecordType> allContents=new ArrayList<TTRRecordType>();
+		
+		
+		
+		while(tuple!=null)
+		{
+			
+			E parentEdge=getParentEdge(tuple);
+			
+			if (parentEdge==null||parentEdge instanceof NewClauseEdge)
+			{
+				allContents.add(cur);
+				if (parentEdge!=null)
+					cur=(TTRRecordType)getParent(tuple).getSemantics(context).removeHead();
+			}
+			tuple=getParent(tuple);
+			
+			
+			
+			
+		}
+		
+		
+		return allContents;
+		
 	}
 
 	

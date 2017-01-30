@@ -53,11 +53,10 @@ public interface DSParser extends edu.stanford.nlp.parser.Parser {
 	 * An utterance is a sequence of words ({@link HasWord}) spoken by an
 	 * individual. This method parses an utterance. The difference from the
 	 * parse method is that the words are spoken/owned by SOMEONE in dialogue.
-	 * Later this should include addressee info, but in dyadic dialogue this
-	 * isn't required.
 	 * 
+	 * returns upon a word that is not parsable.
 	 * @param utt
-	 * @return
+	 * @return the starting sub-utterance successfully parsed.
 	 */
 	public boolean parseUtterance(Utterance utt);
 
