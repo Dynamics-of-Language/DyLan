@@ -911,10 +911,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * such that the constinuents have minimal commonality, and, that, R1 ^ R2 ^
 	 * .. ^ R_N = @this
 	 * 
-	 * (1) types es fields won't appear as single field record types in the result
-	 * So we won't have e.g. [e1==have:es] in the result.
-	 * This is because there is always going to be some other field that will depend on them.
-	 * no point having it on its own.
 	 * 
 	 * @return
 	 */
@@ -1648,9 +1644,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 			} else {
 				newF = new TTRField(f);
-				//added recently. Results in: [x==john:e] ^ [x:e] = [x == john:e] ^ [x:e] = [x==john:e]
-				if (newF.getType()==null)
-					newF.setType(merged.get(f.getLabel()));
+				
 
 			}
 
@@ -2112,7 +2106,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				} else {
 					for (TTRPath path : paths) {
 						if (path instanceof TTRRelativePath) {
-							result.addAll(((TTRRelativePath) path).getMinimalSuperTypeWith().getFields());
 						}
 					}
 				}
@@ -2128,6 +2121,32 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return fields.contains(f);
 	}
 
+	/**
+	 * gets minimal super type of this type with f. Just brings in the parents. Manifest values will all be null in result.
+	 * @param f
+	 * @return
+	 */
+	public TTRRecordType getMinimalSuperTypeWith(TTRField f)
+	{
+		TTRRecordType result=new TTRRecordType();
+		
+		if (f.getVariables().isEmpty())
+		{
+			result.add(new TTRField(f));
+			return result;
+		}
+		
+		List<TTRField> parents=getParents(f);
+		for(TTRField parent: parents)
+		{
+			TTRField newF=new TTRField(parent);
+			newF.setType(null);
+			result.add(newF);
+		}
+		result.add(new TTRField(f));
+		return result;
+	}
+	
 	@Override
 	protected List<TTRRecordType> getTypes() {
 		ArrayList<TTRRecordType> list = new ArrayList<TTRRecordType>();
