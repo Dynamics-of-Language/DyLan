@@ -52,5 +52,29 @@ public class DisjunctiveType extends TTRInfixExpression {
 		return new DisjunctiveType(arg1.removeHead(), arg2.removeHead());
 		
 	}
+	
+	public DisjunctiveType sortFieldsBySpecificity()
+	{
+		if (!(this.arg1 instanceof TTRRecordType && this.arg2 instanceof TTRRecordType))
+			throw new UnsupportedOperationException();
+		
+		TTRRecordType left=(TTRRecordType)arg1;
+		TTRRecordType right=(TTRRecordType)arg2;
+		
+		return new DisjunctiveType(left.sortFieldsBySpecificity(), right.sortFieldsBySpecificity());
+		
+	}
+	
+	public TTRRecordType evaluate()
+	{
+		if (!(this.arg1 instanceof TTRRecordType && this.arg2 instanceof TTRRecordType))
+			throw new UnsupportedOperationException();
+		
+		TTRRecordType left=(TTRRecordType)arg1;
+		TTRRecordType right=(TTRRecordType)arg2;
+		
+		return left.mostSpecificCommonSuperType(right, new HashMap<Variable, Variable>());
+		
+	}
 
 }

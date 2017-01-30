@@ -44,6 +44,7 @@ public abstract class TTRFormula extends Formula {
 	protected abstract List<TTRRecordType> getTypes();
 
 	public abstract TTRField getHeadField();
+	
 	public abstract TTRFormula evaluate();
 
 	public abstract TTRFormula substitute(Formula f1, Formula f2);
@@ -166,5 +167,13 @@ public abstract class TTRFormula extends Formula {
 
 	public TTRFormula removeHeadIfManifest() {
 		throw new UnsupportedOperationException("Operation unsupported for the TTRFormula class:"+this.getClass());
+	}
+
+	/**
+	 * for the purpose of computing maximally specific common supertype between a TTRRecordType and a disjunctive type
+	 * @return
+	 */
+	public TTRFormula sortFieldsBySpecificity() {
+		throw new IllegalArgumentException("Cannot do this for: "+this.getClass());
 	}
 }

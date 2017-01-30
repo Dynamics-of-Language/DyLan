@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +20,8 @@ import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
+import qmul.ds.InteractiveContextParser;
+import qmul.ds.Utterance;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
@@ -529,8 +532,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					v1=map.get(v1);
 					
 				}
-				remove(first.getLabel());
-				add(new TTRField(first.getLabel(), first.getDSType(), subst));
+				//remove(first.getLabel());
+				//add(new TTRField(first.getLabel(), first.getDSType(), subst));
+				first.setType(subst);
 			}
 			
 			for (int j = i+1; j < fields.size(); j++) {
@@ -583,11 +587,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		@Override
 		public int compare(TTRField f1, TTRField f2) {
 
-			List<TTRField> o1Fields = rt.getMaximalSuperTypeWith(f1);
-			List<TTRField> o2Fields = rt.getMaximalSuperTypeWith(f2);
-			if (o1Fields.size() < o2Fields.size())
+			
+			if (rt.getSpecificity(f1) < rt.getSpecificity(f2))
 				return -1;
-			if (o1Fields.size() < o2Fields.size())
+			else if (rt.getSpecificity(f1) > rt.getSpecificity(f2))
 				return 1;
 
 			return 0;
@@ -595,15 +598,193 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	}
 
-	public static void main(String[] a) {
-
-		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+	
+	/**
+	 * Assumes @this already subsumes subtype. 
+	 * Strict label matching.
+	 * @param subtype
+	 * @return
+	 */
+	private List<TTRRecordType> makeOneStepMoreSpecific(TTRRecordType subtype)
+	{
+		List<TTRRecordType> result=new ArrayList<TTRRecordType>();
+		outer:
+		for(TTRField f: subtype.getFields())
+		{
+			TTRRecordType cur=new TTRRecordType(this);
+			
+			//logger.debug("checking:" + f);
+			if (this.hasLabel(f.getLabel()))
+			{
+				if (f.getType()!=null&&this.getType(f.getLabel())==null)
+				{
+					cur.getField(f.getLabel()).setType(f.getType());
+					result.add(cur);
+				}
+				
+				
+			}
+			else
+			{//check to see if parents are there already, if so add the field
+				List<TTRField> parents=subtype.getParents(f);
+				
+				for(TTRField parent:parents)
+				{
+					if (!this.hasLabel(parent.getLabel()))
+						continue outer;
+				}
+				
+				TTRField newF=new TTRField(f);
+				
+				if (f.getDSType().equals(DSType.e)||f.getDSType().equals(DSType.es))
+				{
+					newF.setType(null);
+				}
+				//logger.debug("adding "+newF);
+				cur.add(newF);
+				result.add(cur);
+				
+			}
+		}
 		
-		Formula f=Formula.create("U1");
-		System.out.println(f+":"+f.getClass());
+		return result;
+		
+	}
+	
+	public TTRRecordType mcs(TTRRecordType rt, HashMap<Variable, Variable> map)
+	{
+		return this.mcsRecurse(new TTRRecordType(), rt, map);
+	}
+	
+	/**this.mcsRecurse([], rt, map)
+	 * @param rt
+	 * @param map
+	 * @return
+	 */
+	private TTRRecordType mcsRecurse(TTRRecordType start, TTRRecordType rt, HashMap<Variable,Variable> map)
+	{
+		HashMap<Variable,Variable> copy=new HashMap<Variable,Variable>();
+		logger.trace("testing subsumption of:"+start);
+		long before=new Date().getTime();
+		if (!start.subsumesMapped(rt, map))
+		{
+			return null;
+		}
+		long after=new Date().getTime();
+		logger.trace("subsumed. it took:"+(after-before));
+		copy.putAll(map);
+		logger.trace("mcsRecurse from "+start);
+		logger.trace("with map "+map);
+	
+		List<TTRRecordType> morespecs=start.makeOneStepMoreSpecific(this);
+		logger.trace("subs:"+morespecs);
+		for(TTRRecordType morespec:morespecs)
+		{
+			map.clear();
+			logger.trace("testing subtype:"+morespec);
+			TTRRecordType localMCS=mcsRecurse(morespec, rt, map);
+			if (localMCS!=null)
+			{
+				logger.trace("got result back:"+localMCS);
+				return localMCS;
+			}
+			logger.trace("Failed path");
+			
+			
+				
+		}
+		map.clear();
+		map.putAll(copy);
+		return start;
+		
+	}
+	
+	/**
+	 * Makes @this one step less specific.
+	 *
+	 * @return All record types resulting from this operation.
+	 */
+	private List<TTRRecordType> makeOneStepLessSpecific()
+	{
+		List<TTRRecordType> result=new ArrayList<TTRRecordType>();
+		
+		//make rec one step less specific and check subsumption
+		for(int i=0;i<fields.size();i++)
+		{
+			TTRField f=fields.get(i);
+			
+			if(f.getDSType().equals(DSType.e)||f.getDSType().equals(DSType.es))
+			{
+				if (f.getType()!=null)
+				{
+					TTRRecordType underspec=new TTRRecordType(this);
+					underspec.getField(f.getLabel()).setType(null);
+					result.add(underspec);
+					
+				} else if (!this.hasDependent(f))
+				{
+					TTRRecordType underspec=new TTRRecordType(this);
+					underspec.remove(f.getLabel());
+					result.add(underspec);
+				}
+			}
+			else
+			{
+				//assumes proof types have no dependents (i.e. that there are no higher order proof types)
+				TTRRecordType underspec=new TTRRecordType(this);
+				underspec.remove(f.getLabel());
+				result.add(underspec);
+			}
+		}
+		return result;
+	}
 	
 
+	
+	public static void main(String[] a) {
+
+		TTRRecordType r1=TTRRecordType.parse("[x==john:e]");
+		TTRRecordType r2=TTRRecordType.parse("[x:e]");
+		
+		System.out.println(r2.conjoin(r1));
+		
+//		InteractiveContextParser parser = new InteractiveContextParser(
+//				"resource/2016-english-ttr-restaurant-search");
+//		Utterance utt=new Utterance("arash: what can i help you with today?");
+//		parser.parseUtterance(utt);
+		
+		
+		//TTRRecordType rt2=(TTRRecordType)parser.getContext().getCurrentTuple().getSemantics(parser.getContext()).removeHead();
+//		TTRRecordType rt2=TTRRecordType.parse("[x6==arash : e|e6 : es|x9==dylan : e|x1 : e|p2==modal(e6) : t|head==e6 : es|"
+//				+ "p32==question(x1) : t|p27==today(e6) : t|p9==obj(e6, x9) : t|p10==subj(e6, x6) : t|p21==with(e6, x1) : t]");
+//		
+//		
+//		//TTRRecordType rt1=new TTRRecordType();
+//		TTRRecordType rt1=TTRRecordType.parse("[x22 : e|e6==help : es|x9==dylan : e|"
+//				+ "x1 : e|p2==modal(e6) : t|p32==question(x1) : t|"
+//				+ "p27==today(e6) : t|p9==obj(e6, x9) : t|p10==subj(e6, x22) : t|p21==with(e6, x1) : t|p34==person(x22):t]");
+//		
+//		System.out.println("RT1:"+rt1);
+//		System.out.println("RT2:"+rt2);
+////		
+//		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
+//		long before=new Date().getTime();
+//		TTRRecordType mcs=rt2.mostSpecificCommonSuperType(rt1, map);
+//		long after=new Date().getTime();
+//	
+//		System.out.println("MCS(RT1, RT2)="+mcs);
+//		System.out.println("map: "+map);
+//		System.out.println("Mcs run time:"+(after-before));
+//		
+
 	}
+	
+	
+	
+	
+	
+		
+
 
 	/**
 	 * @param label
@@ -730,38 +911,34 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * such that the constinuents have minimal commonality, and, that, R1 ^ R2 ^
 	 * .. ^ R_N = @this
 	 * 
+	 * (1) types es fields won't appear as single field record types in the result
+	 * So we won't have e.g. [e1==have:es] in the result.
+	 * This is because there is always going to be some other field that will depend on them.
+	 * no point having it on its own.
+	 * 
 	 * @return
 	 */
 	public List<TTRRecordType> decompose() {
 
-		List<TTRField> fieldList = getFields();
+		
 		List<TTRRecordType> decomposedList = new ArrayList<TTRRecordType>();
 
-		// decompose the list on the basis of its dependent fields,
-		// this will result in constituent parts which contain fields
-		// grouped together based on their dependence relationship
-		for (int i = 0; i < fieldList.size(); i++) {
-			decomposedList.add(new TTRRecordType());
-
-			for (int j = 0; j < getFields().size(); j++) {
-				if (fieldList.get(i).dependsOn(getFields().get(j))) {
-					if (!decomposedList.get(decomposedList.size() - 1).getRecord()
-							.containsKey(fieldList.get(i).getLabel()))
-						decomposedList.get(decomposedList.size() - 1).add(fieldList.get(i));
-					decomposedList.get(decomposedList.size() - 1).add(getFields().get(j));
-				}
+		for(TTRField f: fields)
+		{
+			
+			if (f.getType()!=null && !f.getDSType().equals(DSType.es) && f.getType().getVariables().isEmpty())
+			{
+				TTRRecordType singlton=new TTRRecordType();
+				singlton.add(new TTRField(f));
+				decomposedList.add(singlton);
+			}
+			else if (f.getType()!=null&&!f.getVariables().isEmpty())
+			{
+				TTRRecordType dependents=this.getSuperTypeWithParents(f);
+				decomposedList.add(dependents);
 			}
 		}
-
-		// cleaning up the list - i.e. removing empty record types
-		Iterator<TTRRecordType> iter = decomposedList.iterator();
-		while (iter.hasNext()) {
-			TTRRecordType recType = iter.next();
-
-			if (recType.getFields().size() == 0)
-				iter.remove();
-		}
-
+		
 		return decomposedList;
 
 	}
@@ -930,22 +1107,22 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		for (Integer i : remainingOtherIndeces) {
 			TTRField field = other.fields.get(i);
-			logger.debug(fields.get(thisIndex) + " subsumes " + field);
+			logger.trace(fields.get(thisIndex) + " subsumes " + field);
 			if (fields.get(thisIndex).subsumesBasic(field)) {
-				logger.debug("success");
+				logger.trace("success");
 				Set<Integer> remaining = new HashSet<Integer>(remainingOtherIndeces);
 				remaining.remove(i);
 				if (subsumesBasic(other, thisIndex + 1, remaining)) {
-					logger.debug("recursion succeeded");
+					logger.trace("recursion succeeded");
 
 					return true;
 				}
-				logger.debug("recursion failed");
+				logger.trace("recursion failed");
 				
 				
 
 			} else
-				logger.debug("failed");
+				logger.trace("failed");
 			//if we are here, subsumption for thisIndex failed.
 			fields.get(thisIndex).partialResetMetas();
 		}
@@ -966,16 +1143,49 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * @return the most specific common supertype, expressed in terms of @this's
 	 *         labels.
 	 */
-	public TTRRecordType mostSpecificCommonSuperType(TTRRecordType other, HashMap<Variable, Variable> map) {
+	public TTRRecordType mostSpecificCommonSuperType(TTRFormula other, HashMap<Variable, Variable> map) {
+		
 		TTRRecordType sorted1 = this.sortFieldsBySpecificity();
-		TTRRecordType sorted2 = other.sortFieldsBySpecificity();
-		return sorted1.MCS(sorted2, map);
+		TTRFormula sorted2 = other.sortFieldsBySpecificity();
+		
+		if (sorted2 instanceof TTRRecordType)
+			return sorted1.mcs((TTRRecordType)sorted2, map);
+		else if (!(sorted2 instanceof DisjunctiveType))
+			throw new UnsupportedOperationException();
+		
+		DisjunctiveType disjunction=(DisjunctiveType)sorted2;
+		//will throw error if not both arg1 and arg2 are rec types
+		TTRRecordType right=(TTRRecordType)disjunction.getArg2();
+		TTRRecordType left=(TTRRecordType)disjunction.getArg1();
+		
+		//deem the MCS of a rec type and a disjunctive type to be the one with the higher number of fields:
+		//(1) MCS of this and right
+		//(2) MCS of this and left
+		
+		TTRRecordType thisLeft=this.mcs(left, map);
+		logger.debug("MCS(this, left):"+thisLeft);
+		map.clear();
+		TTRRecordType thisRight=this.mcs(right, map);
+		logger.debug("MCS(this, right):"+thisRight);
+		
+		
+		/**
+		 * Assumes they won't have the same number of fields
+		 */
+		if (thisLeft.numFields()>thisRight.numFields())
+			return thisLeft;
+		else return thisRight;
+		
+		
+		
 	}
 
 	/**
 	 * 
 	 * WARNING: Do not use this directly. It changes @this. Use
 	 * mostSpecificCommonSuperType instead.
+	 * THIS IS WRONG. Use mcs (not MCS).
+	 * @deprecated
 	 */
 	private TTRRecordType MCS(TTRRecordType other, HashMap<Variable, Variable> map) {
 		logger.debug("MCS of:" + this);
@@ -1044,12 +1254,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 						// remove the field.
 						clone.remove(f.getLabel());
 						return clone.MCS(other, map);
-					} else if (f.getDSType().equals(DSType.es)) {
-						// we don't want to underspecify an event type. Just
-						// remove the field.
-						clone.remove(f.getLabel());
-						return clone.MCS(other, map);
 					}
+//					 else if (f.getDSType().equals(DSType.es)) {
+//						// we don't want to underspecify an event type. Just
+//						// remove the field.
+//						clone.remove(f.getLabel());
+//						return clone.MCS(other, map);
+//					}
 
 					cloneF.setType(null);
 					return clone.MCS(other, map);
@@ -1361,7 +1572,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 */
 	@Override
 	public TTRRecordType substitute(Formula f1, Formula f2) {
-		logger.debug("Substituting " + f2 + " for " + f1 + " in rec type:" + this);
+		logger.trace("Substituting " + f2 + " for " + f1 + " in rec type:" + this);
 
 		TTRRecordType result = new TTRRecordType();
 		for (TTRField cur : fields) {
@@ -1437,6 +1648,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 			} else {
 				newF = new TTRField(f);
+				//added recently. Results in: [x==john:e] ^ [x:e] = [x == john:e] ^ [x:e] = [x==john:e]
+				if (newF.getType()==null)
+					newF.setType(merged.get(f.getLabel()));
 
 			}
 
@@ -1544,8 +1758,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			return TTR_OPEN + TTR_CLOSE;
 		String s = TTR_OPEN;
 		for (TTRField f : fields)
-			s += f + TTR_FIELD_SEPARATOR;
-
+			s += f +TTR_FIELD_SEPARATOR;
+//+ "<"+getSpecificity(f)
 		return s.substring(0, s.length() - TTR_FIELD_SEPARATOR.length()) + TTR_CLOSE;
 	}
 
@@ -1744,8 +1958,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		TTRRecordType result = new TTRRecordType();
 		for (TTRField f : fields) {
 			TTRField instance = f.instantiate();
-			logger.debug("instatiating " + f);
-			logger.debug("instantiated:" + instance);
+			logger.trace("instatiating " + f);
+			logger.trace("instantiated:" + instance);
 			result.fields.add(instance);
 			result.record.put(instance.getLabel(), instance);
 		}
@@ -1780,13 +1994,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	}
 
-	public TTRRecordType getSuperTypewithDepandents(TTRField field) {
-		if (!this.hasField(field))
-			return new TTRRecordType();
-
-		List<TTRField> fields = getDependents(field);
-		return new TTRRecordType(fields);
-	}
+	
 
 	public List<TTRField> getDependents(TTRField field) {
 		List<TTRField> result = new ArrayList<TTRField>();
@@ -1821,11 +2029,33 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	private List<TTRField> getMaximalSuperTypeWith(TTRField f) {
 		List<TTRField> parents = getParents(f);
+		
 		List<TTRField> result = new ArrayList<TTRField>();
-		for (TTRField parent : parents)
-			result.addAll(getDependents(parent));
-
+		if (parents.isEmpty())
+		{
+			
+			result.add(f);
+			return result;
+		}
+		
 		result.addAll(parents);
+		for (TTRField parent : parents)
+		{
+			List<TTRField> deps=getDependents(parent);
+			for(TTRField dep:deps)
+			{
+				if (!result.contains(dep))
+				{
+					result.add(dep);
+					List<TTRField> depParents=getParents(dep);
+					for(TTRField p: depParents)
+					{
+						if (!result.contains(p))
+							result.add(p);
+					}
+				}
+			}
+		}
 
 		return result;
 	}
@@ -2423,6 +2653,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		
 		return MetaPredicate.get(Formula.METAPREDICATE_ROOT+lastIndexOfPredicateMeta);
 		
+	}
+
+	public int getSpecificity(TTRField field) {
+		List<TTRField> maxType=this.getMaximalSuperTypeWith(field);
+		
+		return maxType.size();
 	}
 
 	

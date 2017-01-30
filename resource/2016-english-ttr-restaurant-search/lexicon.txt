@@ -64,6 +64,7 @@ prefer                         v_subjcon_fin                 prefer             
 prefer                          v_subjcon_inf                 prefer                          inf                          nons3
 //looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
+look						  v_intran_post_causative		  look							inf							  per
 was                           v_aux_be                      past                          s3
 was                           v_be                      past                          s3
 were                          v_aux_be                      past                          per
@@ -90,6 +91,7 @@ a                             det_indef                     eps
 a							  det_indef_postcop				eps
 an                            det_indef                     eps
 an                            det_indef_postcop             eps
+any							  det_indef						eps
 one							  det_num						one						s3
 two							  det_num						two						plur
 three					      det_num						three		     		plur
@@ -140,3 +142,7 @@ range						  count							range					s3				obj
 party						  count							party					s3				obj
 london                        proper                        london                        s3                            loc
 paris                         proper                        paris                         s3                            loc
+<rt>				  		  release_turn					null
+//the name of the release turn token must be the same as in Utterance.RELEASE_TURN_TOKEN
+have                      	  v_tran_fin_imperative         have                          imper                          s2
+let							  v_tran_causative_imperative		let							  imper							 s2

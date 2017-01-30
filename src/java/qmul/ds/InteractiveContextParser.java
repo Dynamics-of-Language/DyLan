@@ -360,17 +360,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				word.setAddressee(participants.get(0));
 		}
 		
-		if (word.word().equals(RELEASE_TURN))
-		{
-			if (this.context.floorIsOpen() || !word.speaker().equals(context.getPrevSpeaker()))
-				return getState();
-			
-			
-			this.context.openFloor();
-			return getState();
-			
-			
-		} else if (word.word().equals(WAIT))
+		if (word.word().equals(WAIT))
 		{
 			return getState();
 		}
@@ -414,6 +404,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		this.getState().thisIsFirstTupleAfterLastWord();
 		logger.info("Parsed " + word);
 		logger.info("Final Tuple:" + getState().getCurrentTuple());
+		logger.info("Sem:"+getState().getCurrentTuple().getSemantics(context));
 
 		return this.getState();
 	}

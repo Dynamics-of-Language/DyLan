@@ -19,7 +19,7 @@ public class Utterance {
 	public static final String SPEAKER_SEP=":";
 	public static final String defaultSpeaker = "Dylan";
 	public static final String defaultAddressee = "you";
-	public static final String RELEASE_TURN_TOKEN= "<release-turn>";
+	public static final String RELEASE_TURN_TOKEN= "<rt>";
 	private static final String[] delimitersArray = { ".", "?", "!" };
 	public static final List<String> SENTENCE_DELIMITERS = Arrays.asList(delimitersArray);
 	public static final String WAIT = "<wait>";

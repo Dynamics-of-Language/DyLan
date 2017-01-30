@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -14,17 +15,17 @@ import edu.uci.ics.jung.graph.Tree;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.ttrlattice.AustinianProp;
 
 /**
  * This class encodes the dialogue context, containing a Directed Asyclic Graph, which
  * as per Eshghi et. al. (2015), encodes the DS procedural context with information about 
  * speaker/hearer coordination, and grounding. It also encodes information about dialogue participants,
  * floor status, etc. (could include time/place). It also provides methods for getting the grounded content of the 
- * conversation (optimistically or otherwise, akin to Ginzburgh (2009)'s FACTS), or content asserted by a speaker.
+ * conversation (optimistically or otherwise, akin to Ginzburgh (2009)'s FACTS), or content asserted by a particular speaker.
  * 
  * This is where the grammar would interface with the non-linguistic, situational context. 
  * In situated dialogue, subclasses of this class can encode non-linguistic,
@@ -53,21 +54,25 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 
 	
 	/**
-	 * this is a map from dialogue participants to the content asserted/accepted by them. This is maintained as the dialogue goes 
+	 * this is a map from dialogue participants to the content asserted by them. This should is maintained as the dialogue goes 
 	 * forward. 
 	 * 
+	 * Currently this is ONLY used to maintain the participants themselves. Asserted contents are as per 
+	 * annotations on the trees in the DAG.
+	 * 
 	 */
-	protected Map<String, TTRFormula> accepted_contents=null;
+	protected Map<String, TreeSet<AustinianProp>> asserted_contents=null;
 	protected DAG<T,E> dag;
+	
 	protected String myName;
 	protected String whoHasFloor=null;
 	
 	public void initParticipantContents(Set<String> participants)
 	{
-		accepted_contents=new HashMap<String, TTRFormula>();
+		asserted_contents=new HashMap<String, TreeSet<AustinianProp>>();
 		for(String s:participants)
 		{
-			accepted_contents.put(s, new TTRRecordType());
+			asserted_contents.put(s, new TreeSet<AustinianProp>());
 		}
 		
 	}
@@ -82,14 +87,14 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	}
 	
 	/**
-	 * Returns the grounded content of the conversation aith a strict grounding strategy 
+	 * Returns the grounded content of the conversation with a strict grounding strategy 
 	 * (requires explicit acceptance from other). Contrast {@link getCautiouslyOptimisticGroundedContent}
 	 * @return 
 	 */
 	public TTRFormula getGroundedContent()
 	{
 	
-		TTRFormula accepted=dag.getGroundedContent(accepted_contents.keySet()).removeHead();
+		TTRFormula accepted=dag.getGroundedContent(asserted_contents.keySet()).removeHead();
 		if (!(accepted instanceof TTRRecordType))
 			throw new UnsupportedOperationException("accepted content not a record type");
 		
@@ -97,6 +102,36 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		return accepted;
 		
 	}
+	
+	
+	/**Returns the set of AustinianProps asserted by speaker. The set is ordered by assertion time. Latest first.
+	 * 
+	 * @param speaker
+	 * @return
+	 */
+	public TreeSet<AustinianProp> getAssertions(String speaker)
+	{
+		return dag.getAssertions(speaker);
+	}
+	/**
+	 * Gets all Austinian Props asserted in the conversation. 
+	 * Doesn't care whether these were grounded. This is a hacky version of an implementation for 
+	 * cautiously optimistic grounding.
+	 * Is not guaranteed to work for all domains..... 
+	 * 
+	 * We do not yet have a proper model of this.... 
+	 * 
+	 * @return
+	 */
+	public TreeSet<AustinianProp> getAllAssertions()
+	{
+		return dag.getAssertions(this.getParticipants());
+	
+	}
+	
+	
+	
+	
 	
 	/**
 	 * get cautiously optimistic grounded content - all asserted content on the path back to root.
@@ -108,7 +143,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	public TTRFormula getCautiouslyOptimisticGroundedContent()
 	{
 		TTRFormula result=new TTRRecordType();
-		for(String participant: this.accepted_contents.keySet())
+		for(String participant: this.asserted_contents.keySet())
 		{
 			logger.debug("conjoining content for "+participant);
 			
@@ -122,13 +157,6 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		
 		((TTRRecordType)headless).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
 		return headless;
-	}
-	
-	
-	
-	public TTRFormula getGroundedContent(String speaker)
-	{
-		return this.accepted_contents.get(speaker);
 	}
 	
 	public boolean floorIsOpen()
@@ -145,15 +173,15 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	
 	public void addParticipant(String name)
 	{
-		if (accepted_contents.keySet().contains(name))
+		if (asserted_contents.keySet().contains(name))
 			return;
 		
-		accepted_contents.put(name, new TTRRecordType());
+		asserted_contents.put(name, new TreeSet<AustinianProp>());
 	}	
 	
 	public void removeParticipant(String name)
 	{
-		accepted_contents.remove(name);
+		asserted_contents.remove(name);
 	}
 	
 	public Tree<T,E> getActiveDAG()
@@ -207,17 +235,11 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		return dag.getParent(cur);
 	}
 	
-//	/**
-//	 * deems the current tuple to have been asserted by the last speaker.
-//	 */
-//	public void setAcceptancePointer()
-//	{
-//		dag.setAcceptancePointer(dag.getSpeakerOfPreviousWord());
-//	}
+
 
 	public Set<String> getParticipants()
 	{
-		return accepted_contents.keySet();
+		return asserted_contents.keySet();
 	}
 	
 	
@@ -324,23 +346,13 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		return dag.repairInitiated();
 	}
 	
-	public void conjoinAcceptedContent(String participant, TTRFormula semantics) {
-		if (this.accepted_contents.containsKey(participant))
-		{
-			TTRFormula conjoined=semantics.conjoin(this.accepted_contents.get(participant));
-			conjoined.collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
-			this.accepted_contents.put(participant, conjoined);
-		}
-		else
-			this.accepted_contents.put(participant, semantics);
-		
-	}
+	
 	
 	public String printAcceptedContents()
 	{
 		String result="";
-		for(String speaker:this.accepted_contents.keySet())
-			result+=speaker+":"+accepted_contents.get(speaker)+"\n";
+		for(String speaker:this.asserted_contents.keySet())
+			result+=speaker+":"+asserted_contents.get(speaker)+"\n";
 		
 		return result;
 			
@@ -381,7 +393,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		if (!(allContent instanceof TTRRecordType))
 			throw new UnsupportedOperationException("accepted content not a record type");
 		
-		
+		//return allContent;
 		((TTRRecordType)allContent).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
 		return allContent;
 	}

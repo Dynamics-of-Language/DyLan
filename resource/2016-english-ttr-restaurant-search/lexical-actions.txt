@@ -663,6 +663,23 @@ THEN	delete(?Ex.fo(x))
 		v_intran_content(PRED)
 ELSE	abort
 
+v_intran_post_causative(PRED,TENSE,PERSON)
+IF		?ty(t)
+  		</\0>?ty(e>(e>t))
+       	¬<\/0>Ex.x
+        ¬<\/1>Ex.x
+        </\0/\1\/0>Fo(X)
+THEN	make(\/0)
+		go(\/0)
+		put(ty(e))
+		put(Fo(X))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(ty(e>t))
+		v_intran_content(PRED)
+ELSE	abort
+
 v_intran_ing(PRED,TENSE,PERSON)
 IF		ty(e>t)
         ?Ex.fo(x)
@@ -697,6 +714,62 @@ IF		ty(e>t)
 THEN	delete(?Ex.fo(x))
 		v_intran_content(PRED)
 ELSE	abort  
+
+
+v_tran_causative_imperative(PRED,TENSE,PERSON)
+IF		?ty(e)
+		</\0\/1>Ex.x
+		Addressee(X)
+THEN	put(ty(e))
+		delete(?ty(e))
+		ttrput([x==X:e|head==x:e])
+		go(/\0)
+		go(\/1)	
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		ttrput([head:es|p1==imperative(head):t])
+		go(/\L)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>(e>t)))
+		make(\/1)
+		go(\/1)
+		put(ty(t>(e>(e>t))))
+		ttrput(R3^R1^R2^(R1 ++ (R2 ++ (R3 ++ [e1==PRED:es|head==e1:es|p2==subj(e1, R2.head):t|p3==obj(e1, R1.head):t|p4==ind_obj(e1, R3.head):t]))))
+		put(!)
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(t))
+		go(/\0)
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+ELSE	abort
+
+		
+		
+v_tran_fin_imperative(PRED,TENSE,PERSON)
+IF		?ty(e)
+		</\0\/1>Ex.x
+		Addressee(X)
+THEN	put(ty(e))
+		delete(?ty(e))
+		ttrput([x==X:e|head==x:e])
+		go(/\0)
+		go(\/1)	
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		ttrput([head:es|p1==imperative(head):t])
+		go(/\L)
+		v_tran_content(PRED)
+ELSE	abort
+
 
 v_subjcon_inf(PRED,TENSE,PERSON)
 IF		ty(e>t)
@@ -1133,7 +1206,7 @@ THEN	IF		(<Z>+Q || Assert(Y))
 		ELSE	put(Assert(X))
 ELSE	abort
 
-//*
+
 release_turn(PRED)
 IF		Speaker(X)
 		PrevSpeaker(Y)
@@ -1147,7 +1220,7 @@ THEN	IF		ty(t)
 						open_floor
 		ELSE	open_floor
 ELSE	abort
-*//
+
 
 
 question(PRED)
