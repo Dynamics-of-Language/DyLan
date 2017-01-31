@@ -250,6 +250,11 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	//END OF methods for rerunning actions-------------------------------------------------------
 	
 
+	public TTRFormula getFinalSemantics()
+	{
+		return context.getCurrentTuple().getSemantics(context);
+	}
+	
 	//BEGIN methods for completing a tree --------------------------------------------------------
 	/** Completes the current tuple in the state (the right most node), and adds an edge to the dag which 
 	 * is composed of all the computational actions applied to do the completion, followed by word (e.g. "."): this is 

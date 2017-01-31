@@ -16,6 +16,7 @@ we							  i								nons3							per
 you							  you							nons3							per
 your						  your							your
 it							  proper						it						   s3							 obj
+arash						  proper						arash					   s3							 per
 make		                  v_tran_inf                    make                       inf                           per
 make		                  v_tran_fin                    make                       pres                          nons3
 makes  	                      v_tran_fin                    make                       pres                          s3
