@@ -69,13 +69,13 @@ THEN    make(\/*)
 ELSE    abort
 *//
 
-
+//*
 anticipationL
 IF		(ty(t) || ty(e>t))
 		<\/L>Ex.x
 THEN	go(\/L)		
 ELSE	abort
-
+*//
 
 //*
 

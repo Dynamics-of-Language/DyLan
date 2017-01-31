@@ -109,10 +109,9 @@ five						  adj_be						five
 six							  adj_be						six
 seven						  adj_be						seven
 eight						  adj_be						eight
-by							  prep_e						by
-from						  prep_e						from
 to							  to_subjcon					to
 for							  prep_es						for
+for							  prep_e						for
 with						  prep_es						with
 on							  prep_postcop					on
 on							  prep_e						on

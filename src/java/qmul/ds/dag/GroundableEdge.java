@@ -17,6 +17,7 @@ public class GroundableEdge extends DAGEdge {
 
 	public GroundableEdge() {
 
+		
 	}
 
 	public GroundableEdge(Action a, UtteredWord w) {
@@ -93,7 +94,7 @@ public class GroundableEdge extends DAGEdge {
 		DAGTuple dest = dag.getDest(this);
 
 		
-		logger.info("Going forward along: " + this);
+		logger.debug("Going forward along: " + this);
 		setInContext(true);
 		
 		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(source);
@@ -134,7 +135,7 @@ public class GroundableEdge extends DAGEdge {
 		setInContext(false);
 
 		dag.setCurrentTuple(dag.getSource(this));
-		logger.info("Backtracked over: " + this);
+		logger.debug("Backtracked over: " + this);
 
 	}
 	

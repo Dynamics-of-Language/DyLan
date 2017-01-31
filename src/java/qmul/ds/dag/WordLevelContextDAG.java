@@ -226,6 +226,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 				continue;
 
 			logger.info("Going forward first along: " + e);
+			logger.debug("Going forward first along: " + e.toDebugString());
 			if (e.word().speaker().equals(DAGGenerator.myName))
 				wordStack.push(e.word());
 
