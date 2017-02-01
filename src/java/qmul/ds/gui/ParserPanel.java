@@ -51,8 +51,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -60,6 +63,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -68,15 +72,6 @@ import javax.swing.text.StyledDocument;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.ContextParser;
-import qmul.ds.DSParser;
-import qmul.ds.Generator;
-import qmul.ds.InteractiveContextParser;
-import qmul.ds.ParserTuple;
-import qmul.ds.Utterance;
-import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
-import qmul.ds.formula.TTRFormula;
 import edu.stanford.nlp.ling.BasicDocument;
 import edu.stanford.nlp.ling.Document;
 import edu.stanford.nlp.process.DocumentProcessor;
@@ -87,6 +82,15 @@ import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.international.pennchinese.ChineseTreebankLanguagePack;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import qmul.ds.ContextParser;
+import qmul.ds.DSParser;
+import qmul.ds.Generator;
+import qmul.ds.InteractiveContextParser;
+import qmul.ds.ParserTuple;
+import qmul.ds.Utterance;
+import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.GroundableEdge;
+import qmul.ds.formula.TTRFormula;
 
 /**
  * Provides a simple GUI Panel for Parsing. Allows a user to load a parser
@@ -1196,25 +1200,53 @@ public class ParserPanel extends JPanel {
 					}
 				});
 
-		pTextPane.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-					highlightEditedSentence();
-					parse(true);
-					pTextPane.setText("");
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-			}
-		});
+		InputMap textPaneMap=pTextPane.getInputMap();
+		KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+	    KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+	    textPaneMap.put(shiftEnter, "parse-release-turn");  // input.get(enter)) = "insert-break"
+	    textPaneMap.put(enter, "parse");
+	    ActionMap actions = pTextPane.getActionMap();
+	    actions.put("parse-release-turn", new AbstractAction() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	        	parse(true);
+				pTextPane.setText("");
+	        }
+	    });
+	    actions.put("parse", new AbstractAction() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	        	parse(false);
+				pTextPane.setText("");
+	        }
+	    });
+	    
+//		pTextPane.addKeyListener(new KeyListener() {
+//
+//			@Override
+//			public void keyTyped(KeyEvent e) {
+//				System.out.println(e);
+//				System.out.println(e.getModifiers());
+//				System.out.println("Enter:"+KeyEvent.VK_ENTER);
+//				System.out.println("keycode:"+e.getKeyCode());
+//				
+//				if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers()==1) 
+//				{
+//					//highlightEditedSentence();
+//					parse(false);
+//					pTextPane.setText("");
+//					
+//				}
+//			}
+//
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//			}
+//
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//			}
+//		});
 
 		pTextScrollPane.setViewportView(pTextPane);
 

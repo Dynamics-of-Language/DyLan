@@ -1,12 +1,16 @@
 package qmul.ds.formula;
 
 import java.util.HashMap;
-
+/**
+ * A disjunctive type: R1 \/ R2. In general, R1 and R2 can either be TTRRecordTypes or TTRInfixExpressions.
+ * But currently only TTRRecordTypes are implemented/allowed as disjuncts.
+ * 
+ * @author Arash
+ *
+ */
 public class DisjunctiveType extends TTRInfixExpression {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -7419851471581483609L;
 
 	public DisjunctiveType(Formula arg1, Formula arg2) {
@@ -64,7 +68,10 @@ public class DisjunctiveType extends TTRInfixExpression {
 		return new DisjunctiveType(left.sortFieldsBySpecificity(), right.sortFieldsBySpecificity());
 		
 	}
-	
+	/**
+	 * Currently returns the maximally specific common super type of arg1 & arg2, in terms of the labels of arg1
+	 * 
+	 */
 	public TTRRecordType evaluate()
 	{
 		if (!(this.arg1 instanceof TTRRecordType && this.arg2 instanceof TTRRecordType))

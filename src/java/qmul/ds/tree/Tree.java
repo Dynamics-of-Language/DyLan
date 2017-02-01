@@ -634,27 +634,25 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public static void main(String args[]) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance utt = new Utterance("usr: what can i help you with?");
+		Utterance utt = new Utterance("usr: can you book a table for four people");
 
 		parser.parseUtterance(utt);
 
-		TTRFormula f = parser.getContext().getCurrentTuple().getSemantics().removeHead();
-		System.out.println(f);
-		parser.init();
-		boolean subsumed = true;
-		for (UtteredWord w : utt.getWords()) {
-			parser.parseWord(w);
-			TTRFormula partial = parser.getContext().getCurrentTuple().getSemantics(parser.getContext()).removeHead();
-			System.out.println(partial);
-			subsumed = partial.subsumes(f);
-			if (!subsumed) {
-				System.out.println("Failed after:" + w);
-				break;
-			}
-
-		}
-		System.out.println("Subsumed:" + subsumed);
-
+		Tree cur=parser.getContext().getCurrentTuple().getTree();
+		
+		System.out.println("Tree: "+cur);
+		System.out.println("Incompleteness: "+cur.getIncompletenessMeasure());
+		parser.parse();
+		cur=parser.getContext().getCurrentTuple().getTree();
+		
+		System.out.println("Tree: "+cur);
+		System.out.println("Incompleteness: "+cur.getIncompletenessMeasure());
+		parser.parse();
+		cur=parser.getContext().getCurrentTuple().getTree();
+		
+		System.out.println("Tree: "+cur);
+		System.out.println("Incompleteness: "+cur.getIncompletenessMeasure());
+		
 	}
 
 	/**
@@ -1106,11 +1104,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 *         AssertionLabels
 	 */
 	public Set<String> getAsserters() {
-		if (!this.isComplete())
-			return new HashSet<String>();
+		//if (!this.isComplete())
+		//	return new HashSet<String>();
 
 		Set<String> asserters = new HashSet<String>();
-		for (Label l : this.getRootNode()) {
+		for (Label l : this.getPointedNode()) {
 			if (l instanceof AssertionLabel) {
 				asserters.add(((AssertionLabel) l).getSpeaker());
 			}
@@ -1122,7 +1120,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public int countIncompleteNodes() {
 		int count = 0;
 		for (Node n : this.values()) {
-			if (!n.hasType())
+			if (!n.isComplete())
 				count++;
 		}
 		return count;

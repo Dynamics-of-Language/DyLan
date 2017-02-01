@@ -1197,6 +1197,10 @@ THEN	put(?+eval)
 ELSE	abort
 
 
+
+
+//*		
+
 assert(PRED)
 IF		ty(t)
 		complete
@@ -1205,6 +1209,50 @@ THEN	IF		(<Z>+Q || Assert(Y))
 		THEN	abort
 		ELSE	put(Assert(X))
 ELSE	abort
+
+*//
+
+
+assert(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	  ty(X)
+					  ¬</\L>Ex.x
+					  Speaker(W)	
+				THEN  put(Assert(W))
+				ELSE  abort
+
+question(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	    ty(X)
+					    ¬</\L>Ex.x	
+				THEN    IF	  	<Z>+Q
+			    	    THEN  	do_nothing
+					    ELSE  	put(+Q)
+				ELSE    abort
+
+//*
+
+question(PRED)
+IF		ty(t)
+		complete
+THEN	IF	  	Assert(X)
+		THEN  	abort
+		ELSE    IF	  	<Z>+Q
+			    THEN  	do_nothing
+				ELSE  	put(+Q)
+ELSE	abort	
+
+*//
 
 
 release_turn(PRED)
@@ -1222,16 +1270,8 @@ THEN	IF		ty(t)
 ELSE	abort
 
 
-
-question(PRED)
-IF		ty(t)
-		complete
-THEN	IF	  	Assert(X)
-		THEN  	abort
-		ELSE    IF	  	<Z>+Q
-			    THEN  	do_nothing
-				ELSE  	put(+Q)
-ELSE	IF		¬+Q
+//*
+IF		¬+Q
 				?ty(e)
 				Ex.tn(x)
 				¬</\0>?ty(t)
@@ -1242,7 +1282,7 @@ ELSE	IF		¬+Q
 						ttrput([x:e|head==x:e])
 						delete(?ty(e))
 		ELSE	abort
-
+*//
 
 
 

@@ -27,6 +27,7 @@ import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -743,16 +744,26 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	
 	public static void main(String[] a) {
 
-		TTRRecordType r1=TTRRecordType.parse("[x==john:e]");
-		TTRRecordType r2=TTRRecordType.parse("[x:e]");
+		TTRRecordType r1=TTRRecordType.parse("[y==U1:e|p==man(y):t]");
+		TTRRecordType r2=TTRRecordType.parse("[x==U2:e]");
+	
+		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
 		
-		System.out.println(r2.conjoin(r1));
+		System.out.println(r1.toDebugString());
+		System.out.println(r2.toDebugString());
+		System.out.println(r2.subsumesMapped(r1, map));
+		System.out.println(map);
 		
 //		InteractiveContextParser parser = new InteractiveContextParser(
 //				"resource/2016-english-ttr-restaurant-search");
-//		Utterance utt=new Utterance("arash: what can i help you with today?");
+//		Utterance utt=new Utterance("arash: what");
 //		parser.parseUtterance(utt);
-		
+//		TTRFormula sem=parser.getFinalSemantics();
+//		System.out.println(sem);
+//		System.out.println(sem.evaluate());
+//		parser.parseWord(new UtteredWord("can", "arash"));
+//		sem=parser.getFinalSemantics();
+//		System.out.println(sem);
 		
 		//TTRRecordType rt2=(TTRRecordType)parser.getContext().getCurrentTuple().getSemantics(parser.getContext()).removeHead();
 //		TTRRecordType rt2=TTRRecordType.parse("[x6==arash : e|e6 : es|x9==dylan : e|x1 : e|p2==modal(e6) : t|head==e6 : es|"
@@ -918,21 +929,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		
 		List<TTRRecordType> decomposedList = new ArrayList<TTRRecordType>();
-
-		for(TTRField f: fields)
+		
+		TTRRecordType sorted=this.sortFieldsBySpecificity();
+		
+		for(int i=sorted.fields.size()-1; i>=0;i--)
 		{
-			
-			if (f.getType()!=null && !f.getDSType().equals(DSType.es) && f.getType().getVariables().isEmpty())
-			{
-				TTRRecordType singlton=new TTRRecordType();
-				singlton.add(new TTRField(f));
-				decomposedList.add(singlton);
-			}
-			else if (f.getType()!=null&&!f.getVariables().isEmpty())
-			{
-				TTRRecordType dependents=this.getSuperTypeWithParents(f);
-				decomposedList.add(dependents);
-			}
+			TTRField f=sorted.fields.get(i);
+			if (f.getType()!=null)
+				decomposedList.add(this.getMinimalSuperTypeWith(f));
 		}
 		
 		return decomposedList;

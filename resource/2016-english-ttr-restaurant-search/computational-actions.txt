@@ -69,16 +69,18 @@ THEN    make(\/*)
 ELSE    abort
 *//
 
-
+//*
 anticipationL
 IF		(ty(t) || ty(e>t))
 		<\/L>Ex.x
 THEN	go(\/L)		
 ELSE	abort
-
+*//
 
 //*
 
+//TODO: to be possible only when the corresponding Ty(e) has a +Q on it..... 
+//how would you do the link evalutation.... formula sharing... shared head.
 link-adj-e
 IF      ty(e)
 		+PN
@@ -99,23 +101,25 @@ THEN	go(Z)
 ELSE	abort
 
 late-star-adj-q
-IF		¬!
-		+Q
- 		//</\*>tn(0)
-        ty(X)  
-   		//¬<\/1>Ex.x
-        //¬<\/0>Ex.x
-      	¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
-        Ex.tn(x)
-THEN	delete(+Q)
-        make(\/*)
-        go(\/*)
-       	put(?Ex.tn(x))
-       	put(?ty(X))
-       	IF		</\*>+BE
-       	THEN	put(+BE)
-       	ELSE	do_nothing
-ELSE	abort
+IF		</\0\/1>Ex.x
+		</\0\/1>Ex.?x
+THEN	abort
+ELSE	IF		¬!
+				+Q
+       			 ty(X)
+		   		¬<\/1>Ex.x
+		        ¬<\/0>Ex.x
+		      	¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
+		        Ex.tn(x)
+		THEN	delete(+Q)
+		        make(\/*)
+		        go(\/*)
+		       	put(?Ex.tn(x))
+		       	put(?ty(X))
+		       	IF		</\*>+BE
+		       	THEN	put(+BE)
+		       	ELSE	do_nothing
+		ELSE	abort
 
 
 //*
@@ -146,10 +150,15 @@ IF      Ex.tn(x)
 		¬<\/*>Ex.x
 		<Y>(?Ex.tn(x) & ty(V))
 		subsumes(Y)
-		(?ty(V) || ty(V))		           
-THEN    merge(Y)
-		delete(?Ex.tn(x))	
-ELSE    abort
+THEN	IF		?ty(V)		           
+		THEN    merge(Y)
+				delete(?Ex.tn(x))	
+		ELSE    IF		ty(Z) 
+						?Ex.fo(x)
+				THEN	merge(Y)
+						delete(?Ex.tn(x))
+				ELSE	abort
+ELSE	abort
 
 *late-star-merge
 IF		ty(Y)
@@ -184,7 +193,7 @@ ELSE    abort
 
 
 //transition relevance place
-
+//TODO
 trp
 IF		complete
 THEN	addaxiom
