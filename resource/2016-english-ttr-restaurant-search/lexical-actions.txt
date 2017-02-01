@@ -1197,20 +1197,7 @@ THEN	put(?+eval)
 ELSE	abort
 
 
-assert(PRED)
-IF		ty(Y>Z)
-THEN	abort
-ELSE	IF		</\0\/1>Ex.x
-				¬</\0\/1>Ex.?x
-				¬Ex.?x
-		THEN	abort
-		ELSE	IF	  ty(X)
-					  ¬</\L>Ex.x
-					  Speaker(W)	
-				THEN  put(Assert(W))
-				ELSE  abort
 
-		
 
 //*		
 
@@ -1224,6 +1211,49 @@ THEN	IF		(<Z>+Q || Assert(Y))
 ELSE	abort
 
 *//
+
+
+assert(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	  ty(X)
+					  ¬</\L>Ex.x
+					  Speaker(W)	
+				THEN  put(Assert(W))
+				ELSE  abort
+
+question(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	    ty(X)
+					    ¬</\L>Ex.x	
+				THEN    IF	  	<Z>+Q
+			    	    THEN  	do_nothing
+					    ELSE  	put(+Q)
+				ELSE    abort
+
+//*
+
+question(PRED)
+IF		ty(t)
+		complete
+THEN	IF	  	Assert(X)
+		THEN  	abort
+		ELSE    IF	  	<Z>+Q
+			    THEN  	do_nothing
+				ELSE  	put(+Q)
+ELSE	abort	
+
+*//
+
 
 release_turn(PRED)
 IF		Speaker(X)
@@ -1239,17 +1269,6 @@ THEN	IF		ty(t)
 		ELSE	open_floor
 ELSE	abort
 
-
-
-question(PRED)
-IF		ty(t)
-		complete
-THEN	IF	  	Assert(X)
-		THEN  	abort
-		ELSE    IF	  	<Z>+Q
-			    THEN  	do_nothing
-				ELSE  	put(+Q)
-ELSE	abort	
 
 //*
 IF		¬+Q
