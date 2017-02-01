@@ -49,8 +49,8 @@ public class MetaType extends DSType {
 	/**
 	 * @return the meta-elements
 	 */
-	public ArrayList<MetaElement<?>> getMetas() {
-		ArrayList<MetaElement<?>> metas = new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		ArrayList<Meta<?>> metas = new ArrayList<Meta<?>>();
 		metas.add(meta);
 		return metas;
 	}

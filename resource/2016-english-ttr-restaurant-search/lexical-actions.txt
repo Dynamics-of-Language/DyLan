@@ -422,6 +422,7 @@ ELSE	IF		?ty(t)
 				put(ty(e))
 				ttrput([x:e|head==x:e])
 				put(+Q)
+				put(+meta)
 		ELSE	abort
 
 
@@ -439,6 +440,7 @@ ELSE	IF		?ty(t)
 				put(ty(e))
 				ttrput([x:e|head==x:e])
 				put(+Q)
+				put(+meta)
 				put(class(CLASS))
 		ELSE	IF		?ty(e)
 						Ex.tn(x)
@@ -450,6 +452,7 @@ ELSE	IF		?ty(t)
 						put(ty(e))
 						ttrput([x:e|head==x:e])
 						put(+Q)
+						put(+meta)
 						put(class(CLASS))
 				ELSE	abort
 
@@ -480,6 +483,7 @@ ELSE	IF		?ty(t)
 				put(ty(e))
 				ttrput([x:e|head==x:e])
 				put(+Q)
+				put(+meta)
 				go(/\0)
 				go(/\1)
 				make(\/0)
@@ -512,6 +516,7 @@ ELSE	IF		?ty(t)
 						put(ty(e))
 						ttrput([x:e|head==x:e])
 						put(+Q)
+						put(+meta)
 						go(/\0)
 						go(/\1)
 						make(\/0)
@@ -554,6 +559,7 @@ ELSE	IF		?ty(t)
 				make(\/0)
 				go(\/0)
 				put(+Q)
+				put(+meta)
 				ttrput([x:e|head==x:e])
 				put(ty(e))
 				go(/\0)
@@ -578,6 +584,7 @@ ELSE	IF		?ty(t)
 						make(\/0)
 						go(\/0)
 						put(+Q)
+						put(+meta)
 						ttrput([x:e|head==x:e])
 						put(ty(e))
 						go(/\0)
@@ -1158,6 +1165,7 @@ IF		ty(e)
 		¬<\/L>Ex.x
 		fo(X)		
 THEN	delete(+Q)
+		delete(+meta)
 		put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -1254,7 +1262,27 @@ ELSE	abort
 
 *//
 
+release_turn(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	  	ty(X)
+					  	¬</\L>Ex.x
+					  	Speaker(W)
+					 	PrevSpeaker(V)
+						W=V
+						¬floor_open
+				THEN	IF		(Assert(W) || <Z>+Q)
+					 	THEN	open_floor
+						ELSE	put(Assert(X))
+								open_floor
+				ELSE    abort
 
+
+//*
 release_turn(PRED)
 IF		Speaker(X)
 		PrevSpeaker(Y)
@@ -1268,7 +1296,7 @@ THEN	IF		ty(t)
 						open_floor
 		ELSE	open_floor
 ELSE	abort
-
+*//
 
 //*
 IF		¬+Q
@@ -1298,10 +1326,9 @@ THEN	IF	    +Q
 				put(!)
 ELSE	abort
 
+//'yes' as acceptance of assertion
 accept(PRED)
-IF		ty(t)
-		complete
-		¬+Q
+IF		¬+Q
 		¬<\/*>+Q
 		PrevSpeaker(Y)
 		Assert(Y)
@@ -1311,9 +1338,10 @@ THEN	IF 		X=Y
 		ELSE	put(Assert(X))
 ELSE	abort
 
+// 'yes' as answer to question
+//needs to distinguish between meta-variables put by wh-terms and fully-fledged formulae
 yes(PRED)
-IF 		ty(t)
-		complete
+IF 		¬+meta
 		+Q
 		Speaker(X)
 		PrevSpeaker(Y)

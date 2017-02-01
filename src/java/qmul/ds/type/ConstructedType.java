@@ -11,6 +11,8 @@ package qmul.ds.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import qmul.ds.action.meta.Meta;
+
 /**
  * A constructed type e.g. e>t, (e>t)>t
  * 
@@ -121,6 +123,16 @@ public class ConstructedType extends DSType {
 	public int toUniqueInt()
 	{
 		return from.toUniqueInt()+to.toUniqueInt();
+	}
+	
+	public ArrayList<Meta<?>> getMetas()
+	{
+		ArrayList<Meta<?>> metas=new ArrayList<Meta<?>>();
+		metas.addAll(from.getMetas());
+		metas.addAll(to.getMetas());
+		return metas;
+		
+		
 	}
 
 }

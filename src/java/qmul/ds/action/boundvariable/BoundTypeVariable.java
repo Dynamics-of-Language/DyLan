@@ -10,6 +10,7 @@ package qmul.ds.action.boundvariable;
 
 import java.util.ArrayList;
 
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaType;
 import qmul.ds.type.DSType;
@@ -44,11 +45,11 @@ public class BoundTypeVariable extends MetaType {
 		return name;
 	}
 
-	public ArrayList<MetaElement<?>> getMetas() {
-		return new ArrayList<MetaElement<?>>();
+	public ArrayList<Meta<?>> getMetas() {
+		return new ArrayList<Meta<?>>();
 	}
 
-	public ArrayList<MetaElement<?>> getBoundMetas() {
+	public ArrayList<Meta<?>> getBoundMetas() {
 		return super.getMetas();
 
 	}
