@@ -7,14 +7,41 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import qmul.ds.Utterance;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.LabelFactory;
 
 public class BabiDialogue {
 	public static final String[] AGENTS = new String[]{"usr", "sys"};
 	private List<Utterance[]> turns = new ArrayList<>();
+	public static Map<String, String> replacements=new HashMap<String,String>();
+	static {
+		Map<String, String> map = new HashMap<String, String>();
 
+		map.put("which price range are looking for", "which price range are you looking for");
+		map.put("<silence>", "<wait>");
+
+		replacements = Collections.unmodifiableMap(map);
+	}
+
+	private static String applyReplacements(String s)
+	{
+		String init=new String(s);
+		
+		for(String replacement: replacements.keySet())
+		{
+			init=init.replace(replacement, replacements.get(replacement));
+			
+		}
+		
+		return init;
+	}
+	
 	public static List<BabiDialogue> loadFromBabiFile(String inBabiFilename) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(inBabiFilename)));
 		List<BabiDialogue> result = new ArrayList<>();
@@ -25,7 +52,8 @@ public class BabiDialogue {
 				result.add(new BabiDialogue());
 				continue;
 			}
-			line = line.toLowerCase().replace("<silence>", "<wait>");
+			//line = line.toLowerCase().replace("<silence>", "<wait>");
+			line=applyReplacements(line.toLowerCase());
 			String[] lineParts = line.split(" ", 2);
 			String[] utterances = lineParts[1].split("\t");
 			assert 2 == utterances.length: "Invalid bAbI data: " + line;
@@ -96,11 +124,13 @@ public class BabiDialogue {
 	}
 
 	public static void main(String[] args) throws IOException {
-		if (args.length != 2) {
-			System.out.println("Usage: BabiDialogue.java <bAbI folder> <Babble folder>");
-			return;
-		}
-		convertCorpus(args[0], args[1]);
+//		if (args.length != 2) {
+//			System.out.println("Usage: BabiDialogue.java <bAbI folder> <Babble folder>");
+//			return;
+//		}
+//		convertCorpus(args[0], args[1]);
+		
+		convertCorpus("corpus/bAbI-dialogue/dialog-bAbI-tasks", "corpus/bAbI-dialogue/babble-format");
 	}
 
 	public void addTurn(Utterance[] inUtterances) {

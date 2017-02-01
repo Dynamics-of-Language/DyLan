@@ -10,6 +10,7 @@
 
 intro-pred
 IF		?ty(t)
+		¬!
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
         ¬<\/*>+Q
