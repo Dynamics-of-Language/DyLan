@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaType;
 import qmul.ds.tree.label.LabelFactory;
 import edu.stanford.nlp.util.Pair;
@@ -164,5 +165,11 @@ public class DSType implements Serializable {
 	public int toUniqueInt() {
 		
 		return 0;
+	}
+	
+	public ArrayList<Meta<?>> getMetas()
+	{
+		return new ArrayList<Meta<?>>();
+		
 	}
 }

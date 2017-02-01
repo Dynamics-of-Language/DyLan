@@ -353,7 +353,7 @@ public class IfThenElse extends Effect implements Serializable {
 	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context) {
 		// get & reset metavariables for this application
 
-		// if (embeddingLevel==0) addAndResetMetas(null);
+		//if (embeddingLevel==0) addAndResetMetas(null);
 		logger.debug("Executing ITE:"+this);
 		MetaElement.resetBoundMetas();
 		if (this.embeddingLevel == 0)
@@ -607,6 +607,7 @@ public class IfThenElse extends Effect implements Serializable {
 			for (Meta<?> meta : arrayList) {
 				if (!this.metas.contains(meta)) {
 					if (!exceptions.contains(meta)) {
+						
 						meta.reset();
 
 						this.metas.add(meta);

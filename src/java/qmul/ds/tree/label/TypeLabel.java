@@ -15,6 +15,7 @@ import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundTypeVariable;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaType;
+import qmul.ds.type.ConstructedType;
 import qmul.ds.type.DSType;
 
 /**
@@ -65,11 +66,9 @@ public class TypeLabel extends Label implements Serializable {
 	@Override
 	public ArrayList<Meta<?>> getMetas() {
 		ArrayList<Meta<?>> metas = super.getMetas();
-		// TODO if ConstructedTypes can contain MetaTypes e.g. (e>(e>X)) then
-		// we'll need Type to implement getMetas()
-		if (type instanceof MetaType) {
-			metas.addAll(((MetaType) type).getMetas());
-		}
+		
+		metas.addAll(type.getMetas());
+		
 		return metas;
 	}
 

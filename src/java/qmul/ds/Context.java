@@ -140,7 +140,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 * @return Cautiously optimistic grounded content
 	 */
 	
-	public TTRFormula getCautiouslyOptimisticGroundedContent()
+	public TTRRecordType getCautiouslyOptimisticGroundedContent()
 	{
 		TTRFormula result=new TTRRecordType();
 		for(String participant: this.asserted_contents.keySet())
@@ -151,7 +151,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 			result=result.conjoin(assertedContent);
 			
 		}
-		TTRFormula headless=result.removeHead();
+		TTRRecordType headless=(TTRRecordType)result.removeHead();
 		if (!(headless instanceof TTRRecordType))
 			throw new UnsupportedOperationException("accepted content not a record type");
 		
