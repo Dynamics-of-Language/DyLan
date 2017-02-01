@@ -58,6 +58,29 @@ THEN    IF		?ty(e)
        		    put(?ty(e>cn))
 ELSE	abort
 
+det_num_noun(QUANT,PERSON)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		?ty(e)
+				</\*>Ex.x
+				</\*>ty(e)
+		THEN	ttrput([x==QUANT:e|head==x:e])
+				put(ty(e))
+				delete(?ty(e))
+		ELSE	put(person(PERSON))
+				put(class(obj))
+				make(\/1)
+  			    go(\/1)
+        		ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t]))
+        		put(ty(cn>e))
+       		    put(!)
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(ty(cn))
+        		ttrput([x:e|head==x:e])
+ELSE	abort
 
 det_indef(QUANT)
 IF      ?ty(e)
@@ -403,6 +426,7 @@ pron_whq_mod(CLASS)
 IF		<Y>+Q
 THEN	abort
 ELSE	IF		?ty(t)
+				¬!
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
@@ -430,6 +454,7 @@ pron_whq(CLASS)
 IF		<Y>+Q
 THEN	abort
 ELSE	IF		?ty(t)
+				¬!
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
@@ -460,6 +485,7 @@ pron_whq_det_count(CLASS)
 IF		<Y>+Q
 THEN	abort
 ELSE	IF		?ty(t)
+				¬!
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
@@ -538,6 +564,7 @@ pron_whq_det(CLASS)
 IF		<Y>+Q
 THEN	abort
 ELSE	IF		?ty(t)
+				¬!
 				¬<\/1>Ex.x
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
@@ -947,6 +974,7 @@ IF		?ty(e>t)
 		</\1\/0>ty(e)
 THEN 	aux_content(PRED)
 ELSE	IF		?ty(t)
+				¬!
 				¬<\/1>Ex.x
 	 			¬<\/0>Ex.x
 	 			¬</\0>Ex.x				
@@ -988,6 +1016,7 @@ THEN 	delete(?ty(e>t))
 		go(/\L)
 		put(+BE)
 ELSE	IF		?ty(t)
+				¬!
 				¬<\/1>Ex.x
 	 			¬<\/0>Ex.x
 	 			¬</\0>Ex.x			
@@ -1262,6 +1291,27 @@ ELSE	abort
 
 *//
 
+greet(PRED)
+IF		</\C>Ex.x
+THEN	abort
+ELSE	IF		?ty(t)
+				¬<\/0>Ex.x
+				¬<\/1>Ex.x
+				¬<\/*>Ex.x
+		THEN	delete(?ty(t))
+				put(ty(t))
+				ttrput([e1==PRED:es|head:e1])
+				put(?+greet)
+				put(!)
+		ELSE	IF		ty(t)
+						?+greet
+						Speaker(X)
+						PrevSpeaker(Y)
+						¬X=Y
+				THEN	delete(?+greet)
+						put(Assert(X))
+				ELSE	abort
+
 release_turn(PRED)
 IF		ty(Y>Z)
 THEN	abort
@@ -1277,7 +1327,7 @@ ELSE	IF		</\0\/1>Ex.x
 						¬floor_open
 				THEN	IF		(Assert(W) || <Z>+Q)
 					 	THEN	open_floor
-						ELSE	put(Assert(X))
+						ELSE	put(Assert(W))
 								open_floor
 				ELSE    abort
 

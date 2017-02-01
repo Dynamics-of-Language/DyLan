@@ -101,14 +101,14 @@ five						  det_num						five				    plur
 six							  det_num						six						plur
 seven						  det_num						seven				    plur
 eight						  det_num						eight				    plur
-one							  adj_be						one
-two							  adj_be						two
-three					      adj_be						three
-four						  adj_be					    four
-five						  adj_be						five
-six							  adj_be						six
-seven						  adj_be						seven
-eight						  adj_be						eight
+one							  det_num_noun						one						s3
+two							  det_num_noun						two						plur
+three					      det_num_noun						three		     		plur
+four						  det_num_noun						four				    plur
+five						  det_num_noun						five				    plur
+six							  det_num_noun						six						plur
+seven						  det_num_noun						seven				    plur
+eight						  det_num_noun						eight				    plur
 to							  to_subjcon					to
 for							  prep_es						for
 for							  prep_e						for
@@ -146,3 +146,6 @@ paris                         proper                        paris               
 //the name of the release turn token must be the same as in Utterance.RELEASE_TURN_TOKEN
 have                      	  v_tran_fin_imperative         have                          imper                          s2
 let							  v_tran_causative_imperative		let							  imper							 s2
+hello						  greet							hello
+hi							  greet							hello
+goodmorning					  greet							hello
