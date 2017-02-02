@@ -49,6 +49,7 @@ people							count						person						  plur						    per
 options							count						option						  plur						    obj
 table							count						table						  s3							obj
 price							noun_mod				    price						  of
+price							noun_mod				    restaurant				      of
 want                          v_tran_inf                    want                          inf                           per
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3
@@ -57,6 +58,7 @@ wants                         v_subjcon_fin                 want                
 want                          v_subjcon_inf                 want                          inf                          nons3
 like                          v_tran_inf                    like                          inf                           per
 like                          v_tran_fin                    like                          pres                          nons3
+make						  v_tran_inf                    make                          inf                          per
 likes                         v_tran_fin                    like                          pres                          s3
 like                          v_subjcon_fin                 like                          pres                          nons3
 likes                         v_subjcon_fin                 like                          pres                          s3
@@ -160,6 +162,7 @@ moderate				      adj_be						moderate
 moderate					  adj							moderate
 food						  mass							food					s3				obj
 cuisine						  mass							cuisine					s3				obj
+reservation					  count							reservation				s3				obj
 range						  count							range					s3				obj
 party						  count							party					s3				obj
 type						  count							type					s3				obj
