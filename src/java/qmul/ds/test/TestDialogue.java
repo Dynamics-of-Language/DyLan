@@ -28,17 +28,15 @@ public class TestDialogue implements Serializable {
 		List<String[]> errors = new ArrayList<>();
 
 		Utterance previousUtterance = new Utterance();
-		for (Utterance[] turn: inDialogue.getTurns()) {
-			for (Utterance utterance: turn) {
-				String[] resultAsIs = parseUtterance(parser, utterance);
-				if (resultAsIs.length != 0) {
-					String[] resultGivenContext = parseUtteranceGivenContext(parser, utterance, previousUtterance);
-					if (resultGivenContext.length != 0) {
-						errors.add(resultGivenContext);
-					}
+		for (Utterance utterance: inDialogue) {
+			String[] resultAsIs = parseUtterance(parser, utterance);
+			if (resultAsIs.length != 0) {
+				String[] resultGivenContext = parseUtteranceGivenContext(parser, utterance, previousUtterance);
+				if (resultGivenContext.length != 0) {
+					errors.add(resultGivenContext);
 				}
-				previousUtterance = utterance;
 			}
+			previousUtterance = utterance;
 		}
 		return errors;
 	}

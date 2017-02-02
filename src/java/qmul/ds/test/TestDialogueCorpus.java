@@ -35,7 +35,7 @@ public class TestDialogueCorpus implements Serializable {
 			for (String[] error: errors) {
 				out.write(String.format("%s\t%s\t%s\n", file.getName(), error[0], error[1]));
 			}
-			totalUtterances += dialogue.getTurns().size() * BabiDialogue.AGENTS.length;
+			totalUtterances += dialogue.size();
 			errorUtterances += errors.size();
 			++totalDialogues;
 			errorDialogues += errors.isEmpty() ? 0 : 1;
