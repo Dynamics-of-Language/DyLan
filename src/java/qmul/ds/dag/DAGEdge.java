@@ -221,6 +221,11 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	{
 		this.actions=actions;
 	}
+	
+	public String toDebugString()
+	{
+		return toString();
+	}
 
 	
 

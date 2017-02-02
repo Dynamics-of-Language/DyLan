@@ -128,6 +128,10 @@ public class ConstructedType extends DSType {
 	public ArrayList<Meta<?>> getMetas()
 	{
 		ArrayList<Meta<?>> metas=new ArrayList<Meta<?>>();
+		if (from==null||to==null)
+		{
+			throw new NullPointerException("Either from or to are null in this constructed DS type:"+this);
+		}
 		metas.addAll(from.getMetas());
 		metas.addAll(to.getMetas());
 		return metas;

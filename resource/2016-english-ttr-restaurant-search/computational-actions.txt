@@ -95,19 +95,21 @@ ELSE    abort
 *//
 //anticipating wh-response
 anticipation-res
-IF		ty(t)
+IF		Speaker(X)
+		PrevSpeaker(Y)
+		¬X=Y
+		ty(t)
 		complete
 		<Z>+Q
 THEN	go(Z)
 ELSE	abort
 
 late-star-adj-q
-IF		</\0\/1>Ex.x
-		</\0\/1>Ex.?x
+IF		</\0>Ex.?x
 THEN	abort
 ELSE	IF		¬!
 				+Q
-       			 ty(X)
+       			ty(X)
 		   		¬<\/1>Ex.x
 		        ¬<\/0>Ex.x
 		      	¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
@@ -194,11 +196,15 @@ ELSE    abort
 
 
 //transition relevance place
-//TODO
 trp
 IF		complete
 THEN	addaxiom
-ELSE	abort
+ELSE	IF		Speaker(X)
+				PrevSpeaker(Y)
+				¬X=Y
+				(Assert(Y) || +Q)
+		THEN	addaxiom
+		ELSE	abort
 
 
 

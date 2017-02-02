@@ -65,7 +65,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	protected List<Long> idPoolEdges = new ArrayList<Long>();
 
 	protected List<E> actionReplay = new ArrayList<E>();
-
+	//for order of traversal.
+	//this could also be by end point completeness.
+	//protected Comparator<E> edgeComparator=new EdgeComparatorByLocality();
+	protected Comparator<E> edgeComparator=new EdgeComparatorByEndPointCompleteness();
 	// protected DAGParser<T,E> parser;
 
 	//protected Map<String, Set<T>> acceptance_pointers = new HashMap<String, Set<T>>();
@@ -262,37 +265,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return null;
 	}
 
-	/*
-	 * public void markEdgeAsUnseenAndAboveItSeen(E seen) { SortedSet<E>
-	 * edges=getOutEdges(getSource(seen), seen.pid); boolean found=false; for(E
-	 * edge:edges) { if(edge==seen) { edge.setSeen(false); if (!(edge instanceof
-	 * BacktrackingEdge)) edge.setInContext(true);
-	 * 
-	 * found=true; continue; }
-	 * 
-	 * if (!found) { edge.setSeen(true); } else { edge.setSeen(false);
-	 * edge.setInContext(false); }
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-	/**
-	 * returns the outgoing edges of cur that are compatible with parsing word.
-	 * These are either edges associated with word, or edges with no word, e.g.
-	 * computational action edges.
-	 * 
-	 * @param cur
-	 * @param word
-	 * @return see above.
-	 * 
-	 *         protected SortedSet<E> getOutEdges(T cur, long activeParentID) {
-	 * 
-	 *         TreeSet<E> result = new TreeSet<E>(); for (E edge :
-	 *         getOutEdges(cur)) { if (edge.pid==activeParentID)
-	 *         result.add(edge); } return result; }
-	 */
-
+	
 	public boolean isComplete() {
 		return getCurrentTuple().isComplete();
 	}
@@ -449,9 +422,12 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	public SortedSet<E> getOutEdges(T node) {
 		
 		Collection<E> outEdges1=super.getOutEdges(node);
-	
-		TreeSet<E> outEdges=new TreeSet<E>(new EdgeComparatorByEndPointCompleteness());//
+		//by endpoint completeness.
+		//TreeSet<E> outEdges=new TreeSet<E>(new EdgeComparatorByEndPointCompleteness());//
+		//by locality
+		TreeSet<E> outEdges=new TreeSet<E>(this.edgeComparator);//
 		outEdges.addAll(outEdges1);
+		
 		
 		return outEdges;
 	}
@@ -474,6 +450,33 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 				return +1;
 			else if (t2.getIncompletenessMeasure()>t1.getIncompletenessMeasure())
 				return -1;
+			
+			
+			return +1;
+			
+			
+		}
+		
+	}
+	
+	/**
+	 * Comparator for edges. Sorts edges based on the length of computational actions prior to the word.
+	 * Measure of locality of interpretation. Local is preferred.
+	 * @author Arash
+	 *
+	 */
+	class EdgeComparatorByLocality implements Comparator<E>{
+
+		
+		
+		@Override
+		public int compare(E o1, E o2) {
+			//System.out.println("Comparing edge:"+o1.toDebugString());
+			//System.out.println("and:"+o2.toDebugString());
+			if (o2.getActions().size()<o2.getActions().size())
+				return -1;
+			else if (o1.getActions().size()>o2.getActions().size())
+				return +1;
 			
 			
 			return +1;

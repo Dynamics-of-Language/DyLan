@@ -744,15 +744,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	
 	public static void main(String[] a) {
 
-		TTRRecordType r1=TTRRecordType.parse("[y==U1:e|p==man(y):t]");
-		TTRRecordType r2=TTRRecordType.parse("[x==U2:e]");
+		TTRRecordType r1=TTRRecordType.parse("[x8==you : e|e10==look : es|x1 : e|x6 : e|x4 : e|x14 : e|x12 : e|p17==cont(e10) : t|head==e10 : es|p8==pres(e10) : t|p35==question(x1) : t|pred1==range(x6) : cn|p4==price(x4) : t|p29==cheap(x14) : t|pred2==range(x14) : cn|p31==price(x12) : t|p18==subj(e10, x8) : t|p5==of(x6, x4) : t|p20==for(e10, x6) : t|p26==in(e10, x14) : t|p32==of(x14, x12) : t]");
+		r1.collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
+		System.out.println(r1);
 	
-		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
-		
-		System.out.println(r1.toDebugString());
-		System.out.println(r2.toDebugString());
-		System.out.println(r2.subsumesMapped(r1, map));
-		System.out.println(map);
+//		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
+//		
+//		System.out.println(r1.toDebugString());
+//		System.out.println(r2.toDebugString());
+//		System.out.println(r2.subsumesMapped(r1, map));
+//		System.out.println(map);
 		
 //		InteractiveContextParser parser = new InteractiveContextParser(
 //				"resource/2016-english-ttr-restaurant-search");

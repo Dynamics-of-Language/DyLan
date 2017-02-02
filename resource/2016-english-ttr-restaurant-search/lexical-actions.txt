@@ -97,14 +97,6 @@ THEN    put(person(s3))
         make(\/0)
         go(\/0)
         put(?ty(cn))
-        make(\/0)
-        go(\/0)
-        put(ty(e))
-        ttrput([x:e|head==x:e])
-        go(/\0)
-        make(\/1)
-        go(\/1)
-        put(?ty(e>cn))
 ELSE    abort
 
 //*
@@ -265,21 +257,13 @@ THEN    put(person(s3))
 		put(class(obj))
 		make(\/1)
         go(\/1)
-        ttrput(R^(R ++ [head==R.head:e|p==of(head,X):t]))
+        ttrput(R^(R ++ [head==R.head:e|p==belongs(head,X):t]))
         put(ty(cn>e))
         put(!)
         go(/\1)
         make(\/0)
         go(\/0)
         put(?ty(cn))
-        make(\/0)
-        go(\/0)
-        put(ty(e))
-        ttrput([x:e|head==x:e])
-        go(/\0)
-        make(\/1)
-        go(\/1)
-        put(?ty(e>cn))
 ELSE    abort
 
 
@@ -297,6 +281,19 @@ THEN    put(ty(e))
 ELSE    abort
 
 noun_mod(PRED,PREP)
+IF      ?ty(cn)
+		¬<\/L>Ex.x
+THEN    put(?+eval)
+		make(\/L)
+        go(\/L)
+        put(ty(t))
+        ttrput([head:e|x:e|p2==PRED(x):t|p3==PREP(head,x):t])
+        put(!)
+        go(/\L)
+ELSE	abort
+
+//*
+noun_mod(PRED,PREP)
 IF      ?ty(e>cn)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
@@ -308,7 +305,7 @@ THEN	put(?+eval)
         put(ty(e>cn))
         go(/\L)
 ELSE	abort
-
+//*
 //*noun-mod //modifier in the case of a following mass noun. Commented out for now. (it works)
 IF		?ty(e)
 				¬<\/1>Ex.x
@@ -338,24 +335,35 @@ IF		?ty(e)
 
 
 count(PRED,PERSON,CLASS)
-IF      ?ty(e>cn)
-THEN    put(ty(e>cn))
-        delete(?ty(e>cn))
+IF      ?ty(cn)
+THEN    make(\/1)
+		go(\/1)
+		put(ty(e>cn))
         ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(ty(e))
+        ttrput([x:e|head==x:e])
 ELSE    abort
 
 
 
+
 adj(PRED)
-IF      (?ty(e>cn) || ty(e>cn))
+IF      ?ty(cn)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-        ¬<\/L>Ex.x
-THEN    put(?+eval)
-		make(\/L)
-        go(\/L)
-        ttrput([head:e|p3==PRED(head):t])
-        put(ty(e>cn))
+		¬<\/L>Ex.x
+THEN    make(\/1)
+        go(\/1)
+        ttrput(R^(R ++ [p3==PRED(R.head):t]))
+        put(ty(cn>cn))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
 ELSE    IF		?ty(e)
 				¬<\/1>Ex.x
         		¬<\/0>Ex.x
@@ -403,11 +411,25 @@ ELSE	abort
 i(PERSON,CLASS)
 IF		?ty(e)
 		Speaker(X)
+		</\0>?ty(t)
 THEN	ttrput([x==X:e|head==x:e])
 		put(ty(e))
 		delete(?ty(e))
 		put(person(PERSON))
 ELSE	abort
+
+
+me(PERSON,CLASS)
+IF		?ty(e)
+		</\0>?ty(t)
+THEN	abort
+ELSE	IF		</\0/\*>?ty(t)
+				Speaker(X)
+		THEN	ttrput([x==X:e|head==x:e])
+				put(ty(e))
+				delete(?ty(e))
+				put(person(PERSON))
+		ELSE	abort
 
 
 you(PERSON,CLASS)
@@ -515,14 +537,6 @@ ELSE	IF		?ty(t)
 				make(\/0)
 				go(\/0)
 				put(?ty(cn))
-				make(\/0)
-				go(\/0)
-				ttrput([x:e|head==x:e])
-				put(ty(e))
-				go(/\0)
-				make(\/1)
-				go(\/1)
-				put(?ty(e>cn))
 		ELSE	IF		?ty(e)
 						¬<\/1>Ex.x
 						¬<\/0>Ex.x
@@ -548,14 +562,6 @@ ELSE	IF		?ty(t)
 						make(\/0)
 						go(\/0)
 						put(?ty(cn))
-						make(\/0)
-						go(\/0)
-						ttrput([x:e|head==x:e])
-						put(ty(e))
-						go(/\0)
-						make(\/1)
-						go(\/1)
-						put(?ty(e>cn))
 				ELSE	abort
 								
 
@@ -573,26 +579,27 @@ ELSE	IF		?ty(t)
 				go(\/*)
 				put(?Ex.tn(x))
 				put(?ty(e))
-				put(person(s3))
+				put(person(plur))
 				make(\/1)
 				go(\/1)
-				ttrput(R^(R ++ [head==R.head:e]))
+				put(?ty(cn>e))
+				make(\/1)
+				go(\/1)
+				ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e])))
+				put(ty(e>(cn>e)))
 				put(!)
-				put(ty(cn>e))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(ty(e))
+				ttrput([x:e|head==x:e])
+				put(+Q)
+				put(+meta)
+				go(/\0)
 				go(/\1)
 				make(\/0)
 				go(\/0)
 				put(?ty(cn))
-				make(\/0)
-				go(\/0)
-				put(+Q)
-				put(+meta)
-				ttrput([x:e|head==x:e])
-				put(ty(e))
-				go(/\0)
-				make(\/1)
-				go(\/1)
-				put(?ty(e>cn))
 		ELSE	IF		?ty(e)
 						Ex.tn(x)
 						¬<\/1>Ex.x
@@ -601,23 +608,24 @@ ELSE	IF		?ty(t)
 						¬</\L>Ex.x
 				THEN	make(\/1)
 						go(\/1)
-						ttrput(R^(R ++ [head==R.head:e]))
+						put(?ty(cn>e))
+						make(\/1)
+						go(\/1)
+						ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e])))
+						put(ty(e>(cn>e)))
 						put(!)
-						put(ty(cn>e))
 						go(/\1)
 						make(\/0)
 						go(\/0)
-						put(?ty(cn))
-						make(\/0)
-						go(\/0)
+						put(ty(e))
+						ttrput([x:e|head==x:e])
 						put(+Q)
 						put(+meta)
-						ttrput([x:e|head==x:e])
-						put(ty(e))
 						go(/\0)
-						make(\/1)
-						go(\/1)
-						put(?ty(e>cn))	
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(cn))	
 				ELSE	abort
 
 
@@ -1236,18 +1244,7 @@ ELSE	abort
 
 
 
-//*		
 
-assert(PRED)
-IF		ty(t)
-		complete
-		Speaker(X)
-THEN	IF		(<Z>+Q || Assert(Y))
-		THEN	abort
-		ELSE	put(Assert(X))
-ELSE	abort
-
-*//
 
 
 assert(PRED)

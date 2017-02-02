@@ -8,10 +8,13 @@ do                            v_aux_inf                     do                  
 //does                          v_aux_inf                     do                            pres                          s3
 //did                           v_aux_inf                     did                           past                          per
 would                         v_aux_inf                     would                         pres                          nons3
+'d							   v_aux_inf                     would                         pres                          nons3
 should						  v_aux_inf						should						  should						nons3
 can                           v_aux_inf                    	can                         modal                          nons3
+may                           v_aux_inf                    	can                         modal                          nons3
 will						  v_aux_inf						will						future							 nons3
 i                             i							    nons3							per
+me							  me							nons3							per
 we							  i								nons3							per				
 you							  you							nons3							per
 your						  your							your
@@ -43,6 +46,7 @@ preference					  	count					    preference					   s3							obj
 boy							  	count					    boy					   		  s3						    obj
 restaurants						count						restaurant					  plur							obj
 people							count						person						  plur						    per
+options							count						option						  plur						    obj
 table							count						table						  s3							obj
 price							noun_mod				    price						  of
 want                          v_tran_inf                    want                          inf                           per
@@ -72,6 +76,8 @@ were                          v_aux_be                      past                
 were                          v__be                      past                          per
 am                            v_aux_be                      pres                           per
 am							  v_be							pres						   per
+'m							  v_be							pres						   per
+'m                            v_aux_be                      pres                           per
 is                            v_aux_be                      pres                           per
 is							  v_be							pres						   per
 are                           v_aux_be                      pres                           per
@@ -80,6 +86,7 @@ be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
 .							  assert						A
 ?							  question						Q
+please						  assert						A
 //uhu							  accept						uhu
 ok							  accept						ok
 yes							  accept						yes
@@ -92,6 +99,7 @@ a                             det_indef                     eps
 a							  det_indef_postcop				eps
 an                            det_indef                     eps
 an                            det_indef_postcop             eps
+some                          det_indef		                eps
 any							  det_indef						eps
 one							  det_num						one						s3
 two							  det_num						two						plur
@@ -111,37 +119,60 @@ seven						  det_num_noun						seven				    plur
 eight						  det_num_noun						eight				    plur
 to							  to_subjcon					to
 for							  prep_es						for
-for							  prep_e						for
+//for							  prep_e						for
+of							  prep_e						of
 with						  prep_es						with
+with						  prep_e						with
 on							  prep_postcop					on
 on							  prep_e						on
 in							  prep_postcop					in	
+in							  prep_es						in
 in							  prep_e						in
+into						  prep_es						into
 today					      manner_adv					today
 good						  adj							good
 good						  adj_be						good
-italian						  adj							italian
+italian						  adj					        italian
 italian						  adj_be						italian
 spanish						  adj							spanish
 spanish						  adj_be						spanish
-persian						  adj							persian
-persian						  adj_be						persian
-chinese						  adj							chinese
-chinese						  adj_be						chinese
+british						  adj							british
+british						  adj_be						british
 japanese					  adj							japanese
 japanese					  adj_be						japanese
 indian						  adj							indian
 indian						  adj_be						indian
+cantonese					  adj						cantonese
+cantonese					  adj_be					cantonese
+french						  adj						french
+french						  adj_be					french
+vietnamese					  adj						vietnamese
+vietnamese					  adj_be					vietnamese
+korean						  adj						korean
+korean						  adj_be					korean
+thai						  adj						thai
+thai					      adj_be					thai
 cheap						  adj							cheap
 expensive				      adj_be						expensive
 expensive					  adj							expensive
 cheap						  adj_be						cheap
+moderate				      adj_be						moderate
+moderate					  adj							moderate
 food						  mass							food					s3				obj
 cuisine						  mass							cuisine					s3				obj
 range						  count							range					s3				obj
 party						  count							party					s3				obj
+type						  count							type					s3				obj
 london                        proper                        london                        s3                            loc
 paris                         proper                        paris                         s3                            loc
+bombay                         proper                       bombay                         s3                            loc	
+rome                         proper                        rome                         s3                            loc
+seoul                         proper                        seoul                         s3                            loc
+tokyo                         proper                        tokyo                         s3                            loc
+bangkok                         proper                      bangkok                         s3                            loc
+hanoi                         proper                        hanoi                         s3                            loc
+madrid                         proper                        madrid                         s3                            loc
+beijing                         proper                       beijing                         s3                            loc
 <rt>				  		  release_turn					null
 //the name of the release turn token must be the same as in Utterance.RELEASE_TURN_TOKEN
 have                      	  v_tran_fin_imperative         have                          imper                          s2

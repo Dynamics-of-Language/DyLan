@@ -168,7 +168,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	protected SortedSet<GroundableEdge> getOutEdgesForTraversal(DAGTuple cur) {
-		TreeSet<GroundableEdge> result = new TreeSet<GroundableEdge>(new EdgeComparatorByEndPointCompleteness());
+		TreeSet<GroundableEdge> result = new TreeSet<GroundableEdge>(this.edgeComparator);
 		for (GroundableEdge edge : super.getOutEdges(cur)) {
 			if (edge instanceof BacktrackingEdge)
 				result.add(((BacktrackingEdge) edge).overarchingRepairingEdge);
