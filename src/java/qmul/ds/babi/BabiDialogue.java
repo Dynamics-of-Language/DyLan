@@ -76,9 +76,8 @@ public class BabiDialogue extends Dialogue {
 					
 				}
 				if (utterance.startsWith("api_call")) {
-					utterance = "";
+					utterance = "ok";
 				}
-				utterance += " " + Utterance.RELEASE_TURN_TOKEN;
 				dialogueTurns.add(new Utterance(agentName, utterance));
 			}
 		}
@@ -88,18 +87,31 @@ public class BabiDialogue extends Dialogue {
 	}
 
 	private static BabiDialogue buildBabiDialogue(List<Utterance> inTurns) {
-		BabiDialogue result = new BabiDialogue();
+		List<Utterance> processedUtterances = new ArrayList<>();
+		boolean turnToBeAppended = false;
 		for (Utterance turn: inTurns) {
-			if (!turn.getText().equals("<silence> " + Utterance.RELEASE_TURN_TOKEN)) {
-				result.add(turn);
+			if (turnToBeAppended) {
+				assert processedUtterances.size() != 0 : "Invalid bAbI idalogue: <silence> as the start of the dialogue";
+				Utterance previousTurn = processedUtterances.get(processedUtterances.size() - 1);
+				processedUtterances.set(
+					processedUtterances.size() - 1,
+					new Utterance(previousTurn.getSpeaker(), previousTurn.getText() + ". " + turn.getText())
+				);
+				turnToBeAppended = false;
 				continue;
 			}
-			assert result.size() != 0 : "Invalid bAbI idalogue: <silence> as the start of the dialogue";
-			Utterance previousTurn = result.get(result.size() - 1);
-			result.set(
-				result.size() - 1,
-				new Utterance(previousTurn.getSpeaker(), previousTurn.getText() + turn.getText())
-			);
+			if (!turn.getText().equals("<silence>")) {
+				processedUtterances.add(turn);
+			}
+			else {
+				// current turn is just silence - skipping it completely and appending next one to the previous one
+				turnToBeAppended = true;
+			}
+		}
+		BabiDialogue result = new BabiDialogue();
+		for (Utterance utterance: processedUtterances) {
+			String utteranceWithRelease = utterance.getText() + " " + Utterance.RELEASE_TURN_TOKEN;
+			result.add(new Utterance(utterance.getSpeaker(), utteranceWithRelease));
 		}
 		return result;
 	}
