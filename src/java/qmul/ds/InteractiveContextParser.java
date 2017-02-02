@@ -310,6 +310,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
+	
 	public void init(List<String> participants) {
 		context.init(participants);
 	}
