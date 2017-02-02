@@ -1397,11 +1397,10 @@ ELSE	abort
 accept(PRED)
 IF		¬+Q
 		¬<\/*>+Q
-		PrevSpeaker(Y)
-		Assert(Y)
 		Speaker(X)
-THEN	IF 		X=Y
-		THEN	abort
+		Assert(Y)
+THEN	IF		Assert(X)
+		THEN	do_nothing
 		ELSE	put(Assert(X))
 ELSE	abort
 
