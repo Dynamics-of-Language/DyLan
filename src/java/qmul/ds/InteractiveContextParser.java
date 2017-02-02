@@ -492,28 +492,15 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance utt=new Utterance("usr: what can i help you with?");
-		
-		
-		parser.parseUtterance(utt);
-		TTRFormula f=parser.getContext().getCurrentTuple().getSemantics().removeHead();
-		System.out.println(f);
-		parser.init();
-		boolean subsumed=true;
-		for(UtteredWord w:utt.words)
+		try{
+		List<Dialogue> d=Dialogue.loadDialoguesFromFile("corpus/dialogue-test-sets/test-dialogue");
+		for(Dialogue di:d)
+			parser.parseDialogue(di);
+		}catch(Exception e)
 		{
-			parser.parseWord(w);
-			TTRFormula partial=parser.getContext().getCurrentTuple().getSemantics();
-			System.out.println(partial);
-			subsumed=partial.subsumes(f);
-			if (!subsumed)
-			{
-				System.out.println("Failed after:"+w);
-				break;
-			}
-			
+			e.printStackTrace();
 		}
-		System.out.println("Subsumed:"+subsumed);
+		
 		
 		
 	}

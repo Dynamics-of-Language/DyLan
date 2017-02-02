@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -18,7 +19,6 @@ import edu.stanford.nlp.trees.TreeFactory;
 import qmul.ds.Context;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
-import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.DisjunctiveType;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRFormula;
@@ -344,6 +344,30 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		boolean removed = getPointedNode().removeLabel(label);
 		if (!removed) {
 			logger.warn("Failed to delete:" + label + " on " + getPointedNode());
+			HashSet<Label> newSet=new HashSet<Label>();
+			for(Label l:getPointedNode())
+			{
+				/**
+				 * The following code is essentially redundant, and has been written because of a bug in java no doubt.
+				 * The hashset.remove() method does not remove an existing element l, despite two way 
+				 * equality and equal hash code with the element in the set. So we are having to do the below.
+				 */
+//				Requirement lReq=(Requirement)l;
+//				Requirement labelReq=(Requirement)l;
+//				System.out.println(l.equals(label));
+//				System.out.println(label.equals(l));
+//				System.out.println(labelReq.equals(lReq));
+//				System.out.println(lReq.equals(labelReq));
+//				System.out.println(labelReq.getLabel().equals(lReq.getLabel()));
+//				System.out.println(lReq.getLabel().equals(labelReq.getLabel()));
+				if (l.equals(label) && label.equals(l)&& l.hashCode() == label.hashCode()) {
+					continue;
+				}
+				newSet.add(l);
+				
+			}
+			getPointedNode().clear();
+			getPointedNode().addAll(newSet);
 		}
 
 		if (removed && (label instanceof Requirement)) {
