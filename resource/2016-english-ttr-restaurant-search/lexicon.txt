@@ -49,7 +49,7 @@ people							count						person						  plur						    per
 options							count						option						  plur						    obj
 table							count						table						  s3							obj
 price							noun_mod				    price						  of
-price							noun_mod				    restaurant				      of
+restaurant							noun_mod				    restaurant				      of
 want                          v_tran_inf                    want                          inf                           per
 want                          v_tran_fin                    want                          pres                          nons3
 wants                         v_tran_fin                    want                          pres                          s3

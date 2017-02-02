@@ -199,10 +199,7 @@ ELSE    abort
 trp
 IF		complete
 THEN	addaxiom
-ELSE	IF		Speaker(X)
-				PrevSpeaker(Y)
-				¬X=Y
-				(Assert(Y) || +Q)
+ELSE	IF		(Assert(Y) || +Q)
 		THEN	addaxiom
 		ELSE	abort
 

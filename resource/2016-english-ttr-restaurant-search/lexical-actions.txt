@@ -1396,7 +1396,6 @@ ELSE	abort
 //'yes' as acceptance of assertion
 accept(PRED)
 IF		¬+Q
-		¬<\/*>+Q
 		Speaker(X)
 		Assert(Y)
 THEN	IF		Assert(X)
