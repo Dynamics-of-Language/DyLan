@@ -397,7 +397,24 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		((TTRRecordType)allContent).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
 		return allContent;
 	}
-
-	
+	/**
+	 * This corresponding to the semantic material which hasn't been grounded/needs feedback
+	 * (loosely following Ginzburg (2012))
+	 * Subclasses of Context can reimplement this method.
+	 * Currently assumes very optimistic grounding: if the current tuple has an assertion 
+	 * annotation, then it is grounded, and hence pending is empty. Otherwise, pending is the 
+	 * the current tuple.
+	 * @return the PENDING content.
+	 */
+	public TTRFormula getPendingContent()
+	{
+		qmul.ds.tree.Tree current=getCurrentTuple().getTree();
+		
+		if (!current.getAsserters().isEmpty())
+			return new TTRRecordType();
+		else return getCurrentTuple().getSemantics();
+		
+		
+	}
 	
 }

@@ -29,6 +29,7 @@ public class BabiDialogue extends Dialogue {
 		map.put("good morning", "goodmorning");
 		map.put("how many", "howmany");
 		map.put("i'm on it", "sure");
+		map.put("any preference on a type of cuisine", "any preference on a type of cuisine?");
 
 		replacements = Collections.unmodifiableMap(map);
 	}

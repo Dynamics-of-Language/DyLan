@@ -202,6 +202,22 @@ THEN	addaxiom
 ELSE	IF		(Assert(Y) || +Q)
 		THEN	addaxiom
 		ELSE	abort
-
-
-
+//*
+//transition relevance place
+//assumes VERY optimistic grounding. (new clause ground previous clause and Adds corresponding Assert annotations)
+trp
+IF		complete
+		Speaker(X)
+THEN	put(Assert(X))
+		addaxiom
+ELSE	IF		Assert(Y)
+		THEN	put(Assert(X))
+				addaxiom
+		ELSE	IF		+Q
+						PrevSpeaker(Z)
+				THEN	delete(+Q)
+						put(Assert(X))
+						put(Assert(Z))
+				ELSE	abort
+// yeah, the above probably is wrong.... ok. sticking to the previous (above) version.
+*//
