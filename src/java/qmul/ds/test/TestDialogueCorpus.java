@@ -28,12 +28,20 @@ public class TestDialogueCorpus implements Serializable {
 			errorDialogues = 0,
 			totalDialogues = 0;
 		File[] filesToProcess = new File(inCorpusRoot).listFiles();
+		int erroneousDialogues = 0;
 		for (File file: filesToProcess) {
+			System.out.println("Processing dialogue" + file.getName());
 			BabiDialogue dialogue = BabiDialogue.loadFromBabbleFile(file.getAbsolutePath());
 			parser.init();
-			List<String[]> errors = TestDialogue.test(parser, dialogue);
+			List<String[]> errors = TestDialogue.testWholeDialog(parser, dialogue);
 			for (String[] error: errors) {
 				out.write(String.format("%s\t%s\t%s\n", file.getName(), error[0], error[1]));
+			}
+			if (errors.size() != 0) {
+				++erroneousDialogues;
+			}
+			if (erroneousDialogues == 20) {
+				return;
 			}
 			totalUtterances += dialogue.size();
 			errorUtterances += errors.size();

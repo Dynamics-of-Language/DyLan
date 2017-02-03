@@ -41,6 +41,22 @@ public class TestDialogue implements Serializable {
 		return errors;
 	}
 
+	public static List<String[]> testWholeDialog(InteractiveContextParser parser, BabiDialogue inDialogue) {
+		List<String[]> errors = new ArrayList<>();
+
+		for (Utterance utterance: inDialogue) {
+			System.out.println("Processing " + utterance.getText());
+			for (UtteredWord word: utterance.getWords()) {
+				if (parser.parseWord(word) == null) {
+					String[] error = new String[]{utterance.getText(), word.word()};
+					errors.add(error);
+					return errors;
+				}
+			}
+		}
+		return errors;
+	}
+
 	private static String[] parseUtterance(InteractiveContextParser parser, Utterance utterance) {
 		parser.init();
 		for(UtteredWord word: utterance.getWords()) {

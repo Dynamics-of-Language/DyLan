@@ -3,7 +3,6 @@ package qmul.ds.babi;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class BabiDialogue extends Dialogue {
 		map.put("which price range are looking for", "which price range are you looking for");
 		map.put("good morning", "goodmorning");
 		map.put("how many", "howmany");
-		map.put("i 'm on it", "yes");
+		map.put("i'm on it", "sure");
 
 		replacements = Collections.unmodifiableMap(map);
 	}
@@ -76,7 +75,7 @@ public class BabiDialogue extends Dialogue {
 					
 				}
 				if (utterance.startsWith("api_call")) {
-					utterance = "ok";
+					continue;
 				}
 				dialogueTurns.add(new Utterance(agentName, utterance));
 			}
