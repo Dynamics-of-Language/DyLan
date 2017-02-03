@@ -1205,7 +1205,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	public List<TTRRecordType> getAllClauseContents()
 	{
 		T tuple=getCurrentTuple();
-		TTRRecordType cur = (TTRRecordType) tuple.getSemantics(context).removeHead();
+		TTRRecordType cur = (TTRRecordType) tuple.getSemantics(context);
 		
 		List<TTRRecordType> allContents=new ArrayList<TTRRecordType>();
 		
@@ -1220,7 +1220,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			{
 				allContents.add(cur);
 				if (parentEdge!=null)
-					cur=(TTRRecordType)getParent(tuple).getSemantics(context).removeHead();
+					cur=(TTRRecordType)getParent(tuple).getSemantics(context);
 			}
 			tuple=getParent(tuple);
 			

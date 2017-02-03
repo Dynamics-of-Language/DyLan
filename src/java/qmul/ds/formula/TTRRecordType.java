@@ -745,8 +745,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public static void main(String[] a) {
 
 		TTRRecordType r1=TTRRecordType.parse("[x8==you : e|e10==look : es|x1 : e|x6 : e|x4 : e|x14 : e|x12 : e|p17==cont(e10) : t|head==e10 : es|p8==pres(e10) : t|p35==question(x1) : t|pred1==range(x6) : cn|p4==price(x4) : t|p29==cheap(x14) : t|pred2==range(x14) : cn|p31==price(x12) : t|p18==subj(e10, x8) : t|p5==of(x6, x4) : t|p20==for(e10, x6) : t|p26==in(e10, x14) : t|p32==of(x14, x12) : t]");
-		r1.collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
-		System.out.println(r1);
+		for(TTRRecordType dec:r1.decompose())
+		{
+			System.out.println(dec);
+		}
 	
 //		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
 //		
@@ -936,8 +938,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		for(int i=sorted.fields.size()-1; i>=0;i--)
 		{
 			TTRField f=sorted.fields.get(i);
+			if (sorted.head()!=null&&f==sorted.head())
+				continue;
+			
 			if (f.getType()!=null)
-				decomposedList.add(this.getMinimalSuperTypeWith(f));
+			{
+				TTRRecordType superType=this.getMinimalSuperTypeWith(f);
+				if (sorted.head()!=null&&superType.hasLabel(sorted.getHeadField().getLabel()))
+					superType.add(new TTRField(sorted.head()));
+				
+				decomposedList.add(superType);
+			}
 		}
 		
 		return decomposedList;

@@ -93,6 +93,8 @@ please						  assert						A
 ok							  accept						ok
 yes							  accept						yes
 yes							  yes							yes
+sure						  yes							yes
+sure						  accept						yes
 okay						  accept						okay
 yeah						  accept						yeah
 right						  accept						right

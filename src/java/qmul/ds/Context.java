@@ -412,7 +412,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		
 		if (!current.getAsserters().isEmpty())
 			return new TTRRecordType();
-		else return getCurrentTuple().getSemantics();
+		else return getCurrentTuple().getSemantics(this);
 		
 		
 	}

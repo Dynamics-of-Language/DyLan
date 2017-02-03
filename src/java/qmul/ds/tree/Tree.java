@@ -1071,10 +1071,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		}
 		logger.debug("done: " + rootReduced);
 
-		if (root.contains(questionLabel)) {
-
-			rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
-		}
+		//commented out for now. Not introducing question fields in the rec type. only +Q on tree.
+//		if (root.contains(questionLabel)) {
+//
+//			rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
+//		}
 
 		if (root.contains(negatedLabel))
 			rootReduced = negatedRec.freshenVars(c).conjoin(rootReduced);

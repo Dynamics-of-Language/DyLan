@@ -1344,8 +1344,10 @@ ELSE	IF		</\0\/1>Ex.x
 						¬floor_open
 				THEN	IF		(Assert(W) || <Z>+Q)
 					 	THEN	open_floor
-						ELSE	put(Assert(W))
-								open_floor
+						ELSE	IF	 	¬Ex.?x
+								THEN	put(Assert(W))
+										open_floor
+								ELSE	open_floor
 				ELSE    abort
 
 
