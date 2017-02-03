@@ -3,7 +3,6 @@ what						  pron_whq_det					obj
 where						  pron_whq_mod				    loc
 howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
-who							  pron_whq						obj
 do                            v_aux_inf                     do                            pres                          nons3
 //does                          v_aux_inf                     do                            pres                          s3
 //did                           v_aux_inf                     did                           past                          per
@@ -19,28 +18,26 @@ we							  i								nons3							per
 you							  you							nons3							per
 your						  your							your
 it							  proper						it						   s3							 obj
-arash						  proper						arash					   s3							 per
 make		                  v_tran_inf                    make                       inf                           per
-make		                  v_tran_fin                    make                       pres                          nons3
-makes  	                      v_tran_fin                    make                       pres                          s3
-making	                      v_tran_ing                    make                       ing                           per
+//makes  	                      v_tran_fin                    make                       pres                          s3
+//making	                      v_tran_ing                    make                       ing                           per
 have		                  v_tran_inf                    have                       inf                           per
 have		                  v_tran_fin                    have                       pres                          nons3
-has  	                      v_tran_fin                    have                       pres                          s3
-having	                      v_tran_ing                    have                       ing                           per
+//has  	                      v_tran_fin                    have                       pres                          s3
+//having	                      v_tran_ing                    have                       ing                           per
 love		                  v_tran_inf                    love                       inf                           per
 love		                  v_tran_fin                    love                       pres                          nons3
-loves  	                      v_tran_fin                    love                       pres                          s3
+//loves  	                      v_tran_fin                    love                       pres                          s3
 loving	                      v_tran_ing                    love                       ing                           per
 help		                  v_tran_inf                    help                       inf                           per
 help		                  v_tran_fin                    help                       pres                          nons3
 book		                  v_tran_inf                    book                       inf                           per
 book		                  v_tran_fin                    book                       pres                          nons3
 booking						  v_tran_ing					book						   ing							per
-purchase		              v_tran_inf                    purchase                       inf                           per
-purchase		              v_tran_fin                    purchase                       pres                          nons3
-purchases 	                  v_tran_fin                    purchase                       pres                          s3
-purchasing	                  v_tran_ing                    purchase                       ing                           per
+//purchase		              v_tran_inf                    purchase                       inf                           per
+//purchase		              v_tran_fin                    purchase                       pres                          nons3
+//purchases 	                  v_tran_fin                    purchase                       pres                          s3
+//purchasing	                  v_tran_ing                    purchase                       ing                           per
 restaurant					  	count					    restaurant					   s3							obj
 preference					  	count					    preference					   s3							obj
 boy							  	count					    boy					   		  s3						    obj
@@ -50,32 +47,28 @@ options							count						option						  plur						    obj
 table							count						table						  s3							obj
 price							noun_mod				    price						  of
 restaurant							noun_mod				    restaurant				      of
-want                          v_tran_inf                    want                          inf                           per
-want                          v_tran_fin                    want                          pres                          nons3
-wants                         v_tran_fin                    want                          pres                          s3
-want                          v_subjcon_fin                 want                          pres                          nons3
-wants                         v_subjcon_fin                 want                          pres                          s3
-want                          v_subjcon_inf                 want                          inf                          nons3
+//want                          v_tran_inf                    want                          inf                           per
+//want                          v_tran_fin                    want                          pres                          nons3
+//wants                         v_tran_fin                    want                          pres                          s3
+//want                          v_subjcon_fin                 want                          pres                          nons3
+//wants                         v_subjcon_fin                 want                          pres                          s3
+//want                          v_subjcon_inf                 want                          inf                          nons3
 like                          v_tran_inf                    like                          inf                           per
 like                          v_tran_fin                    like                          pres                          nons3
-make						  v_tran_inf                    make                          inf                          per
-likes                         v_tran_fin                    like                          pres                          s3
+//make						  v_tran_inf                    make                          inf                          per
+//likes                         v_tran_fin                    like                          pres                          s3
 like                          v_subjcon_fin                 like                          pres                          nons3
-likes                         v_subjcon_fin                 like                          pres                          s3
+//likes                         v_subjcon_fin                 like                          pres                          s3
 like                          v_subjcon_inf                 like                          inf                          nons3
-prefer                          v_tran_inf                    prefer                          inf                           per
-prefer                          v_tran_fin                    prefer                          pres                          nons3
-prefer                         v_tran_fin                    prefer                          pres                          s3
-prefer                          v_subjcon_fin                 prefer                          pres                          nons3
-prefer                         v_subjcon_fin                 prefer                          pres                          s3
-prefer                          v_subjcon_inf                 prefer                          inf                          nons3
+//prefer                          v_tran_inf                    prefer                          inf                           per
+//prefer                          v_tran_fin                    prefer                          pres                          nons3
+//prefer                         v_tran_fin                    prefer                          pres                          s3
+//prefer                          v_subjcon_fin                 prefer                          pres                          nons3
+//prefer                         v_subjcon_fin                 prefer                          pres                          s3
+//prefer                          v_subjcon_inf                 prefer                          inf                          nons3
 //looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
 look						  v_intran_post_causative		  look							inf							  per
-was                           v_aux_be                      past                          s3
-was                           v_be                      past                          s3
-were                          v_aux_be                      past                          per
-were                          v__be                      past                          per
 am                            v_aux_be                      pres                           per
 am							  v_be							pres						   per
 'm							  v_be							pres						   per
