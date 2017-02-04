@@ -744,13 +744,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	
 	public static void main(String[] a) {
 
-		TTRRecordType r1=TTRRecordType.parse("[x8==you : e|e10==look : es|x1 : e|x6 : e|x4 : e|x14 : e|x12 : e|p17==cont(e10) : t|head==e10 : es|p8==pres(e10) : t|p35==question(x1) : t|pred1==range(x6) : cn|p4==price(x4) : t|p29==cheap(x14) : t|pred2==range(x14) : cn|p31==price(x12) : t|p18==subj(e10, x8) : t|p5==of(x6, x4) : t|p20==for(e10, x6) : t|p26==in(e10, x14) : t|p32==of(x14, x12) : t]");
-		for(TTRRecordType dec:r1.decompose())
-		{
-			System.out.println(dec);
-		}
-	
-//		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
+		TTRRecordType r1=TTRRecordType.parse("[x14 : e|x24 : e|x23 : e|e16==book : es|x11==sys : e|p55==expensive(x24) : t|pred4==range(x24) : cn|p56==price(x23) : t|pred1==table(x14) : cn|head==e16 : es|p30==modal(e16) : t|p40==in(x14, x24) : t|p57==of(x24, x23) : t|p36==subj(e16, x11) : t|p35==obj(e16, x14) : t]");
+		TTRRecordType r2=TTRRecordType.parse("[x15 : e|x17 : e|x11 : e|e10==book : es|x8==sys : e|p38==price(x15) : t|pred2==range(x17) : cn|p36==expensive(x17) : t|pred1==table(x11) : cn|head==e10 : es|p21==modal(e10) : t|p39==of(x17, x15) : t|p33==in(e10, x17) : t|p27==subj(e10, x8) : t|p26==obj(e10, x11) : t]");
+		
+		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
+		
+		
+		System.out.println(r1.subsumesMapped(r2, map));
+		System.out.println(map);
 //		
 //		System.out.println(r1.toDebugString());
 //		System.out.println(r2.toDebugString());

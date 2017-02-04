@@ -467,7 +467,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 
 	@Override
 	public TreeSet<DAGTuple> getStateWithNBestTuples(int N) {
-
+		getState().resetToFirstTupleAfterLastWord();
 		TreeSet<DAGTuple> result = new TreeSet<DAGTuple>();
 		result.add(context.getDAG().getCurrentTuple());
 		for (int i = 0; i < N; i++) {

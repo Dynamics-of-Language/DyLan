@@ -1145,7 +1145,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public int countIncompleteNodes() {
 		int count = 0;
 		for (Node n : this.values()) {
-			if (!n.isComplete())
+			if (!n.hasType())
 				count++;
 		}
 		return count;

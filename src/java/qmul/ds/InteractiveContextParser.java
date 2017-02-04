@@ -495,17 +495,16 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		try{
-		List<Dialogue> d=Dialogue.loadDialoguesFromFile("corpus/dialogue-test-sets/test-dialogue");
-		for(Dialogue di:d)
-			parser.parseDialogue(di);
-		}catch(Exception e)
+		Utterance u=new Utterance("A: can you book a table in a expensive price range");
+		parser.parseUtterance(u);
+		TreeSet<DAGTuple> tuples= parser.getStateWithNBestTuples(3);
+		
+		
+		for(DAGTuple tuple: tuples)
 		{
-			e.printStackTrace();
+			System.out.println(tuple.getSemantics(parser.getContext()));
+			
 		}
-		
-		parser.getStateWithNBestTuples(4);
-		
 		
 		
 	}
