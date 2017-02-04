@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import qmul.ds.Dialogue;
 import qmul.ds.Utterance;
@@ -119,11 +120,15 @@ public class BabiDialogue extends Dialogue {
 	public static List<BabiDialogue> loadFromBabbleFile(String srcFile) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(srcFile)));
 		List<BabiDialogue> result = new ArrayList<>();
+		result.add(new BabiDialogue());
 
 		String line;
 		while ((line = in.readLine()) != null) {
 			if (line.trim().isEmpty()) {
-				result.add(new BabiDialogue());
+				if (!result.get(result.size() - 1).isEmpty()) {
+					 result.add(new BabiDialogue());
+				}
+				continue;
 			}
 			if (line.trim().startsWith("//")) {
 				continue;
@@ -137,7 +142,7 @@ public class BabiDialogue extends Dialogue {
 			result.get(result.size() - 1).add(new Utterance(agentName, utterance));
 		}
 		in.close();
-		return result;
+		return result.stream().filter(x -> !x.isEmpty()).collect(Collectors.toList());
 	}
 
 	public static void convertCorpus(String inBabiRoot, String inBabbleRoot) throws IOException {
