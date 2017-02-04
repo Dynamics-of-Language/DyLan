@@ -31,7 +31,7 @@ public class TestDialogueCorpus implements Serializable {
 		int erroneousDialogues = 0;
 		for (File file: filesToProcess) {
 			System.out.println("Processing dialogue" + file.getName());
-			BabiDialogue dialogue = BabiDialogue.loadFromBabbleFile(file.getAbsolutePath());
+			BabiDialogue dialogue = BabiDialogue.loadFromBabbleFile(file.getAbsolutePath()).get(0);
 			parser.init();
 			List<String[]> errors = TestDialogue.testWholeDialog(parser, dialogue);
 			for (String[] error: errors) {

@@ -116,13 +116,16 @@ public class BabiDialogue extends Dialogue {
 		return result;
 	}
 
-	public static BabiDialogue loadFromBabbleFile(String srcFile) throws IOException {
+	public static List<BabiDialogue> loadFromBabbleFile(String srcFile) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(srcFile)));
-		BabiDialogue result = new BabiDialogue();
+		List<BabiDialogue> result = new ArrayList<>();
 
 		String line;
 		while ((line = in.readLine()) != null) {
-			if (line.isEmpty() || line.trim().startsWith("//")) {
+			if (line.trim().isEmpty()) {
+				result.add(new BabiDialogue());
+			}
+			if (line.trim().startsWith("//")) {
 				continue;
 			}
 			line = line.toLowerCase();
@@ -131,7 +134,7 @@ public class BabiDialogue extends Dialogue {
 			String
 				agentName = lineParts[0].trim(),
 				utterance = lineParts[1].trim();
-			result.add(new Utterance(agentName, utterance));
+			result.get(result.size() - 1).add(new Utterance(agentName, utterance));
 		}
 		in.close();
 		return result;
