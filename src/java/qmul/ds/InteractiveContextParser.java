@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -343,7 +344,16 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return new InteractiveContextGenerator(this);
 	}
 
-	
+	public List<TTRFormula> getNBestFinalSemantics(int n)
+	{
+		TreeSet<DAGTuple> set=getStateWithNBestTuples(n);
+		
+		List<TTRFormula> result=new ArrayList<TTRFormula>();
+		for(DAGTuple t:set)
+			result.add(t.getSemantics(context));
+		
+		return result;
+	}
 	/**@param word
 	 *            , speaker
 	 * @return the state which results from extending the current state with all
@@ -500,6 +510,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		{
 			e.printStackTrace();
 		}
+		
+		parser.getStateWithNBestTuples(4);
 		
 		
 		

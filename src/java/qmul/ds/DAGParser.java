@@ -475,6 +475,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			else
 				break;
 		}
+		getState().resetToFirstTupleAfterLastWord();
 		return result;
 	}
 

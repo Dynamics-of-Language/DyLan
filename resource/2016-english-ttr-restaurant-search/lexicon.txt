@@ -28,9 +28,9 @@ have		                  v_tran_fin                    have                      
 love		                  v_tran_inf                    love                       inf                           per
 love		                  v_tran_fin                    love                       pres                          nons3
 //loves  	                      v_tran_fin                    love                       pres                          s3
-loving	                      v_tran_ing                    love                       ing                           per
+//loving	                      v_tran_ing                    love                       ing                           per
 help		                  v_tran_inf                    help                       inf                           per
-help		                  v_tran_fin                    help                       pres                          nons3
+//help		                  v_tran_fin                    help                       pres                          nons3
 book		                  v_tran_inf                    book                       inf                           per
 book		                  v_tran_fin                    book                       pres                          nons3
 booking						  v_tran_ing					book						   ing							per
@@ -173,7 +173,7 @@ madrid                         proper                        madrid             
 beijing                         proper                       beijing                         s3                            loc
 <rt>				  		  release_turn					null
 //the name of the release turn token must be the same as in Utterance.RELEASE_TURN_TOKEN
-have                      	  v_tran_fin_imperative         have                          imper                          s2
+//have                      	  v_tran_fin_imperative         have                          imper                          s2
 let							  v_tran_causative_imperative		let							  imper							 s2
 hello						  greet							hello
 hi							  greet							hello
