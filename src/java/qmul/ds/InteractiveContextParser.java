@@ -27,6 +27,7 @@ import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.VirtualRepairingEdge;
 import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 /**
@@ -344,16 +345,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return new InteractiveContextGenerator(this);
 	}
 
-	public List<TTRFormula> getNBestFinalSemantics(int n)
-	{
-		TreeSet<DAGTuple> set=getStateWithNBestTuples(n);
-		
-		List<TTRFormula> result=new ArrayList<TTRFormula>();
-		for(DAGTuple t:set)
-			result.add(t.getSemantics(context));
-		
-		return result;
-	}
+	
+	
 	/**@param word
 	 *            , speaker
 	 * @return the state which results from extending the current state with all

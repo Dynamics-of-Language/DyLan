@@ -26,6 +26,7 @@ import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Word;
@@ -250,9 +251,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	//END OF methods for rerunning actions-------------------------------------------------------
 	
 
-	public TTRFormula getFinalSemantics()
+	public TTRRecordType getFinalSemantics()
 	{
-		return context.getCurrentTuple().getSemantics(context);
+		return (TTRRecordType)context.getCurrentTuple().getSemantics(context).evaluate();
 	}
 	
 	//BEGIN methods for completing a tree --------------------------------------------------------
@@ -476,6 +477,18 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 				break;
 		}
 		getState().resetToFirstTupleAfterLastWord();
+		return result;
+	}
+	
+	
+	public List<TTRRecordType> getNBestFinalSemantics(int n)
+	{
+		TreeSet<DAGTuple> set=getStateWithNBestTuples(n);
+		
+		List<TTRRecordType> result=new ArrayList<TTRRecordType>();
+		for(DAGTuple t:set)
+			result.add((TTRRecordType)t.getSemantics(context).evaluate());
+		
 		return result;
 	}
 
