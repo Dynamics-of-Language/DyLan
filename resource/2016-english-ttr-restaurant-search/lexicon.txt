@@ -1,19 +1,19 @@
 what                          pron_whq                      obj
-what						  pron_whq_det					obj
+//what						  pron_whq_det					obj
 where						  pron_whq_mod				    loc
 howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
-do                            v_aux_inf                     do                            pres                          nons3
-//does                          v_aux_inf                     do                            pres                          s3
-//did                           v_aux_inf                     did                           past                          per
-would                         v_aux_inf                     would                         pres                          nons3
-'d							   v_aux_inf                     would                         pres                          nons3
-should						  v_aux_inf						should						  should						nons3
-can                           v_aux_inf                    	can                         modal                          nons3
-may                           v_aux_inf                    	can                         modal                          nons3
-will						  v_aux_inf						will						future							 nons3
-i                             i							    nons3							per
-me							  me							nons3							per
+do                            v_aux_inf_per                     do                            pres                          nons3
+does                          v_aux_inf_per                     do                            pres                          s3
+did                           v_aux_inf               did                           past
+would                         v_aux_inf                would                         pres
+'d							  v_aux_inf                     would                         pres
+should						  v_aux_inf						should						  should
+can                           v_aux_inf                    	can                         modal
+may                           v_aux_inf                    	can                         modal
+will						  v_aux_inf						will						future							 
+i                             i							    nons3							nons3
+me							  me							nons3							nons3
 we							  i								nons3							per				
 you							  you							nons3							per
 your						  your							your
@@ -69,14 +69,14 @@ like                          v_subjcon_inf                 like                
 //looking						  v_subjcon_ing				  look							ing 						  per
 looking						  v_intran_ing				      look							ing							  per
 look						  v_intran_post_causative		  look							inf							  per
-am                            v_aux_be                      pres                           per
-am							  v_be							pres						   per
-'m							  v_be							pres						   per
-'m                            v_aux_be                      pres                           per
-is                            v_aux_be                      pres                           per
-is							  v_be							pres						   per
-are                           v_aux_be                      pres                           per
-are                           v_be                          pres                           per
+am                            v_aux_be                      pres                           nons3
+am							  v_be							pres						   nons3
+'m							  v_be							pres						   nons3
+'m                            v_aux_be                      pres                           nons3
+is                            v_aux_be                      pres                           s3
+is							  v_be							pres						   s3
+are                           v_aux_be                      pres                           nons3
+are                           v_be                          pres                           nons3
 be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
 .							  assert						A
@@ -99,21 +99,21 @@ an                            det_indef_postcop             eps
 some                          det_indef		                eps
 any							  det_indef						eps
 one							  det_num						one						s3
-two							  det_num						two						plur
-three					      det_num						three		     		plur
-four						  det_num						four				    plur
-five						  det_num						five				    plur
-six							  det_num						six						plur
-seven						  det_num						seven				    plur
-eight						  det_num						eight				    plur
+two							  det_num						two						nons3
+three					      det_num						three		     		nons3
+four						  det_num						four				    nons3
+five						  det_num						five				    nons3
+six							  det_num						six						nons3
+seven						  det_num						seven				    nons3
+eight						  det_num						eight				    nons3
 one							  det_num_noun						one						s3
-two							  det_num_noun						two						plur
-three					      det_num_noun						three		     		plur
-four						  det_num_noun						four				    plur
-five						  det_num_noun						five				    plur
-six							  det_num_noun						six						plur
-seven						  det_num_noun						seven				    plur
-eight						  det_num_noun						eight				    plur
+two							  det_num_noun						two						nons3
+three					      det_num_noun						three		     		nons3
+four						  det_num_noun						four				    nons3
+five						  det_num_noun						five				    nons3
+six							  det_num_noun						six						nons3
+seven						  det_num_noun						seven				    nons3
+eight						  det_num_noun						eight				    nons3
 to							  to_subjcon					to
 for							  prep_es						for
 //for							  prep_e						for

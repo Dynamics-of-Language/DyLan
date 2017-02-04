@@ -94,13 +94,18 @@ public class ModalLabel extends EmbeddedLabelGroup {
 			if (!m1.matches())
 				this.labels.add(LabelFactory.create(m.group(m.groupCount()),
 						ite));
-			else {
+			else if (m1.group(1).indexOf("&")>0){
+				
 				String labelSt = m1.group(1);
 				String[] labels = labelSt.split("&");
 				for (String l : labels) {
 					this.labels.add(LabelFactory.create(l.trim(), ite));
+					
 				}
 			}
+			else
+				this.labels.add(LabelFactory.create(m.group(m.groupCount()),
+						ite));
 			logger.debug("created modal label:" + this + " from string:"
 					+ string);
 		} else {

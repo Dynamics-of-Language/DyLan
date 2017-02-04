@@ -243,7 +243,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			
 		}while(!init.first.isEmpty());
 		
-		logger.debug("completetuple until applicable returns false");
+		logger.debug("complete tuple until applicable returns false");
 		return null;
 		
 	}

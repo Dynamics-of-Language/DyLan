@@ -191,5 +191,13 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 		result = result.substring(0, result.length() - 2) + ")";
 		return result;
 	}
+	
+	
+	public static void main(String[] args)
+	{
+		Label l=LabelFactory.create("</\\0\\/1>(ty(e>t) || ?ty(e>t))");
+		System.out.println(l);
+		
+	}
 
 }

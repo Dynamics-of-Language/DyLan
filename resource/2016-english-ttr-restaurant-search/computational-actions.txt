@@ -199,9 +199,13 @@ ELSE    abort
 trp
 IF		complete
 THEN	addaxiom
-ELSE	IF		(Assert(Y) || +Q)
+ELSE	IF		Assert(Y)
 		THEN	addaxiom
-		ELSE	abort
+		ELSE	IF		+Q
+						¬+meta
+				THEN	addaxiom
+				ELSE 	abort
+						
 //*
 //transition relevance place
 //assumes VERY optimistic grounding. (new clause ground previous clause and Adds corresponding Assert annotations)
