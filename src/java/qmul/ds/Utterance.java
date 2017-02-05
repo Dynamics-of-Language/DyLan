@@ -197,6 +197,19 @@ public class Utterance {
 		return word;
 	}
 	
+	public boolean equals(Object o)
+	{
+		if (o==this)
+			return true;
+		
+		if (!(o instanceof Utterance))
+			return false;
+		
+		Utterance other=(Utterance)o;
+		
+		return this.speaker.equals(other.speaker)&&this.words.equals(other.words);
+	}
+	
 	
 
 }
