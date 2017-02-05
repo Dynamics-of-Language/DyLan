@@ -125,27 +125,7 @@ ELSE	IF		¬!
 		ELSE	abort
 
 
-//*
-late-star-adj-q
-IF      ty(t)
-		//<\/*>+Q
-		<Z>+Q
-THEN	go(Z)
-		IF		¬!
-        		//</\*>tn(0)
-        		ty(X)  // could restrict this to e/t but no way to do disjunction here yet
-        		//¬<\/1>Ex.x
-        		//¬<\/0>Ex.x
-        		¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
-        		Ex.tn(x)
-        THEN	delete(+Q)
-        		make(\/*)
-        		go(\/*)
-        		put(?Ex.tn(x))
-        		put(?ty(X))
-        ELSE	abort
-ELSE    abort
-*//
+
 
 
 merge

@@ -95,10 +95,10 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	 * 
 	 */
 	public void resetToFirstTupleAfterLastWord() {
-		if (!this.isExhausted()) {
-			logger.error("can only reset to last word when the state is exhausted, and wants to get ready for repairing");
-			return;
-		}
+//		if (!this.isExhausted()) {
+//			logger.error("can only reset to last word when the state is exhausted, and wants to get ready for repairing");
+//			return;
+//		}
 
 		this.setCurrentTuple(firstTupleAfterLastWord);
 		this.wordStack.clear();
