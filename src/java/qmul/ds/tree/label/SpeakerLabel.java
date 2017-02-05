@@ -100,6 +100,7 @@ public class SpeakerLabel extends Label implements Serializable {
 	public <E extends DAGEdge, U extends DAGTuple> boolean check(Tree t, Context<U,E> context)
 	{
 		String speaker=context.getCurrentSpeaker();
+
 		Formula speakerF=new AtomicFormula(speaker);
 		return this.formula.equals(speakerF);
 		

@@ -357,6 +357,7 @@ ELSE    abort
 
 
 
+
 adj(PRED)
 IF      ?ty(cn)
 		</\0>?ty(e)
@@ -1062,6 +1063,40 @@ ELSE	IF		?ty(t)
 						put(?ty(e))
 		ELSE	abort
 
+can(PRED,TENSE)
+IF		?ty(e>t)
+		¬<\/1>Ex.x
+	 	¬<\/0>Ex.x
+	 	¬</\1/\0>Ex.x
+		</\1\/0>ty(e)
+		Speaker(X)
+THEN 	aux_content(PRED)
+ELSE	IF		?ty(t)
+				¬!
+				¬<\/1>Ex.x
+	 			¬<\/0>Ex.x
+	 			¬</\0>Ex.x
+	 			Speaker(X)				
+		THEN	IF 		<\/*>+Q
+				THEN    make(\/1)
+						go(\/1)
+						put(?ty(e>t))
+						aux_content(PRED)
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(e))
+				ELSE	put(Assert(X))
+						make(\/1)
+						go(\/1)
+						put(?ty(e>t))
+						aux_content(PRED)
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(e))
+		ELSE	abort
+
 
 
 v_aux_be(TENSE,PERSON,NUMBER)
@@ -1321,7 +1356,7 @@ ELSE	abort
 
 
 manner_adv(PRED)
-IF		(?ty(t) || ty(t) || ty(e>t))
+IF		ty(t)
 		¬<\/L>Ex.x		
 THEN	put(?+eval)
 		make(\/L)
@@ -1330,7 +1365,11 @@ THEN	put(?+eval)
 		ttrput([head:es|p==PRED(head):t])
 ELSE	abort
 
-
+please(PRED)
+IF		ty(t)
+		¬<\/L>Ex.x		
+THEN	do_nothing
+ELSE	abort
 
 
 

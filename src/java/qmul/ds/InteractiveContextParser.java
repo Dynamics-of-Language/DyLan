@@ -222,7 +222,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		for (Pair<List<Action>, Tree> pair : global) {
 
 			UtteredWord w = getState().wordStack().peek();
-			logger.trace("top of stack:" + getState().wordStack().peek());
+			logger.debug("top of stack:" + getState().wordStack().peek());
 			for (LexicalAction la : lexicon.get(w.word())) {
 				// set right-edge indicators (e.g. '.' or '?') and acceptances
 				// to not replayable
@@ -231,6 +231,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 				// boolean repairable = true;
 				logger.debug("applying la '" + la + "' on " + pair.second);
+				logger.debug("top of stack:" + getState().wordStack().peek());
 				Tree res = la.exec(pair.second.clone(), context);
 
 				if (res != null) {
@@ -381,7 +382,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		}
 
 		getState().wordStack().push(word);
-		// state.clear();
+		
 		if (!parse()) {
 			logger.info("OOPS! Cannot parse:" + word.word() + ". Resetting to the state after the last parsable word");
 			logger.debug("stack:" + getState().wordStack());
@@ -495,16 +496,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance u=new Utterance("A: can you book a table in a expensive price range");
+		Utterance u=new Utterance("sys: can ");
 		parser.parseUtterance(u);
-		TreeSet<DAGTuple> tuples= parser.getStateWithNBestTuples(3);
-		
-		
-		for(DAGTuple tuple: tuples)
-		{
-			System.out.println(tuple.getSemantics(parser.getContext()));
-			
-		}
+		System.out.println(parser.getContext().getCurrentTuple());
 		
 		
 	}

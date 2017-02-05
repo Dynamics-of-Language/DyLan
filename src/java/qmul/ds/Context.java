@@ -212,6 +212,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 */
 	public String getCurrentSpeaker()
 	{
+		
 		return (dag.wordStack().isEmpty())?null:dag.wordStack().peek().speaker();
 	}
 	

@@ -9,8 +9,8 @@ did                           v_aux_inf               did                       
 would                         v_aux_inf                would                         pres
 'd							  v_aux_inf                     would                         pres
 should						  v_aux_inf						should						  should
-can                           v_aux_inf                    	can                         modal
-may                           v_aux_inf                    	can                         modal
+can                           can                    	can                         modal
+may                           can                    	can                         modal
 will						  v_aux_inf						will						future							 
 i                             i							    nons3							nons3
 me							  me							nons3							nons3
@@ -81,7 +81,7 @@ be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
 .							  assert						A
 ?							  question						Q
-please						  manner_adv					please
+please						  please					please
 //uhu							  accept						uhu
 ok							  accept						ok
 yes							  accept						yes
