@@ -317,6 +317,21 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public void init(List<String> participants) {
 		context.init(participants);
 	}
+	
+	public List<TTRRecordType> getTopNPending(int i)
+	{
+		List<TTRRecordType> result=new ArrayList<TTRRecordType>();
+		
+		qmul.ds.tree.Tree current=context.getCurrentTuple().getTree();
+		
+		if (!current.getAsserters().isEmpty())
+		{
+			result.add(new TTRRecordType());
+			return result;
+		}
+		else return getNBestFinalSemantics(i);
+		
+	}
 
 	/**
 	 * Only generating to propositional semantics. And not incrementally -
@@ -496,9 +511,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance u=new Utterance("sys: can ");
+		Utterance u=new Utterance("sys: what can you book a table");
 		parser.parseUtterance(u);
-		System.out.println(parser.getContext().getCurrentTuple());
+		System.out.println(parser.getContext().getCurrentTuple().getSemantics());
 		
 		
 	}

@@ -210,6 +210,11 @@ public class Utterance {
 		return this.speaker.equals(other.speaker)&&this.words.equals(other.words);
 	}
 	
+	public int getLength()
+	{
+		return this.words.size();
+	}
+	
 	
 
 }
