@@ -96,7 +96,7 @@ public class BabiDialogue extends Dialogue {
 				Utterance previousTurn = processedUtterances.get(processedUtterances.size() - 1);
 				processedUtterances.set(
 					processedUtterances.size() - 1,
-					new Utterance(previousTurn.getSpeaker(), previousTurn.getText() + ". " + turn.getText())
+					new Utterance(previousTurn.getSpeaker(), previousTurn.getText() + " "+ turn.getText())
 				);
 				turnToBeAppended = false;
 				continue;

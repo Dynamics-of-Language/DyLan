@@ -1,0 +1,60 @@
+is                            v_be                  	pres                          s3
+square                          count                       square                        s3                            shape
+circle                          count                       circle                        s3                            shape
+triangle						count						triangle					  s3							shape
+blue                            adj	                       	blue
+red							    adj							red
+green							adj							green
+purple							adj							purple
+yellow							adj							yellow
+orange							adj							orange
+black							adj							black
+blue                            adj_ev	                       	blue
+red							    adj_ev							red
+green							adj_ev							green
+purple							adj_ev						purple
+yellow							adj_ev							yellow
+orange							adj_ev							orange
+black							adj_ev							black
+blue                            adj_be	                       	blue
+red							    adj_be							red
+green							adj_be							green
+purple							adj_be						purple
+yellow							adj_be							yellow
+orange							adj_be							orange
+black							adj_be							black
+//this						  det_demonst					here						  s3
+//that						  det_demonst					there					      s3
+this						  demonst  						this						  s3							obj
+that						  demonst						that						  s3							obj
+see							  v_tran_fin					see							  pres                          nons3
+see							  v_tran_inf					see							  inf							per
+sees						  v_tran_fin					see							  pres							s3
+can 						  v_aux_inf                     can                           pres
+do						      v_aux_inf                     do                            pres
+it							  pron_nom						s3							  obj
+it							  pron_acc						s3							  obj
+a                             det_indef                     eps
+an                            det_indef                     eps
+a                             det_indef_postcop				eps
+an                            det_indef_postcop				eps
+//what                          pron_whq                      obj
+what						  pron_whq_cop					obj
+//what						  pron_whq_det_cop				meta_cn
+//color						  cn_meta_cat					color
+//shape						  cn_meta_cat					shape
+//which						  pron_whq						obj
+.							  assert						A
+?							  question						Q
+//uhu							  accept						uhu
+ok							  accept						ok
+yes							  yes							yes
+yes							  accept						yes
+okay						  accept						okay
+yeah						  accept						yeah
+//wow							  accept						wow
+//right						  accept						right
+no							  reject						not
+//i                             i		                        s1                            spkr
+you							  proper						system							  s2
+<rt>				  		  release_turn					null

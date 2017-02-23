@@ -37,11 +37,15 @@ public class DSType implements Serializable {
 	public final static BasicType t = new BasicType("t");
 	public final static BasicType cn = new BasicType("cn");
 	public final static BasicType es = new BasicType("es");
-
+	public final static BasicType cnev = new BasicType("cnev");
+	//cnev is common noun that predicates over events (post-copula)
+	//invented this type to get around special cases where computing max-sem
+	//yes. it multiplies lexical entries and I don't like it.
+	
 	public final static DSType et = new ConstructedType(e, t);
 	public final static DSType eet = new ConstructedType(e, et);
 
-	public final static String BASIC_TYPE_PATTERN = "e|es|cn|t";
+	public final static String BASIC_TYPE_PATTERN = "e|es|cn|t|cnev";
 
 	/**
 	 * @param type

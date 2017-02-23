@@ -233,7 +233,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				logger.debug("applying la '" + la + "' on " + pair.second);
 				logger.debug("top of stack:" + getState().wordStack().peek());
 				Tree res = la.exec(pair.second.clone(), context);
-
+				logger.debug("Floor is open:"+context.floorIsOpen());
 				if (res != null) {
 					logger.debug("success:" + res);
 
@@ -368,6 +368,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 * @return the state which results from extending the current state with all
 	 *         possible lexical actions corresponding to the given word; or null
 	 *         if the word is not parsable
+	 *        
 	 */
 	public DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord word) {
 		logger.info("Parsing word " + word);
@@ -419,8 +420,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				// state.initiateClauseRepair();
 			}
 		}
-
-		this.context.setWhoHasFloor(word.speaker());
+		
+		if (word.word().equals(RELEASE_TURN))
+			this.context.openFloor();
+		else
+			this.context.setWhoHasFloor(word.speaker());
+		
+		
 		this.getState().thisIsFirstTupleAfterLastWord();
 		logger.info("Parsed " + word);
 		logger.info("Final Tuple:" + getState().getCurrentTuple());
@@ -511,9 +517,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance u=new Utterance("sys: what can you book a table");
+		Utterance u=new Utterance("sys: what can it help you with <rt>");
 		parser.parseUtterance(u);
-		System.out.println(parser.getContext().getCurrentTuple().getSemantics());
+		System.out.println(parser.getContext().floorIsOpen());
 		
 		
 	}

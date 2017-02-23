@@ -398,8 +398,9 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		((TTRRecordType)allContent).collapseIsomorphicSuperTypes(new HashMap<Variable, Variable>());
 		return allContent;
 	}
+	
 	/**
-	 * This corresponding to the semantic material which hasn't been grounded/needs feedback
+	 * This corresponds to the semantic material which hasn't been grounded/needs feedback
 	 * (loosely following Ginzburg (2012))
 	 * Subclasses of Context can reimplement this method.
 	 * Currently assumes very optimistic grounding: if the current tuple has an assertion 

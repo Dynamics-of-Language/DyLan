@@ -692,6 +692,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 */
 	private void addUnderspecifiedFormulae(Context c) {
 		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
+		typeMap.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
 		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
 		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
 		// typeMap.put(DSType.cn,

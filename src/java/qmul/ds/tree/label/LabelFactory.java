@@ -298,8 +298,8 @@ public class LabelFactory {
 
 	public static void main(String a[]) {
 
-		FormulaLabel l=(FormulaLabel)LabelFactory.create("Fo(X)");
-		System.out.println(l.getFormula().getClass());
+		Label l=LabelFactory.create("ty(cnev>e)");
+		System.out.println(l+" "+l.getClass());
 
 	}
 

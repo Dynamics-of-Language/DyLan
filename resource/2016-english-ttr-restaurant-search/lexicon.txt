@@ -79,7 +79,7 @@ are                           v_aux_be                      pres                
 are                           v_be                          pres                           nons3
 be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
-.							  assert						A
+//.							  assert						A
 ?							  question						Q
 please						  manner_adv					please
 //uhu							  accept						uhu

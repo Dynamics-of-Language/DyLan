@@ -76,7 +76,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			logger.trace("metavars for word : " + word + " of type " + name);
 
 			
-
+			logger.info("creating lexical action for "+word+" using template "+name);
 			for (String line : this.lines) {
 				for (int i = 0; i < metavals.size(); i++) {
 					line = line.replaceAll(metavars.get(i), metavals.get(i));
@@ -86,7 +86,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 			lexiconsize++;
 			//logger.info("lexicon size = " + lexiconsize);
-			logger.info("creating lexical action for "+word+" using template "+name);
+			
 			return new LexicalAction(word, lines, this.name, this.noLeftAdjustment);
 		}
 
