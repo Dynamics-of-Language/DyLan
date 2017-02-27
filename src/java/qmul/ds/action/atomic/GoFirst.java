@@ -62,7 +62,7 @@ public class GoFirst extends Effect {
 		Node currentNode = tree.getPointedNode();
 		NodeAddress curAddress = tree.getPointer();
 		while (!this.label.check(currentNode)) {
-			curAddress = curAddress.upNonLink();
+			curAddress = curAddress.up();
 			if (curAddress == null) {
 				logger.debug("GoFirst action failed. Couldn't find node with required label above. Returning null");
 				return null;

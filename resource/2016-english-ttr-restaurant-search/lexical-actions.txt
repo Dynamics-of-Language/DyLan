@@ -1213,7 +1213,7 @@ ELSE	IF		?ty(t)
 						put(?ty(e))
 		ELSE	abort
 
-
+//*
 prep_es(PRED)
 IF		ty(t)
 		¬<\/L>Ex.x		
@@ -1246,7 +1246,61 @@ THEN	IF		<\/*>?Ex.tn(x)
 				go(\/0)
 				put(?ty(e))
 ELSE	abort
+*//
 
+prep_es(PRED)
+IF		ty(t)
+		¬<\/L>Ex.x		
+THEN	IF		<\/*>?Ex.tn(x)
+			  	<\/*>ty(e)
+		THEN	put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+				merge(</\0/\L\/*>)
+			 	delete(?ty(e))
+		ELSE 	IF		complete
+						Speaker(X)
+						PrevSpeaker(Y)
+						¬X=Y
+						<Z>(+Q & +meta)
+				THEN	go(Z)
+						delete(+Q)
+						delete(+meta)
+						gofirst(tn(0))
+						put(?+eval)
+						make(\/L)
+						go(\/L)
+						put(?ty(t))
+						make(\/1)
+						go(\/1)
+						put(ty(e>t))
+						ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(e))
+				ELSE	put(?+eval)
+						make(\/L)
+						go(\/L)
+						put(?ty(t))
+						make(\/1)
+						go(\/1)
+						put(ty(e>t))
+						ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(e))
+ELSE	abort
 
 
 prep_postcop(PRED)
