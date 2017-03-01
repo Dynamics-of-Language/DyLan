@@ -22,9 +22,9 @@ import qmul.ds.Utterance;
 public class BabiDialogue extends Dialogue {
 	private static final long serialVersionUID = 1L;
 	public static final String[] AGENTS = new String[]{"usr", "sys"};
-	public static Map<String, String> replacements=new HashMap<String,String>();
+	public static Map<String, String> replacements=new HashMap<>();
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 
 		map.put("which price range are looking for", "which price range are you looking for");
 		map.put("good morning", "goodmorning");
@@ -41,7 +41,7 @@ public class BabiDialogue extends Dialogue {
 
 	private static String applyReplacements(String s)
 	{
-		String init=new String(s);
+		String init = s;
 		
 		for(String replacement: replacements.keySet())
 		{
@@ -73,9 +73,6 @@ public class BabiDialogue extends Dialogue {
 				String
 					agentName = AGENTS[index],
 					utterance = utterances[index];
-				if (utterance.equals("silence")) {
-					
-				}
 				if (utterance.startsWith("api_call")) {
 					continue;
 				}
@@ -83,6 +80,7 @@ public class BabiDialogue extends Dialogue {
 			}
 		}
 		in.close();
+		result = result.stream().filter(x -> !x.isEmpty()).collect(Collectors.toList());
 
 		return result;
 	}
