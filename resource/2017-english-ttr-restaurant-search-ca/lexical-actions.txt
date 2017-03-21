@@ -45,7 +45,7 @@ THEN    IF		</\0\/1>Ex.x
 		ELSE	put(person(PERSON))
 				make(\/1)
 			    go(\/1)
-				ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t]))
+				ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t|p1==counting(head):t]))
 				put(ty(cn>e))
 			    put(!)
 				go(/\1)
@@ -67,7 +67,7 @@ THEN    IF		</\0\/1>Ex.x
 		ELSE	put(person(PERSON))
 				make(\/1)
 		  		go(\/1)
-		       	ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t]))
+		       	ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t|p1==counting(head):t]))
 		        put(ty(cn>e))
 		       	put(!)
 		       	go(/\1)
@@ -565,20 +565,9 @@ ELSE	IF		?ty(t)
 				put(person(nons3))
 				make(\/1)
 				go(\/1)
-				put(?ty(cn>e))
-				make(\/1)
-				go(\/1)
-				ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==count(R2.head,R1.head):t])))
-				put(ty(e>(cn>e)))
-				put(!)
-				go(/\1)
-				make(\/0)
-				go(\/0)
-				put(ty(e))
-				ttrput([x:e|head==x:e])
-				put(+Q)
-				put(+meta)
-				go(/\0)
+				put(ty(cn>e))
+				put(+whdet)
+				ttrput(R2^(R2 ++ [head==R2.head:e|p==counting(R2.head):t]))
 				go(/\1)
 				make(\/0)
 				go(\/0)
@@ -587,23 +576,12 @@ ELSE	IF		?ty(t)
 						¬<\/1>Ex.x
 						¬<\/0>Ex.x
 						¬<\/*>Ex.x
-				THEN	put(person(plur))
+				THEN	put(person(nons3))
 						make(\/1)
 						go(\/1)
-						put(?ty(cn>e))
-						make(\/1)
-						go(\/1)
-						ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==count(R2.head,R1.head):t])))
-						put(ty(e>(cn>e)))
-						put(!)
-						go(/\1)
-						make(\/0)
-						go(\/0)
-						put(ty(e))
-						ttrput([x:e|head==x:e])
-						put(+Q)
-						put(+meta)
-						go(/\0)
+						put(ty(cn>e))
+						put(+whdet)
+						ttrput(R2^(R2 ++ [head==R2.head:e|p==counting(R2.head):t]))
 						go(/\1)
 						make(\/0)
 						go(\/0)
@@ -764,7 +742,6 @@ THEN	make(\/0)
 		put(?ty(e>t))
 		v_tran_content(PRED)
 ELSE	abort
-
 
 v_intran_ing(PRED,TENSE,PERSON)
 IF		ty(e>t)
@@ -1289,39 +1266,19 @@ THEN	IF		<\/*>?Ex.tn(x)
 				put(?ty(e))
 				merge(</\0/\L\/*>)
 			 	delete(?ty(e))
-		ELSE 	IF		complete
-						Speaker(X)
-						PrevSpeaker(Y)
-						¬X=Y
-						<Z>(+Q & +meta)
-				THEN	go(Z)
-						delete(+Q)
-						delete(+meta)
-						gofirst(tn(0))
-						put(?+eval)
-						make(\/L)
-						go(\/L)
-						put(?ty(t))
-						make(\/1)
-						go(\/1)
-						put(ty(e>t))
-						ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
-						go(/\1)
-						make(\/0)
-						go(\/0)
-						put(?ty(e))
-				ELSE	put(?+eval)
-						make(\/L)
-						go(\/L)
-						put(?ty(t))
-						make(\/1)
-						go(\/1)
-						put(ty(e>t))
-						ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
-						go(/\1)
-						make(\/0)
-						go(\/0)
-						put(?ty(e))
+		ELSE 	unassert
+				put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
 ELSE	abort
 
 
@@ -1492,6 +1449,22 @@ ELSE	IF		</\0\/1>Ex.x
 				¬</\0\/1>Ex.?x
 				¬Ex.?x
 		THEN	abort
+		ELSE	IF	  	¬Ex.?x
+					  	Speaker(W)
+				THEN	IF		<Z>+Q
+					 	THEN	do_nothing
+						ELSE	put(Assert(W))	
+				ELSE    do_nothing
+
+
+//*
+release_turn(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
 		ELSE	IF	  	ty(X)
 					  	¬</\L>Ex.x
 					  	Speaker(W)
@@ -1507,7 +1480,7 @@ ELSE	IF		</\0\/1>Ex.x
 				ELSE    abort
 
 
-//*
+
 release_turn(PRED)
 IF		Speaker(X)
 		PrevSpeaker(Y)
@@ -1522,22 +1495,6 @@ THEN	IF		ty(t)
 		ELSE	open_floor
 ELSE	abort
 *//
-
-//*
-IF		¬+Q
-				?ty(e)
-				Ex.tn(x)
-				¬</\0>?ty(t)
-		THEN	IF		<Z>?Ex.tn(x)
-				THEN	abort	
-				ELSE	put(+Q)
-						put(ty(e))
-						ttrput([x:e|head==x:e])
-						delete(?ty(e))
-		ELSE	abort
-*//
-
-
 
 reject(PRED)
 IF		ty(t)
@@ -1556,9 +1513,8 @@ accept(PRED)
 IF		¬+Q
 		Speaker(X)
 		Assert(Y)
-THEN	IF		Assert(X)
-		THEN	abort
-		ELSE	put(Assert(X))
+		¬X=Y
+THEN	put(Assert(X))
 ELSE	abort
 
 // 'yes' as answer to question

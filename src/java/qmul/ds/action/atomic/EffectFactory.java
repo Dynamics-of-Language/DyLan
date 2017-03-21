@@ -78,7 +78,10 @@ public class EffectFactory {
 			return new OpenFloor();
 		}else if (line.toLowerCase().startsWith(Unreduce.FUNCTOR.toLowerCase())) {
 			return new Unreduce();
-		} 
+		}
+		else if (line.toLowerCase().startsWith(Unassert.FUNCTOR.toLowerCase())) {
+			return new Unassert();
+		}
 		else if (line.toLowerCase().startsWith(GroundToRoot.FUNCTOR.toLowerCase())) {
 			return new GroundToRoot();
 		}else if (line.toLowerCase().startsWith(Make.FUNCTOR.toLowerCase())) {

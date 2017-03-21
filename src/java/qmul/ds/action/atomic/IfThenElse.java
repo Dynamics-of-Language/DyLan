@@ -354,7 +354,7 @@ public class IfThenElse extends Effect implements Serializable {
 		// get & reset metavariables for this application
 
 		//if (embeddingLevel==0) addAndResetMetas(null);
-		logger.debug("Executing ITE:"+this);
+		logger.debug("Executing ITE:\n"+this);
 		MetaElement.resetBoundMetas();
 		if (this.embeddingLevel == 0)
 			setupBacktrackers(new ArrayList<Meta<?>>());

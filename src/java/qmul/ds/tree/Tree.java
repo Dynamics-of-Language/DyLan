@@ -344,27 +344,28 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		boolean removed = getPointedNode().removeLabel(label);
 		if (!removed) {
 			logger.warn("Failed to delete:" + label + " on " + getPointedNode());
-			HashSet<Label> newSet=new HashSet<Label>();
-			for(Label l:getPointedNode())
-			{
+			HashSet<Label> newSet = new HashSet<Label>();
+			for (Label l : getPointedNode()) {
 				/**
-				 * The following code is essentially redundant, and has been written because of a bug in java no doubt.
-				 * The hashset.remove() method does not remove an existing element l, despite two way 
-				 * equality and equal hash code with the element in the set. So we are having to do the below.
+				 * The following code is essentially redundant, and has been
+				 * written because of a bug in java no doubt. The
+				 * hashset.remove() method does not remove an existing element
+				 * l, despite two way equality and equal hash code with the
+				 * element in the set. So we are having to do the below.
 				 */
-//				Requirement lReq=(Requirement)l;
-//				Requirement labelReq=(Requirement)l;
-//				System.out.println(l.equals(label));
-//				System.out.println(label.equals(l));
-//				System.out.println(labelReq.equals(lReq));
-//				System.out.println(lReq.equals(labelReq));
-//				System.out.println(labelReq.getLabel().equals(lReq.getLabel()));
-//				System.out.println(lReq.getLabel().equals(labelReq.getLabel()));
-				if (l.equals(label) && label.equals(l)&& l.hashCode() == label.hashCode()) {
+				// Requirement lReq=(Requirement)l;
+				// Requirement labelReq=(Requirement)l;
+				// System.out.println(l.equals(label));
+				// System.out.println(label.equals(l));
+				// System.out.println(labelReq.equals(lReq));
+				// System.out.println(lReq.equals(labelReq));
+				// System.out.println(labelReq.getLabel().equals(lReq.getLabel()));
+				// System.out.println(lReq.getLabel().equals(labelReq.getLabel()));
+				if (l.equals(label) && label.equals(l) && l.hashCode() == label.hashCode()) {
 					continue;
 				}
 				newSet.add(l);
-				
+
 			}
 			getPointedNode().clear();
 			getPointedNode().addAll(newSet);
@@ -662,21 +663,21 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 		parser.parseUtterance(utt);
 
-		Tree cur=parser.getContext().getCurrentTuple().getTree();
-		
-		System.out.println("Tree: "+cur);
-		System.out.println("Incompleteness: "+cur.getIncompletenessMeasure());
+		Tree cur = parser.getContext().getCurrentTuple().getTree();
+
+		System.out.println("Tree: " + cur);
+		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
 		parser.parse();
-		cur=parser.getContext().getCurrentTuple().getTree();
-		
-		System.out.println("Tree: "+cur);
-		System.out.println("Incompleteness: "+cur.getIncompletenessMeasure());
+		cur = parser.getContext().getCurrentTuple().getTree();
+
+		System.out.println("Tree: " + cur);
+		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
 		parser.parse();
-		cur=parser.getContext().getCurrentTuple().getTree();
-		
-		System.out.println("Tree: "+cur);
-		System.out.println("Incompleteness: "+cur.getIncompletenessMeasure());
-		
+		cur = parser.getContext().getCurrentTuple().getTree();
+
+		System.out.println("Tree: " + cur);
+		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
+
 	}
 
 	/**
@@ -725,7 +726,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			if (dsType != null && f == null) {
 				if (typeMap.containsKey(dsType)) {
 					/**
-					 * Yanchao's grammar is not going to work with underspecification.
+					 * Yanchao's grammar is not going to work with
+					 * underspecification.
 					 */
 					// Node
 					// mother=this.get(n.getAddress().go(Modality.parse("/\\")));
@@ -853,6 +855,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		Tree result = clone();
 		boolean merged = false;
 		boolean isLateUnfixed = false;
+		boolean et = false;// spacial case of mering into e>t -> always merges.
+		// TODO: WARNING: (lower e>ts not covered!)
+
 		for (Node unfixed : result.getUnfixedNodes()) {
 			logger.debug("found unfixed node:" + unfixed);
 			FormulaLabel mergePointFChosen = null;
@@ -867,10 +872,6 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				logger.debug("considering merge point:" + mergePoint.getAddress());
 				FormulaLabel mergePointF = mergePoint.getFormulaLabel();
 				FormulaLabel unfixedF = unfixed.getFormulaLabel();
-				//
-				// commented out, because with late-*-Adjunction for short
-				// answers to questions, the merge point will actually have a
-				// formula on it already.
 
 				if (getDaughters(mergePoint, "01").isEmpty() && mergePoint.isUnifiable(unfixed)) {
 
@@ -882,6 +883,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 					}
 					isLateUnfixed = unfixed.getAddress().isLateUnfixed();
+					et = mergePoint.getAddress().getAddress().equals("01");
 					result.merge(unfixed);
 					// returns tree with unfixed node merged into THE FIRST
 					// merge point found.
@@ -897,13 +899,15 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				mergePointChosen.remove(mergePointFChosen);
 
 		}
-		if (merged && !isLateUnfixed) {
+		if (merged && !isLateUnfixed && !et) {
 			results.add(original);
 			results.add(result);
 
 		} else if (merged && isLateUnfixed) {
 			results.add(result);
-		} else
+		} else if (merged && et)
+			results.add(result);
+		else
 			results.add(original);
 
 		return results;
@@ -986,6 +990,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		logger.debug("getting semantics of tree rooted at:" + root);
 		Node unfixed = get(root.getAddress().downStar());
 		Node localUnfixed = get(root.getAddress().downLocalUnfixed());
+		boolean unfixedFunctor = false;
 		TTRFormula unfixedReduced = null;
 		if (unfixed != null) {
 			unfixedReduced = getMaximalSemantics(unfixed, c);
@@ -1001,6 +1006,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				TTRLambdaAbstract unfixedFunct = (TTRLambdaAbstract) unfixedReduced;
 				// now reduce
 				unfixedReduced = unfixedFunct.betaReduce(imaginaryTypeESem);
+				unfixedFunctor = true;
 
 			}
 
@@ -1020,6 +1026,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				TTRLambdaAbstract unfixedFunct = (TTRLambdaAbstract) localUnfixedReduced;
 				// now reduce
 				localUnfixedReduced = unfixedFunct.betaReduce(imaginaryTypeESem);
+				unfixedFunctor = true;
 
 			}
 
@@ -1056,9 +1063,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				rootReduced = unfixedReduced.removeHead().conjoin(localUnfixedReduced.removeHead());
 
 			else if (unfixedReduced != null && localUnfixedReduced == null)
-				rootReduced = unfixedReduced.removeHead();
+				rootReduced = unfixedFunctor ? unfixedReduced : unfixedReduced.removeHead();
 			else if (localUnfixedReduced != null)
-				rootReduced = localUnfixedReduced.removeHead();
+				rootReduced = unfixedFunctor ? localUnfixedReduced : localUnfixedReduced.removeHead();
 		}
 		// only evaluate link if it hasn't been evaluated before. ARASH,
 		// question to himself: Why would it have been evaluated before?
@@ -1072,7 +1079,6 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		}
 		logger.debug("done: " + rootReduced);
 
-		
 		if (root.contains(questionLabel)) {
 
 			rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
@@ -1130,8 +1136,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 *         AssertionLabels
 	 */
 	public Set<String> getAsserters() {
-		//if (!this.isComplete())
-		//	return new HashSet<String>();
+		// if (!this.isComplete())
+		// return new HashSet<String>();
 
 		Set<String> asserters = new HashSet<String>();
 		for (Label l : this.getPointedNode()) {

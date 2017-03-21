@@ -230,7 +230,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				// about this.
 
 				// boolean repairable = true;
-				logger.debug("applying la '" + la + "' on " + pair.second);
+				logger.debug("applying la '" + la + "':"+la.getLexicalActionType()+" on " + pair.second);
 				logger.debug("top of stack:" + getState().wordStack().peek());
 				Tree res = la.exec(pair.second.clone(), context);
 				logger.debug("Floor is open:"+context.floorIsOpen());
@@ -517,9 +517,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance u=new Utterance("sys: what can it help you with <rt>");
+		Utterance u=new Utterance("sys: where");
 		parser.parseUtterance(u);
-		System.out.println(parser.getContext().floorIsOpen());
+		System.out.println(parser.getContext().getPendingContent());
 		
 		
 	}
