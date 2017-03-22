@@ -137,22 +137,28 @@ italian						  adj_be						italian
 italian						  mass							italian						s3					cuisine
 spanish						  adj							spanish
 spanish						  adj_be						spanish
+spanish						  mass							spanish						s3					cuisine
 british						  adj							british
 british						  adj_be						british
+british						  mass							british						s3					cuisine
 japanese					  adj							japanese
 japanese					  adj_be						japanese
+japanese					  mass							japanese						s3					cuisine
 indian						  adj							indian
 indian						  adj_be						indian
+indian						  mass							indian						s3					cuisine
 cantonese					  adj						cantonese
 cantonese					  adj_be					cantonese
+cantonese					  mass							cantonese						s3					cuisine
 french						  adj						french
 french						  adj_be					french
-vietnamese					  adj						vietnamese
-vietnamese					  adj_be					vietnamese
-korean						  adj						korean
-korean						  adj_be					korean
-thai						  adj						thai
-thai					      adj_be					thai
+french						  french							french						s3					cuisine
+//vietnamese					  adj						vietnamese
+//vietnamese					  adj_be					vietnamese
+//korean						  adj						korean
+//korean						  adj_be					korean
+//thai						  adj						thai
+//thai					      adj_be					thai
 cheap						  adj							cheap
 expensive				      adj_be						expensive
 expensive					  adj							expensive
