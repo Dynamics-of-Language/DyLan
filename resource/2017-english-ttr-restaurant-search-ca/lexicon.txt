@@ -165,8 +165,8 @@ expensive					  adj							expensive
 cheap						  adj_be						cheap
 moderate				      adj_be						moderate
 moderate					  adj							moderate
-food						  mass							food					s3				obj
-cuisine						  mass							food					s3				obj
+food						  mass							cuisine					s3				obj
+cuisine						  mass							cuisine					s3				obj
 reservation					  count							reservation				s3				obj
 range						  count							range					s3				obj
 party						  count							party					s3				obj

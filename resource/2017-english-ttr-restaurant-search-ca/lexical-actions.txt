@@ -18,7 +18,7 @@ THEN    IF		</\0\/1>Ex.x
 		ELSE	put(person(PERSON))
 		        put(ty(e))
 		        delete(?ty(e))
-		        ttrput([x==NAME:e|p==CLASS(x):t|head==x:e])
+		        ttrput([x==NAME:e|pred==CLASS(x):cn|head==x:e])
 ELSE    abort
 
 //*
@@ -274,7 +274,7 @@ IF      ?ty(e)
         ¬<\/0>Ex.x
 THEN    put(ty(e))
 		delete(?ty(e))
-        ttrput([x:e|p==NAME(x):t|p1==CLASS(x):t|head==x:e])
+        ttrput([x:e|p==NAME(x):t|pred==CLASS(x):cn|head==x:e])
         put(person(PERSON))
         put(!)
 ELSE    IF		?ty(cn)
