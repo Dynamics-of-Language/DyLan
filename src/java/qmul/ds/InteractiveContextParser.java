@@ -370,7 +370,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 *         if the word is not parsable
 	 *        
 	 */
-	public DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord word) {
+	public DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord w) {
+		UtteredWord word=new UtteredWord(w.word().toLowerCase(),w.speaker());
 		logger.info("Parsing word " + word);
 		// set addressee of utterance if inferrable (in the dyadic case):
 		List<String> participants = new ArrayList<String>(context.getParticipants());
