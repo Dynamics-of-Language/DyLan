@@ -52,7 +52,10 @@ public class BabiDialogue extends Dialogue {
 		return init;
 	}
 
-	public static List<BabiDialogue> loadFromBabiFile(String inBabiFilename) throws IOException {
+	public static List<BabiDialogue> loadFromBabiFile(
+		String inBabiFilename,
+		Map<String, Boolean> inConfig
+	) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(inBabiFilename)));
 		List<BabiDialogue> result = new ArrayList<>();
 		result.add(new BabiDialogue());
@@ -60,11 +63,13 @@ public class BabiDialogue extends Dialogue {
 		String line;
 		while ((line = in.readLine()) != null) {
 			if (line.isEmpty()) {
-				result.add(buildBabiDialogue(dialogueTurns));
+				result.add(buildBabiDialogue(dialogueTurns, inConfig));
 				dialogueTurns.clear();
 				continue;
 			}
-			line=applyReplacements(line.toLowerCase());
+			if (inConfig.get("apply_replacements")) {
+				line = applyReplacements(line.toLowerCase());
+			}
 			String[] lineParts = line.split(" ", 2);
 			String[] utterances = lineParts[1].split("\t");
 			assert 2 == utterances.length: "Invalid bAbI data: " + line;
@@ -73,7 +78,7 @@ public class BabiDialogue extends Dialogue {
 				String
 					agentName = AGENTS[index],
 					utterance = utterances[index];
-				if (utterance.startsWith("api_call")) {
+				if (utterance.startsWith("api_call") && inConfig.get("process_api_calls")) {
 					continue;
 				}
 				dialogueTurns.add(new Utterance(agentName, utterance));
@@ -85,7 +90,7 @@ public class BabiDialogue extends Dialogue {
 		return result;
 	}
 
-	private static BabiDialogue buildBabiDialogue(List<Utterance> inTurns) {
+	private static BabiDialogue buildBabiDialogue(List<Utterance> inTurns, Map<String, Boolean> inConfig) {
 		List<Utterance> processedUtterances = new ArrayList<>();
 		boolean turnToBeAppended = false;
 		for (Utterance turn: inTurns) {
@@ -99,12 +104,17 @@ public class BabiDialogue extends Dialogue {
 				turnToBeAppended = false;
 				continue;
 			}
-			if (!turn.getText().equals("<silence>")) {
-				processedUtterances.add(turn);
+			if (turn.getText().equals("<silence>")) {
+				if (!inConfig.get("remove_silence")) {
+					processedUtterances.add(new Utterance(turn.getSpeaker(), " "));
+				}
+				else {
+					// current turn is just silence - skipping it completely and appending next one to the previous one
+					turnToBeAppended = true;
+				}
 			}
 			else {
-				// current turn is just silence - skipping it completely and appending next one to the previous one
-				turnToBeAppended = true;
+				processedUtterances.add(turn);
 			}
 		}
 		BabiDialogue result = new BabiDialogue();
@@ -155,7 +165,7 @@ public class BabiDialogue extends Dialogue {
 				continue;
 			}
 			++fileCounter;
-			List<BabiDialogue> dialogues = loadFromBabiFile(file.getAbsolutePath());
+			List<BabiDialogue> dialogues = loadFromBabiFile(file.getAbsolutePath(), getDefaultConfig());
 			int counter = 0;
 			for (BabiDialogue dialogue: dialogues) {
 				String outFileName = inBabbleRoot + File.separator + String.format("%s.%d", fileName, counter + 1);
@@ -164,6 +174,14 @@ public class BabiDialogue extends Dialogue {
 			}
 		}
 		System.out.println(String.format("Successfully converted %d files", fileCounter));
+	}
+
+	public static Map<String, Boolean> getDefaultConfig() {
+		Map<String, Boolean> config = new HashMap<>();
+		config.put("apply_replacements", true);
+		config.put("remove_silence", true);
+		config.put("process_api_calls", false);
+		return config;
 	}
 
 	public static void collectSlotValuesFromCorpus(String inBabiRoot, String inDstFileName) throws IOException {
