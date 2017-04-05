@@ -78,7 +78,7 @@ public class BabiDialogue extends Dialogue {
 				String
 					agentName = AGENTS[index],
 					utterance = utterances[index];
-				if (utterance.startsWith("api_call") && inConfig.get("process_api_calls")) {
+				if (utterance.startsWith("api_call") && inConfig.get("process_api_calls").equals(false)) {
 					continue;
 				}
 				dialogueTurns.add(new Utterance(agentName, utterance));
