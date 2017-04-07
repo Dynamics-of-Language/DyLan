@@ -1,6 +1,7 @@
 package qmul.ds;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,7 +9,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -101,7 +101,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		this(resourceDirOrURL, false, participants);
 	}
 	public InteractiveContextParser(String resourceDirOrURL) {
-		this(resourceDirOrURL, false, DEFAULT_NAME);
+		this(resourceDirOrURL, false);
 	}
 
 	
@@ -148,15 +148,15 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	public boolean parse() {
 		if (getState().isExhausted()) {
-			logger.info("state exhausted");
+			logger.debug("state exhausted");
 			return false;
 		}
 
 		do {
 
 			if (!adjustOnce()) {
-				logger.info("wordstack:" + getState().wordStack());
-				logger.info("depth:" + getState().getDepth());
+				logger.debug("wordstack:" + getState().wordStack());
+				logger.debug("depth:" + getState().getDepth());
 				getState().setExhausted(true);
 				return false;
 			}
@@ -293,7 +293,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		}
 		ActionReplayEdge replayEdge = getState().getNewActionReplayEdge(acts, new UtteredWord(null, word.speaker()),
 				edgeTreePair.first);
-		logger.info("adding replayEdge with actions:" + acts);
+		logger.debug("adding replayEdge with actions:" + acts);
 		DAGTuple res = getState().getNewTuple(edgeTreePair.second);
 		getState().addChild(res, replayEdge);
 		getState().getBacktrackedEdges().clear();
@@ -402,11 +402,12 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		
 		if (!parse()) {
 			logger.info("OOPS! Cannot parse:" + word.word() + ". Resetting to the state after the last parsable word");
+			logger.error("OOPS! Cannot parse:" + word.word() + ". Resetting to the state after the last parsable word");
 			logger.debug("stack:" + getState().wordStack());
 			// state.wordStack().remove(0);
 			getState().resetToFirstTupleAfterLastWord();
 			if (!getState().repairProcessingEnabled()) {
-				logger.info("repair processing is disabled. Reset to state after last parsable word.");
+				logger.debug("repair processing is disabled. Reset to state after last parsable word.");
 				return null;
 			}
 			logger.info("Now initiating local repair.");
@@ -415,8 +416,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 			if (!parse()) {
 				logger.info("OOPS! Couldn't parse word as local repair either");
-
-				logger.info("now attempting repair of previous clause");
+				logger.error("OOPS! Couldn't parse word as local repair either");
 				return null;
 				// state.initiateClauseRepair();
 			}
@@ -430,7 +430,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		
 		this.getState().thisIsFirstTupleAfterLastWord();
 		logger.info("Parsed " + word);
-		logger.info("Final Tuple:" + getState().getCurrentTuple());
+		logger.debug("Final Tuple:" + getState().getCurrentTuple());
 		logger.info("Sem:"+getState().getCurrentTuple().getSemantics(context));
 
 		return this.getState();
@@ -515,13 +515,19 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
-	public static void main(String[] a) {
+	public static void main(String[] a) throws IOException {
 
-		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance u=new Utterance("sys: where");
-		parser.parseUtterance(u);
-		System.out.println(parser.getContext().getPendingContent());
+		InteractiveContextParser parser = new InteractiveContextParser("resource/2017-english-ttr-restaurant-search-ca");
+		List<Dialogue> dialogues=Dialogue.loadDialoguesFromFile("../babble/data/Domains/restaurant-search/training_dialogues");
 		
+		for(Dialogue d: dialogues)
+		{
+			if (parser.parseDialogue(d)==null)
+				System.out.println("Failed to parse:\n"+d);
+			else
+				System.out.println("parsed dialogue successfully");
+				
+		}
 		
 	}
 

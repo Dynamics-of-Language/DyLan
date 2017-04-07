@@ -3,6 +3,7 @@ package qmul.ds.formula;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -40,6 +41,9 @@ public abstract class TTRFormula extends Formula {
 	
 	
 	public abstract <T extends DAGTuple, E extends DAGEdge> TTRFormula freshenVars(Context<T,E> c);
+	
+	public abstract <T extends DAGTuple, E extends DAGEdge> TTRFormula freshenVars(TTRRecordType r, Map<Variable, Variable> map);
+	
 
 	protected abstract List<TTRRecordType> getTypes();
 

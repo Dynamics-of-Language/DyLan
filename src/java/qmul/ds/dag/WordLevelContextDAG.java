@@ -455,8 +455,18 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		if (this.wordStack().isEmpty())
 			return true;
 		
-//		if (parent.isGroundeFor(this.wordStack().peek().speaker()))
-//			return false;
+		//if (parent.isGroundeFor(this.wordStack().peek().speaker()))
+		//	return false;
+		if (parent.isGroundedFor(this.context.getParticipants()))
+		{
+				return false;
+		}
+		else
+		{
+			logger.trace("can backtrack over:"+parent);
+			logger.trace("participants:"+this.context.getParticipants());
+			logger.trace("grounded for:"+parent.grounded_for);
+		}
 		
 		if (atGroundedClauseRoot())
 		{

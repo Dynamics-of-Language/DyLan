@@ -492,7 +492,7 @@ ELSE	abort
 
 
 
-pron_whq_mod(CLASS)
+pron_whq_mod_in(CLASS)
 IF		<Y>+Q
 THEN	abort
 ELSE	IF		?ty(t)
@@ -518,6 +518,25 @@ ELSE	IF		?ty(t)
 				put(+Q)
 				put(+meta)
 		ELSE	abort
+
+pron_whq_mod(CLASS)
+IF		<Y>+Q
+THEN	abort
+ELSE	IF		?ty(t)
+				¬!
+				¬<\/1>Ex.x
+				¬<\/0>Ex.x
+				¬<\/*>Ex.x
+				¬</\L>Ex.x
+		THEN	put(+Q)
+				make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
+				put(ty(e>t))
+				ttrput(R2^(R2 ++ [e1:es|p1==subj(e1,R2.head):t|head==e1:es]))
+		ELSE	abort
+
+
 
 
 pron_whq(CLASS)

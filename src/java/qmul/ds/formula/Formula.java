@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -365,6 +366,17 @@ public abstract class Formula implements Serializable {
 	 * @return
 	 */
 	public <T extends DAGTuple, E extends DAGEdge> Formula freshenVars(Context<T, E> c) {
+		return this;
+	}
+	
+	/**
+	 * @see freshenVars with Context or Tree argument
+	 * @param r
+	 * @param map
+	 * @return
+	 */
+	public <T extends DAGTuple, E extends DAGEdge> Formula freshenVars(TTRRecordType r, Map<Variable, Variable> map)
+	{
 		return this;
 	}
 

@@ -2,7 +2,7 @@ what                          pron_whq                      obj
 what						  pron_whq_det					obj
 where						  pron_whq_mod				    loc
 howmany						  pron_whq_det_count				obj
-//which						  pron_whq_det					obj
+which						  pron_whq_det					obj
 do                            v_aux_inf_per                     do                            pres                          nons3
 does                          v_aux_inf_per                     do                            pres                          s3
 did                           v_aux_inf               did                           past
@@ -82,11 +82,12 @@ are                           v_aux_be                      pres                
 are                           v_be                          pres                           nons3
 be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
-//.							  assert						A
+.							  assert						A
 ?							  question						Q
-please						  manner_adv					please
+please						  assert     					please
 //uhu							  accept						uhu
 ok							  accept						ok
+ok							  yes						ok
 yes							  accept						yes
 yes							  yes							yes
 sure						  yes							yes
@@ -127,7 +128,7 @@ on							  prep_postcop					on
 on							  prep_e						on
 in							  prep_postcop					in	
 in							  prep_es						in
-in							  prep_e						in
+//in							  prep_e						in
 into						  prep_es						into
 today					      manner_adv					today
 good						  adj							good

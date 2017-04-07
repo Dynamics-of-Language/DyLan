@@ -32,7 +32,11 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
+import qmul.ds.action.atomic.FreshPut;
+import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.formula.TTRRecordType;
 
 /**
  * A map from words to {@link LexicalAction}s
@@ -680,6 +684,41 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			return null;
 		}
 		return line;
+	}
+	
+	/**
+	 * Precondition: only works with lexicons in TTR
+	 * Goes through each lexical action and extracts the contributed semantics from it. When the semantics is functional,
+	 * the semantics is beta-reduced with underspecified arguments.
+	 * @return the list of all possible semantic increments by this lexicon
+	 */
+	public List<TTRRecordType> extractSemanticAtoms()
+	{
+		ArrayList<TTRRecordType> result=new ArrayList<TTRRecordType>();
+		
+		for(String word: keySet())
+		{
+			for(LexicalAction action: get(word))
+			{
+				
+				Effect[] ites=action.getEffects();
+				
+				for(Effect ifte:ites)
+				{
+					IfThenElse ite=(IfThenElse)ifte;
+					
+					for(Effect atomic: ite.getTHENClause())
+					{
+//						if (atomic instanceof TTRFreshPut)
+//						{
+//							
+//						}
+					}
+				}
+			}
+			
+		}
+		return null;
 	}
 
 }

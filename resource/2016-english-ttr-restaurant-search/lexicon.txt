@@ -1,6 +1,7 @@
 what                          pron_whq                      obj
 //what						  pron_whq_det					obj
-where						  pron_whq_mod				    loc
+//where						  pron_whq_mod				    in
+where						  pron_whq_mod_in				in
 howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
 do                            v_aux_inf_per                     do                            pres                          nons3
@@ -10,7 +11,7 @@ would                         v_aux_inf                would                    
 'd							  v_aux_inf                     would                         pres
 should						  v_aux_inf						should						  should
 can                           v_aux_inf                    	can                         modal
-may                           v_aux_inf                    	can                         modal
+may                           v_aux_inf                    	maybe                         modal
 will						  v_aux_inf						will						future							 
 i                             i							    nons3							nons3
 me							  me							nons3							nons3
@@ -48,11 +49,11 @@ table							count						table						  s3							obj
 price							noun_mod				    price						  of
 restaurant							noun_mod				    restaurant				      of
 //want                          v_tran_inf                    want                          inf                           per
-//want                          v_tran_fin                    want                          pres                          nons3
-//wants                         v_tran_fin                    want                          pres                          s3
-//want                          v_subjcon_fin                 want                          pres                          nons3
-//wants                         v_subjcon_fin                 want                          pres                          s3
-//want                          v_subjcon_inf                 want                          inf                          nons3
+want                          v_tran_fin                    want                          pres                          nons3
+wants                         v_tran_fin                    want                          pres                          s3
+want                          v_subjcon_fin                 want                          pres                          nons3
+wants                         v_subjcon_fin                 want                          pres                          s3
+want                          v_subjcon_inf                 want                          inf                          nons3
 like                          v_tran_inf                    like                          inf                           per
 like                          v_tran_fin                    like                          pres                          nons3
 //make						  v_tran_inf                    make                          inf                          per

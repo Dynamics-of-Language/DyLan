@@ -3,6 +3,7 @@ package qmul.ds.formula;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,6 +158,11 @@ public class TTRInfixExpression extends TTRFormula {
 	public <T extends DAGTuple, E extends DAGEdge> TTRInfixExpression freshenVars(Context<T,E> c)
 	{
 		return new TTRInfixExpression(this.predicate, this.arg1.freshenVars(c), this.arg2.freshenVars(c));
+	}
+	
+	public <T extends DAGTuple, E extends DAGEdge> TTRInfixExpression freshenVars(TTRRecordType r, Map<Variable, Variable> map)
+	{
+		return new TTRInfixExpression(this.predicate, this.arg1.freshenVars(r, map), this.arg2.freshenVars(r, map));
 	}
 
 	/*

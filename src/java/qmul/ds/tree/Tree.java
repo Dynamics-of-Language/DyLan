@@ -3,10 +3,11 @@ package qmul.ds.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -680,6 +681,36 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	}
 
+	
+	public static Map<DSType, Formula> typeMap;
+	
+	static{
+		Map<DSType, Formula> map=new HashMap<DSType, Formula>();
+		map.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
+		map.put(DSType.e, Formula.create("[x:e|head==x:e]"));
+		map.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
+		// map.put(DSType.cn,
+		// Formula.create("[x:e|head==x:e]").freshenVars(this));
+		map.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
+		map.put(DSType.t, Formula.create("[e1:es|head==e1:es]"));
+		// for underspec VP
+		map.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
+		map.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		map.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
+		map.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
+		map.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
+		// map.put(DSType.parse("e>(e>(e>t))"), Formula
+		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		map.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		map.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		// for underspec adjunct e>t, see below, special case
+
+		map.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
+		map.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+		typeMap=Collections.unmodifiableMap(map);
+		
+	}
+	
 	/**
 	 * 
 	 * Assumes grammar with event terms... @see{resource/2013-english-ttr}
@@ -692,28 +723,28 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * @return
 	 */
 	private void addUnderspecifiedFormulae(Context c) {
-		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
-		typeMap.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
-		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
-		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
-		// typeMap.put(DSType.cn,
-		// Formula.create("[x:e|head==x:e]").freshenVars(this));
-		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
-		typeMap.put(DSType.t, Formula.create("[e1:es|head==e1:es]"));
-		// for underspec VP
-		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		typeMap.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
-		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
-		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
-		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
-		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
-		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		// for underspec adjunct e>t, see below, special case
-
-		typeMap.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
-		typeMap.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+//		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
+//		typeMap.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
+//		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
+//		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
+//		// typeMap.put(DSType.cn,
+//		// Formula.create("[x:e|head==x:e]").freshenVars(this));
+//		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
+//		typeMap.put(DSType.t, Formula.create("[e1:es|head==e1:es]"));
+//		// for underspec VP
+//		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
+//		typeMap.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+//		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
+//		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
+//		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
+//		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
+//		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		// for underspec adjunct e>t, see below, special case
+//
+//		typeMap.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
+//		typeMap.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
 
 		// Label copula=LabelFactory.create("+BE");
 

@@ -444,7 +444,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * relabel whole record type using map
+	 * relabel whole record type using map, respecting all dependencies, and avoiding duplicate labels.
 	 * 
 	 * @param map
 	 * @return new relabelled record type
@@ -491,7 +491,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		for (TTRField f : mappedFields) {
 			mapped.add(f);
 		}
-
+		
 		return mapped;
 
 	}
@@ -577,6 +577,147 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	}
 
+
+	
+	public static void main(String[] a) {
+
+		TTRRecordType st = TTRRecordType.parse("[e1:es|p4==make(e1):t|x:e|pred1==reservation(x):cn|p1==obj(e1,x):t|x2:e|p2==restaurant(x2):t|p3==of(x,x2):t]");
+		
+		TTRRecordType syn = TTRRecordType.parse("[e1:es|p2==book(e1):t|x:e|p==table(x):cn|p1==obj(e1,x):t]");
+
+		
+
+		//TTRRecordType st = TTRRecordType.parse("[e10:es|p4==make(e10):t|x4:e|x:e|p1==obj(e10,x):t|p3==subj(e10,x4):t]");
+		
+		//TTRRecordType syn = TTRRecordType.parse("[e1:es|x:e|x1:e|p1==make(e1,x,x1):t]");
+
+		
+		
+		
+		Map<Variable,Variable> map=new HashMap<Variable,Variable>();
+		map.put(new Variable("e1"), new Variable("e1"));
+//		map.put(new Variable("e10"), new Variable("e1"));
+//		map.put(new Variable("x4"), new Variable("x"));
+//		map.put(new Variable("x"), new Variable("x1"));
+//		
+		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
+		Utterance utt=new Utterance("usr: I want to make a restaurant reservation in london.");
+		parser.parseUtterance(utt);
+		
+		TTRRecordType sem=TTRRecordType.parse("[x1 : e|e4==make : es|head==e4 : es|p8==subj(e4, x1) : t]");
+		//TTRRecordType.parse("[x1: e|p25==usr(x1):t|e4 : es|p21==want(e4):t|e6 : es|p22==make(e6):t|x7 : e|x6 : e|x9 : e|p23==london(x9):t|p6==pres(e4) : t|head==e4 : es|pred2==reservation(x7) : cn|p14==restaurant(x6) : t|p20==loc(x9) : t|"
+//				+ "p7==obj(e4, e6) : t|p8==subj(e4, x1) : t|p10==obj(e6, x7) : t|p11==subj(e6, x1) : t|p15==of(x7, x6) : t|p19==in(e4, x9) : t]");
+				//parser.getFinalSemantics();
+		
+		List<TTRRecordType> components=sem.decompose();
+		
+		for(TTRRecordType component:components)
+		{
+			System.out.println(component);
+		}
+		
+//		
+//		System.out.println("sem:"+sem);
+//		System.out.println("st:"+st);
+//		System.out.println("syn:"+syn);
+//		System.out.println("---------\n st replaced by syn in sem:\n"+sem.replaceSuperTypeWith(st, syn, map));
+		
+	}
+	
+	/**
+	 * Precondition: r is a supertype of this. Replaces r with replacement.
+	 * 
+	 * Really this is equivalant to taking two lambda abstracts with st and syn as bodies with variables in abstractedVars abstracted.
+	 * 
+	 * Maybe the implementation should actually be done in these terms... yes.... TODO: later.
+	 * @param superType
+	 * @return 
+	 */
+	public TTRRecordType replaceSuperTypeWith(TTRRecordType st, TTRRecordType syn, Map<Variable,Variable> abstractedVars)
+	{
+		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
+		
+		if (!(st.subsumesMapped(this, map)))
+		{
+			System.out.println("st not a supertype of this");
+			return this;
+		}
+		
+		//first relabel super type st, so all the labels match this record type
+		TTRRecordType superType=st.relabel(map);
+		System.out.println("st relabelled:"+superType);
+		System.out.println("Map:"+map);
+		//make sure fields in replacement don't clash with fields in this
+		HashMap<Variable,Variable> newVarsMap=new HashMap<Variable,Variable>();
+		
+		TTRRecordType synonym=syn.freshenVars(this, newVarsMap);
+		//Add replacement to result
+		System.out.println("syn refreshed: " + synonym);
+		System.out.println("newVarsMap: " + newVarsMap);
+		
+		
+		
+		//now fix the abstracted var map to match these modifications
+		
+		Map<Variable,Variable> abstractedMap=new HashMap<Variable,Variable>();
+		for(Variable from: abstractedVars.keySet())
+		{
+			Variable to=abstractedVars.get(from);
+			abstractedMap.put(map.get(from), newVarsMap.get(to));
+			
+		}
+		
+		System.out.println("Done adjusting abstracted map:"+abstractedMap);
+		
+		
+		
+		//now add syn to result, reconstructing it such that the abstracted fields take values from this record type
+		TTRRecordType result=new TTRRecordType(synonym.getFields());
+//		for(Variable v: abstractedMap.keySet())
+//		{
+//			result.add(this.getField(v).relabel(abstractedMap));
+//		}
+//		for(TTRField f: synonym.getFields())
+//		{
+//			if (!result.hasLabel(f.getLabel()))
+//			{
+//				result.add(new TTRField(f));
+//			}
+//		}
+			
+		
+		
+		
+		//and then the rest of the fields in this:
+		
+		for(TTRField f: this.fields)
+		{
+			TTRLabel l=f.getLabel();
+			
+			if (!superType.hasLabel(l))
+			{
+				TTRField relabelledF=f.relabel(abstractedMap);
+				if (!result.hasLabels(relabelledF.getVariables()))
+					throw new IllegalStateException("Broken Dependencies in:"+result+"\n when adding:"+relabelledF);
+				result.add(relabelledF);
+			}
+			//else if (abstractedMap.containsKey(l))
+			//	result.add(f.relabel(abstractedMap));
+			
+			
+		}
+		
+		//now add remaining syn fields to result
+//		for(TTRField f: synonym.getFields())
+//		{
+//			if (!result.hasLabel(f.getLabel()))
+//				result.add(new TTRField(f));
+//		}
+		
+		return result;
+		
+	}
+	
 	private class FieldSpecificityComparator implements Comparator<TTRField> {
 
 		TTRRecordType rt;
@@ -742,58 +883,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	
 
 	
-	public static void main(String[] a) {
-
-		TTRRecordType r1=TTRRecordType.parse("[x14 : e|x24 : e|x23 : e|e16==book : es|x11==sys : e|p55==expensive(x24) : t|pred4==range(x24) : cn|p56==price(x23) : t|pred1==table(x14) : cn|head==e16 : es|p30==modal(e16) : t|p40==in(x14, x24) : t|p57==of(x24, x23) : t|p36==subj(e16, x11) : t|p35==obj(e16, x14) : t]");
-		TTRRecordType r2=TTRRecordType.parse("[x15 : e|x17 : e|x11 : e|e10==book : es|x8==sys : e|p38==price(x15) : t|pred2==range(x17) : cn|p36==expensive(x17) : t|pred1==table(x11) : cn|head==e10 : es|p21==modal(e10) : t|p39==of(x17, x15) : t|p33==in(e10, x17) : t|p27==subj(e10, x8) : t|p26==obj(e10, x11) : t]");
 		
-		HashMap<Variable,Variable> map=new HashMap<Variable,Variable>();
-		
-		
-		System.out.println(r1.subsumesMapped(r2, map));
-		System.out.println(map);
-//		
-//		System.out.println(r1.toDebugString());
-//		System.out.println(r2.toDebugString());
-//		System.out.println(r2.subsumesMapped(r1, map));
-//		System.out.println(map);
-		
-//		InteractiveContextParser parser = new InteractiveContextParser(
-//				"resource/2016-english-ttr-restaurant-search");
-//		Utterance utt=new Utterance("arash: what");
-//		parser.parseUtterance(utt);
-//		TTRFormula sem=parser.getFinalSemantics();
-//		System.out.println(sem);
-//		System.out.println(sem.evaluate());
-//		parser.parseWord(new UtteredWord("can", "arash"));
-//		sem=parser.getFinalSemantics();
-//		System.out.println(sem);
-		
-		//TTRRecordType rt2=(TTRRecordType)parser.getContext().getCurrentTuple().getSemantics(parser.getContext()).removeHead();
-//		TTRRecordType rt2=TTRRecordType.parse("[x6==arash : e|e6 : es|x9==dylan : e|x1 : e|p2==modal(e6) : t|head==e6 : es|"
-//				+ "p32==question(x1) : t|p27==today(e6) : t|p9==obj(e6, x9) : t|p10==subj(e6, x6) : t|p21==with(e6, x1) : t]");
-//		
-//		
-//		//TTRRecordType rt1=new TTRRecordType();
-//		TTRRecordType rt1=TTRRecordType.parse("[x22 : e|e6==help : es|x9==dylan : e|"
-//				+ "x1 : e|p2==modal(e6) : t|p32==question(x1) : t|"
-//				+ "p27==today(e6) : t|p9==obj(e6, x9) : t|p10==subj(e6, x22) : t|p21==with(e6, x1) : t|p34==person(x22):t]");
-//		
-//		System.out.println("RT1:"+rt1);
-//		System.out.println("RT2:"+rt2);
-////		
-//		HashMap<Variable, Variable> map=new HashMap<Variable, Variable>();
-//		long before=new Date().getTime();
-//		TTRRecordType mcs=rt2.mostSpecificCommonSuperType(rt1, map);
-//		long after=new Date().getTime();
-//	
-//		System.out.println("MCS(RT1, RT2)="+mcs);
-//		System.out.println("map: "+map);
-//		System.out.println("Mcs run time:"+(after-before));
-//		
-
-	}
-	
 	
 	
 	
@@ -1314,7 +1404,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			return true;
 
 		HashMap<Variable, Variable> copy = new HashMap<Variable, Variable>(map);
-		//logger.debug("testing subsumption for field:" + fields.get(thisIndex));
+		logger.debug("testing subsumption for field:" + fields.get(thisIndex));
 
 		// is map already telling us we should map the field at thisIndex to a
 		// particular field in other?
@@ -1338,8 +1428,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				continue;
 
 			if (fields.get(thisIndex).subsumesMapped(field, map)) {
-				//logger.debug("Subsumed " + field);
-				//logger.debug("map is now:" + map);
+				logger.debug("Subsumed " + field);
+				logger.debug("map is now:" + map);
 
 				if (subsumesMapped(other, thisIndex + 1, map))
 					return true;
@@ -1350,7 +1440,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				map.putAll(copy);
 
 			} else {
-				 //logger.debug(fields.get(thisIndex) + " failed against:" + field + " map:" + map);
+				 logger.debug(fields.get(thisIndex) + " failed against:" + field + " map:" + map);
 				//fields.get(thisIndex).partialResetMetas();
 				map.clear();
 				map.putAll(copy);
@@ -1510,6 +1600,41 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		fresh.updateParentLinks();
 		return fresh;
 	}
+	
+	
+	/** Freshens all the labels in {@code this} with respect to {@code r}, so that the result will not contain any variables
+	 * from {@code r}.
+	 * 
+	 * @param r
+	 * @param map Must be an empty map. After method call it will contain the mappings from old to new variables
+	 * @return 
+	 */
+	public <T extends DAGTuple, E extends DAGEdge> TTRRecordType freshenVars(TTRRecordType r, Map<Variable, Variable> map) {
+		TTRRecordType fresh = new TTRRecordType();
+		
+		
+		for (TTRField f : this.fields) {
+			if (f.getLabel().equals(HEAD) || f.getLabel().equals(REF_TIME)) {
+				fresh.add(f.relabel(map));
+				map.put(HEAD, HEAD);
+				continue;
+			}
+			
+			
+		
+			TTRLabel newLabel = new TTRLabel(r.getFreshVariable(map.values(), f.getDSType()));
+			
+			map.put(f.getLabel(),newLabel);
+			fresh.add(f.relabel(map));
+		}
+		fresh.updateParentLinks();
+		return fresh;
+	}
+	
+	
+	
+	
+	
 
 	/**
 	 * A fresh variable with a root (e.g. e, x, y, etc) - with respect to this
@@ -1522,6 +1647,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			v = new Variable(root + (++i));
 
 		return v;
+	}
+	
+	
+	public Variable getFreshVariable(Collection<Variable> toAvoid, DSType t)
+	{
+		return getFreshVariable(toAvoid, Context.VARIABLE_ROOTS.get(t));
+		
 	}
 	
 	//public MetaElement<?> getFreshVa

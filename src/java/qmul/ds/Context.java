@@ -2,6 +2,7 @@ package qmul.ds;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +19,10 @@ import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.ttrlattice.AustinianProp;
+import qmul.ds.type.DSType;
 
 /**
  * This class encodes the dialogue context, containing a Directed Asyclic Graph, which
@@ -42,6 +46,20 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	public static final String PROPOSITION_VARIABLE_ROOT = qmul.ds.tree.Tree.PROPOSITION_VARIABLE_ROOT;
 	public static final String REC_TYPE_VARIABLE_ROOT = qmul.ds.tree.Tree.REC_TYPE_VARIABLE_ROOT;
 	public static final String PREDICATE_VARIABLE_ROOT = qmul.ds.tree.Tree.PREDICATE_VARIABLE_ROOT;
+	
+	public static final Map<DSType, String> VARIABLE_ROOTS;
+	static {
+		Map<DSType, String> map = new HashMap<DSType, String>();
+
+		map.put(DSType.e, ENTITY_VARIABLE_ROOT);
+		map.put(DSType.es, EVENT_VARIABLE_ROOT);
+		map.put(DSType.t, PROPOSITION_VARIABLE_ROOT);
+		map.put(DSType.cn, PREDICATE_VARIABLE_ROOT);
+		map.put(null, REC_TYPE_VARIABLE_ROOT);
+		
+
+		VARIABLE_ROOTS = Collections.unmodifiableMap(map);
+	}
 	
 	/**
 	 * 

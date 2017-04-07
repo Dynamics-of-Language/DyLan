@@ -3,16 +3,18 @@ package qmul.ds.formula;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Tree;
 import qmul.ds.type.BasicType;
+import qmul.ds.type.ConstructedType;
 import qmul.ds.type.DSType;
-import edu.stanford.nlp.util.Pair;
 
 /**
  * 
@@ -309,13 +311,59 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 		throw new UnsupportedOperationException();
 	}
 
-	public static void main(String args[]) {
-		TTRLambdaAbstract l = (TTRLambdaAbstract) Formula
-				.create("R2^(R2 ++ [head==R2.head : e])");
-		TTRRecordType l2 = (TTRRecordType) Formula
-				.create("[p==question(head):t]");
-		TTRRecordType l3 = TTRRecordType.parse("[x:e|head==x:e]");
-		System.out.println(((TTRLambdaAbstract) l2.conjoin(l)).betaReduce(l3));
+	
+	
+	/**
+	 * Applies this function to underspecified arguments all the way.
+	 * @param type the ds type of this function (TODO: this really ought to be part of the lambda abstract)
+	 * @return
+	 */
+	public TTRRecordType betaReduceWithUnderspecifiedArguments(DSType type)
+	{
+		
+		DSType curType=type.clone();
+		TTRFormula reduced=this;
+		DSType from;
+		DSType to;
+		while(!(reduced instanceof TTRRecordType))
+		{
+			
+			if (curType instanceof ConstructedType)
+			{
+				from=((ConstructedType)curType).getFrom();
+				to=((ConstructedType)curType).getTo();
+				System.out.println("from is:"+from);
+				System.out.println("to is:"+to);
+			}
+			else
+				throw new IllegalStateException();
+			
+			Map<Variable,Variable> map=new HashMap<Variable,Variable>();
+			//no higher types allowded here. the argument has to be a TTRRecordType
+			TTRRecordType curUnderSpec=(TTRRecordType)Tree.typeMap.get(from);
+			reduced=reduced.freshenVars(curUnderSpec,map);
+			reduced=((TTRLambdaAbstract)reduced).betaReduce(curUnderSpec);
+			curType=to;
+		}
+		return (TTRRecordType)reduced;
+		
+		
+	}
+	
+	
+	public static void main(String s[])
+	{
+		
+		TTRLambdaAbstract a=(TTRLambdaAbstract)Formula.create("R1^R2^(R1 ++ (R2 ++ [e1==make:es|head==e1:es|p2==subj(e1, R2.head):t|p3==obj(e1, R1.head):t]))");
+		
+		System.out.println(a.betaReduceWithUnderspecifiedArguments(DSType.eet));
 	}
 
+	@Override
+	public <T extends DAGTuple, E extends DAGEdge> TTRFormula freshenVars(TTRRecordType r,
+			Map<Variable, Variable> map) {
+		
+		return this.replaceCore(getCore().freshenVars(r,map));
+		
+	}
 }

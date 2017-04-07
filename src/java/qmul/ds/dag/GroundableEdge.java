@@ -69,6 +69,11 @@ public class GroundableEdge extends DAGEdge {
 	public boolean isGroundeFor(String speaker) {
 		return grounded_for.contains(speaker);
 	}
+	
+	public boolean isGroundedFor(Set<String> speakers)
+	{
+		return grounded_for.equals(speakers);
+	}
 
 	public void ungroundFor(String speaker) {
 		grounded_for.remove(speaker);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
@@ -139,14 +140,29 @@ public class TTRField extends Formula{
 	}
 	
 	
+	
+	
 	/**
-	 * Relabels this field according to map
-	 * @return
+	 * Relabels this field according to map (including its label if specified by map)
+	 * @return relabelled field.
 	 */
-//	public TTRField relabel(HashMap<Variable,Variable> map)
-//	{
-//		return new TTRField()
-//	}
+	public TTRField relabel(Map<Variable,Variable> map)
+	{
+		TTRLabel newLabel=map.containsKey(this.label)?new TTRLabel(map.get(this.label)):new TTRLabel(this.label);
+		if (this.type==null)
+			return new TTRField(newLabel, this.dsType,null);
+		
+		Formula newType=this.type;
+		for(Variable v:this.getVariables())
+		{
+			if (map.containsKey(v))
+			{
+				newType=newType.substitute(v, map.get(v));
+			}
+		}
+			
+		return new TTRField(newLabel,this.dsType,newType.clone());
+	}
 
 	private static int indexOfLabelSep(String s) {
 		int depth = 0;
