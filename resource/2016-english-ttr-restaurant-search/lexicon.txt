@@ -1,6 +1,6 @@
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
-where						  pron_whq_mod				    loc
+where						  pron_whq_mod				   	in
 howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
 do                            v_aux_inf_per                     do                            pres                          nons3
@@ -56,8 +56,8 @@ restaurant							noun_mod				    restaurant				      of
 want                          v_subjcon_fin                 want                          pres                          nons3
 wants                         v_subjcon_fin                 want                          pres                          s3
 want                          v_subjcon_inf                 want                          inf                          nons3
-like                          v_tran_inf                    like                          inf                           per
-like                          v_tran_fin                    like                          pres                          nons3
+//like                          v_tran_inf                    like                          inf                           per
+//like                          v_tran_fin                    like                          pres                          nons3
 //make						  v_tran_inf                    make                          inf                          per
 //likes                         v_tran_fin                    like                          pres                          s3
 like                          v_subjcon_fin                 like                          pres                          nons3

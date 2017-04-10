@@ -67,7 +67,7 @@ THEN    IF		</\0\/1>Ex.x
 		ELSE	put(person(PERSON))
 				make(\/1)
 		  		go(\/1)
-		       	ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t|p1==counting(head):t]))
+		       	ttrput(R^(R ++ [head==R.head:e|x==QUANT:e|p==count(head,x):t|p1==counting(head):t|p2==person(head):t]))
 		        put(ty(cn>e))
 		       	put(!)
 		       	go(/\1)
@@ -1461,6 +1461,9 @@ ELSE	IF		?ty(t)
 				THEN	delete(?+greet)
 						put(Assert(X))
 				ELSE	abort
+//* 
+THIS IS THE GENERAL, CORRECT entry for release turn.
+Temporarily replaced by one where polar questions are annotated as assertions (requests really)
 
 release_turn(PRED)
 IF		ty(Y>Z)
@@ -1477,9 +1480,9 @@ ELSE	IF		</\0\/1>Ex.x
 								THEN	do_nothing
 								ELSE	put(Assert(W))	
 				ELSE    do_nothing
+*//
 
 
-//*
 release_turn(PRED)
 IF		ty(Y>Z)
 THEN	abort
@@ -1487,21 +1490,20 @@ ELSE	IF		</\0\/1>Ex.x
 				¬</\0\/1>Ex.?x
 				¬Ex.?x
 		THEN	abort
-		ELSE	IF	  	ty(X)
-					  	¬</\L>Ex.x
+		ELSE	IF	  	¬Ex.?x
 					  	Speaker(W)
-					 	PrevSpeaker(V)
-						W=V
-						¬floor_open
-				THEN	IF		(Assert(W) || <Z>+Q)
-					 	THEN	open_floor
-						ELSE	IF	 	¬Ex.?x
-								THEN	put(Assert(W))
-										open_floor
-								ELSE	open_floor
-				ELSE    abort
+				THEN	IF		ty(t)
+								+Q
+						THEN	delete(+Q)
+								put(Assert(W))
+						ELSE	IF		<Z>+Q
+								THEN	do_nothing
+								ELSE    IF		Assert(W)
+										THEN	do_nothing
+										ELSE	put(Assert(W))	
+				ELSE    do_nothing
 
-
+//*
 
 release_turn(PRED)
 IF		Speaker(X)
