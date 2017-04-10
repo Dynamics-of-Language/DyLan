@@ -21,6 +21,21 @@ THEN    IF		</\0\/1>Ex.x
 		        ttrput([x==NAME:e|pred==CLASS(x):cn|head==x:e])
 ELSE    abort
 
+it(NAME,PERSON,CLASS)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		</\0\/1>Ex.x
+				</\0\/1>(ty(e>t) || ?ty(e>t))
+				¬</\0\/1>person(PERSON)
+				</\0\/1>person(X)
+		THEN	abort
+		ELSE	put(person(PERSON))
+		        put(ty(e))
+		        delete(?ty(e))
+		        ttrput([x:e|pred==table(x):cn|head==x:e])
+
+
 //*
 det_num_postcop(QUANT,PERSON)
 IF		ty(e>t)
@@ -1245,8 +1260,13 @@ THEN	IF		<\/*>?Ex.tn(x)
 				go(\/0)
 				put(?ty(e))
 ELSE	abort
+
 *//
 
+
+//*
+
+this is the version that removes any potential question annotations when it extends the current clause
 prep_es(PRED)
 IF		(ty(t) || ?ty(t))
 		¬<\/L>Ex.x		
@@ -1300,6 +1320,69 @@ THEN	IF		<\/*>?Ex.tn(x)
 						go(\/0)
 						put(?ty(e))
 ELSE	abort
+
+*//
+
+prep_es(PRED)
+IF		ty(t)
+		¬<\/L>Ex.x	
+		Speaker(X)
+		PrevSpeaker(Y)
+		X=Y	
+THEN	IF		<\/*>?Ex.tn(x)
+			  	<\/*>ty(e)
+		THEN	put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+				merge(</\0/\L\/*>)
+			 	delete(?ty(e))
+		ELSE 	put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+ELSE	IF		?ty(t)
+				¬<\/*>?Ex.tn(x)
+				¬<\/L>Ex.x
+				¬<\/0>Ex.x
+				¬<\/1>Ex.x
+				Speaker(X)
+				PrevSpeaker(Y)
+				¬X=Y
+		THEN	put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+		ELSE	abort
+				
+
+
+
+
 
 
 prep_postcop(PRED)
@@ -1395,22 +1478,7 @@ ELSE	abort
 
 
 
-assert(PRED)
-IF		ty(Y>Z)
-THEN	abort
-ELSE	IF		</\0\/1>Ex.x
-				¬</\0\/1>Ex.?x
-				¬Ex.?x
-		THEN	abort
-		ELSE	IF	  	¬Ex.?x
-					  	¬</\L>Ex.x
-					  	Speaker(W)
-					  	PrevSpeaker(X)
-					  	¬X=Y
-				THEN  	IF		Assert(W)
-					  	THEN	do_nothing
-					  	ELSE	put(Assert(W))
-				ELSE  	abort
+
 
 
 question(PRED)
@@ -1481,6 +1549,40 @@ ELSE	IF		</\0\/1>Ex.x
 								ELSE	put(Assert(W))	
 				ELSE    do_nothing
 *//
+
+assert(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	  	¬Ex.?x
+					  	¬</\L>Ex.x
+					  	Speaker(W)
+					  	PrevSpeaker(X)
+					  	¬X=Y
+				THEN  	IF		Assert(W)
+					  	THEN	do_nothing
+					  	ELSE	put(Assert(W))
+				ELSE  	abort
+
+please(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	  	¬Ex.?x
+					  	¬</\L>Ex.x
+					  	Speaker(W)
+					  	PrevSpeaker(X)
+					  	¬X=Y
+				THEN  	IF		Assert(W)
+					  	THEN	do_nothing
+					  	ELSE	put(Assert(W))
+				ELSE  	do_nothing
 
 
 release_turn(PRED)
