@@ -87,7 +87,7 @@ be							  v_be_inf						inf
 please						  assert     					please
 //uhu							  accept						uhu
 ok							  accept						ok
-ok							  yes						ok
+ok							  accept						ok
 yes							  accept						yes
 yes							  yes							yes
 sure						  yes							yes

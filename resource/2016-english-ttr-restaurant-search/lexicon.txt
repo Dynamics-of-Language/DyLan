@@ -1,7 +1,6 @@
 what                          pron_whq                      obj
-//what						  pron_whq_det					obj
-//where						  pron_whq_mod				    in
-where						  pron_whq_mod_in				in
+what						  pron_whq_det					obj
+where						  pron_whq_mod				    loc
 howmany						  pron_whq_det_count				obj
 which						  pron_whq_det					obj
 do                            v_aux_inf_per                     do                            pres                          nons3
@@ -11,7 +10,7 @@ would                         v_aux_inf                would                    
 'd							  v_aux_inf                     would                         pres
 should						  v_aux_inf						should						  should
 can                           v_aux_inf                    	can                         modal
-may                           v_aux_inf                    	maybe                         modal
+may                           v_aux_inf                    	can                         modal
 will						  v_aux_inf						will						future							 
 i                             i							    nons3							nons3
 me							  me							nons3							nons3
@@ -24,6 +23,7 @@ make		                  v_tran_inf                    make                      
 //making	                      v_tran_ing                    make                       ing                           per
 have		                  v_tran_inf                    have                       inf                           per
 have		                  v_tran_fin                    have                       pres                          nons3
+have						  v_tran_post_causative		have					   inf							  per
 //has  	                      v_tran_fin                    have                       pres                          s3
 //having	                      v_tran_ing                    have                       ing                           per
 love		                  v_tran_inf                    love                       inf                           per
@@ -40,17 +40,19 @@ booking						  v_tran_ing					book						   ing							per
 //purchases 	                  v_tran_fin                    purchase                       pres                          s3
 //purchasing	                  v_tran_ing                    purchase                       ing                           per
 restaurant					  	count					    restaurant					   s3							obj
+look					  		count					    look						   s3							obj
 preference					  	count					    preference					   s3							obj
 boy							  	count					    boy					   		  s3						    obj
 restaurants						count						restaurant					  plur							obj
 people							count						person						  plur						    per
 options							count						option						  plur						    obj
 table							count						table						  s3							obj
+city							count						city						  s3							obj
 price							noun_mod				    price						  of
 restaurant							noun_mod				    restaurant				      of
 //want                          v_tran_inf                    want                          inf                           per
-want                          v_tran_fin                    want                          pres                          nons3
-wants                         v_tran_fin                    want                          pres                          s3
+//want                          v_tran_fin                    want                          pres                          nons3
+//wants                         v_tran_fin                    want                          pres                          s3
 want                          v_subjcon_fin                 want                          pres                          nons3
 wants                         v_subjcon_fin                 want                          pres                          s3
 want                          v_subjcon_inf                 want                          inf                          nons3
@@ -80,10 +82,11 @@ are                           v_aux_be                      pres                
 are                           v_be                          pres                           nons3
 be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
-//.							  assert						A
+.							  assert						A
 ?							  question						Q
-please						  manner_adv					please
+please						  assert     					please
 //uhu							  accept						uhu
+ok							  accept						ok
 ok							  accept						ok
 yes							  accept						yes
 yes							  yes							yes
@@ -125,38 +128,45 @@ on							  prep_postcop					on
 on							  prep_e						on
 in							  prep_postcop					in	
 in							  prep_es						in
-in							  prep_e						in
+//in							  prep_e						in
 into						  prep_es						into
 today					      manner_adv					today
 good						  adj							good
 good						  adj_be						good
 italian						  adj					        italian
 italian						  adj_be						italian
+italian						  mass							italian						s3					cuisine
 spanish						  adj							spanish
 spanish						  adj_be						spanish
+spanish						  mass							spanish						s3					cuisine
 british						  adj							british
 british						  adj_be						british
+british						  mass							british						s3					cuisine
 japanese					  adj							japanese
 japanese					  adj_be						japanese
+japanese					  mass							japanese						s3					cuisine
 indian						  adj							indian
 indian						  adj_be						indian
+indian						  mass							indian						s3					cuisine
 cantonese					  adj						cantonese
 cantonese					  adj_be					cantonese
+cantonese					  mass							cantonese						s3					cuisine
 french						  adj						french
 french						  adj_be					french
-vietnamese					  adj						vietnamese
-vietnamese					  adj_be					vietnamese
-korean						  adj						korean
-korean						  adj_be					korean
-thai						  adj						thai
-thai					      adj_be					thai
+french						  french							french						s3					cuisine
+//vietnamese					  adj						vietnamese
+//vietnamese					  adj_be					vietnamese
+//korean						  adj						korean
+//korean						  adj_be					korean
+//thai						  adj						thai
+//thai					      adj_be					thai
 cheap						  adj							cheap
 expensive				      adj_be						expensive
 expensive					  adj							expensive
 cheap						  adj_be						cheap
 moderate				      adj_be						moderate
 moderate					  adj							moderate
-food						  mass							food					s3				obj
+food						  mass							cuisine					s3				obj
 cuisine						  mass							cuisine					s3				obj
 reservation					  count							reservation				s3				obj
 range						  count							range					s3				obj
