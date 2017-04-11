@@ -2,15 +2,15 @@ what                          pron_whq                      obj
 what						  pron_whq_det					obj
 where						  pron_whq_mod				    loc
 howmany						  pron_whq_det_count				obj
-which						  pron_whq_det					obj
+//which						  pron_whq_det					obj
 do                            v_aux_inf_per                     do                            pres                          nons3
 does                          v_aux_inf_per                     do                            pres                          s3
-did                           v_aux_inf               		did                           past
-would                         v_aux_inf                		would                         pres
+did                           v_aux_inf               did                           past
+would                         v_aux_inf                would                         pres
 'd							  v_aux_inf                     would                         pres
 should						  v_aux_inf						should						  should
-can                           v_aux_inf                    	request                         pres
-may                           v_aux_inf                    	request                         pres
+can                           v_aux_inf                    	can                         modal
+may                           v_aux_inf                    	can                         modal
 will						  v_aux_inf						will						future							 
 i                             i							    nons3							nons3
 me							  me							nons3							nons3
@@ -53,16 +53,16 @@ restaurant							noun_mod				    restaurant				      of
 //want                          v_tran_inf                    want                          inf                           per
 //want                          v_tran_fin                    want                          pres                          nons3
 //wants                         v_tran_fin                    want                          pres                          s3
-want                          v_subjcon_fin                 request                          pres                          nons3
-wants                         v_subjcon_fin                 request                          pres                          s3
-want                          v_subjcon_inf                 request                          inf                          nons3
+want                          v_subjcon_fin                 want                          pres                          nons3
+wants                         v_subjcon_fin                 want                          pres                          s3
+want                          v_subjcon_inf                 want                          inf                          nons3
 like                          v_tran_inf                    like                          inf                           per
 like                          v_tran_fin                    like                          pres                          nons3
 //make						  v_tran_inf                    make                          inf                          per
 //likes                         v_tran_fin                    like                          pres                          s3
-like                          v_subjcon_fin                 request                          pres                          nons3
+like                          v_subjcon_fin                 want                          pres                          nons3
 //likes                         v_subjcon_fin                 like                          pres                          s3
-like                          v_subjcon_inf                 request                          inf                          nons3
+like                          v_subjcon_inf                 want                          inf                          nons3
 //prefer                          v_tran_inf                    prefer                          inf                           per
 //prefer                          v_tran_fin                    prefer                          pres                          nons3
 //prefer                         v_tran_fin                    prefer                          pres                          s3
@@ -82,11 +82,10 @@ are                           v_aux_be                      pres                
 are                           v_be                          pres                           nons3
 be							  v_aux_be_inf				    inf							   per
 be							  v_be_inf						inf
-.							  assert						A
+//.							  assert						A
 ?							  question						Q
-please						  assert     					please
+please						  manner_adv					please
 //uhu							  accept						uhu
-ok							  accept						ok
 ok							  accept						ok
 yes							  accept						yes
 yes							  yes							yes
@@ -128,7 +127,7 @@ on							  prep_postcop					on
 on							  prep_e						on
 in							  prep_postcop					in	
 in							  prep_es						in
-//in							  prep_e						in
+in							  prep_e						in
 into						  prep_es						into
 today					      manner_adv					today
 good						  adj							good

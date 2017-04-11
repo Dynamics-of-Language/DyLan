@@ -1245,7 +1245,44 @@ THEN	IF		<\/*>?Ex.tn(x)
 				go(\/0)
 				put(?ty(e))
 ELSE	abort
+
+
+prep_es(PRED)
+IF		ty(t)
+		¬<\/L>Ex.x		
+THEN	IF		<\/*>?Ex.tn(x)
+			  	<\/*>ty(e)
+		THEN	put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+				merge(</\0/\L\/*>)
+			 	delete(?ty(e))
+		ELSE 	unassert
+				put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(ty(e>t))
+				ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
+ELSE	abort
 *//
+
+
 
 prep_es(PRED)
 IF		(ty(t) || ?ty(t))
@@ -1287,7 +1324,8 @@ THEN	IF		<\/*>?Ex.tn(x)
 						make(\/0)
 						go(\/0)
 						put(?ty(e))
-				ELSE	put(?+eval)
+				ELSE	unassert
+						put(?+eval)
 						make(\/L)
 						go(\/L)
 						put(?ty(t))
@@ -1300,7 +1338,6 @@ THEN	IF		<\/*>?Ex.tn(x)
 						go(\/0)
 						put(?ty(e))
 ELSE	abort
-
 
 prep_postcop(PRED)
 IF		ty(e>t)
@@ -1473,9 +1510,7 @@ ELSE	IF		</\0\/1>Ex.x
 					  	Speaker(W)
 				THEN	IF		<Z>+Q
 					 	THEN	do_nothing
-						ELSE	IF		Assert(W)
-								THEN	do_nothing
-								ELSE	put(Assert(W))	
+						ELSE	put(Assert(W))	
 				ELSE    do_nothing
 
 
@@ -1530,7 +1565,6 @@ THEN	IF	    +Q
 				put(!)
 ELSE	abort
 
-//*
 //'yes' as acceptance of assertion
 accept(PRED)
 IF		¬+Q
@@ -1538,16 +1572,6 @@ IF		¬+Q
 		Assert(Y)
 		¬X=Y
 THEN	put(Assert(X))
-ELSE	abort
-*//
-
-accept(PRED)
-IF		¬+Q
-		Speaker(X)
-		Assert(Y)
-THEN	IF		¬X=Y
-		THEN	put(Assert(X))
-		ELSE	do_nothing
 ELSE	abort
 
 // 'yes' as answer to question

@@ -517,8 +517,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	public static void main(String[] a) throws IOException {
 
-		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		List<Dialogue> dialogues=Dialogue.loadDialoguesFromFile("../babble/data/Domains/restaurant-search/training_dialogues");
+		InteractiveContextParser parser = new InteractiveContextParser("resource/2017-english-ttr-restaurant-search-ca");
+		List<Dialogue> dialogues=Dialogue.loadDialoguesFromFile("../babble/data/Domains/restaurant-search-ca/training_dialogues");
 		
 		for(Dialogue d: dialogues)
 		{
