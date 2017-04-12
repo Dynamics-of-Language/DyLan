@@ -82,6 +82,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public abstract BacktrackingEdge getNewBacktrackingEdge(List<GroundableEdge> backtrackedOver, String speaker);
 
+	public abstract RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word);
+	
 	public DAG(Tree start, List<UtteredWord> words) {
 
 		wordStack = new Stack<UtteredWord>();
@@ -433,6 +435,9 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	}
 	/**
 	 * Comparator for edges. Sorts edges based on their end-point completeness.
+	 * 
+	 * For now, {@link VirtualRepairingEdge}s are sorted based on their length, i.e. the distance backtracked.
+	 * 
 	 * @author Arash
 	 *
 	 */
@@ -442,6 +447,11 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		
 		@Override
 		public int compare(E o1, E o2) {
+			//System.out.println("comparing edges: "+o1+" and "+o2);
+			if (o1 instanceof VirtualRepairingEdge && o2 instanceof VirtualRepairingEdge)
+				return ((VirtualRepairingEdge)o1).length - ((VirtualRepairingEdge)o2).length;
+			
+			
 			T end1=getDest(o1);
 			T end2=getDest(o2);
 			Tree t1=end1.getTree();

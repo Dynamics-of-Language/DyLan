@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.InteractiveContextParser;
 import qmul.ds.action.Action;
 import qmul.ds.action.LexicalAction;
 
@@ -22,8 +23,10 @@ public class GroundableEdge extends DAGEdge {
 
 	public GroundableEdge(Action a, UtteredWord w) {
 		super(a, w);
-		if (w != null)
+		if (w.word().equals(InteractiveContextParser.RELEASE_TURN))
 			this.grounded_for.add(w.speaker());
+		//if (w != null)
+		//	this.grounded_for.add(w.speaker());
 	}
 
 	public GroundableEdge(Action a, UtteredWord w, long id) {
@@ -33,8 +36,11 @@ public class GroundableEdge extends DAGEdge {
 
 	public GroundableEdge(List<Action> a, UtteredWord w) {
 		super(a, w);
-		if (w != null)
+		//TODO: treating <rt> edges as grounded. They are the self grounding edges.... 
+		if (w.word().equals(InteractiveContextParser.RELEASE_TURN))
 			this.grounded_for.add(w.speaker());
+		//if (w != null)
+		//	this.grounded_for.add(w.speaker());
 	}
 
 	public GroundableEdge(List<Action> a, UtteredWord w, long id) {
@@ -102,11 +108,11 @@ public class GroundableEdge extends DAGEdge {
 		logger.debug("Going forward along: " + this);
 		setInContext(true);
 		
-		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(source);
-		if (prevPrevEdge != null
-				&& !word().speaker().equals(prevPrevEdge.word().speaker())) {
-			dag.groundToClauseRootFor(word().speaker(), dag.getSource(this));
-		}
+//		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(source);
+//		if (prevPrevEdge != null
+//				&& !word().speaker().equals(prevPrevEdge.word().speaker())) {
+//			dag.groundToClauseRootFor(word().speaker(), dag.getSource(this));
+//		}
 		
 		
 		dag.setCurrentTuple(dest);
@@ -130,10 +136,10 @@ public class GroundableEdge extends DAGEdge {
 				.getSource(this));
 		
 		
-		if (prevPrevEdge != null
-				&& !word().speaker().equals(prevPrevEdge.word().speaker())) {
-			dag.ungroundToClauseRootFor(word().speaker(), dag.getSource(this));
-		}
+//		if (prevPrevEdge != null
+//				&& !word().speaker().equals(prevPrevEdge.word().speaker())) {
+//			dag.ungroundToClauseRootFor(word().speaker(), dag.getSource(this));
+//		}
 		
 		
 		setSeen(true);

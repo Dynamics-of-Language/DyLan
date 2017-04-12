@@ -93,7 +93,7 @@ yes							  yes							yes
 sure						  yes							yes
 sure						  accept						yes
 okay						  accept						okay
-yeah						  accept						yeah
+//yeah						  accept						yeah
 right						  accept						right
 //no							  reject						not
 a                             det_indef                     eps

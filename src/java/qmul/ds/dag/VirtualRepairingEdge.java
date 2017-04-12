@@ -13,16 +13,25 @@ import edu.stanford.nlp.util.Pair;
  */
 public class VirtualRepairingEdge extends GroundableEdge {
 
-	Pair<BacktrackingEdge, RepairingWordEdge> edgePair;
+	Pair<BacktrackingEdge, GroundableEdge> edgePair;
 	DAGTuple midTuple;
-
+	int length=-1;
 	public VirtualRepairingEdge(BacktrackingEdge backEdge,
-			RepairingWordEdge repairingWordEdge, DAGTuple midTuple, long id) {
+			GroundableEdge repairingWordEdge, DAGTuple midTuple, long id) {
 		super(repairingWordEdge.getActions(), repairingWordEdge.word, id);
 		this.midTuple = midTuple;
-		edgePair=new Pair<BacktrackingEdge, RepairingWordEdge>(backEdge, repairingWordEdge);
+		edgePair=new Pair<BacktrackingEdge, GroundableEdge>(backEdge, repairingWordEdge);
 		
 	}
+	
+	public VirtualRepairingEdge(BacktrackingEdge backEdge,
+			GroundableEdge repairingWordEdge, DAGTuple midTuple, long id, int length)
+	{
+		this(backEdge, repairingWordEdge, midTuple, id);
+		this.length=length;
+	}
+
+	
 
 	public void traverse(WordLevelContextDAG dag) {
 		edgePair.first.traverse(dag);
@@ -50,5 +59,10 @@ public class VirtualRepairingEdge extends GroundableEdge {
 	public String toString(){
 		return "repair-"+super.toString();
 	}
-
+	/*
+	public UtteredWord word()
+	{
+		return edgePair.first.word();
+	}
+	*/
 }

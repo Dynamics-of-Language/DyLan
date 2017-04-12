@@ -44,11 +44,11 @@ public class NewClauseEdge extends GroundableEdge {
 		 * Assumption is, as always, that new clause edges are always the last outgoing edge.
 		 */
 		
-		GroundableEdge parent=dag.getActiveParentEdge();
-		if (parent.getLexicalActionType().equalsIgnoreCase("assert")||parent.getLexicalActionType().equalsIgnoreCase("question"))
-		{
-			ground();
-		}
+//		GroundableEdge parent=dag.getActiveParentEdge();
+//		if (parent.getLexicalActionType().equalsIgnoreCase("assert")||parent.getLexicalActionType().equalsIgnoreCase("question"))
+//		{
+//			ground();
+//		}
 		
 		super.traverse(dag);
 		

@@ -1285,7 +1285,7 @@ ELSE	abort
 
 
 prep_es(PRED)
-IF		(ty(t) || ?ty(t))
+IF		ty(t)
 		¬<\/L>Ex.x		
 THEN	IF		<\/*>?Ex.tn(x)
 			  	<\/*>ty(e)
@@ -1509,9 +1509,10 @@ ELSE	IF		</\0\/1>Ex.x
 		ELSE	IF	  	¬Ex.?x
 					  	Speaker(W)
 				THEN	IF		<Z>+Q
-					 	THEN	do_nothing
+					 	THEN	ground
 						ELSE	put(Assert(W))	
-				ELSE    do_nothing
+								ground
+				ELSE    ground
 
 
 //*

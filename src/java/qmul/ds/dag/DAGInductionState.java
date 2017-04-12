@@ -182,5 +182,11 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

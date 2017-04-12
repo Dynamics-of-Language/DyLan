@@ -232,6 +232,11 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 			else if (!wordStack.isEmpty()&&wordStack.peek().equals(e.word()))
 				wordStack().pop();
+			else if (e instanceof VirtualRepairingEdge)
+			{
+				VirtualRepairingEdge vr=(VirtualRepairingEdge)e;
+				
+			}
 
 			else if (!wordStack.isEmpty()){
 				logger.error("Trying to pop word " + wordStack.peek()
@@ -423,7 +428,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			}
 
 			if (edge instanceof RepairingWordEdge) {
-				logger.info("returning overarching edge"
+				logger.info("returning overarching edge: "
 						+ ((RepairingWordEdge) edge).overarchingRepairingEdge);
 				return ((RepairingWordEdge) edge).overarchingRepairingEdge;
 			} else if (edge instanceof BacktrackingEdge) {
@@ -504,7 +509,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		while (!moreUnseenEdges()) {
 			logger.info("Attempting to backtrack. . .");
 			if (!canBacktrack()) {
-				logger.debug("Cannot backtrack: at clause root");
+				logger.debug("Cannot backtrack: at grounded root");
 				return false;
 			}
 
@@ -522,7 +527,8 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 					wordStack.push(backover.word());
 					logger.info("Backtrack: adding word to stack, now:"
 							+ backover.word());
-					logger.debug("Backtrack: stack now:" + wordStack);
+					logger.debug("Backtracked over:+ "+backover
+							+ "|stack now:" + wordStack);
 				}
 
 			}
@@ -540,13 +546,30 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			UtteredWord repairingWord) {
 		BacktrackingEdge newBackEdge = getNewBacktrackingEdge(backtrackedOver,
 				repairingWord.speaker());
-		RepairingWordEdge repairingWordEdge = getNewRepairingWordEdge(
-				repairingActions, repairingWord);
+		GroundableEdge repairingWordEdge;
+		VirtualRepairingEdge repairingEdge;
 		long newID = idPoolEdges.size() + 1;
-		VirtualRepairingEdge repairingEdge = new VirtualRepairingEdge(
-				newBackEdge, repairingWordEdge, midTuple, newID);
-		newBackEdge.overarchingRepairingEdge = repairingEdge;
-		repairingWordEdge.overarchingRepairingEdge = repairingEdge;
+		if (repairingActions.get(0).getName().equals("trp"))
+		{
+			repairingWordEdge=getNewRepairingNewClauseEdge(repairingActions, repairingWord);
+			repairingEdge = new VirtualRepairingEdge(
+					newBackEdge, repairingWordEdge, midTuple, newID, backtrackedOver.size());
+			newBackEdge.overarchingRepairingEdge = repairingEdge;
+			((RepairingNewClauseEdge)repairingWordEdge).overarchingRepairingEdge = repairingEdge;
+		
+		}
+		else
+		{
+			repairingWordEdge = getNewRepairingWordEdge(
+					repairingActions, repairingWord);
+			repairingEdge = new VirtualRepairingEdge(
+					newBackEdge, repairingWordEdge, midTuple, newID, backtrackedOver.size());
+			newBackEdge.overarchingRepairingEdge = repairingEdge;
+			((RepairingWordEdge)repairingWordEdge).overarchingRepairingEdge = repairingEdge;
+		}
+		
+		
+		
 
 		return repairingEdge;
 
@@ -584,6 +607,26 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 		return parent.word.speaker();
 
+	}
+	
+	public DAGTuple getDest(GroundableEdge e)
+	{
+		
+		if (e instanceof VirtualRepairingEdge)
+		{
+			VirtualRepairingEdge vr=(VirtualRepairingEdge)e;
+			return super.getDest(vr.getWordEdge());
+		}
+		
+		return super.getDest(e);
+	}
+
+	@Override
+	public RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word) {
+		long newID = idPoolEdges.size() + 1;
+		RepairingNewClauseEdge cl = new RepairingNewClauseEdge(actions, word, newID);
+		idPoolEdges.add(newID);
+		return cl;
 	}
 	
 	

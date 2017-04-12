@@ -87,6 +87,15 @@ public class BacktrackingEdge extends GroundableEdge {
 //		}
 		logger.info("Going forward along:" + this);
 		super.traverse(dag);
+		if (!dag.wordStack().isEmpty()&&!dag.wordStack().peek().equals(this.word))
+			throw new IllegalStateException("Popping "+dag.wordStack().peek() +" off stack when traversing:"+this);
+		else if (!dag.wordStack().isEmpty())
+			dag.wordStack().pop();
+		/**
+		 * For these edges the popping is not done by goFirst, but by the corresponding traverse methods....
+		 * Because two words need to be popped off (init-repair, and the repair word).
+		 */
+		
 		markRepairedEdges();
 		//
 		dag.actionReplay.addAll(getReplayableBacktrackedEdges());

@@ -193,16 +193,3 @@ ELSE	IF		Assert(V)
 						ELSE	abort
 
 
-//*
-//transition relevance place
-trp
-IF		Assert(Y)
-THEN	addaxiom
-ELSE	IF		+Q
-				¬+meta
-		THEN	addaxiom
-		ELSE 	IF		complete
-						<Z>+Q
-				THEN	addaxiom
-				ELSE	abort
-*//

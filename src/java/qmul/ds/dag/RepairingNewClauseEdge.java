@@ -3,22 +3,15 @@ package qmul.ds.dag;
 import java.util.List;
 
 import qmul.ds.action.Action;
-/**
- * TODO: implement traverse and backtrack methods.
- * @author Arash
- *
- */
-public class RepairingWordEdge extends GroundableEdge {
-	
-	VirtualRepairingEdge overarchingRepairingEdge=null; //is set when the overarching repairing edge is created. These edges are not created directly.
-	
-	public RepairingWordEdge(List<Action> repairingActions, UtteredWord word, long id)
-	{
-		super(repairingActions, word, id);
-	}
-	
-	
 
+public class RepairingNewClauseEdge extends NewClauseEdge {
+
+	VirtualRepairingEdge overarchingRepairingEdge=null;
+	
+	public RepairingNewClauseEdge(List<Action> actions, UtteredWord word, long newID) {
+		super(actions, word, newID);
+		
+	}
 	
 	public void setSeen(boolean seen)
 	{
@@ -39,7 +32,7 @@ public class RepairingWordEdge extends GroundableEdge {
 	{
 		return overarchingRepairingEdge.inContext();
 	}
-
+	
 	public void traverse(WordLevelContextDAG dag)
 	{
 		super.traverse(dag);
@@ -49,4 +42,5 @@ public class RepairingWordEdge extends GroundableEdge {
 			dag.wordStack().pop();
 		
 	}
+
 }

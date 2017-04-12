@@ -1585,6 +1585,8 @@ ELSE	IF		</\0\/1>Ex.x
 				ELSE  	do_nothing
 
 
+
+
 release_turn(PRED)
 IF		ty(Y>Z)
 THEN	abort
@@ -1598,12 +1600,14 @@ ELSE	IF		</\0\/1>Ex.x
 								+Q
 						THEN	delete(+Q)
 								put(Assert(W))
+								ground
 						ELSE	IF		<Z>+Q
-								THEN	do_nothing
+								THEN	ground
 								ELSE    IF		Assert(W)
-										THEN	do_nothing
-										ELSE	put(Assert(W))	
-				ELSE    do_nothing
+										THEN	ground
+										ELSE	put(Assert(W))
+												ground	
+				ELSE    ground
 
 //*
 
@@ -1642,6 +1646,7 @@ IF		¬+Q
 		Assert(Y)
 		¬X=Y
 THEN	put(Assert(X))
+		ground
 ELSE	abort
 *//
 
@@ -1651,7 +1656,8 @@ IF		¬+Q
 		Assert(Y)
 THEN	IF		¬X=Y
 		THEN	put(Assert(X))
-		ELSE	do_nothing
+				ground
+		ELSE	ground
 ELSE	abort
 
 // 'yes' as answer to question
@@ -1665,6 +1671,7 @@ THEN	IF		X=Y
 		THEN    abort
 		ELSE	delete(+Q)
 				put(Assert(X))
+				ground
 ELSE	abort
 
 not(PRED)
