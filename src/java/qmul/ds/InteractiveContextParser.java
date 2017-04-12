@@ -64,7 +64,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	String[] acksa = { "uhu" };
 	List<String> acks = Arrays.asList(acksa);
-	String[] repairand = { "uhh", "errm", "err", "er", "well", "oh", "uh", "erm", "uhm", "um" };
+	String[] repairand = { "uhh", "errm", "err", "er", "well", "oh", "uh", "erm", "uhm", "um", "oh" };
 	String[] restarter = { "yeah" };
 	List<String> repairanda = Arrays.asList(repairand);
 	String[] forceRepairand = { "sorry", "no" };
@@ -81,10 +81,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static final String WAIT = Utterance.WAIT;
 
 	/**
-	 * determines the maximum number of words we can go back for self/other
-	 * repair.
+	 * currently determines the maximum number previous positions we add repairing edges through....
+	 * so in e.g. I like john um mary, mary can only repair john with a max depth of 1. If this were 2
+	 * it could also repair 'I'
 	 */
-	public static final int max_repair_depth = 10;
+	public static final int max_repair_depth = 2;
 
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir, false);
@@ -607,6 +608,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			if (getState().isClauseRoot(current))
 				return;
 
+			int depth=0;
 			GroundableEdge repairableEdge;
 			List<GroundableEdge> backtracked = new ArrayList<GroundableEdge>();
 
@@ -651,11 +653,12 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					DAGTuple to = getState().getNewTuple(result);
 					getState().addChild(to, repairing);
 					logger.debug("to " + to);
+					depth++;
 
 				} else
 					logger.debug("could not apply:" + actions + "\n at:" + current.getTree());
 
-			} while (backtracked.size() <= max_repair_depth && !getState().isClauseRoot(current)
+			} while (depth <= max_repair_depth && !getState().isClauseRoot(current)
 					&& !getState().isBranching(current));
 		}
 
