@@ -131,8 +131,8 @@ in							  prep_es						in
 //in							  prep_e						in
 into						  prep_es						into
 today					      manner_adv					today
-good						  adj							good
-good						  adj_be						good
+//good						  adj							good
+//good						  adj_be						good
 italian						  adj					        italian
 italian						  adj_be						italian
 //italian						  mass							italian						s3					cuisine
@@ -189,3 +189,4 @@ let							  v_tran_causative_imperative		let							  imper							 s2
 hello						  greet							hello
 hi							  greet							hello
 goodmorning					  greet							hello
+good					  greet							hello

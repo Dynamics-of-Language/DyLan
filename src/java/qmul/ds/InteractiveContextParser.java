@@ -432,6 +432,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				logger.info("OOPS! Couldn't parse word as restart");
 				logger.error("OOPS! Couldn't parse word as restart");
 				this.forcedRestart = false;
+				this.forcedRepair=false;
 				return null;
 			}
 
@@ -556,7 +557,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 				UtteredWord repairableWord = repairableEdge.word();
 
-				if (!repairableWord.equals(word))
+				if (repairableWord.word().startsWith("good")&&word.word().startsWith("good")&&repairableWord.speaker().equals(word.speaker()))
+				{
+					
+				}
+				else if (!repairableWord.equals(word))
 					continue;
 
 				/**
@@ -597,9 +602,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		getState().setCurrentTuple(before);
 
 	}
-
+	
 	private void backtrackAndParse(UtteredWord word) {
 		logger.debug("backtrack and parsing " + word);
+		DAGTuple before = getState().getCurrentTuple();
 		for (LexicalAction la : lexicon.get(word.word())) {
 			if (non_repairing_action_types.contains(la.getLexicalActionType()))
 				return;
@@ -639,11 +645,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				 */
 				List<Action> actions = new ArrayList<Action>(
 						repairableEdge.getActions().subList(0, repairableEdge.getActions().size() - 1));
-
+				
 				actions.add(la);
-
+				getState().setCurrentTuple(current);
 				Tree result = applyActions(current.getTree(), actions);
-
+				getState().setCurrentTuple(before);
 				if (result != null) {
 					// now add backtracking edge
 					logger.debug("Adding VirutualReparingEdge");
@@ -667,6 +673,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static void main(String[] a) throws IOException {
 
 		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
+		
+		//File folder=new File("corpus/bAbI+");
+
 		List<Dialogue> dialogues = Dialogue
 				.loadDialoguesFromFile("../babble/data/Domains/restaurant-search/training_dialogues");
 

@@ -30,6 +30,7 @@ public class BabiDialogue extends Dialogue {
 		map.put("good morning", "goodmorning");
 		map.put("how many", "howmany");
 		map.put("i'm on it", "sure");
+		map.put("you know", "uhm");
 		map.put("any preference on a type of cuisine", "any preference on a type of cuisine?");
 
 		replacements = Collections.unmodifiableMap(map);
@@ -39,6 +40,7 @@ public class BabiDialogue extends Dialogue {
 		super(AGENTS);
 	}
 
+	
 	private static String applyReplacements(String s)
 	{
 		String init = s;
@@ -232,8 +234,8 @@ public class BabiDialogue extends Dialogue {
 	public static void main(String[] args) {
 		try {
 			String
-				srcPath = "corpus/bAbI-dialogue/dialog-bAbI-tasks",
-				dstPath = "corpus/bAbI-dialogue/babble-format";
+				srcPath = "corpus/bAbI-dialogue/dialog-bAbI+-tasks",
+				dstPath = "corpus/bAbI-dialogue/bAbI+-babble-format";
 			if (args.length == 2) {
 				srcPath = args[0];
 				dstPath = args[1];
