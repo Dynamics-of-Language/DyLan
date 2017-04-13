@@ -85,7 +85,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 * so in e.g. I like john um mary, mary can only repair john with a max depth of 1. If this were 2
 	 * it could also repair 'I'
 	 */
-	public static final int max_repair_depth = 2;
+	public static final int max_repair_depth = 1;
 
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir, false);
@@ -331,6 +331,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	}
 
 	public void init() {
+		this.forcedRepair=false;
+		this.forcedRestart=false;
+		
 		context.init();
 
 	}

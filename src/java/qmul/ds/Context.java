@@ -16,6 +16,7 @@ import edu.uci.ics.jung.graph.Tree;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
@@ -344,14 +345,19 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	
 	public void init()
 	{
-		dag.init();
+		//dag.init();Need to fix the init method... not working with repair and backtracking edges etc.
+		
+		dag=(DAG<T, E>) new WordLevelContextDAG();
 		resetVariablePools();
 		initParticipantContents(getParticipants());
+		//TODO: shouldn't be setting this like this.
+		dag.setRepairProcessing(false);
 	}
 	
 	public void init(List<String> participants)
 	{
-		dag.init();
+		//dag.init();
+		dag=(DAG<T, E>) new WordLevelContextDAG();
 		resetVariablePools();
 		initParticipantContents(new HashSet<String>(participants));
 	}
