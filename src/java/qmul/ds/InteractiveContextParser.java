@@ -72,8 +72,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	List<String> restarters = Arrays.asList(restarter);
 	String[] punct = { ".", "?", "!" };
-	List<String> rightEdgeIndicators = Arrays.asList(punct);
-
+	List<String> rightEdgeIndicators = new ArrayList<String>();//Arrays.asList(punct);
+	
 	private boolean forcedRestart = false;
 	private boolean forcedRepair = false;
 
@@ -292,8 +292,15 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
+	/**
+	 * Action repaly not working... TODO
+	 * TODO
+	 * commenting it out in applyAllPermutaions.
+	 * 
+	 * 
+	 */
 	public boolean replayBacktrackedActions(UtteredWord word) {
-
+		
 		Tree start = getState().getCurrentTuple().getTree().clone();
 		List<Action> acts = new ArrayList<Action>();// this will be the actions
 													// that will be replayed..
