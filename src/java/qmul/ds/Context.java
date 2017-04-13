@@ -348,6 +348,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		//dag.init();Need to fix the init method... not working with repair and backtracking edges etc.
 		
 		dag=(DAG<T, E>) new WordLevelContextDAG();
+		dag.setContext(this);
 		resetVariablePools();
 		initParticipantContents(getParticipants());
 		//TODO: shouldn't be setting this like this.
@@ -358,6 +359,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	{
 		//dag.init();
 		dag=(DAG<T, E>) new WordLevelContextDAG();
+		dag.setContext(this);
 		resetVariablePools();
 		initParticipantContents(new HashSet<String>(participants));
 	}
