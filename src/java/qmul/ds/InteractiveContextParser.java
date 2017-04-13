@@ -606,7 +606,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 				}
 
-			} while (!getState().isClauseRoot(current) && !getState().isBranching(current));
+			} while (!getState().isClauseRoot(current));
 		}
 
 		getState().setCurrentTuple(before);

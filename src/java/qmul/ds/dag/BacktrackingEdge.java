@@ -100,7 +100,8 @@ public class BacktrackingEdge extends GroundableEdge {
 		markRepairedEdges();
 		//
 		dag.actionReplay.addAll(getReplayableBacktrackedEdges());
-		dag.groundToClauseRootFor(word.speaker(), dag.getDest(this));
+		//commented out for now.
+		//dag.groundToClauseRootFor(word.speaker(), dag.getDest(this));
 	
 	}
 	
