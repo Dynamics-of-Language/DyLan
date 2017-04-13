@@ -449,7 +449,14 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		public int compare(E o1, E o2) {
 			//System.out.println("comparing edges: "+o1+" and "+o2);
 			if (o1 instanceof VirtualRepairingEdge && o2 instanceof VirtualRepairingEdge)
+			{
+				if (((VirtualRepairingEdge)o1).length - ((VirtualRepairingEdge)o2).length==0)
+					return +1;
+				
 				return ((VirtualRepairingEdge)o1).length - ((VirtualRepairingEdge)o2).length;
+						
+				
+			}
 			
 			
 			T end1=getDest(o1);

@@ -613,6 +613,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			if (non_repairing_action_types.contains(la.getLexicalActionType()))
 				return;
 
+			logger.debug("trying :"+la+":"+la.getLexicalActionType());
 			DAGTuple current = getState().getCurrentTuple();
 			if (getState().isClauseRoot(current))
 				return;
@@ -663,12 +664,15 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					getState().addChild(to, repairing);
 					logger.debug("to " + to);
 					depth++;
+					logger.debug("depth is:"+depth);
 
 				} else
 					logger.debug("could not apply:" + actions + "\n at:" + current.getTree());
 
-			} while (depth <= max_repair_depth && !getState().isClauseRoot(current)
+			} while (depth < max_repair_depth && !getState().isClauseRoot(current)
 					&& !getState().isBranching(current));
+			
+			logger.debug("finished trying:"+la+":"+la.getLexicalActionType());
 		}
 
 	}

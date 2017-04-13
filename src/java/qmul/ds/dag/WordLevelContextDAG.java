@@ -170,10 +170,11 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	protected SortedSet<GroundableEdge> getOutEdgesForTraversal(DAGTuple cur) {
 		TreeSet<GroundableEdge> result = new TreeSet<GroundableEdge>(this.edgeComparator);
 		for (GroundableEdge edge : super.getOutEdges(cur)) {
+			logger.trace("out edges:"+edge);
 			if (edge instanceof BacktrackingEdge)
 				result.add(((BacktrackingEdge) edge).overarchingRepairingEdge);
 			else if (edge instanceof RepairingWordEdge) {
-
+				logger.error("out edge is a reparing word edge. This shouldn't happen. Edge:"+edge);
 			} else
 				result.add(edge);
 		}
@@ -217,14 +218,18 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			logger.debug("out degree of cur is 0");
 			return null;
 		}
-
+		
 		
 		SortedSet<GroundableEdge> edges = getOutEdgesForTraversal();
+		
 
 		for (GroundableEdge e : edges) {
+			
 			if (e.hasBeenSeen())
+			{
+				
 				continue;
-
+			}
 			logger.info("Going forward first along: " + e);
 			logger.debug("Going forward first along: " + e.toDebugString());
 			if (e.word().speaker().equals(DAGGenerator.myName))
@@ -251,6 +256,8 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			return e;
 
 		}
+		
+		
 		return null;
 	}
 

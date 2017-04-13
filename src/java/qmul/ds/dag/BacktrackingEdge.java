@@ -28,12 +28,13 @@ public class BacktrackingEdge extends GroundableEdge {
 	
 	public String toString()
 	{
-		String s= "BacktrackingEdge (id="+id+",word="+word+"): [";
-		for(DAGEdge e: this.backtrackedOver)
-		{
-			s+=e.word()+";";
-		}
-		return s+"]";
+		String s= "BacktrackingEdge (id="+id+",word="+word+"): ["+this.overarchingRepairingEdge.edgePair.second.word()+"]";
+		return s;
+		//		for(DAGEdge e: this.backtrackedOver)
+//		{
+//			s+=e.word()+";";
+//		}
+//		return s+"]";
 		
 	}
 
@@ -114,6 +115,8 @@ public class BacktrackingEdge extends GroundableEdge {
 		
 		logger.debug("going back (forward) over backtrakcing edge: "+this);
 		dag.setCurrentTuple(dag.getSource(this));
+		
+		setSeen(true);
 		logger.info("Backtracked over: "+this);
 		logger.info("adding word to stack now: "+word);
 		dag.wordStack().push(word);
@@ -122,6 +125,7 @@ public class BacktrackingEdge extends GroundableEdge {
 	
 	public void setSeen(boolean seen)
 	{
+		super.setSeen(seen);
 		overarchingRepairingEdge.setSeen(seen);
 	}
 	

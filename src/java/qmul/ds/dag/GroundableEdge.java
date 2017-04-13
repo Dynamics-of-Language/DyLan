@@ -124,7 +124,7 @@ public class GroundableEdge extends DAGEdge {
 			throw new IllegalStateException(
 					"the edge to be backtracked does not have its destination as the current dag tuple");
 		}
-
+		logger.debug("backtracking over groundable edge:"+this);
 		
 		/**
 		 * IMPORTANT: commented out because I am enforcing grounding of the previous turn upon continuation.
@@ -132,8 +132,8 @@ public class GroundableEdge extends DAGEdge {
 		 * backtrack over/into it anymore.
 		 * TODO
 		**/
-		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(dag
-				.getSource(this));
+		//GroundableEdge prevPrevEdge = dag.getActiveParentEdge(dag
+		//		.getSource(this));
 		
 		
 //		if (prevPrevEdge != null
@@ -144,7 +144,7 @@ public class GroundableEdge extends DAGEdge {
 		
 		setSeen(true);
 		setInContext(false);
-
+		
 		dag.setCurrentTuple(dag.getSource(this));
 		logger.debug("Backtracked over: " + this);
 

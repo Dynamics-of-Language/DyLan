@@ -40,6 +40,7 @@ public class VirtualRepairingEdge extends GroundableEdge {
 	}
 
 	public void backtrack(WordLevelContextDAG dag) {
+		logger.debug("backtracking over:"+this);
 		edgePair.second.backtrack(dag);
 		edgePair.first.backtrack(dag);
 	}
@@ -59,6 +60,13 @@ public class VirtualRepairingEdge extends GroundableEdge {
 	public String toString(){
 		return "repair-"+super.toString();
 	}
+	
+//	public void setSeen(boolean b)
+//	{
+//		super.setSeen(b);
+//		this.edgePair.first.setSeen(b);
+//		this.edgePair.second.setSeen(b);
+//	}
 	/*
 	public UtteredWord word()
 	{
