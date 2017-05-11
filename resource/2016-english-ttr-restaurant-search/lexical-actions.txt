@@ -516,6 +516,7 @@ ELSE	IF		?ty(t)
 				¬<\/0>Ex.x
 				¬<\/*>Ex.x
 				¬</\L>Ex.x
+				¬<\/L>Ex.x
 		THEN	make(\/*)
 				go(\/*)
 				put(?Ex.tn(x))
