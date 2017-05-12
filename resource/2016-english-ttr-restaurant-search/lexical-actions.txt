@@ -1595,7 +1595,7 @@ ELSE	IF		</\0\/1>Ex.x
 				¬</\0\/1>Ex.?x
 				¬Ex.?x
 		THEN	abort
-		ELSE	IF	  	¬Ex.?x
+		ELSE	IF	  	ty(X)
 					  	Speaker(W)
 				THEN	IF		ty(t)
 								+Q
@@ -1608,7 +1608,7 @@ ELSE	IF		</\0\/1>Ex.x
 										THEN	ground
 										ELSE	put(Assert(W))
 												ground	
-				ELSE    ground
+				ELSE    abort
 
 //*
 
