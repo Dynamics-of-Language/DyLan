@@ -198,6 +198,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			if (e.hasBeenSeen())
 				continue;
 			markAllEdgesBelowAsUnseen(e);
+			markAllEdgesBelowAsNotInContext(e);
 			logger.info("Going forward first reset along: " + e);
 			e.traverse(this);
 			logger.info("now on" + getCurrentTuple());
@@ -232,7 +233,11 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			}
 			logger.info("Going forward first along: " + e);
 			logger.debug("Going forward first along: " + e.toDebugString());
-			if (e.word().speaker().equals(DAGGenerator.myName))
+			if (e instanceof CompletionEdge)
+			{
+				
+			}
+			else if (e.word().speaker().equals(DAGGenerator.myName))
 				wordStack.push(e.word());
 
 			else if (!wordStack.isEmpty()&&wordStack.peek().equals(e.word()))
@@ -242,7 +247,6 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 				VirtualRepairingEdge vr=(VirtualRepairingEdge)e;
 				
 			}
-
 			else if (!wordStack.isEmpty()){
 				logger.error("Trying to pop word " + wordStack.peek()
 						+ " off the stack when going along " + e);
@@ -276,6 +280,23 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 			if (done) {
 				outEdge.setSeen(false);
+				continue;
+			}
+			if (outEdge == seenEdge) {
+				done = true;
+			}
+
+		}
+
+	}
+	
+	public void markAllEdgesBelowAsNotInContext(GroundableEdge seenEdge) {
+
+		boolean done = false;
+		for (DAGEdge outEdge : this.getOutEdges(cur)) {
+
+			if (done) {
+				outEdge.setInContext(false);
 				continue;
 			}
 			if (outEdge == seenEdge) {

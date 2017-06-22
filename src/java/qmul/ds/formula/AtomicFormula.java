@@ -62,7 +62,7 @@ public class AtomicFormula extends Formula {
 	 * 
 	 * @see qmul.ds.formula.Formula#subsumesMapped(qmul.ds.formula.Formula, java.util.HashMap)
 	 */
-	protected boolean subsumesMapped(Formula f, HashMap<Variable, Variable> map) {
+	public boolean subsumesMapped(Formula f, HashMap<Variable, Variable> map) {
 		return subsumesBasic(f);
 	}
 

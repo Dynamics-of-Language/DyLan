@@ -695,7 +695,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		map.put(DSType.t, Formula.create("[e1:es|head==e1:es]"));
 		// for underspec VP
 		map.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		map.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		map.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
 		map.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
 		map.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
 		map.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
@@ -723,30 +723,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * @return
 	 */
 	private void addUnderspecifiedFormulae(Context c) {
-//		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
-//		typeMap.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
-//		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
-//		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
-//		// typeMap.put(DSType.cn,
-//		// Formula.create("[x:e|head==x:e]").freshenVars(this));
-//		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
-//		typeMap.put(DSType.t, Formula.create("[e1:es|head==e1:es]"));
-//		// for underspec VP
-//		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-//		typeMap.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
-//		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
-//		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
-//		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
-//		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
-//		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-//		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-//		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-//		// for underspec adjunct e>t, see below, special case
-//
-//		typeMap.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
-//		typeMap.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
 
-		// Label copula=LabelFactory.create("+BE");
 
 		Label formReq = LabelFactory.create("?Ex.fo(x)");
 		for (Node n : values()) {
@@ -807,7 +784,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		// typeMap.put(DSType.t, Formula.create("[p:t]"));
 		// for underspec VP
 		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		typeMap.put(DSType.parse("es>cn"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
 		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
 		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
 		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
@@ -1115,8 +1092,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
 		}
 
-		if (root.contains(negatedLabel))
-			rootReduced = negatedRec.freshenVars(c).conjoin(rootReduced);
+//		if (root.contains(negatedLabel))
+//			rootReduced = negatedRec.freshenVars(c).conjoin(rootReduced);
 
 		return rootReduced;
 

@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.meta.Meta;
+import qmul.ds.action.meta.MetaType;
 import qmul.ds.type.DSType;
 
 /**
@@ -126,10 +127,11 @@ public class TTRField extends Formula{
 			// if we can parse this as a DS type then we have unmanifest field
 			// such as x:e
 			// otherwise we just have a type (Formula) to the right of the label
-			// sep (:), with dsType remaining null.
+			// sep (:), with dsType remaining null. Also we're not allowing meta DS Type in fields right now.
 			// So:
-			if (dsType == null) {
+			if (dsType == null||(dsType instanceof MetaType)) {
 				type = Formula.create(dsTypeS);
+				dsType = null;
 			}
 
 		}
@@ -474,10 +476,13 @@ public class TTRField extends Formula{
 	public String toDebugString() {
 
 		if (dsType != null)
+		{
+			//System.out.println("DS type not null");
 			return label
 					+ (type == null ? "" : "==" + type.toDebugString() + "("
 							+ type.getClass() + ")") + " "
 					+ TTRRecordType.TTR_LABEL_SEPARATOR + " " + dsType;
+		}
 		else
 			return label + " " + TTRRecordType.TTR_LABEL_SEPARATOR + " "
 					+ type.toDebugString() + "(" + type.getClass() + ")";

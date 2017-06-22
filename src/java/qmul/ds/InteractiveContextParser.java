@@ -67,7 +67,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	String[] repairand = { "uhh", "errm", "err", "er", "well", "oh", "uh", "erm", "uhm", "um", "oh" };
 	String[] restarter = { "yeah" };
 	List<String> repairanda = Arrays.asList(repairand);
-	String[] forceRepairand = { "sorry", "no" };
+	String[] forceRepairand = { "sorry"};
 	List<String> forcedRepairanda = Arrays.asList(forceRepairand);
 
 	List<String> restarters = Arrays.asList(restarter);
@@ -88,9 +88,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static final int max_repair_depth = 1;
 
 	public InteractiveContextParser(File resourceDir) {
-		super(resourceDir, false);
+		super(resourceDir);
 
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, DEFAULT_NAME);
 
 	}
 
@@ -100,11 +100,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 *            lexical-actions.txt, lexicon.txt
 	 */
 	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing, String... participants) {
-		super(resourceDirNameOrURL, repairing);
+		super(resourceDirNameOrURL);
 		if (participants.length > 0)
-			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), participants);
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, participants);
 		else
-			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, DEFAULT_NAME);
 
 		context.setRepairProcessing(repairing);
 
@@ -241,7 +241,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			}
 
 		}
-
+		logger.debug("Now attempting to apply lexical action for:"+getState().wordStack().peek());
 		for (Pair<List<Action>, Tree> pair : global) {
 
 			UtteredWord w = getState().wordStack().peek();
@@ -266,9 +266,61 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					GroundableEdge wordEdge;
 					newActs.add(la.instantiate());
 					//
-
-					if (getIndexOfTRP(newActs) >= 0)
+					int indexOfTRP=getIndexOfTRP(newActs);
+					if (indexOfTRP == 0)
+					{
+						logger.debug("TRP at the beginning");
 						wordEdge = getState().getNewNewClauseEdge(newActs, w);
+					}
+					else if (indexOfTRP>0)
+					{
+						
+						
+						logger.debug("Found TRP in the middle of sequence");
+						Tree beforeTRP=null;
+						//create two edges, one before trp, and one after
+						for(Pair<List<Action>, Tree> pair1: global)
+						{
+							logger.debug("Looking for before trp:"+pair1.first);
+							if(pair1.first().equals(pair.first.subList(0, indexOfTRP)))
+							{
+								logger.debug("found it:"+pair1.second());
+								beforeTRP=pair1.second();
+								break;
+							}
+							
+						}
+						if (beforeTRP==null)
+							throw new IllegalStateException("Couldn't find sublist");
+						
+						DAGTuple beforeTRPTuple=getState().getNewTuple(beforeTRP);
+						//UtteredWord completionWord=new UtteredWord(".", w.speaker());
+						
+						GroundableEdge completionEdge=getState().getNewCompletionEdge(new ArrayList<Action>(pair.first.subList(0, indexOfTRP)));
+						completionEdge.setRepairable(false);
+						getState().addChild(beforeTRPTuple,completionEdge);
+						
+						logger.debug("Added Completion Edge:" + completionEdge);
+						logger.debug("Child:" + beforeTRPTuple);
+						logger.debug("going forward along it");
+						getState().setCurrentTuple(getState().getDest(completionEdge));
+						
+						wordEdge = getState().getNewNewClauseEdge(newActs.subList(indexOfTRP, newActs.size()), w);
+						if (non_repairing_action_types.contains(la.getLexicalActionType()))
+							wordEdge.setRepairable(false);
+
+						DAGTuple newTuple = getState().getNewTuple(res);
+
+						getState().addChild(newTuple, wordEdge);
+						
+						logger.debug("Added Edge:" + wordEdge.toDebugString());
+						logger.debug("Child:" + newTuple);
+						getState().setCurrentTuple(getState().getSource(completionEdge));
+						
+						continue;
+						
+						
+					}
 					else
 						wordEdge = getState().getNewEdge(newActs, w);
 
@@ -516,20 +568,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return getState();
 	}
 
-	private GroundableEdge getFirstRepairableEdge() {
-		logger.debug("finding first repairable edge:");
-
-		GroundableEdge parent = getState().getParentEdge();
-		while (parent != null) {
-			if (parent.isRepairable())
-				return parent;
-
-			parent = getState().getParentEdge(getState().getSource(parent));
-			logger.debug("inside loop");
-
-		}
-		return null;
-	}
+	
 
 	private void restart(UtteredWord word) {
 		logger.debug("restarting with: " + word);
@@ -698,7 +737,12 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				System.out.println("Failed to parse:\n" + d);
 				break;
 			} else
+			{
 				System.out.println("parsed dialogue successfully");
+				System.out.println("Grounded content is:");
+				System.out.println(parser.getContext().getCautiouslyOptimisticGroundedContent());
+			}
+			
 
 		}
 

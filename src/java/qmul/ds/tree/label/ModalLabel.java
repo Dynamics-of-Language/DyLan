@@ -24,6 +24,7 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaModality;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.NewClauseEdge;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Modality;
 import qmul.ds.tree.Node;
@@ -41,7 +42,7 @@ public class ModalLabel extends EmbeddedLabelGroup {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Modality modality;
-	private static final Logger logger=Logger.getLogger(ModalLabel.class);
+	protected static final Logger logger=Logger.getLogger(ModalLabel.class);
 	/**
 	 * @param modality
 	 * @param label
@@ -181,7 +182,7 @@ public class ModalLabel extends EmbeddedLabelGroup {
 	@Override
 	public <E extends DAGEdge, U extends DAGTuple> boolean check(Tree tree,
 			Context<U, E> context) {
-		logger.debug("Checking model label " + this + " on " + tree);
+		logger.debug("Checking modal label " + this + " on " + tree);
 		// check if the actual modal label e.g. [\/1]?Ty(t) is present here
 		if (super.checkWithTupleAsContext(tree, null)) {
 			return true;
@@ -196,23 +197,51 @@ public class ModalLabel extends EmbeddedLabelGroup {
 						.equals(BasicOperator.PATH_CONTEXT)) {
 			U previous = context.getCurrentTuple();
 			if (previous==null)
+			{
+				logger.error("Current tuple is null!");
 				return false;
+			}
 			// TODO option to restrict context search depth to 1,2 etc here - or
 			// could be in modality path quantifier?
 			// currently searching whole trees for labels
 			int depth=1;
 			int index=0;
-			//Restricting it to complete trees only
+			//Restricting it to the trees just before new clauses or complete trees
 			do {
 				if (index==depth)
 					break;
-				if (!previous.getTree().isComplete())
+				logger.debug("Checking tuple: "+previous);
+				if (context.getDAG().getParentEdge(previous) instanceof NewClauseEdge)
+				{
+					logger.debug("found new clause edge");
+					previous=context.getParent(previous);
+				}
+				else if (previous.getTree().isComplete())
+				{
+					
+				}
+				else
+				{
+					logger.debug("going up");
 					continue;
 				
+				}
 				logger.debug("checking "+super.toString()+" on tree:"+previous.getTree());
-				for(Node n:previous.getTree().values())
-					if (checkLabelsConj(n))
-						return true;
+				Node pointed=previous.getTree().getPointedNode();
+				NodeLoop:
+				for(Node n: previous.getTree().values())
+				{
+					previous.getTree().setPointer(n.getAddress());
+					this.resetMetas();
+					for(Label l: labels)
+					{
+						if (!l.check(previous.getTree(), context))
+							continue NodeLoop;
+					}
+					
+					previous.getTree().setPointer(pointed.getAddress());
+					return true;
+				}
 				index++;
 				
 			} while((previous = context.getParent(previous))!=null);

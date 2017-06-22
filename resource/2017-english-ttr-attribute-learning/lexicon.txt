@@ -2,6 +2,13 @@ is                            v_be                  	pres                       
 square                          count                       square                        s3                            shape
 circle                          count                       circle                        s3                            shape
 triangle						count						triangle					  s3							shape
+square                          mass                       square                        s3                            shape
+circle                          mass                       circle                        s3                            shape
+triangle						mass						triangle					  s3							shape
+square                            proper_shape	                       	square				s3
+circle							    proper_shape							circle					s3
+triangle							proper_shape							triangle				s3
+color							count						color						  s3							color
 blue                            adj	                       	blue
 red							    adj							red
 green							adj							green
@@ -23,6 +30,15 @@ purple							adj_be						purple
 yellow							adj_be							yellow
 orange							adj_be							orange
 black							adj_be							black
+called							naming_adj						called
+named							naming_adj						named					
+blue                            proper_color	                       	blue				s3
+red							    proper_color							red					s3
+green							proper_color							green				s3
+purple							proper_color							purple				s3
+yellow							proper_color							yellow				s3
+orange							proper_color							orange				s3
+black							proper_color							black				s3
 //this						  det_demonst					here						  s3
 //that						  det_demonst					there					      s3
 this						  demonst  						this						  s3							obj
@@ -30,7 +46,7 @@ that						  demonst						that						  s3							obj
 see							  v_tran_fin					see							  pres                          nons3
 see							  v_tran_inf					see							  inf							per
 sees						  v_tran_fin					see							  pres							s3
-can 						  v_aux_inf                     can                           pres
+can 						  v_aux_inf                     can                           modal
 do						      v_aux_inf                     do                            pres
 it							  pron_nom						s3							  obj
 it							  pron_acc						s3							  obj
@@ -38,9 +54,11 @@ a                             det_indef                     eps
 an                            det_indef                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
+the							  det_def						iota
 //what                          pron_whq                      obj
 what						  pron_whq_cop					obj
-//what						  pron_whq_det_cop				meta_cn
+what						  pron_whq_det_cop				whatever
+what						  pron_whq_det					whatever
 //color						  cn_meta_cat					color
 //shape						  cn_meta_cat					shape
 //which						  pron_whq						obj
@@ -55,6 +73,6 @@ yeah						  accept						yeah
 //wow							  accept						wow
 //right						  accept						right
 no							  reject						not
-//i                             i		                        s1                            spkr
-you							  proper						system							  s2
+i                             i		                        nons3                            spkr
+you							  proper						system							  nons3
 <rt>				  		  release_turn					null

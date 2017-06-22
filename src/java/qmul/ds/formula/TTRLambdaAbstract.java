@@ -149,7 +149,7 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	 * java.util.HashMap)
 	 */
 	@Override
-	protected boolean subsumesMapped(Formula other,
+	public boolean subsumesMapped(Formula other,
 			HashMap<Variable, Variable> map) {
 		if (!(other instanceof TTRLambdaAbstract)) {
 			return false;

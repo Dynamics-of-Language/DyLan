@@ -15,22 +15,21 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.util.Pair;
 import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.Lexicon;
+import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Tree;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.Word;
-import edu.stanford.nlp.util.Pair;
 
 /**
  * A generic parser with a Directed Asyclic Graph  as its parse context.getDAG() and context ({@link DAG<T,E>}, see Eshghi et. al. (2013)).
@@ -64,13 +63,19 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 
 	protected Grammar completionGrammar;
+	
+	protected SpeechActInferenceGrammar sa_grammar;
 
 	
-	
+	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa)
+	{
+		this.lexicon=lexicon;
+		separateGrammars(grammar);
+		this.sa_grammar=sa;
+	}
 	
 	public DAGParser(Lexicon lexicon, Grammar grammar) {
-		this.lexicon = lexicon;
-		separateGrammars(grammar);
+		this(lexicon,grammar,new SpeechActInferenceGrammar());
 	}
 	/** This method divides the set of computational actions into optional and non-optional ones.
 	 * 
@@ -102,7 +107,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 *            lexical-actions.txt, lexicon.txt
 	 */
 	public DAGParser(File resourceDir) {
-		this(new Lexicon(resourceDir), new Grammar(resourceDir));
+		this(new Lexicon(resourceDir), new Grammar(resourceDir), new SpeechActInferenceGrammar(resourceDir));
+		
 	}
 	
 	
@@ -114,18 +120,15 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public DAGParser(String resourceDirNameOrURL) {
 		this(new Lexicon(resourceDirNameOrURL), new Grammar(
-				resourceDirNameOrURL));
-	}
-	
-	public DAGParser(String resourceDirNameOrURL, boolean repairing)
-	{
-		this(resourceDirNameOrURL);
+				resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL));
 	}
 	
 	
-	public DAGParser(File resourceDir, boolean b) {
-		this(resourceDir);
-	}
+	
+	
+	
+	
+	
 	/** BEGIN METHODS FOR RERUNNING ACTIONS________________________________________________________________________ 
 	 * The following methods are used for re-running actions having backtracked over them to do repair.
 	 * 
@@ -373,7 +376,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	protected Pair<List<Action>,Tree> adjustWithNonOptionalGrammar(
 			Pair<List<Action>,Tree> initPair) {
-		logger.trace("adjusting non-optionally: " + initPair.second);
+		logger.debug("adjusting non-optionally: " + initPair.second);
 		ArrayList<Action> actions = new ArrayList<Action>(initPair.first);
 
 		Tree res = initPair.second;

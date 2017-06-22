@@ -18,22 +18,28 @@ import qmul.ds.action.boundvariable.BoundFormulaVariable;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.Node;
 
 public class SubsumesLabel extends Label implements Serializable {
 
 	/**
+	 * Label for checking formula subsumption in actions
+	 * X << Y means Y subsumes X
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final Pattern SUBSUMES_PATTERN = Pattern.compile("(.+)\\s*<<\\s*(.+)");
+	public static final String FUNCTOR="<<";
+	public static final Pattern SUBSUMES_PATTERN = Pattern.compile("(.+)\\s*"+FUNCTOR+"\\s*(.+)");
 	Formula left;
 	Formula right;
 
 	public SubsumesLabel(String s, IfThenElse ite) {
 		super(ite);
+		
 		Matcher m = SUBSUMES_PATTERN.matcher(s);
 		if (m.matches()) {
+			
 			left = Formula.create(m.group(1));
 			right = Formula.create(m.group(2));
 
@@ -47,16 +53,19 @@ public class SubsumesLabel extends Label implements Serializable {
 
 	public boolean check(Node n) {
 
-		return right.subsumesBasic(left);
+		
+		boolean success=right.subsumes(left);
+		
 
+		return success;
 	}
 
 	public String toString() {
-		return "(" + left + "=" + right + ")";
+		return left + FUNCTOR + right;
 	}
 
 	public String toUnicodeString() {
-		return left.toUnicodeString() + "=" + right.toUnicodeString();
+		return left.toUnicodeString() + FUNCTOR + right.toUnicodeString();
 	}
 
 	public ArrayList<Meta<?>> getMetas() {
@@ -77,6 +86,22 @@ public class SubsumesLabel extends Label implements Serializable {
 			result.addAll(((BoundFormulaVariable) right).getBoundMetas());
 
 		return result;
+	}
+	
+	public static void main(String s[])
+	{
+		TTRRecordType rt=TTRRecordType.parse("[x2==this : e|e4==eq : es|x4 : e|head==e4 : es|p6==red(x4) : t|p7==color(p6) : t|p4==obj(e4, x4) : t|p5==subj(e4, x2) : t]");
+		TTRRecordType rt1=TTRRecordType.parse("[x:e|e1==eq:es|x2:e|p2==Q(x2):t|p3==color(p2):t|p==subj(e1,x):t|p1==obj(e1,x2):t]");
+		
+		
+		System.out.println(rt1.subsumesBasic(rt));
+		
+		System.out.println(rt1);
+		System.out.println(rt1.subsumes(rt));
+		System.out.println(rt1);
+		
+		
+		
 	}
 
 }

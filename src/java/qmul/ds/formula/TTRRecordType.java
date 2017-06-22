@@ -387,6 +387,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * @return the type associated with label
 	 */
 	public Formula get(TTRLabel label) {
+		
 		return record.get(label) == null ? null : record.get(label).getType();
 	}
 
@@ -952,8 +953,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		if (record.containsKey(f.getLabel()))
 			throw new IllegalArgumentException("Coinciding labels in:" + this + " when adding:" + f);
 
-		if (!f.getMetas().isEmpty() && f.isMeta())
-			throw new IllegalArgumentException("Illegal field:"+f+" - cannot have meta-label at the same time as meta-vairables in the type");
+		//if (!f.getMetas().isEmpty() && f.isMeta())
+		//	throw new IllegalArgumentException("Illegal field:"+f+" - cannot have meta-label at the same time as meta-vairables in the type");
 		
 		ArrayList<TTRField> list = new ArrayList<TTRField>();
 		Set<Variable> variables = new HashSet<Variable>(f.getVariables());
@@ -1452,13 +1453,29 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map) {
 
+		TTRRecordType other;
+		
+
+		if (o instanceof MetaFormula)
+		{
+			MetaFormula meta=(MetaFormula)o;
+			if (meta.getValue()==null)
+				return false;
+			
+			if (!(meta.getValue() instanceof TTRRecordType))
+				return false;
+			
+			other=(TTRRecordType)meta.getValue();
+		}
+		else if (o instanceof TTRRecordType)
+			other=(TTRRecordType)o;
+		else
+			return false;
+			
+
 		if (isEmpty())
 			return true;
-
-		if (!(o instanceof TTRRecordType))
-			return false;
-
-		TTRRecordType other = (TTRRecordType) o;
+		
 
 		return subsumesMapped(other, 0, map);
 
@@ -2819,7 +2836,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public MetaPredicate getFreshPredicateMetaVariable() {
 		lastIndexOfPredicateMeta++;
 		
-		return MetaPredicate.get(Formula.METAPREDICATE_ROOT+lastIndexOfPredicateMeta);
+		return MetaPredicate.get(Formula.META_PREDICATE_PATTERN+lastIndexOfPredicateMeta);
 		
 	}
 

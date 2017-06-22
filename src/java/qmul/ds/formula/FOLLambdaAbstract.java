@@ -131,7 +131,7 @@ public class FOLLambdaAbstract extends Formula implements LambdaAbstract {
 	 * @see qmul.ds.formula.Formula#subsumes(qmul.ds.formula.Formula, java.util.HashMap)
 	 */
 	@Override
-	protected boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
+	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		if (!(other instanceof FOLLambdaAbstract)) {
 			return false;
 		}

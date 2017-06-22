@@ -11,8 +11,6 @@ package qmul.ds.tree.label;
 import java.util.HashMap;
 
 import qmul.ds.action.ActionSequence;
-import qmul.ds.action.atomic.Effect;
-import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.boundvariable.BoundLabelVariable;
 import qmul.ds.action.meta.MetaLabel;
@@ -112,22 +110,26 @@ public class LabelFactory {
 
 	/**
 	 * @param string
-	 *            a {@link String} representation of a label as used in lexicon specs, e.g. Fo(john),
-	 *            ?[\/1]Ty(&lt;e,t&gt;) etc
+	 *            a {@link String} representation of a label as used in lexicon
+	 *            specs, e.g. Fo(john), ?[\/1]Ty(&lt;e,t&gt;) etc
 	 * @return the label
 	 */
 	public static Label create(String string, IfThenElse ite) {
 		string = string.trim();
 		UnaryPredicateLabel upa = UnaryPredicateLabel.parse(string);
-		if (string.matches(METAVARIABLE_PATTERN)) {
+		if (string.contains(SubsumesLabel.FUNCTOR)) {
+			
+			return new SubsumesLabel(string, ite);
+		}
+		else if (string.matches(METAVARIABLE_PATTERN)) {
 			return MetaLabel.get(string);
 		} else if (string.matches(VAR_PATTERN)) {
 			return new BoundLabelVariable(string);
 		} else if (upa != null) {
 			return upa;
-		}else if (string.toLowerCase().startsWith(CompleteTreeLabel.PREFIX)) {
+		} else if (string.toLowerCase().startsWith(CompleteTreeLabel.PREFIX)) {
 			return new CompleteTreeLabel();
-		}else if (string.toLowerCase().startsWith(FloorIsOpen.PREFIX)) {
+		} else if (string.toLowerCase().startsWith(FloorIsOpen.PREFIX)) {
 			return new FloorIsOpen();
 		} else if (string.toLowerCase().startsWith(ScopeStatement.FUNCTOR.toLowerCase())) {
 			return new ScopeStatement(string, ite);
@@ -140,17 +142,21 @@ public class LabelFactory {
 		} else if (string.toLowerCase().startsWith(IndefLabel.FUNCTOR.toLowerCase())) {
 			return new IndefLabel(string, ite);
 		} else if (string.toLowerCase().startsWith(SpeakerLabel.FUNCTOR.toLowerCase())) {
-			return new SpeakerLabel(Formula.create(
-					string.substring(SpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
+			return new SpeakerLabel(
+					Formula.create(string.substring(SpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true),
+					ite);
 		} else if (string.toLowerCase().startsWith(AssertionLabel.FUNCTOR.toLowerCase())) {
-			return new AssertionLabel(Formula.create(
-					string.substring(AssertionLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
+			return new AssertionLabel(
+					Formula.create(string.substring(AssertionLabel.FUNCTOR.length() + 1, string.length() - 1), true),
+					ite);
 		} else if (string.toLowerCase().startsWith(AddresseeLabel.FUNCTOR.toLowerCase())) {
-			return new AddresseeLabel(Formula.create(
-					string.substring(AddresseeLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
-		}  else if (string.toLowerCase().startsWith(PrevSpeakerLabel.FUNCTOR.toLowerCase())) {
-			return new PrevSpeakerLabel(Formula.create(
-					string.substring(PrevSpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
+			return new AddresseeLabel(
+					Formula.create(string.substring(AddresseeLabel.FUNCTOR.length() + 1, string.length() - 1), true),
+					ite);
+		} else if (string.toLowerCase().startsWith(PrevSpeakerLabel.FUNCTOR.toLowerCase())) {
+			return new PrevSpeakerLabel(
+					Formula.create(string.substring(PrevSpeakerLabel.FUNCTOR.length() + 1, string.length() - 1), true),
+					ite);
 		} else if (string.toLowerCase().startsWith(ContextualActionLabel.FUNCTOR)) {
 			return new ContextualActionLabel(string, ite);
 		} else if (string.toLowerCase().startsWith(FeatureLabel.PREFIX.toLowerCase())) {
@@ -169,11 +175,12 @@ public class LabelFactory {
 			return new TypeLabel(DSType.parse(string.substring(TypeLabel.FUNCTOR.length() + 1, string.length() - 1)),
 					ite);
 		} else if (string.toLowerCase().startsWith(AddressSubsumptionLabel.FUNCTOR.toLowerCase())) {
-			return new AddressSubsumptionLabel(string.substring(AddressSubsumptionLabel.FUNCTOR.length() + 1,
-					string.length() - 1), ite);
+			return new AddressSubsumptionLabel(
+					string.substring(AddressSubsumptionLabel.FUNCTOR.length() + 1, string.length() - 1), ite);
 		} else if (string.toLowerCase().startsWith(FormulaLabel.FUNCTOR.toLowerCase())) {
-			return new FormulaLabel(Formula.create(
-					string.substring(FormulaLabel.FUNCTOR.length() + 1, string.length() - 1), true), ite);
+			return new FormulaLabel(
+					Formula.create(string.substring(FormulaLabel.FUNCTOR.length() + 1, string.length() - 1), true),
+					ite);
 		} else if (string.toLowerCase().startsWith(Modality.FORALL_LEFT.toLowerCase())
 				|| string.toLowerCase().startsWith(Modality.EXIST_LEFT.toLowerCase())
 				|| string.toLowerCase().startsWith(BasicOperator.ARROW_UP.toLowerCase())
@@ -190,7 +197,12 @@ public class LabelFactory {
 		} else if (string.equals("x")) {
 			// special case for existential check of entire labels e.g. Ex.?x
 			return new ArbitraryLabel("x", ite);
-		} else {
+		} else if (string.startsWith(SpeechActLabel.FUNCTOR))
+		{
+			return new SpeechActLabel(string,ite);
+		}
+
+		else {
 			LabelDisjunction ld = LabelDisjunction.parse(string, ite);
 			if (ld != null)
 				return ld;
@@ -200,13 +212,15 @@ public class LabelFactory {
 	}
 
 	/**
-	 * The method is used in Existential label to determine the type of the quantified variable
+	 * The method is used in Existential label to determine the type of the
+	 * quantified variable
 	 * 
 	 * @param f
-	 *            this is a string that should correspond to the functor of some ds predicate in the implementation,
-	 *            e.g. ty, fo etc.
+	 *            this is a string that should correspond to the functor of some
+	 *            ds predicate in the implementation, e.g. ty, fo etc.
 	 * 
-	 * @return the class which represents the type of variable that the predicate takes as argument
+	 * @return the class which represents the type of variable that the
+	 *         predicate takes as argument
 	 */
 	public static Class<?> getClassForPredicate(String functor) {
 
@@ -237,15 +251,18 @@ public class LabelFactory {
 	}
 
 	/**
-	 * This method takes a single string representation of a label, and a bound variable, e.g. x, and returns the type
-	 * (class) corresponding to that variable in the label. E.g. fo(x) will result in Formula, and <x> Modality.
+	 * This method takes a single string representation of a label, and a bound
+	 * variable, e.g. x, and returns the type (class) corresponding to that
+	 * variable in the label. E.g. fo(x) will result in Formula, and
+	 * <x> Modality.
 	 * 
-	 * The method is used in ExistentialLabelConjunction to determine the type of the meta-variable replacing the bound
-	 * variable upon label checking.
+	 * The method is used in ExistentialLabelConjunction to determine the type
+	 * of the meta-variable replacing the bound variable upon label checking.
 	 * 
 	 * @param labelS
 	 * @param var
-	 * @return the type or class in the label, of the variable passed as argument.
+	 * @return the type or class in the label, of the variable passed as
+	 *         argument.
 	 */
 
 	public static Class<?> findVariableType(String labelS, String var) {
@@ -298,8 +315,8 @@ public class LabelFactory {
 
 	public static void main(String a[]) {
 
-		Label l=LabelFactory.create("ty(cnev>e)");
-		System.out.println(l+" "+l.getClass());
+		Label l = LabelFactory.create("ty(cnev>e)");
+		System.out.println(l + " " + l.getClass());
 
 	}
 

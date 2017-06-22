@@ -18,8 +18,41 @@ THEN    IF		</\0\/1>Ex.x
 		ELSE	put(person(PERSON))
 		        put(ty(e))
 		        delete(?ty(e))
-		        ttrput([x==NAME:e|pred==CLASS(x):cn|head==x:e])
+		        ttrput([x==NAME:e|head==x:e])
 ELSE    abort
+
+proper_color(NAME,PERSON)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		</\0\/1>Ex.x
+				</\0\/1>(ty(e>t) || ?ty(e>t))
+				¬</\0\/1>person(PERSON)
+				</\0\/1>person(X)
+		THEN	abort
+		ELSE	put(person(PERSON))
+		        put(ty(e))
+		        delete(?ty(e))
+		        ttrput([x:e|p==NAME(x):t|head==x:e])
+ELSE    abort
+
+
+proper_shape(NAME,PERSON)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		</\0\/1>Ex.x
+				</\0\/1>(ty(e>t) || ?ty(e>t))
+				¬</\0\/1>person(PERSON)
+				</\0\/1>person(X)
+		THEN	abort
+		ELSE	put(person(PERSON))
+		        put(ty(e))
+		        delete(?ty(e))
+		        ttrput([x:e|pred==NAME(x):cn|head==x:e])
+ELSE    abort
+
+
 
 demonst(PRED,PERSON,CLASS)
 IF      ?ty(e)
@@ -117,101 +150,96 @@ THEN    IF		</\0\/1>Ex.x
         		make(\/0)
         		go(\/0)
         		put(?ty(cn))
+        		make(\/1)
+				go(\/1)
+				put(?ty(e>cn))
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(ty(e))
+        		ttrput([x:e|head==x:e])
+        		go(/\0)
 ELSE    abort
+
+det_def(QUANT)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		</\0\/1>Ex.x
+				</\0\/1>?Ex.fo(x)
+				</\0\/1>ty(e>t)
+				¬</\0\/1>person(s3)
+				</\0\/1>person(X)
+		THEN	abort
+		ELSE	put(person(s3))
+				put(class(obj))
+				make(\/1)
+        		go(\/1)
+        		ttrput(R^(R ++ [head==R.head:e|p==def(head):t]))
+        		put(ty(cn>e))
+        		put(!)
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(?ty(cn))
+        		make(\/1)
+				go(\/1)
+				put(?ty(e>cn))
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(ty(e))
+        		ttrput([x:e|head==x:e])
+        		go(/\0)
+ELSE    abort	
+
 
 
 det_indef_postcop(QUANT)
-IF		?ty(cnev)
-		¬+indef
+IF		?ty(es)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-THEN	put(+indef)
+THEN	make(\/1)
+		go(\/1)
+		ttrput(R^(R ++ [head==R.head:es]))
+		put(ty(cnev>es))
+		put(!)
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(cnev))
+		make(\/1)
+		go(\/1)
+		put(?ty(es>cnev))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(ty(es))
+		ttrput([e1:es|head==e1:e])
+		go(/\0)
 ELSE	abort
+
+
+count(PRED,PERSON,CLASS)
+IF      ?ty(cn)
+THEN    go(\/1)
+		put(ty(e>cn))
+		delete(?ty(e>cn))
+        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+        go(/\1)
+        make(\/0)
+        go(\/0)
+ELSE    IF		?ty(cnev)
+		THEN  	go(\/1)
+				put(ty(es>cnev))
+				delete(?ty(es>cnev))
+		        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+		        go(/\1)
+		ELSE	abort
 
 
 
 //*
-this is the version where the definite article copies the subject variable onto the lower, object type e
-the problem is that the head comes out wrong. And hard to get tense to work properly without event terms.
-
-det_indef_postcop(QUANT)
-IF		ty(e>t)
-		+BE
-		?Ex.fo(x)
-		¬<\/1>Ex.x
-        ¬<\/0>Ex.x
-        </\1\/0>ty(e)
-        </\1\/0>fo(X)
-THEN	delete(?Ex.fo(x))
-		delete(ty(e>t))
-		put(?ty(e>t))
-		make(\/1)
-		go(\/1)
-		put(ty(e>(e>t)))
-		ttrput(R1^R2^(R2 ++ (R1 ++ [head==R1.head:e])))
-		go(/\)
-		make(\/0)
-		go(\/0)
-		put(?ty(e))
-		make(\/1)
-        go(\/1)
-        ttrput(R^(R ++ [head==R.head:e]))
-        put(ty(cn>e))
-        put(!)
-        go(/\1)
-        make(\/0)
-        go(\/0)
-        put(?ty(cn))
-        make(\/0)
-        go(\/0)
-        put(ty(e))
-       	put(fo(X))
-        go(/\0)
-        make(\/1)
-        go(\/1)
-        put(?ty(e>cn))
-ELSE	abort
-
-
-det_indef_postcop(QUANT)
-IF		ty(e>t)
-		+BE
-		?Ex.fo(x)
-		¬<\/1>Ex.x
-        ¬<\/0>Ex.x
-THEN	delete(?Ex.fo(x))
-		delete(ty(e>t))
-		put(?ty(e>t))
-		make(\/1)
-		go(\/1)
-		put(ty(e>(e>t)))
-		ttrput(R1^R2^(R2 ++ (R1 ++ [e1==eq:es|p==subj(e1,R2.head):t|p1==obj(e1,R1.head):t|head==e1:es])))
-		put(!)
-		go(/\)
-		make(\/0)
-		go(\/0)
-		put(?ty(e))
-		make(\/1)
-        go(\/1)
-        ttrput(R^(R ++ [head==R.head:e]))
-        put(ty(cn>e))
-        put(!)
-        go(/\1)
-        make(\/0)
-        go(\/0)
-        put(?ty(cn))
-        make(\/0)
-        go(\/0)
-        put(ty(e))
-       	ttrput([x1:e|head==x1:e])
-        go(/\0)
-        make(\/1)
-        go(\/1)
-        put(?ty(e>cn))
-ELSE	abort
-
-*//
-
 det_def_postcop(QUANT)
 IF		?ty(e>t)
 		+BE
@@ -236,6 +264,8 @@ THEN	make(\/1)
         go(\/0)
         put(?ty(cn))
 ELSE	abort
+*//
+
 
 
 
@@ -291,21 +321,39 @@ ELSE    abort
 
 
 
-mass(NAME,PERSON,CLASS)
+mass(PRED,PERSON,CLASS)
 IF      ?ty(e)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
 THEN    put(ty(e))
 		delete(?ty(e))
-        ttrput([x==NAME:e|head==x:e])
+        ttrput([x:e|pred==PRED(x):cn|head==x:e])
         put(person(PERSON))
         put(class(CLASS))
-        put(!)
 ELSE    IF		?ty(cn)
-		THEN	put(ty(cn))
-				delete(?ty(cn))
-				ttrput([x==NAME:e|head==x:e])
-		ELSE	abort
+		THEN	go(\/1)
+				put(ty(e>cn))
+				delete(?ty(e>cn))
+		        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		ELSE	IF		?ty(es)
+						¬<\/1>Ex.x
+        				¬<\/0>Ex.x
+        		THEN	put(ty(es))
+						delete(?ty(es))
+       					ttrput([e1:es|pred==PRED(e1):cn|head==e1:es])
+        				put(!)
+        		ELSE	IF		?ty(cnev)
+						THEN  	go(\/1)
+								put(ty(es>cnev))
+								delete(?ty(es>cnev))
+						        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+						        go(/\1)
+						ELSE	abort
+        		
+						
 
 noun_mod(PRED,PREP)
 IF      ?ty(cn)
@@ -359,6 +407,8 @@ IF		?ty(e)
 
 
 
+//*
+This is good except it doesn't work with whq-det
 
 
 count(PRED,PERSON,CLASS)
@@ -387,39 +437,127 @@ ELSE    IF		?ty(cnev)
 
 
 
+count(PRED,PERSON,CLASS)
+IF		?ty(cn)
+THEN	IF		</\*\/1>(ty(cn>e) & +whdet)
+		THEN	make(\/1)
+				go(\/1)
+				put(ty(e>cn))
+		        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+		       	go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        put(ty(e))
+		        ttrput([x:e|head==x:e])
+		        put(+Q)
+				put(+meta)
+		ELSE	make(\/1)
+				go(\/1)
+				put(ty(e>cn))
+		        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        put(ty(e))
+		        ttrput([x:e|head==x:e])
+ELSE	IF		?ty(cnev)
+				(+indef || </\*>+indef)
+		THEN	make(\/1)
+				go(\/1)
+				put(ty(es>cnev))
+		        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        put(ty(es))
+		        ttrput([e1:es|head==e1:es])
+		ELSE	abort
+		
+
+
+
+
+This is good except it doesn't work with the copula and ty(cnev)
+count(PRED,PERSON,CLASS)
+IF      ?ty(cn)
+		</\*\/1>(ty(cn>e) & +whdet)
+THEN    make(\/1)
+		go(\/1)
+		put(ty(e>cn))
+        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(ty(e))
+        ttrput([x:e|head==x:e])
+        put(+Q)
+		put(+meta)
+ELSE    IF		?ty(cn)
+		THEN    make(\/1)
+				go(\/1)
+				put(ty(e>cn))
+		        ttrput(R^(R ++ [pred==PRED(R.head):cn]))
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        put(ty(e))
+		        ttrput([x:e|head==x:e])
+		ELSE	abort
+
+*//
+
+
 //this is adjective after copula as part of noun phrase.
 //involves cnev type. predicates over events.
 
 adj_ev(PRED)
 IF      ?ty(cnev)
-		¬<\/1>Ex.x
-        ¬<\/0>Ex.x
 		¬<\/L>Ex.x
-THEN    make(\/1)
-        go(\/1)
-        ttrput(R^(R ++ [p3==PRED(R.head):t]))
-        put(ty(cnev>cnev))
-        put(!)
-        go(/\1)
-        make(\/0)
-        go(\/0)
-        put(?ty(cnev))
-ELSE    abort
+THEN    make(\/L)
+        go(\/L)
+        ttrput([head:es|p3==PRED(head):t])
+        put(ty(cnev))
+        go(/\L)
+        put(?+eval)
+ELSE    IF		?ty(es)
+				¬<\/1>Ex.x
+        		¬<\/0>Ex.x
+        THEN	put(person(s3))
+        		make(\/1)
+        		go(\/1)
+  		        ttrput(R^(R ++ [head==R.head:e]))
+ 		        put(ty(cnev>es))
+    	        put(!)
+    		    go(/\1)
+  		        make(\/0)
+  		        go(\/0)
+		        put(?ty(cnev))
+		        make(\/L)
+        		go(\/L)
+       		    ttrput([head:es|p3==PRED(head):t])
+		        put(ty(cnev))
+		        go(/\L)
+		        put(?+eval)
+   		        make(\/1)
+       			go(\/1)
+       			put(?ty(es>cnev))
+      		    go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(ty(es))
+        		ttrput([e1:es|head==e1:es])
+        		go(/\0)
+      	 ELSE	abort
 
 adj(PRED)
 IF      ?ty(cn)
-		¬<\/1>Ex.x
-        ¬<\/0>Ex.x
 		¬<\/L>Ex.x
-THEN    make(\/1)
-        go(\/1)
-        ttrput(R^(R ++ [p3==PRED(R.head):t]))
-        put(ty(cn>cn))
-        put(!)
-        go(/\1)
-        make(\/0)
-        go(\/0)
-        put(?ty(cn))
+THEN    make(\/L)
+        go(\/L)
+        ttrput([head:e|p3==PRED(head):t])
+        put(ty(cn))
+        go(/\L)
+        put(?+eval)
 ELSE    IF		?ty(e)
 				¬<\/1>Ex.x
         		¬<\/0>Ex.x
@@ -433,38 +571,43 @@ ELSE    IF		?ty(e)
   		        make(\/0)
   		        go(\/0)
 		        put(?ty(cn))
+		        make(\/L)
+        		go(\/L)
+       		    ttrput([head:e|p3==PRED(head):t])
+		        put(ty(cn))
+		        go(/\L)
+		        put(?+eval)
    		        make(\/1)
        			go(\/1)
-       			ttrput(R^(R ++ [p3==PRED(R.head):t]))
-      		    put(ty(cn>cn))
-        		put(!)
-        		go(/\1)
+       			put(?ty(e>cn))
+      		    go(/\1)
         		make(\/0)
         		go(\/0)
-        		put(?ty(cn))
+        		put(ty(e))
+        		ttrput([x1:e|head==x1:e])
+        		go(/\0)
       	 ELSE	abort
        		    
         		
 		
 adj_be(PRED)
-IF		?ty(cnev)
-		</\0>?ty(e>t)
-THEN	delete(?ty(cnev))
-		put(ty(cnev))
+IF		?ty(es)
+THEN	delete(?ty(es))
+		put(ty(es))
 		ttrput([e1:es|p2==PRED(e1):t|head==e1:es])
 ELSE	abort
 
-//*
-this is the version where adjectives predicate over the subject directly (as opposed to an event term)
-adj_be(PRED)
-IF		ty(e>t)
-		+BE
-		?Ex.fo(x)
-THEN	delete(?Ex.fo(x))
-		ttrput(R^(R ++ [p==PRED(R.head):t]))
+naming_adj(PRED)
+IF		?ty(es)
+THEN	make(\/1)
+		go(\/1)
+		put(ty(e>es))
+		ttrput(R^(R ++ [e1:es|p==PRED(e1,R.head):t|head==e1:es]))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
 ELSE	abort
-*//
-
 
 i(PERSON,CLASS)
 IF		?ty(e)
@@ -508,23 +651,10 @@ THEN    IF		</\0\/1>Ex.x
 				put(person(PERSON))
 ELSE	abort
 
-pron_whq_cop(CLASS)
-IF		<Y>+Q
-THEN	abort
-ELSE	IF		?ty(t)
-				¬!
-				¬<\/1>Ex.x
-				¬<\/0>Ex.x
-				¬<\/*>Ex.x
-				¬</\L>Ex.x
-		THEN	make(\/*)
-				go(\/*)
-				put(?Ex.tn(x))
-				put(ty(cnev))
-				ttrput([e1:es|head==e1:es])
-				put(+Q)
-				put(+meta)
-		ELSE	abort
+
+		
+		
+
 
 
 pron_whq_mod(CLASS)
@@ -554,6 +684,35 @@ ELSE	IF		?ty(t)
 				put(+meta)
 		ELSE	abort
 
+
+pron_whq_cop(CLASS)
+IF		<Y>+Q
+THEN	abort
+ELSE	IF		?ty(t)
+				¬!
+				¬<\/1>Ex.x
+				¬<\/0>Ex.x
+				¬<\/*>Ex.x
+				¬</\L>Ex.x
+		THEN	make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
+				put(ty(es))
+				ttrput([e1:es|head==e1:es])
+				put(+Q)
+				put(+meta)
+		ELSE	IF		?ty(es)
+						Ex.tn(x)
+						¬<\/1>Ex.x
+						¬<\/0>Ex.x
+						¬<\/*>Ex.x
+						¬</\L>Ex.x
+				THEN	delete(?ty(es))
+						put(ty(es))
+						ttrput([e1:es|head==e1:es])
+						put(+Q)
+						put(+meta)
+				ELSE	abort
 
 pron_whq(CLASS)
 IF		<Y>+Q
@@ -602,20 +761,9 @@ ELSE	IF		?ty(t)
 				put(person(nons3))
 				make(\/1)
 				go(\/1)
-				put(?ty(cn>e))
-				make(\/1)
-				go(\/1)
-				ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==count(R2.head,R1.head):t])))
-				put(ty(e>(cn>e)))
-				put(!)
-				go(/\1)
-				make(\/0)
-				go(\/0)
-				put(ty(e))
-				ttrput([x:e|head==x:e])
-				put(+Q)
-				put(+meta)
-				go(/\0)
+				put(ty(cn>e))
+				put(+whdet)
+				ttrput(R2^(R2 ++ [head==R2.head:e|p==counting(R2.head):t]))
 				go(/\1)
 				make(\/0)
 				go(\/0)
@@ -624,23 +772,12 @@ ELSE	IF		?ty(t)
 						¬<\/1>Ex.x
 						¬<\/0>Ex.x
 						¬<\/*>Ex.x
-				THEN	put(person(plur))
+				THEN	put(person(nons3))
 						make(\/1)
 						go(\/1)
-						put(?ty(cn>e))
-						make(\/1)
-						go(\/1)
-						ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e|p==count(R2.head,R1.head):t])))
-						put(ty(e>(cn>e)))
-						put(!)
-						go(/\1)
-						make(\/0)
-						go(\/0)
-						put(ty(e))
-						ttrput([x:e|head==x:e])
-						put(+Q)
-						put(+meta)
-						go(/\0)
+						put(ty(cn>e))
+						put(+whdet)
+						ttrput(R2^(R2 ++ [head==R2.head:e|p==counting(R2.head):t]))
 						go(/\1)
 						make(\/0)
 						go(\/0)
@@ -665,12 +802,15 @@ ELSE	IF		?ty(t)
 				put(person(plur))
 				make(\/1)
 				go(\/1)
-				put(?ty(cn>e))
+				put(ty(cn>e))
+				ttrput(R2^(R2 ++ [head==R2.head:e]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(cn))
 				make(\/1)
 				go(\/1)
-				ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e])))
-				put(ty(e>(cn>e)))
-				put(!)
+				put(?ty(e>cn))
 				go(/\1)
 				make(\/0)
 				go(\/0)
@@ -679,24 +819,24 @@ ELSE	IF		?ty(t)
 				put(+Q)
 				put(+meta)
 				go(/\0)
-				go(/\1)
-				make(\/0)
-				go(\/0)
-				put(?ty(cn))
 		ELSE	IF		?ty(e)
 						Ex.tn(x)
 						¬<\/1>Ex.x
 						¬<\/0>Ex.x
 						¬<\/*>Ex.x
 						¬</\L>Ex.x
-				THEN	make(\/1)
-						go(\/1)
-						put(?ty(cn>e))
+				THEN	put(person(plur))
 						make(\/1)
 						go(\/1)
-						ttrput(R1^R2^(R1 ++ (R2 ++ [head==R2.head:e])))
-						put(ty(e>(cn>e)))
-						put(!)
+						put(ty(cn>e))
+						ttrput(R2^(R2 ++ [head==R2.head:e]))
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(cn))
+						make(\/1)
+						go(\/1)
+						put(?ty(e>cn))
 						go(/\1)
 						make(\/0)
 						go(\/0)
@@ -705,12 +845,68 @@ ELSE	IF		?ty(t)
 						put(+Q)
 						put(+meta)
 						go(/\0)
+				ELSE	abort
+
+pron_whq_det_cop(CLASS)
+IF		<Y>+Q
+THEN	abort
+ELSE	IF		?ty(t)
+				¬!
+				¬<\/1>Ex.x
+				¬<\/0>Ex.x
+				¬<\/*>Ex.x
+				¬</\L>Ex.x
+		THEN	make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
+				put(?ty(es))
+				put(person(plur))
+				make(\/1)
+				go(\/1)
+				put(ty(cnev>es))
+				ttrput(R2^(R2 ++ [head==R2.head:es]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(cnev))
+				make(\/1)
+				go(\/1)
+				put(?ty(es>cnev))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(ty(es))
+				ttrput([e1:es|head==e1:es])
+				put(+Q)
+				put(+meta)
+				go(/\0)
+		ELSE	IF		?ty(es)
+						Ex.tn(x)
+						¬<\/1>Ex.x
+						¬<\/0>Ex.x
+						¬<\/*>Ex.x
+						¬</\L>Ex.x
+				THEN	put(person(plur))
+						make(\/1)
+						go(\/1)
+						put(ty(cnev>es))
+						ttrput(R2^(R2 ++ [head==R2.head:es]))
 						go(/\1)
 						make(\/0)
 						go(\/0)
-						put(?ty(cn))	
+						put(?ty(cnev))
+						make(\/1)
+						go(\/1)
+						put(?ty(es>cnev))
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(ty(es))
+						ttrput([e1:es|head==e1:es])
+						put(+Q)
+						put(+meta)
+						go(/\0)
 				ELSE	abort
-
 
 
 
@@ -1198,6 +1394,8 @@ IF		ty(e>t)
 THEN	put(+BE)
 ELSE	abort
 
+
+
 v_be_inf(TENSE,PERSON)
 IF		ty(e>t)
 		?Ex.fo(x)
@@ -1224,12 +1422,12 @@ IF		?ty(e>t)
 		</\1\/0>person(PERSON)
 THEN 	make(\/1)
 		go(\/1)
-		put(ty(cnev>(e>t)))
+		put(ty(es>(e>t)))
 		ttrput(R1^R2^(R1 ++ (R2 ++ [head==R1.head:es|p2==subj(head, R2.head):t])))
 		go(/\1)
 		make(\/0)
 		go(\/0)
-		put(?ty(cnev))
+		put(?ty(es))
 ELSE	IF		?ty(t)
 				¬<\/1>Ex.x
 	 			¬<\/0>Ex.x
@@ -1240,12 +1438,12 @@ ELSE	IF		?ty(t)
 						put(?ty(e>t))
 						make(\/1)
 						go(\/1)
-						put(ty(cnev>(e>t)))
+						put(ty(es>(e>t)))
 						ttrput(R1^R2^(R1 ++ (R2 ++ [head==R1.head:es|p2==subj(head, R2.head):t])))
 						go(/\1)
 						make(\/0)
 						go(\/0)
-						put(?ty(cnev))
+						put(?ty(es))
 						go(/\0)
 						go(/\1)
 						make(\/0)
@@ -1257,12 +1455,12 @@ ELSE	IF		?ty(t)
 						put(?ty(e>t))
 						make(\/1)
 						go(\/1)
-						put(ty(cnev>(e>t)))
+						put(ty(es>(e>t)))
 						ttrput(R1^R2^(R1 ++ (R2 ++ [head==R1.head:es|p2==subj(head, R2.head):t])))
 						go(/\1)
 						make(\/0)
 						go(\/0)
-						put(?ty(cnev))
+						put(?ty(es))
 						go(/\0)
 						go(/\1)
 						make(\/0)
@@ -1431,19 +1629,7 @@ ELSE	IF		</\0\/1>Ex.x
 					    ELSE  	put(+Q)
 				ELSE    abort
 
-//*
 
-question(PRED)
-IF		ty(t)
-		complete
-THEN	IF	  	Assert(X)
-		THEN  	abort
-		ELSE    IF	  	<Z>+Q
-			    THEN  	do_nothing
-				ELSE  	put(+Q)
-ELSE	abort	
-
-*//
 
 greet(PRED)
 IF		</\C>Ex.x
@@ -1466,6 +1652,11 @@ ELSE	IF		?ty(t)
 						put(Assert(X))
 				ELSE	abort
 
+
+
+
+
+
 release_turn(PRED)
 IF		ty(Y>Z)
 THEN	abort
@@ -1474,49 +1665,17 @@ ELSE	IF		</\0\/1>Ex.x
 				¬Ex.?x
 		THEN	abort
 		ELSE	IF	  	ty(X)
-					  	¬</\L>Ex.x
 					  	Speaker(W)
-					 	PrevSpeaker(V)
-						W=V
-						¬floor_open
-				THEN	IF		(Assert(W) || <Z>+Q)
-					 	THEN	open_floor
-						ELSE	IF	 	¬Ex.?x
-								THEN	put(Assert(W))
-										open_floor
-								ELSE	open_floor
+				THEN	IF		<Z>+Q
+					 	THEN	ground
+						ELSE	IF		Assert(W)
+								THEN	ground
+								ELSE	put(Assert(W))
+										ground
 				ELSE    abort
 
 
-//*
-release_turn(PRED)
-IF		Speaker(X)
-		PrevSpeaker(Y)
-		X=Y
-		¬floor_open
-THEN	IF		ty(t)
-				complete
-		THEN	IF		(Assert(X) || <Z>+Q)
-				THEN	open_floor
-				ELSE	put(Assert(X))
-						open_floor
-		ELSE	open_floor
-ELSE	abort
-*//
 
-//*
-IF		¬+Q
-				?ty(e)
-				Ex.tn(x)
-				¬</\0>?ty(t)
-		THEN	IF		<Z>?Ex.tn(x)
-				THEN	abort	
-				ELSE	put(+Q)
-						put(ty(e))
-						ttrput([x:e|head==x:e])
-						delete(?ty(e))
-		ELSE	abort
-*//
 
 
 

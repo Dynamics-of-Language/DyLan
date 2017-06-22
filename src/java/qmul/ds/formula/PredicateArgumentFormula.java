@@ -126,7 +126,7 @@ public class PredicateArgumentFormula extends Formula {
 	 * @see qmul.ds.formula.Formula#subsumes(qmul.ds.formula.Formula, java.util.HashMap)
 	 */
 	@Override
-	protected boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
+	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		if (!(other instanceof PredicateArgumentFormula)) {
 			return false;
 		}

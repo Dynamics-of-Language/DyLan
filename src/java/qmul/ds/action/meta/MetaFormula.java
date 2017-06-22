@@ -10,8 +10,10 @@ package qmul.ds.action.meta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 
 /**
  * A {@link Formula} metavariable as used in rule specs e.g. X, Y
@@ -145,5 +147,18 @@ public class MetaFormula extends Formula implements Serializable {
 		
 		
 	}
+	
+	public boolean subsumesMapped(Formula f)
+	{
+		if (f==null)
+			return false;
+		if (meta.getValue()==null)
+			return false;
+		
+		return meta.getValue().subsumesMapped(f, new HashMap<Variable, Variable>());
+		
+	}
+	
+	
 
 }

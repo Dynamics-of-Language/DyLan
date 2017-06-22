@@ -198,7 +198,7 @@ public class TTRInfixExpression extends TTRFormula {
 	 * @see qmul.ds.formula.Formula#subsumes(qmul.ds.formula.Formula, java.util.HashMap)
 	 */
 	@Override
-	protected boolean subsumesMapped(Formula other1, HashMap<Variable, Variable> map) {
+	public boolean subsumesMapped(Formula other1, HashMap<Variable, Variable> map) {
 		if (!(other1 instanceof TTRFormula)) {
 			return false;
 		}

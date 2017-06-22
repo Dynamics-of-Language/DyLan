@@ -38,10 +38,10 @@ public class DSType implements Serializable {
 	public final static BasicType cn = new BasicType("cn");
 	public final static BasicType es = new BasicType("es");
 	public final static BasicType cnev = new BasicType("cnev");
-	//cnev is common noun that predicates over events (post-copula)
-	//invented this type to get around special cases where computing max-sem
-	//yes. it multiplies lexical entries and I don't like it.
-	
+	// cnev is common noun that predicates over events (post-copula)
+	// invented this type to get around special cases where computing max-sem
+	// yes. it multiplies lexical entries and I don't like it.
+
 	public final static DSType et = new ConstructedType(e, t);
 	public final static DSType eet = new ConstructedType(e, et);
 
@@ -67,7 +67,8 @@ public class DSType implements Serializable {
 
 	/**
 	 * @param string
-	 *            a {@link String} representation e.g. "e", "e>t", "e>(e>t)" as used in lexicon specs
+	 *            a {@link String} representation e.g. "e", "e>t", "e>(e>t)" as
+	 *            used in lexicon specs
 	 * @return a new type
 	 */
 	public static DSType parse(String string) {
@@ -84,10 +85,12 @@ public class DSType implements Serializable {
 			// upper-case single letter - type metavariable
 			if (string.matches("^" + LabelFactory.METAVARIABLE_PATTERN + "$")) {
 				return MetaType.get(string);
-			} /*
-			 * else if (string.matches("^" + LabelFactory.VAR_PATTERN + "$")) { return new BoundTypeVariable(string); }
-			 */else if (string.matches("^" + BASIC_TYPE_PATTERN + "$"))
+			} 
+			else if (string.matches("^" + BASIC_TYPE_PATTERN + "$"))
+			{
+				logger.debug("creating basic type from:"+string);
 				return new BasicType(string);
+			}
 			else {
 				logger.debug("string was " + string + " bad type spec");
 				return null;
@@ -123,9 +126,10 @@ public class DSType implements Serializable {
 	}
 
 	/**
-	 * @return an instantiated version of this {@link DSType}, with all meta-elements replaced by their values. By
-	 *         default, just return this {@link DSType} unchanged. This will be overridden by {@link MetaType}s and the
-	 *         like
+	 * @return an instantiated version of this {@link DSType}, with all
+	 *         meta-elements replaced by their values. By default, just return
+	 *         this {@link DSType} unchanged. This will be overridden by
+	 *         {@link MetaType}s and the like
 	 */
 	public DSType instantiate() {
 		return this;
@@ -167,13 +171,12 @@ public class DSType implements Serializable {
 	}
 
 	public int toUniqueInt() {
-		
+
 		return 0;
 	}
-	
-	public ArrayList<Meta<?>> getMetas()
-	{
+
+	public ArrayList<Meta<?>> getMetas() {
 		return new ArrayList<Meta<?>>();
-		
+
 	}
 }

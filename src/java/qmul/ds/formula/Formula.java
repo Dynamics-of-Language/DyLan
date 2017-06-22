@@ -97,8 +97,8 @@ public abstract class Formula implements Serializable {
 																									// or
 																									// more
 	public static final Pattern PRED_ARG_PATTERN = Pattern.compile("([a-z][a-z][a-z_0-9]*)\\((.+)\\)");
-	public static final String METAPREDICATE_ROOT="P";
-	public static final Pattern META_PRED_ARG_PATTERN = Pattern.compile("("+METAPREDICATE_ROOT+"[0-9]*)\\((.+)\\)");//e.g. P1(x,y)
+	public static final String META_PREDICATE_PATTERN="[P-Q][0-9]*";
+	public static final Pattern META_PRED_ARG_PATTERN = Pattern.compile("("+META_PREDICATE_PATTERN+")\\((.+)\\)");//e.g. P1(x,y)
 	public static String ATOMIC_FORMULA_PATTERN = "[a-z]+[a-z_0-9]*";
 
 	private HashSet<Variable> variables = new HashSet<Variable>();
@@ -275,6 +275,15 @@ public abstract class Formula implements Serializable {
 
 			return f;
 		}
+		
+		m=Pattern.compile(META_PREDICATE_PATTERN).matcher(string);
+		if (m.matches())
+		{
+			Predicate p = MetaPredicate.get(string);
+			return p;
+				
+		}
+		
 
 		if (string.matches(ATOMIC_FORMULA_PATTERN))
 			return new AtomicFormula(string);
@@ -445,7 +454,7 @@ public abstract class Formula implements Serializable {
 	 *         assume that subsumesBasic has been called first and failed (so
 	 *         the default is for this to fail)
 	 */
-	protected boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
+	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
 		return false;
 	}
 

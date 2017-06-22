@@ -77,6 +77,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public abstract E getNewEdge(List<Action> actions, UtteredWord word);
 
+	
+
 	public abstract VirtualRepairingEdge getNewRepairingEdge(List<GroundableEdge> backtrackedOver,
 			List<Action> repairingActions, DAGTuple midTuple, UtteredWord repairingWord);
 
@@ -163,6 +165,15 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		idPoolEdges.add(newID);
 		return cl;
 
+	}
+	
+	public CompletionEdge getNewCompletionEdge(ArrayList<Action> arrayList)
+	{
+		long newID = idPoolEdges.size() + 1;
+		CompletionEdge cl = new CompletionEdge(arrayList, newID);
+		idPoolEdges.add(newID);
+		return cl;
+		
 	}
 
 	public E getNewEdge(Action action, UtteredWord word) {
@@ -450,13 +461,22 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			//System.out.println("comparing edges: "+o1+" and "+o2);
 			if (o1 instanceof VirtualRepairingEdge && o2 instanceof VirtualRepairingEdge)
 			{
-				if (((VirtualRepairingEdge)o1).length - ((VirtualRepairingEdge)o2).length==0)
+				if (((VirtualRepairingEdge)o1).length == ((VirtualRepairingEdge)o2).length)
 					return +1;
 				
 				return ((VirtualRepairingEdge)o1).length - ((VirtualRepairingEdge)o2).length;
 						
 				
 			}
+			else if (o1 instanceof CompletionEdge && o2 instanceof CompletionEdge)
+			{
+				//by end point completeness, below
+				
+			}
+			else if (o1 instanceof CompletionEdge)
+				return +1;
+			else if (o2 instanceof CompletionEdge)
+				return -1;
 			
 			
 			T end1=getDest(o1);
@@ -467,6 +487,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 				return +1;
 			else if (t2.getIncompletenessMeasure()>t1.getIncompletenessMeasure())
 				return -1;
+			//else
+				
 			
 			
 			return +1;
@@ -1174,8 +1196,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		T tuple=getCurrentTuple();
 		
 		do{
-			
+			System.out.println("Checking Tuple:"+tuple);
 			Set<String> asserters=tuple.getTree().getAsserters();
+			System.out.println("Asserters:"+asserters);
+			System.out.println();
 			if (asserters.contains(speaker))
 			{
 				asserted_tuples.add(tuple);
@@ -1187,6 +1211,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		
 		for (T tu : asserted_tuples) {
 			result = result.conjoin(tu.getSemantics(context));
+			System.out.println("Conjoining:"+tu.getTree().getAsserters()+":"+tu.getSemantics(context));
 		}
 		return result;
 
@@ -1251,6 +1276,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		
 	}
 
+	
 	
 
 	

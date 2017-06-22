@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 
 import edu.uci.ics.jung.graph.Tree;
+import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
@@ -86,6 +87,8 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	protected String myName;
 	protected String whoHasFloor=null;
 	
+	protected SpeechActInferenceGrammar sa_inf_grammar;
+	
 	public void initParticipantContents(Set<String> participants)
 	{
 		asserted_contents=new HashMap<String, TreeSet<AustinianProp>>();
@@ -103,6 +106,15 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		dag.setContext(this);
 		this.myName=participants[0];
 		initParticipantContents(new HashSet<String>(Arrays.asList(participants)));
+		this.sa_inf_grammar=new SpeechActInferenceGrammar();
+	}
+	
+	
+	public Context(DAG<T,E> dag, SpeechActInferenceGrammar sag, String... participants)
+	{
+		this(dag,participants);
+		this.sa_inf_grammar=sag;
+			
 	}
 	
 	/**
@@ -443,6 +455,11 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		else return getCurrentTuple().getSemantics(this);
 		
 		
+	}
+
+
+	public SpeechActInferenceGrammar getSAGrammar() {
+		return this.sa_inf_grammar;
 	}
 	
 	

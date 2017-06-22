@@ -120,6 +120,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 				return false;
 			}
 		}
+		logger.debug("success");
 		return true;
 	}
 
