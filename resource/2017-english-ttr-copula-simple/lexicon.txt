@@ -1,0 +1,88 @@
+is                            v_be                  	pres                          s3
+'s							  v_be                  	pres                          s3
+was							  v_be                  	pres                          s3
+square                          count                       square                        s3                            shape
+circle                          count                       circle                        s3                            shape
+triangle						count						triangle					  s3							shape
+square                          mass                       square                        s3                            shape
+circle                          mass                       circle                        s3                            shape
+triangle						mass						triangle					  s3							shape
+//square                            	proper	                       	square					s3			shape		
+//circle							    proper							circle					s3			shape
+//triangle							proper							triangle				s3			shape
+name							count						name						  s3							name
+shape							count						shape						  s3							shape
+color							count						color						  s3							color
+object							object						s3							object
+one								object						s3							object
+blue                            color	                       	blue
+red							    color							red
+green							color							green
+purple							color							purple
+yellow							color							yellow
+orange							color							orange
+black							color							black
+blue                            color_np	                       	blue
+red							    color_np							red	
+green							color_np							green	
+purple							color_np							purple
+yellow							color_np							yellow
+orange							color_np							orange	
+black							color_np							black
+right							adj_np							right
+new								adj								new
+called							naming_adj						called
+named							naming_adj						named					
+this						  det_demonst					here						  s3
+that						  det_demonst					there					      s3
+this						  demonst  						this						  s3							obj
+that						  demonst						that						  s3							obj
+see							  v_tran_fin					see							  pres                          nons3
+see							  v_tran_inf					see							  inf							per
+sees						  v_tran_fin					see							  pres							s3
+can 						  v_aux_inf                     can                           modal
+do						      v_aux_inf                     do                            pres
+would						  v_aux_inf						would						  pres
+it							  pron_nom						s3							  obj
+it							  pron_acc						s3							  obj
+a                             det_indef                     eps
+an                            det_indef                     eps
+a                             det_indef_postcop				eps
+an                            det_indef_postcop				eps
+the							  det_def						iota
+what                          pron_whq                      obj
+what						  pron_whq_det					whatever
+//which						  pron_whq						obj
+.							  assert						A
+?							  question						Q
+//uhu							  accept						uhu
+ok							  accept						ok
+yes							  yes							yes
+yes							  accept						yes
+great						  accept						great
+okay						  accept						okay
+yeah						  accept						yeah
+right						  accept						right
+correct						  accept						correct	
+bingo						  accept						bingo
+//wow							  accept						wow
+no							  reject						not
+not							  not_np							not
+n't							  not_np							not
+i                             i		                        nons3                            spkr
+you							  you							nons3							per
+we							  we							nons3							spkr
+<rt>				  		  release_turn					null
+and							  and							null
+but							  and							null
+of							  prep_e						of
+try							  v_tran_fin_imperative			try							imper					s2
+got							  v_tran_fin					get							past					nons3
+get							  v_tran_inf					get							inf						nons3
+have						  v_tran_inf					have						inf						nons3
+have						  v_tran_fin					have						pres					nons3
+here						  manner_adv					here			
+recognise					  v_tran_fin					recognise					pres					nons3
+recognise					  v_tran_inf					recognise					pres					nons3
+know					  v_tran_fin					know					pres					nons3
+know					  v_tran_inf					know					pres					nons3
