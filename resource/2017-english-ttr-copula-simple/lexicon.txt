@@ -52,6 +52,7 @@ an                            det_indef_postcop				eps
 the							  det_def						iota
 what                          pron_whq                      obj
 what						  pron_whq_det					whatever
+what						  pron_wh_rel					whatever
 //which						  pron_whq						obj
 .							  assert						A
 ?							  question						Q
@@ -69,6 +70,8 @@ bingo						  accept						bingo
 no							  reject						not
 not							  not_np							not
 n't							  not_np							not
+not							  not_aux							not
+n't							  not_aux							not
 i                             i		                        nons3                            spkr
 you							  you							nons3							per
 we							  we							nons3							spkr
@@ -86,3 +89,5 @@ recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
 know					  v_tran_fin					know					pres					nons3
 know					  v_tran_inf					know					pres					nons3
+know					  v_intran_inf					know					pres					nons3
+know					  v_intran_fin					know					pres					nons3

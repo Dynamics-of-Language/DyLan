@@ -475,7 +475,6 @@ ELSE	abort
 i(PERSON,CLASS)
 IF		?ty(e)
 		Speaker(X)
-		</\0>?ty(t)
 THEN	ttrput([x==X:e|head==x:e])
 		put(ty(e))
 		delete(?ty(e))
@@ -485,7 +484,6 @@ ELSE	abort
 
 we(PERSON,CLASS)
 IF		?ty(e)
-		</\0>?ty(t)
 THEN	ttrput([x==we:e|head==x:e])
 		put(ty(e))
 		delete(?ty(e))
@@ -573,6 +571,13 @@ ELSE	IF		?ty(e)
 				put(+meta)
 				put(class(CLASS))
 		ELSE	abort
+		
+		
+		
+
+
+				
+		
 
 pron_whq_det_count(CLASS)
 IF		<Y>+Q
@@ -1678,21 +1683,14 @@ THEN	IF		X=Y
 				put(Assert(X))
 ELSE	abort
 
-not-aux(PRED)
+not_aux(PRED)
 IF		ty(e>t)
-		?Ex.Fo(x)
+		?Ex.fo(x)
 		¬<\/0>Ex.x
         ¬<\/1>Ex.x
-THEN	delete(?Ex.Fo(x))
-		make(\/1)
+THEN	go(/\1)
+		put(+neg)
 		go(\/1)
-		put(ty((e>t)>(e>t)))
-		ttrput(R1^(R1 ++ [p==PRED(R1.head):t|head==p:t]))
-		put(!)
-		go(/\1)
-		make(\/0)
-		put(?ty(e>t))
-		put(?Ex.Fo(x))
 ELSE	abort
 	
 	
