@@ -156,6 +156,17 @@ THEN    put(ty(e))
         put(!)
 ELSE    abort
 
+pron_dat(PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        ttrput([x:e|head==x:e])
+        put(?Ex.fo(x))
+        put(person(PERSON))
+        put(class(CLASS))
+        put(!)
+ELSE    abort
+
+
 //*
 pron_ref(PERSON,CLASS)
 IF		?ty(e)
@@ -272,6 +283,29 @@ THEN	put(ty(e))
 		v_tran_content(PRED)
 ELSE	abort
 
+v_ditran_fin_imperative(PRED,TENSE,PERSON)
+IF		?ty(e)
+		</\0\/1>Ex.x
+THEN	put(ty(e))
+		delete(?ty(e))
+		ttrput([x==addressee:e|head==x:e])
+		go(/\0)
+		go(\/1)	
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(TENSE)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		ttrput([head:es|p1==imperative(head):t])
+		go(/\L)
+		go(/\L)
+		v_ditran_content(PRED)
+ELSE	abort
+
 v_intran_fin_imperative(PRED,TENSE,PERSON)
 IF		?ty(e)
 		</\0\/1>Ex.x
@@ -294,51 +328,6 @@ THEN	put(ty(e))
 		go(/\L)
 		v_intran_content(PRED)
 ELSE	abort
-
-//*
-		put(?Ex.fo(x))	
-		put(?+eval)
-		v_tran_content(PRED)
-		go(/\0)
-		make(\/1)
-		go(\/1)
-		put(ty(e>t))	
-		v_tran_content(PRED)	
-		put(?Ex.fo(x))	
-		put(?+eval)
-		make(\/L)
-		go(\/L)
-		put(ty(t))
-		event_restrictor(TENSE)
-		go(/\L)
-		make(\/L)
-		go(\/L)
-		put(ty(t))
-		ttrput([head==e:es|p1==imperative(e):t])
-		go(/\L)	
-IF		ty(e>t)
-        ?Ex.fo(x)
-        ¬<\/0>Ex.x
-        ¬<\/1>Ex.x
-THEN	go</\1>
-		go<\/0>
-		put(ty(e))
-		delete(?ty(e))
-		ttrput([x==addressee:e|head==x:e])
-		go(/\0)
-		go(\/1)
-		make(\/L)
-		go(\/L)
-		put(ty(t))
-		ttrput([head==e:es|p1==imperative(e):t])
-		go(/\L)
-		delete(?Ex.fo(x))
-		delete(ty(e>t))
-		put(?ty(e>t))		
-		v_tran_content(PRED)
-ELSE    abort
-
-*//
 
 v_aux_inf(PRED,TENSE,PERSON)
 IF		?ty(e>t)
@@ -405,21 +394,22 @@ THEN	put(?+eval)
         ttrput([x:e|head:x])
 ELSE	abort
 
-prep_mod(PRED)
-IF		(ty(e))
-		¬<\/L>Ex.x		
-THEN	put(?+eval)
-		make(\/L)
-		go(\/L)
-		put(?ty(t))
-		make(\/1)
+prep_mod_location(PRED)
+IF		?ty(e)
+THEN	make(\/1)
 		go(\/1)
-		put(ty(e>t))
-		ttrput(R1^(R1 ++ [head:e|p==PRED(head,R1.head):t]))
+		put(ty(e>e))
+		ttrput(R1^(R1 ++ [e1==PRED:es|head:e1|p==obj(head,R1.head):t]))
+		put(!)
 		go(/\1)
 		make(\/0)
 		go(\/0)
 		put(?ty(e))
+ELSE	abort
+
+dative_particle(PRED)
+IF      ?ty(e)
+THEN	do_nothing
 ELSE	abort
 
 prep_mod_def(PRED)
@@ -469,8 +459,84 @@ IF		X
 THEN	do_nothing
 ELSE	abort
 
-conj(PRED)
-IF		(?ty(cn))
+conj_entity(PRED)
+IF		ty(e)
+		fo(X)
+		¬?+eval
+		¬</\0\/1>ty(cn>e)
+		<\/0>fo(W)
+		<\/1>fo(U)
+		<\/0\/0>fo(Y)
+		<\/0\/1>fo(Z)
+THEN	delete(fo(X))
+		ttrput([x==conjunction:e|head==x:e])
+		put(?+eval)
+		go(\/0)
+		go(\/0)
+		delete(fo(Y))
+		ttrput([x==conjunction:e|head==x:e])
+		go(/\0)
+		go(\/1)
+		delete(fo(Z))
+		ttrput(R1^(R1 ++ [head==R1.head:e]))
+		go(/\1)
+		delete(fo(W))
+		ttrput([x==conjunction:e|head==x:e])
+		make(\/L)
+		go(\/L)
+		put(ty(e))
+		put(fo(X))
+		go(/\L)
+		go(/\0)
+		go(\/1)
+		delete(fo(U))
+		ttrput(R1^(R1 ++ [head==R1.head:e]))
+		go(/\1)
+		make(\/L)
+		go(\/L)
+		put(?ty(e))
+		make(\/1)
+		go(\/1)
+		put(ty(e>e))
+		ttrput(R1^(R1 ++ [head==R1.head:e|p==conjunct(x, R1.head):t]))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+ELSE	abort
+
+//*
+
+		
+		go(\/0)
+		go(\/0)
+		delete(fo(Y))
+		go(/\0)
+		go(\/1)
+		delete(fo(Z))
+		go(/\1)
+		go(/\0)
+		
+		put(fo(X))
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(e))
+		put(fo(X))
+		go(/\L)
+put(?t)
+		make(\/1)
+		go(\/1)
+		put(ty(e>t))
+		ttrput(R1^(R1 ++ [e:es]))
+		go(/\1)
+		make(\/0)
+		go(\/0)
+ttrput((R1^R2^(R1 ++ (R2 ++ [x:e|p1==conj(e, R2.head):t|p2==conj(e, R1.head):t])))
+*//
+
+conj_event(PRED)
+IF		?ty(cn)
 THEN	do_nothing
 ELSE	abort
 

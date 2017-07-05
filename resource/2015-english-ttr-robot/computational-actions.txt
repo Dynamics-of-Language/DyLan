@@ -74,6 +74,7 @@ THEN	go(\/L)
 ELSE	abort
 
 
+//*
 link-adjunction
 IF      ty(e)
         fo(X)
@@ -84,7 +85,7 @@ THEN    put(?+eval)
         put(?ty(t))
         put(?<\/*>fo(X))
 ELSE    abort
-
+*//
 
 
 merge

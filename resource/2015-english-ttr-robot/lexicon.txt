@@ -1,10 +1,9 @@
+me							  pron_dat                      s3
 take						  v_tran_fin_imperative         take                          pres                          s2				
 select						  v_tran_fin_imperative         take                          pres                          s2				
 highlight					  v_tran_fin_imperative         take                          pres                          s2				
 delete						  v_tran_fin_imperative         delete                        pres                          s2				
-put 						  v_tran_fin_imperative         put                           pres                          s2				
 move						  v_tran_fin_imperative         put                           pres                          s2				
-place						  v_tran_fin_imperative         put                           pres                          s2				
 drop						  v_tran_fin_imperative         put                           pres                          s2				
 add							  v_tran_fin_imperative         put                           pres                          s2				
 addup						  v_tran_fin_imperative         put                           pres                          s2				
@@ -12,13 +11,18 @@ do							  v_tran_fin_imperative         put                           pres     
 turn						  v_tran_fin_imperative         turn                          pres                          s2				
 rotate						  v_tran_fin_imperative         turn                          pres                          s2				
 reflect 					  v_tran_fin_imperative			reflect						  pres							s2
-lies						  v_intran_fin					be_situated 				  pres							s2
-lies						  v_intran_fin					be_situated					  pres							s2
+put 						  v_ditran_fin_imperative       put                           pres                          s2				
+place						  v_ditran_fin_imperative       put                           pres                          s2				
+give 						  v_ditran_fin_imperative       give                          pres                          s2				
+lies						  v_intran_fin					be_situated 				  pres							s3
+lie 						  v_intran_fin					be_situated 				  pres							p3
 the                           det_quant                     iota
 a                             det_quant                     eps
 another                       det_quant                     eps
 these                         det_quant                     iota
 this                          det_quant                     iota
+every						  det_quant						tau
+all							  det_quant						tau
 which                         pron_whrel                    obj
 that                          pron_whrel                    obj
 it							  pron_nom                      s3                            neuter
@@ -46,7 +50,7 @@ box			 				  count							box  							s3                          obj
 banana			 			  count							banana  						s3                          obj
 apple			 			  count							apple  							s3                          obj
 basket			 			  count							basket  						s3                          obj
-block			 			 count							block  							s3                          obj
+block			 			  count							block  							s3                          obj
 corner						  count							corner							s3                          obj
 line						  count							line							s3                          obj
 row 						  count							row  							s3                          obj
@@ -55,7 +59,7 @@ position					  count							column							s3                          obj
 side						  count							column							s3                          obj
 clockwise					  adj							clockwise_direction
 y							  count							crutch							s3                          obj
-cructh						  count							crutch							s3                          obj
+crutch						  count							crutch							s3                          obj
 u							  count							bridge							s3                          obj
 bridge						  count							bridge							s3                          obj
 v							  count							angle							s3                          obj
@@ -79,7 +83,7 @@ w							  count							staircase						s3                          obj
 staircase					  count							staircase						s3                          obj
 mobile						  count							mobile_phone					s3                          obj
 matrix						  count							game_board						s3                          obj					  
-gameabord					  count							game_baord						s3                          obj
+gameboard					  count							game_board						s3                          obj
 board						  count							game_board						s3                          obj
 square						  count							game_board						s3                          obj
 squares						  count							game_board						s3                          obj
@@ -93,10 +97,13 @@ horizontally				  adv							horizontal
 once						  adv							once				  
 twice   					  adv							twice
 again    					  adv							again
-over						  prep_mod						over
-under						  prep_mod						under
-out							  prep_mod						out
-near						  prep_mod						near
-in							  prep_mod						in
-into						  prep_mod						into
-and							  conj							and
+over						  prep_mod_location				over
+under						  prep_mod_location				under
+out							  prep_mod_location				out
+near						  prep_mod_location				near
+in							  prep_mod_location				in
+into						  prep_mod_location				into
+between 					  prep_mod_location				between
+next						  prep_mod_location				beside
+to							  prep_mod_location				dative
+and							  conj_entity					and
