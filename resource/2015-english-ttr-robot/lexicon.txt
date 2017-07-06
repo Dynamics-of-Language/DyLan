@@ -1,4 +1,3 @@
-me							  pron_dat                      s3
 take						  v_tran_fin_imperative         take                          pres                          s2				
 select						  v_tran_fin_imperative         take                          pres                          s2				
 highlight					  v_tran_fin_imperative         take                          pres                          s2				
@@ -13,7 +12,9 @@ rotate						  v_tran_fin_imperative         turn                          pres  
 reflect 					  v_tran_fin_imperative			reflect						  pres							s2
 put 						  v_ditran_fin_imperative       put                           pres                          s2				
 place						  v_ditran_fin_imperative       put                           pres                          s2				
-give 						  v_ditran_fin_imperative       give                          pres                          s2				
+move 						  v_ditran_fin_imperative       put                           pres                          s2				
+give 						  v_ditran_fin_imperative_personal_object       give                          pres                          s2				
+show 						  v_ditran_fin_imperative_personal_object       show                          pres                          s2				
 lies						  v_intran_fin					be_situated 				  pres							s3
 lie 						  v_intran_fin					be_situated 				  pres							p3
 the                           det_quant                     iota
@@ -27,6 +28,7 @@ which                         pron_whrel                    obj
 that                          pron_whrel                    obj
 it							  pron_nom                      s3                            neuter
 it							  pron_acc                      s3                            neuter
+me							  pron_dative                   speaker
 big                           adj                           big
 small                         adj                           small
 red                           adj                           red
@@ -107,3 +109,4 @@ between 					  prep_mod_location				between
 next						  prep_mod_location				beside
 to							  prep_mod_location				dative
 and							  conj_entity					and
+andy						  conj_entity_other				and
