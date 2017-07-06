@@ -4,33 +4,33 @@ was							  v_be                  	pres                          s3
 square                          count                       square                        s3                            shape
 circle                          count                       circle                        s3                            shape
 triangle						count						triangle					  s3							shape
-square                          mass                       square                        s3                            shape
-circle                          mass                       circle                        s3                            shape
-triangle						mass						triangle					  s3							shape
-//square                            	proper	                       	square					s3			shape		
-//circle							    proper							circle					s3			shape
-//triangle							proper							triangle				s3			shape
+square                          concept_name	                       	square					s3			shape		
+circle							concept_name							circle					s3			shape
+triangle						concept_name							triangle				s3			shape
 name							count						name						  s3							name
-shape							count						shape						  s3							shape
-color							count						color						  s3							color
+shape							count						shape						  s3							attr
+color							count						color						  s3							attr
+shape							count						shape						  s3							attr
+color							mass						color						  s3							attr
+shape							mass						shape						  s3							attr
 object							object						s3							object
 one								object						s3							object
-blue                            color	                       	blue
-red							    color							red
-green							color							green
-purple							color							purple
-yellow							color							yellow
-orange							color							orange
-black							color							black
-blue                            color_np	                       	blue
-red							    color_np							red	
-green							color_np							green	
-purple							color_np							purple
-yellow							color_np							yellow
-orange							color_np							orange	
-black							color_np							black
-right							adj_np							right
+blue                            color_adj	                       	blue
+red							    color_adj							red
+green							color_adj							green
+purple							color_adj							purple
+yellow							color_adj							yellow
+orange							color_adj							orange
+black							color_adj							black
+blue                            concept_name	                       	blue			s3			color
+red							    concept_name							red				s3			color
+green							concept_name							green				s3			color	
+purple							concept_name							purple				s3			color
+yellow							concept_name							yellow				s3			color
+orange							concept_name							orange					s3			color
+black							concept_name							black				s3			color
 new								adj								new
+new								adj_postcop								new
 called							naming_adj						called
 named							naming_adj						named					
 this						  det_demonst					here						  s3
@@ -40,19 +40,22 @@ that						  demonst						that						  s3							obj
 see							  v_tran_fin					see							  pres                          nons3
 see							  v_tran_inf					see							  inf							per
 sees						  v_tran_fin					see							  pres							s3
+//see							  v_intran_fin					see							  pres                          nons3
+//see							  v_intran_inf					see							  inf							per
 can 						  v_aux_inf                     can                           modal
 do						      v_aux_inf                     do                            pres
 would						  v_aux_inf						would						  pres
-it							  pron_nom						s3							  obj
-it							  pron_acc						s3							  obj
+it							  demonst						this						  s3							obj
+//it							  pron_nom						s3							  obj
+//it							  pron_acc						s3							  obj
 a                             det_indef                     eps
 an                            det_indef                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
 the							  det_def						iota
 what                          pron_whq                      obj
-what						  pron_whq_det					whatever
-what						  pron_wh_rel					whatever
+//what						  pron_whq_det					obj
+//what						  pron_what_rel					obj
 //which						  pron_whq						obj
 .							  assert						A
 ?							  question						Q
@@ -65,7 +68,9 @@ okay						  accept						okay
 yeah						  accept						yeah
 right						  accept						right
 correct						  accept						correct	
+correct						  yes							yes
 bingo						  accept						bingo
+bingo						  yes							bingo
 //wow							  accept						wow
 no							  reject						not
 not							  not_np							not
@@ -79,15 +84,35 @@ we							  we							nons3							spkr
 and							  and							null
 but							  and							null
 of							  prep_e						of
+for						      prep_e						for
+about						  prep_e						about
 try							  v_tran_fin_imperative			try							imper					s2
 got							  v_tran_fin					get							past					nons3
 get							  v_tran_inf					get							inf						nons3
+try							  v_tran_inf					get							inf						nons3
+try							  v_tran_fin					get							inf						nons3
 have						  v_tran_inf					have						inf						nons3
 have						  v_tran_fin					have						pres					nons3
 here						  manner_adv					here			
 recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
+recognize					  v_tran_fin					recognise					pres					nons3
+recognize					  v_tran_inf					recognise					pres					nons3
+describe					  v_tran_fin					describe					pres					nons3
+describe					  v_tran_inf					describe					pres					nons3
+describes					  v_tran_fin					describe					pres					s3
 know					  v_tran_fin					know					pres					nons3
 know					  v_tran_inf					know					pres					nons3
 know					  v_intran_inf					know					pres					nons3
 know					  v_intran_fin					know					pres					nons3
+know					  v_tran_obj_prop_inf				know					pres					nons3
+know					  v_tran_obj_prop_fin				know					pres					nons3		
+think					  v_tran_obj_prop_fin				think					pres					nons3
+think					  v_tran_obj_prop_inf				think					pres					nons3
+guess					  v_tran_fin					guess					pres					nons3
+guess					  v_tran_inf					guess					pres					nons3
+want                          v_subjcon_fin                 want                          pres                          nons3
+wants                         v_subjcon_fin                 want                          pres                          s3
+want                          v_subjcon_inf                 want                          inf                          nons3
+to							  to_subjcon					to
+again						  manner_adv					again
