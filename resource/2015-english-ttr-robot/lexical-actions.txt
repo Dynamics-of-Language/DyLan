@@ -505,7 +505,10 @@ THEN	put(?+eval)
 ELSE	abort
 
 //*
-CONNECTIVES
+CONNECTIVES.
+For entities, as we're dealing with an already complete e node,
+we need to de-head the x:e and replace it with a conjunction x==conunction:e
+which can be added to
 *//
 
 conj_entity(PRED)
@@ -542,13 +545,14 @@ THEN	delete(fo(X))
 		delete(fo(U))
 		ttrput(R1^(R1 ++ [head==R1.head:e]))
 		go(/\1)
+		conjoin(X)
 		make(\/L)
 		go(\/L)
 		put(?ty(e))
 		make(\/1)
 		go(\/1)
 		put(ty(e>e))
-		ttrput(R1^(R1 ++ [head==R1.head:e|p==conjunct(x, R1.head):t]))
+		ttrput(R1^(R1 ++ [x==conjunction:e||head==x|:ep==conjunct(x, R1.head):t]))
 		go(/\1)
 		make(\/0)
 		go(\/0)
@@ -594,7 +598,7 @@ put(?t)
 		go(/\1)
 		make(\/0)
 		go(\/0)
-ttrput((R1^R2^(R1 ++ (R2 ++ [x:e|p1==conj(e, R2.head):t|p2==conj(e, R1.head):t])))
+ttrput((R1^R2^(R1 ++ (R2 ++ [x:e|p2==conj(x, R1.head):t])))
 *//
 
 conj_event(PRED)
