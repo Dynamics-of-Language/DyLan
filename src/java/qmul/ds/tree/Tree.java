@@ -853,9 +853,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * @return
 	 */
 	private List<Tree> mergeUnfixed() {
-		if (getUnfixedNodes().size() > 1)
-			throw new UnsupportedOperationException(
-					"Currently not supporting more than one unfixed node at the same time.");
+		//if (getUnfixedNodes().size() > 1)
+		//	throw new UnsupportedOperationException(
+		//			"Currently not supporting more than one unfixed node at the same time.");
 
 		List<Tree> results = new ArrayList<Tree>();
 
@@ -863,7 +863,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		Tree result = clone();
 		boolean merged = false;
 		boolean isLateUnfixed = false;
-		boolean et = false;// spacial case of mering into e>t -> always merges.
+		boolean et = false;// special case of mering into e>t -> always merges.
 		// TODO: WARNING: (lower e>ts not covered!)
 
 		for (Node unfixed : result.getUnfixedNodes()) {

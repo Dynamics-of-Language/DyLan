@@ -62,6 +62,13 @@ IF      ty(X)
 THEN    go(/\*)
 ELSE    abort
 
+completionL
+IF      ty(X)
+		¬?ty(X)
+        </\L>Ex.x
+THEN    go(/\L)
+ELSE    abort
+
 *elimination
 IF      ?ty(X)
         ¬Ex.fo(x)
@@ -113,8 +120,10 @@ anticipation-res
 IF		Speaker(X)
 		PrevSpeaker(Y)
 		¬X=Y
-		ty(t)
-		complete
+		ty(Y)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
 		<Z>+Q
 THEN	go(Z)
 ELSE	abort
@@ -202,6 +211,8 @@ ELSE	IF		ty(X)
 		THEN	addaxiom
 		ELSE	abort
 
+
+
 //Substitution for v_be only
 substitution-copula
 IF		?Ex.fo(x)
@@ -209,7 +220,7 @@ IF		?Ex.fo(x)
 		</\0>+BE
 		¬<\/0>Ex.x
 		¬<\/1>Ex.x
-		</\C>(ty(e)& </\0>+BE& fo(X))
+		</\C>(ty(e) & fo(X))
 THEN	delete(?Ex.fo(x))
 		put(ty(e))
 		delete(?ty(e))
