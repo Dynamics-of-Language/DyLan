@@ -1,3 +1,6 @@
+john                          proper                        john                          male
+bill                          proper                        bill                          male
+mary                          proper                        mary                          female
 take						  v_tran_fin_imperative         take                          pres                          s2				
 select						  v_tran_fin_imperative         take                          pres                          s2				
 highlight					  v_tran_fin_imperative         take                          pres                          s2				
@@ -108,5 +111,5 @@ into						  prep_mod_location				into
 between 					  prep_mod_location				between
 next						  prep_mod_location				beside
 to							  prep_mod_location				dative
-and							  conj_entity					and
 andy						  conj_entity_other				and
+and							  conj_entity					and
