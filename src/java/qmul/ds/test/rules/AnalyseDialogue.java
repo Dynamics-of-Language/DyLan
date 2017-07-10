@@ -21,8 +21,9 @@ public class AnalyseDialogue{
 	
 	private static final String dir = "corpus/";
 	private static final String filename = "/dialogues.txt";
-	private static final String exception_file = "analysis/unparsable_dialogues.txt";
-	private static final String parsed_file = "analysis/parsable_dialogues.txt";
+	private static final String analysis_fir = "analysis/";
+	private static final String exception_file = "unparsable_dialogues.txt";
+	private static final String parsed_file = "parsable_dialogues.txt";
 	public static final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple";
 	private List<Dialogue> dlgList;
 	private String corpus;
@@ -157,7 +158,13 @@ public class AnalyseDialogue{
 	}
 	
 	private void appendExceptionToFile(String filename, String error) throws IOException{
-		String path = this.dir + corpus + "/" + filename;
+		String dir_path = this.dir + corpus + "/" + analysis_fir;
+		
+		File dir = new File(dir_path);
+		if(!dir.exists())
+			dir.mkdir();
+		
+		String path = dir_path + filename;
 
 		File newfile = new File(path);
 		FileWriter fileWriter = new FileWriter(newfile, true);
