@@ -4,6 +4,8 @@ import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -25,6 +27,9 @@ public class Utterance {
 	public static final String WAIT = "<wait>";
 	String speaker;
 	List<UtteredWord> words;
+	
+	public Map<Integer,String> uttSegment_map;
+	public Map<Integer,String> dAtSegment_map;
 
 	public Utterance(String speaker, String utt) {
 		this(speaker+SPEAKER_SEP+utt);
@@ -34,20 +39,52 @@ public class Utterance {
 		
 	
 		String[] split=text.split(SPEAKER_SEP);
-		String utt=null;
+		String content=null;
 		String spk=null;
 		if (split.length>1)
 		{
 			spk=split[0];
-			utt=split[1];
+			content=split[1];
 		}
 		else
 		{
 			spk=defaultSpeaker;
-			utt=split[0];
+			content=split[0];
 		}
 		speaker=spk;
-		utt=utt.toLowerCase();
+		content=content.toLowerCase();
+		
+		String utt = content;
+		if(content.contains("--")){
+			if(this.uttSegment_map == null)
+				this.uttSegment_map = new TreeMap<Integer, String>();
+			if(this.dAtSegment_map == null)
+				this.dAtSegment_map = new TreeMap<Integer, String>();
+			
+			String[] items = content.split("--");
+			utt = items[0].trim();
+			String dat = items[1].trim();
+			
+		//TODO: keep working on this utterance updates to get dats and utterances
+		
+			utt = utt.replace(". <rt>", " <rt>").replaceAll("\\.\\.\\.", "");
+			String[] utt_segments = utt.split("\\.");
+			String[] dAts = dat.split("&&");
+//			logger.info("??? utt: " + utt);
+//			logger.info("??? num of utt_segments: " + utt_segments.length + " :: " + "num of dAts: " + dAts.length+ ".");
+		
+			if(utt_segments.length == dAts.length){
+				for(int i=0; i< utt_segments.length; i++){
+					this.uttSegment_map.put(i, utt_segments[i].trim());
+					this.dAtSegment_map.put(i, dAts[i].trim());
+				}
+			}
+			else{
+				logger.error("cannot find the matched utt segments("+utt_segments.length+") and dAts("+dAts.length+"):");
+				logger.error(content);
+			}
+		}
+		
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		Tokenizer<? extends HasWord> toke = tlp.getTokenizerFactory()
 				.getTokenizer(new CharArrayReader(utt.toCharArray()));
@@ -213,6 +250,24 @@ public class Utterance {
 	public int getLength()
 	{
 		return this.words.size();
+	}
+	
+	public int getTotalNumberOfSegments() {
+		return this.uttSegment_map.size();
+	}
+
+	public String getUttSegment(int i) {
+		if(this.uttSegment_map != null){
+//			logger.info("UttSegment["+i+"]: " + this.uttSegment_map.get(i));
+			return this.uttSegment_map.get(i);
+		}
+		return null;
+	}
+
+	public String getDAt(int i) {
+		if(this.dAtSegment_map != null)
+			return this.dAtSegment_map.get(i);
+		return null;
 	}
 	
 	
