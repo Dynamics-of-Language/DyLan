@@ -43,6 +43,7 @@ sees						  v_tran_fin					see							  pres							s3
 //see							  v_intran_fin					see							  pres                          nons3
 //see							  v_intran_inf					see							  inf							per
 can 						  v_aux_inf                     can                           modal
+ca   						  v_aux_inf                     ca                            modal
 do						      v_aux_inf                     do                            pres
 would						  v_aux_inf						would						  pres
 it							  demonst						this						  s3							obj
@@ -63,16 +64,26 @@ what                          pron_whq                      obj
 ok							  accept						ok
 yes							  yes							yes
 yes							  accept						yes
+yep 						  yes							yep
+yep							  accept						yep
+yeah 						  yes							yeah
+yeah					      accept						yeah
+yay 						  yes							yay
+yay					      	  accept						yay
+good						  accept						good
 great						  accept						great
 okay						  accept						okay
-yeah						  accept						yeah
 right						  accept						right
 correct						  accept						correct	
 correct						  yes							yes
 bingo						  accept						bingo
 bingo						  yes							bingo
-//wow							  accept						wow
+awesome						  yes						    awesome	
+awesome						  accept						awesome	
+//wow						  accept						wow
 no							  reject						not
+close						  reject						close
+nope						  reject						nope
 not							  not_np							not
 n't							  not_np							not
 not							  not_aux							not
@@ -98,6 +109,8 @@ recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
 recognize					  v_tran_fin					recognise					pres					nons3
 recognize					  v_tran_inf					recognise					pres					nons3
+remember					  v_tran_fin					remember					pres					nons3
+remember					  v_tran_inf					remember					pres					nons3
 describe					  v_tran_fin					describe					pres					nons3
 describe					  v_tran_inf					describe					pres					nons3
 describes					  v_tran_fin					describe					pres					s3
