@@ -92,8 +92,6 @@ gameboard					  count							game_board						s3                          obj
 board						  count							game_board						s3                          obj
 square						  count							game_board						s3                          obj
 squares						  count							game_board						s3                          obj
-over						  adv							over
-under						  adv							under
 left						  adv							left
 right						  adv							right
 middle						  adv							middle
@@ -102,14 +100,21 @@ horizontally				  adv							horizontal
 once						  adv							once				  
 twice   					  adv							twice
 again    					  adv							again
+into						  prep_mod_location_goal		into
+over						  prep_mod_location_goal		over
+in							  prep_mod_location_goal		in
+above						  prep_mod_location_goal		above
+under						  prep_mod_location_goal		under
+underneath					  prep_mod_location_goal		under
+near						  prep_mod_location_goal		near
+between 					  prep_mod_location_goal		between
+next						  prep_mod_location_goal		beside
 over						  prep_mod_location				over
-under						  prep_mod_location				under
-out							  prep_mod_location				out
-near						  prep_mod_location				near
 in							  prep_mod_location				in
-into						  prep_mod_location				into
+above						  prep_mod_location				above
+under						  prep_mod_location				under
+underneath					  prep_mod_location				under
+near						  prep_mod_location				near
 between 					  prep_mod_location				between
 next						  prep_mod_location				beside
-to							  prep_mod_location				dative
-andy						  conj_entity_other				and
 and							  conj_entity					and
