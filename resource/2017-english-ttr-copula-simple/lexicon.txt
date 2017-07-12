@@ -63,6 +63,13 @@ what						  pron_whq_det					obj
 ok							  accept						ok
 yes							  yes							yes
 yes							  accept						yes
+yep 						  yes							yep
+yep							  accept						yep
+yeah 						  yes							yeah
+yeah					      accept						yeah
+yay 						  yes							yay
+yay					      	  accept						yay
+good						  accept						good
 great						  accept						great
 okay						  accept						okay
 yeah						  accept						yeah
@@ -71,8 +78,12 @@ correct						  accept						correct
 correct						  yes							yes
 bingo						  accept						bingo
 bingo						  yes							bingo
-//wow							  accept						wow
+awesome						  yes						    awesome	
+awesome						  accept						awesome	
+//wow						  accept						wow
 no							  reject						not
+close						  reject						close
+nope						  reject						nope
 not							  not_np							not
 n't							  not_np							not
 not							  not_aux							not
