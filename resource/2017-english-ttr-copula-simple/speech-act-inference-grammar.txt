@@ -36,7 +36,6 @@ THEN	IF		<Z>+Q
 ELSE	abort
 
 
-
 info-neg-1
 IF		¬ty(Y>Z)
 		ty(X)
@@ -57,10 +56,67 @@ IF		¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		+Q
+		¬<Z>+meta
 		Fo(W)
 		W << [x:e|e1==eq:es|x2:e|p2==Q(x2):t|p3==color(p2):t|p==subj(e1,x):t|p1==obj(e1,x2):t]
 		PrevSpeaker(V)
 THEN	put(sa:polar(V,color:Q))
+ELSE	abort
+
+
+ask-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		<Z>(+Q & +meta)
+		Fo(W)
+		W << ...
+		PrevSpeaker(V)
+THEN	put(ask-color(V))
+ELSE	abort
+
+ask-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		<Z>(+Q & +meta)
+		Fo(W)
+		W << ...
+		PrevSpeaker(V)
+THEN	put(ask-color(V))
+ELSE	abort
+
+accept-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		PrevSpeaker(V)
+		Assert(V)
+		Fo(W)
+		W << ...
+THEN	put(accept(V))
+ELSE	abort
+
+
+accept-2
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		PrevSpeaker(V)
+		Assert(V)
+		Assert(W)
+		¬V=W
+THEN	put(accept(V))
 ELSE	abort
 
 *//
