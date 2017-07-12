@@ -225,7 +225,7 @@ sys:  i have a %colorvalue %shapevalue <rt> -- info(color&shape)
 usr:  great. <rt> -- Ack()
 
 sys:  <none> <rt> -- listen()
-usr:  color %colorvalue <rt> -- Info(color=%colorvalue)
+usr:  color is %colorvalue <rt> -- Info(color=%colorvalue)
 sys:  okay. <rt> -- ack()
 usr:  <none> <rt> -- Listen()
 
@@ -515,7 +515,7 @@ usr:  yep. <rt> -- Ack()
 
 sys:  <none> <rt> -- listen()
 usr:  what do you recognise? <rt> -- OpenAsk()
-sys:  color %colorvalue? <rt> -- polar(color)
+sys:  color is %colorvalue? <rt> -- polar(color)
 usr:  no. %colorvalue. <rt> -- Reject()&&Info(color=%colorvalue)
 sys:  %colorvalue <rt> -- info(color)
 usr:  yes. what about the shape? <rt> -- Ack()&&Ask(shape)

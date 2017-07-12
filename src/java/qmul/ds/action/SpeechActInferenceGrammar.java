@@ -82,6 +82,7 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 				File file = new File(dirNameOrURL, FILE_NAME);
 				reader = new BufferedReader(new FileReader(file));
 			}
+
 			initActions(reader);
 		} catch (Exception e) {
 			e.printStackTrace();

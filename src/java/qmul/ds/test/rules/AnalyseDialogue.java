@@ -21,9 +21,12 @@ import qmul.ds.tree.Node;
 
 /**
  * Description: this class is applied to test the coverage of the existing grammar onto dialogues:
- * system will generate two text files in a folder of "analysis":
- * 1) parsable dialogues
- * 2) unparsable dialogues
+ * system will generate 3 text files in a folder of "analysis":
+ * 1) parsable dialogues -- record all parsable dialogues with annotated actions
+ * 2) parsable dialogues (ttr) -- record all parsable dialogues with annotated actions and ttr 
+ * 								  record type on the pointed node on the tree
+ * 3) unparsable dialogues -- record all unparsable dialogues with annotated actions, including 
+ *                            the exceptions from the parser and existing ttr semantics
  * 
  * @author Yanchao Yu
  */
@@ -35,20 +38,24 @@ public class AnalyseDialogue{
 	private static final String filename = "/dialogues.txt";
 	private static final String analysis_fir = "analysis/";
 	private static final String exception_file = "unparsable_dialogues.txt";
-	private static final String parsed_file = "parsable_dialogues.txt";
+	private static final String parsed_file = "parsable_dialogues_ttr.txt";
+	private static final String parsable_file = "parsable_dialogues.txt";
 	public static final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple";
 	private List<Dialogue> dlgList;
 	private String corpus;
 	
 	private DyLanParser dlParser;
 	
-	public AnalyseDialogue(String domain){
-		this.initialDyLanParser();
+	public AnalyseDialogue(String domain, String english_ttr_url){
+		this.initialDyLanParser(english_ttr_url);
 		this.loadDialogues(domain);
 	}
 	
-	private void initialDyLanParser() {
-		dlParser = new DyLanParser(this.ENGLISHTTRURL, null);
+	private void initialDyLanParser(String english_ttr_url) {
+		if(english_ttr_url == null)
+			english_ttr_url = this.ENGLISHTTRURL;
+		
+		dlParser = new DyLanParser(english_ttr_url, null);
 	}
 
 	private void loadDialogues(String corpus){
@@ -95,11 +102,13 @@ public class AnalyseDialogue{
 	private String curTTRContxt = null;
 	private String prevTTRContxt = null;
 	public void start(){
-		Queue<String> utterances = new LinkedList<String>();
+		Queue<String> utt_queue = new LinkedList<String>();
+		Queue<String> utt_ttr_queue = new LinkedList<String>();
 		
 		if(this.dlgList != null && !this.dlgList.isEmpty()){
 			for(Dialogue dlg: this.dlgList){
-				
+
+				// reset the dylan parser for new dialogue
 				if(this.dlParser != null)
 					dlParser.initParser();
 				
@@ -121,6 +130,7 @@ public class AnalyseDialogue{
 						text = utt.getUttSegment(i);
 						text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
 						String act = utt.getDAt(i);
+						act = this.convert_act_to_sa_name(act);
 						
 						// parse the text using DyLan module
 						// if throw an exception, print the entire dialogue into a separate .txt file, otherwise, keep parsing
@@ -151,28 +161,43 @@ public class AnalyseDialogue{
 									logger.error(e1.getMessage());
 								}
 
-								utterances.clear();
+								utt_queue.clear();
+								utt_ttr_queue.clear();
 								break outofdialgloop;
 							}
 						}
-						Node rootNode = result.getContxtalTree().getRootNode();
-						Node pointedNode = result.getContxtalTree().getPointedNode();
+						Node rootNode = result.getContxtalTree().getRootNode().clone();
+						Node pointedNode = result.getContxtalTree().getPointedNode().clone();
 						
-						String str = utt.getSpeaker() + ": " + text +" <> " + utt.getDAt(i);
+						String str = utt.getSpeaker() + ": " + text +" -- " + act;
+						utt_queue.add(str);
 						str += "--" + pointedNode+"\n";
-						utterances.add(str);
+						utt_ttr_queue.add(str);
 					}
 				}
 				
 				if(is_parse_successful){
 					try {
-						if(utterances != null && !utterances.isEmpty()){
-							while(!utterances.isEmpty()){
-								String str = utterances.poll();
+						if(utt_ttr_queue != null && !utt_ttr_queue.isEmpty()){
+							while(!utt_ttr_queue.isEmpty()){
+								String str = utt_ttr_queue.poll();
 								appendExceptionToFile(parsed_file,  str);
 							}
 
 							appendExceptionToFile(parsed_file,  "\r\n");
+						}
+					} catch (IOException e1) {
+						logger.error(e1.getMessage());
+					}
+					
+					try {
+						if(utt_queue != null && !utt_queue.isEmpty()){
+							while(!utt_queue.isEmpty()){
+								String str = utt_queue.poll();
+								appendExceptionToFile(parsable_file,  str+"\n");
+							}
+
+							appendExceptionToFile(parsable_file,  "\r\n");
 						}
 					} catch (IOException e1) {
 						logger.error(e1.getMessage());
@@ -203,19 +228,32 @@ public class AnalyseDialogue{
 
         fileWriter.close();
 	}
-
-	private void printDialogue() {
-		if(this.dlgList != null && !this.dlgList.isEmpty()){
-			int index = 0;
-			for(Dialogue dlg: this.dlgList){
-				logger.info("["+(index++)+"]: " + dlg);
-			}
-		}
+	
+	private String convert_act_to_sa_name(String action){
+		String sa = action.toLowerCase().replaceAll("=%colorvalue", "").replaceAll("=%shapevalue", "");
+		
+		if(sa.contains("ackrepeat"))
+			sa = sa.replace("ackrepeat", "accept-info");
+		
+		if(sa.contains("ack"))
+			sa = sa.replace("ack", "accept");
+		
+		if(sa.contains("()"))
+			sa = sa.replace("()", "");
+		else
+			sa = sa.replace(")", "").replace("(", "-").replaceAll("&", "-");
+		
+		if(sa.contains("*"))
+			sa = sa.replace("*", "-info-");
+		
+		logger.info("before: " + action +" -- after: " + sa);
+		
+		return sa;
 	}
 	
 	/*********************** Main Function **************************/
 	public static void main(String[] args){
-		AnalyseDialogue learner = new AnalyseDialogue("BURCHAK"); 
+		AnalyseDialogue learner = new AnalyseDialogue("BURCHAK", null); 
 		System.out.println("IS IT READY?");
 		Scanner scanInput = new Scanner(System.in);
 		String comman  = scanInput.nextLine();
