@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
@@ -93,6 +95,8 @@ public class AnalyseDialogue{
 	private String curTTRContxt = null;
 	private String prevTTRContxt = null;
 	public void start(){
+		Queue<String> utterances = new LinkedList<String>();
+		
 		if(this.dlgList != null && !this.dlgList.isEmpty()){
 			for(Dialogue dlg: this.dlgList){
 				
@@ -105,17 +109,10 @@ public class AnalyseDialogue{
 				this.current_dialog = dlg;
 				logger.debug("current_dialog: " + current_dialog.size());
 				
-				try {
-					appendExceptionToFile(parsed_file,  "\r\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
 				boolean is_parse_successful = true;
 				ParseForm result = null;
-				
+
 				outofdialgloop:
-				
 				for(Utterance utt: this.current_dialog){
 //					logger.debug("utt: " + utt);
 					String text = "";
@@ -153,28 +150,32 @@ public class AnalyseDialogue{
 								} catch (IOException e1) {
 									logger.error(e1.getMessage());
 								}
-									
+
+								utterances.clear();
 								break outofdialgloop;
 							}
 						}
-//						result = dlParser.parse(text);
+						Node rootNode = result.getContxtalTree().getRootNode();
+						Node pointedNode = result.getContxtalTree().getPointedNode();
 						
-	//					logger.info(utt + " -- " + result.getContxtalTree());
-						curTTRContxt = "[" + act + "]: " + result.getContxtalTree().toString();
-						logger.info("curTTRContxt: " + curTTRContxt);
-						
-						if(is_parse_successful){
-							try {
-								Node rootNode = result.getContxtalTree().getRootNode();
-								Node pointedNode = result.getContxtalTree().getPointedNode();
-								
-								String str = utt.getSpeaker() + ": " + text +" <> " + utt.getDAt(i);
-								str += "--" + pointedNode + "--" + pointedNode.isComplete() +" \r\n";
+						String str = utt.getSpeaker() + ": " + text +" <> " + utt.getDAt(i);
+						str += "--" + pointedNode+"\n";
+						utterances.add(str);
+					}
+				}
+				
+				if(is_parse_successful){
+					try {
+						if(utterances != null && !utterances.isEmpty()){
+							while(!utterances.isEmpty()){
+								String str = utterances.poll();
 								appendExceptionToFile(parsed_file,  str);
-							} catch (IOException e1) {
-								logger.error(e1.getMessage());
 							}
+
+							appendExceptionToFile(parsed_file,  "\r\n");
 						}
+					} catch (IOException e1) {
+						logger.error(e1.getMessage());
 					}
 				}
 			}
