@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
-import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import qmul.ds.ContextParser;
 import qmul.ds.DSParser;
@@ -20,7 +19,18 @@ import qmul.ds.formula.TTRField;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRLabel;
 import qmul.ds.formula.TTRRecordType;
+import qmul.ds.tree.Tree;
 
+/**
+ * Description: this class is a mini class of the DS-TTR parser,
+ * which will be able to load the particular lexicon and parse 
+ * the utterances word by word like the GUI
+ * 
+ * this class is applied to assist the class of "AnalyseDialogue" 
+ * to report the grammar coverage 
+ * 
+ * @author Yanchao Yu
+ */
 public class DyLanParser {
 	Logger logger = Logger.getLogger(DyLanParser.class);
 	
@@ -134,7 +144,8 @@ public class DyLanParser {
 		// tuples.addAll(ttrtuples);
 		tupleNumber = tuples.size() - 1;
 		ParserTuple tuple = tuples.get(tupleNumber);
-		Tree tree = (tuple == null ? null : tuple.getTree().toStanfordTree());
+		tuple.getTree();
+		Tree tree = (tuple == null ? null : tuple.getTree());
 		TTRFormula sem = (tuple == null ? null : tuple.getSemantics());
 		return new ParseForm(utt, sem, tree);
 	}
@@ -148,8 +159,6 @@ public class DyLanParser {
 		String parserFilename = DyLanParser.ENGLISHTTRURL;
 		DyLanParser parser = new DyLanParser(parserFilename, dataFilename);
 	}
-	
-	
 	
 	/**
 	 * Worker thread for loading the parser. Loading a parser usually takes ~2

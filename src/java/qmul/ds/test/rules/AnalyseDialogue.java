@@ -15,6 +15,16 @@ import org.apache.log4j.Logger;
 import qmul.ds.Dialogue;
 import qmul.ds.Utterance;
 import qmul.ds.test.rules.DyLanParser.ParseForm;
+import qmul.ds.tree.Node;
+
+/**
+ * Description: this class is applied to test the coverage of the existing grammar onto dialogues:
+ * system will generate two text files in a folder of "analysis":
+ * 1) parsable dialogues
+ * 2) unparsable dialogues
+ * 
+ * @author Yanchao Yu
+ */
 
 public class AnalyseDialogue{
 	static Logger logger = Logger.getLogger(AnalyseDialogue.class);
@@ -85,13 +95,21 @@ public class AnalyseDialogue{
 	public void start(){
 		if(this.dlgList != null && !this.dlgList.isEmpty()){
 			for(Dialogue dlg: this.dlgList){
+				
 				if(this.dlParser != null)
 					dlParser.initParser();
+				
 				this.curTTRContxt = null;
 				this.prevTTRContxt = null;
 				
 				this.current_dialog = dlg;
 				logger.debug("current_dialog: " + current_dialog.size());
+				
+				try {
+					appendExceptionToFile(parsed_file,  "\r\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				
 				boolean is_parse_successful = true;
 				ParseForm result = null;
@@ -100,24 +118,25 @@ public class AnalyseDialogue{
 				
 				for(Utterance utt: this.current_dialog){
 //					logger.debug("utt: " + utt);
+					String text = "";
 					for(int i=0; i< utt.getTotalNumberOfSegments(); i++){
 //						logger.info("utt.getUttSegment("+i+"): " + utt.getUttSegment(i));
-						
-						String text = utt.getUttSegment(i);
+						text = utt.getUttSegment(i);
 						text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
 						String act = utt.getDAt(i);
-
-//						logger.info("text["+act+"]: " + text);
-//						
+						
 						// parse the text using DyLan module
 						// if throw an exception, print the entire dialogue into a separate .txt file, otherwise, keep parsing
-						System.err.println("text: "+ text);
+						if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
+							text += ".";
+						logger.info("AFTER:: text: "+ text);
+						
 						String[] words = text.split(" ");
 						for(int j=0; j < words.length; j++){
-							String word = words[j];
-							
-							if(i==0 && j==0)
-								word = utt.getSpeaker() + ": " + word;
+//							String word = words[j];
+//							
+//							if(i==0 && j==0)
+							String word = utt.getSpeaker() + ": " + words[j];
 							
 							result = dlParser.parse(word);
 							
@@ -143,14 +162,19 @@ public class AnalyseDialogue{
 	//					logger.info(utt + " -- " + result.getContxtalTree());
 						curTTRContxt = "[" + act + "]: " + result.getContxtalTree().toString();
 						logger.info("curTTRContxt: " + curTTRContxt);
-					}
-				}
-				
-				if(is_parse_successful){
-					try {
-						appendExceptionToFile(parsed_file,  current_dialog.toString()+"\r\n");
-					} catch (IOException e1) {
-						logger.error(e1.getMessage());
+						
+						if(is_parse_successful){
+							try {
+								Node rootNode = result.getContxtalTree().getRootNode();
+								Node pointedNode = result.getContxtalTree().getPointedNode();
+								
+								String str = utt.getSpeaker() + ": " + text +" <> " + utt.getDAt(i);
+								str += "--" + pointedNode + "--" + pointedNode.isComplete() +" \r\n";
+								appendExceptionToFile(parsed_file,  str);
+							} catch (IOException e1) {
+								logger.error(e1.getMessage());
+							}
+						}
 					}
 				}
 			}

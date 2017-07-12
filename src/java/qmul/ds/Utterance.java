@@ -75,6 +75,11 @@ public class Utterance {
 		
 			if(utt_segments.length == dAts.length){
 				for(int i=0; i< utt_segments.length; i++){
+					String segment = utt_segments[i];
+					if(!segment.contains("<rt>") && !segment.contains(".") && !segment.contains("?"))
+						segment += ".";
+					logger.info("AFTER:: segment: "+ segment);
+					
 					this.uttSegment_map.put(i, utt_segments[i].trim());
 					this.dAtSegment_map.put(i, dAts[i].trim());
 				}

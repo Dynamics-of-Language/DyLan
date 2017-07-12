@@ -43,6 +43,7 @@ public class Node extends TreeSet<Label> {
 	public Node(NodeAddress address) {
 		super();
 		this.address = address;
+		
 	}
 
 	public Node(Node node) {
