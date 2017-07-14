@@ -1,0 +1,2 @@
+%colorvalue:red,blue,green,black,purple,orange 
+%shapevalue:square,triangle,circle

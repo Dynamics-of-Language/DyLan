@@ -180,11 +180,12 @@ public class AnalyseDialogue{
 					String text = "";
 					for(int i=0; i< utt.getTotalNumberOfSegments(); i++){
 //						logger.info("utt.getUttSegment("+i+"): " + utt.getUttSegment(i));
+						String act = utt.getDAt(i);
+						act = this.convert_act_to_sa_name(act, text);
+						actSet.add(act);
+
 						text = utt.getUttSegment(i);
 						text = text.replaceAll("%colorvalue", this.slot_values.get("%colorvalue").iterator().next()).replaceAll("%shapevalue", this.slot_values.get("%shapevalue").iterator().next());
-						String act = utt.getDAt(i);
-						act = this.convert_act_to_sa_name(act);
-						actSet.add(act);
 						
 						// parse the text using DyLan module
 						// if throw an exception, print the entire dialogue into a separate .txt file, otherwise, keep parsing
@@ -264,7 +265,7 @@ public class AnalyseDialogue{
 			for(String act: actSet){
 				
 				try {
-					appendExceptionToFile(this.action_map_file, act+" >> \r\n");
+					appendExceptionToFile(this.action_map_file, act+"\r\n");
 				} catch (IOException e1) {
 					logger.error(e1.getMessage());
 				}
@@ -294,26 +295,26 @@ public class AnalyseDialogue{
         fileWriter.close();
 	}
 	
-	private String convert_act_to_sa_name(String action){
-		String sa = action.toLowerCase().replaceAll("=%colorvalue", "").replaceAll("=%shapevalue", "");
+	private String convert_act_to_sa_name(String action, String utt){
+		String sa_name = action.toLowerCase().replaceAll("=%colorvalue", "").replaceAll("=%shapevalue", "");
 		
-		if(sa.contains("ackrepeat"))
-			sa = sa.replace("ackrepeat", "accept-info");
+		if(sa_name.contains("ackrepeat"))
+			sa_name = sa_name.replace("ackrepeat", "accept-info");
 		
-		if(sa.contains("ack"))
-			sa = sa.replace("ack", "accept");
+		if(sa_name.contains("ack"))
+			sa_name = sa_name.replace("ack", "accept");
 		
-		if(sa.contains("()"))
-			sa = sa.replace("()", "");
+		if(sa_name.contains("()"))
+			sa_name = sa_name.replace("()", "");
 		else
-			sa = sa.replace(")", "").replace("(", "-").replaceAll("&", "-");
+			sa_name = sa_name.replace(")", "").replace("(", "-").replaceAll("&", "-");
 		
-		if(sa.contains("*"))
-			sa = sa.replace("*", "-info-");
+		if(sa_name.contains("*"))
+			sa_name = sa_name.replace("*", "-info-");
 		
-		logger.info("before: " + action +" -- after: " + sa);
+		logger.info("before: " + action +" -- after: " + sa_name);
 		
-		return sa;
+		return sa_name + " >> ";
 	}
 	
 	/*********************** Main Function **************************/

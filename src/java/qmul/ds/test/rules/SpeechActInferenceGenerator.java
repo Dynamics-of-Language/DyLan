@@ -50,6 +50,7 @@ public class SpeechActInferenceGenerator {
 	private SpeechActInferenceGrammar sa_inference_map;
 	private Map<String, List<String>> act_map;
 	private Map<String, Set<String>> slot_values;
+	private Map<String, Formula> meta_replacements;
 	
 	private String corpus;
 	
@@ -269,12 +270,9 @@ public class SpeechActInferenceGenerator {
 								Effect effect_template = action.getEffect();
 								logger.debug("old Effect:  \r\n" + effect_template);
 								
-								Effect effect = this.addNewFormula(effect_template, f);
+								Effect effect = this.addNewFormula(effect_template, ttr);
+								effect = this.replaceMetaVariable(effect, this.meta_replacements);
 								logger.debug("new Effect at (" + act + "): \r\n" + effect);
-								logger.debug("old Effect again:  \r\n" + action.getEffect());
-								
-//								if(effect instanceof IfThenElse)
-//									((IfThenElse)effect).setupBacktrackers(new ArrayList<Meta<?>>());
 								
 								this.sa_inference_map.addNewComputationalAction(act, effect);
 							}
@@ -288,12 +286,9 @@ public class SpeechActInferenceGenerator {
 							Effect effect_template = action.getEffect();
 							logger.debug("old Effect:  \r\n" + effect_template);
 							
-							Effect effect = this.addNewFormula(effect_template, f);
+							Effect effect = this.addNewFormula(effect_template, ttr);
+							effect = this.replaceMetaVariable(effect, this.meta_replacements);
 							logger.debug("new Effect at (" + act + "): \r\n" + effect);
-							logger.debug("old Effect again:  \r\n" + action.getEffect());
-							
-//							if(effect instanceof IfThenElse)
-//								((IfThenElse)effect).setupBacktrackers(new ArrayList<Meta<?>>());
 							
 							this.sa_inference_map.addNewComputationalAction(act, effect);
 						}
@@ -305,6 +300,15 @@ public class SpeechActInferenceGenerator {
 		this.sa_inference_map.exportToFile(this.rescource_dir, "speech-act-inference-grammar-learned.txt");
 	}
 	
+	private Effect replaceMetaVariable(Effect effect, Map<String, Formula> replacements) {
+		if(effect instanceof IfThenElse){
+			IfThenElse ite = ((IfThenElse)effect).clone();
+			ite.substitues(replacements);
+			return ite;
+		}
+		return effect;
+	}
+
 	private Effect addNewFormula(Effect effect, Formula f) {
 		if(effect instanceof IfThenElse){
 			IfThenElse ite = ((IfThenElse)effect).clone();
@@ -398,7 +402,8 @@ public class SpeechActInferenceGenerator {
 	 */
 
 	public TTRRecordType abstractOutSlotValues(TTRRecordType rec) {
-
+		this.meta_replacements = new HashMap<String, Formula>();
+		
 		TTRRecordType result = new TTRRecordType();
 
 		for (TTRField f : rec.getFields()) {
@@ -413,7 +418,10 @@ public class SpeechActInferenceGenerator {
 					Set<String> values = entry.getValue();
 					if (values.contains(af.getName())) {
 						logger.debug("------------------ I found something I have in values : " + af.getName());
-						newF.setType(result.getFreshAtomicMetaVariable());
+						Formula replaced=result.getFreshAtomicMetaVariable();
+						newF.setType(replaced);
+						
+						meta_replacements.put(entry.getKey(), replaced);
 					}
 				}
 
@@ -428,8 +436,10 @@ public class SpeechActInferenceGenerator {
 					Set<String> values = entry.getValue();
 					if (values.contains(paf.getPredicate().getName())) {
 						logger.debug("------------------ I found something I have in values : " + paf.getPredicate().getName());
-						newF.setType(
-								new PredicateArgumentFormula(result.getFreshPredicateMetaVariable(), paf.getArguments()));
+						Formula replaced = new PredicateArgumentFormula(result.getFreshPredicateMetaVariable(), paf.getArguments());
+						newF.setType(replaced);
+						
+						meta_replacements.put(entry.getKey(), replaced);
 					}
 				}
 			}

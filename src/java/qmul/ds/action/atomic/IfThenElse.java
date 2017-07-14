@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,7 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.Formula;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
@@ -780,5 +782,27 @@ public class IfThenElse extends Effect implements Serializable {
 	public Effect[] getELSEClause() {
 
 		return ELSE;
+	}
+
+	public void substitues(Map<String, Formula> replacements) {
+		for(Effect e: this.THEN){
+			if(e instanceof IfThenElse){
+				System.err.println("THEN: " + (IfThenElse)e);
+				
+				if(e.toString().contains("put("))
+					System.err.println("Found the put in:" + e);
+					
+			}
+		}
+		
+		for(Effect e: this.ELSE){
+			if(e instanceof IfThenElse){
+				System.err.println("ELSE: " + (IfThenElse)e);
+				
+				if(e.toString().contains("put("))
+					System.err.println("Found the put in:" + e);
+					
+			}
+		}
 	}
 }
