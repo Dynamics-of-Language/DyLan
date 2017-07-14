@@ -12,15 +12,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+
+import qmul.ds.action.atomic.Effect;
 
 /**
  * A set of {@link ComputationalAction}s that define speech act inference rules,
@@ -80,6 +85,31 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 						new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/") + FILE_NAME).openStream()));
 			} else {
 				File file = new File(dirNameOrURL, FILE_NAME);
+				reader = new BufferedReader(new FileReader(file));
+			}
+
+			initActions(reader);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);
+			logger.error("Error reading speech act grammar file " + dirNameOrURL);
+		}
+	}
+	
+	/**
+	 * Read a set of {@link ComputationalAction}s from file
+	 * 
+	 * @param dirNameOrURL
+	 *            containing the computational-actions.txt file
+	 */
+	public SpeechActInferenceGrammar(String dirNameOrURL, String filename) {
+		BufferedReader reader;
+		try {
+			if (dirNameOrURL.matches("(https?|file):.*")) {
+				reader = new BufferedReader(
+						new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/") + filename).openStream()));
+			} else {
+				File file = new File(dirNameOrURL, filename);
 				reader = new BufferedReader(new FileReader(file));
 			}
 
@@ -158,5 +188,73 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 		}
 		logger.info("Loaded speech act grammar with " + size() + " speech act inference action entries.");
 		logger.trace(this);
+	}
+	
+	public void addNewComputationalAction(String name, Effect effect){
+		String key = this.getNewKey(name);
+		logger.debug("name: " + name +"; key= " + key); 
+		
+		this.put(key, new ComputationalAction(key, effect));
+	}
+	
+	private String getNewKey(String name){
+		int index = 0;
+		
+		Iterator<Entry<String, ComputationalAction>> iterator = this.entrySet().iterator();
+		while(iterator.hasNext()){
+			Entry<String, ComputationalAction> entry = iterator.next();
+			String key = entry.getKey();
+
+			if(key.contains(name)){
+				String sub = key.replace(name+"-", "");
+				
+				if(this.isInteger(sub.trim())){
+					int exisit_index = Integer.valueOf(sub.trim());
+					if(exisit_index >= index)
+						index = exisit_index;
+				}
+			}
+		}
+		
+		return name + "-" + String.valueOf(index+1);
+	}
+
+	private boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    } catch(NullPointerException e) {
+	        return false;
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
+	
+	public void exportToFile(String dir, String fileName){
+		File file = new File(dir, fileName);
+		try {
+			if(!file.exists())
+				file.createNewFile();
+			
+			FileWriter fileWriter = new FileWriter(file, true);
+	        
+			Iterator<Entry<String, ComputationalAction>> iterator = this.entrySet().iterator();
+			while(iterator.hasNext()){
+				Entry<String, ComputationalAction> entry = iterator.next();
+				String key = entry.getKey();
+				fileWriter.append(key+"\n");
+				
+				ComputationalAction action = entry.getValue();
+				fileWriter.append(action.getEffect()+"\n");
+				
+				fileWriter.append("\r\n");
+			}
+	        fileWriter.close();
+		} catch (FileNotFoundException e) {
+			logger.warn("No speech act inference file " + file.getAbsolutePath());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
 	}
 }

@@ -5,8 +5,7 @@ Can be learned from data annotated with speech acts (by parsing and generating t
 
 *//
 
-//*
-info-color-1
+info-color
 IF	  	¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -20,7 +19,7 @@ THEN	IF		<Z>+Q
 				ELSE	put(sa:info(V,color:Q))
 ELSE	abort
 
-info-shape-1
+info-shape
 IF	  	¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -34,7 +33,7 @@ THEN	IF		<Z>+Q
 				ELSE	put(sa:info(V,shape:Q))
 ELSE	abort
 
-info-color-shape-1
+info-color-shape
 IF	  	¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -48,7 +47,7 @@ THEN	IF		<Z>+Q
 				ELSE	put(sa:info(V,color:Q,shape:P))
 ELSE	abort
 
-info-neg-color-1
+info-neg-color
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -59,7 +58,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:infoneg(V,color:Q))
 ELSE	abort
 
-info-neg-shape-1
+info-neg-shape
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -70,7 +69,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:infoneg(V,shape:Q))
 ELSE	abort
 
-polar-color-1
+polar-color
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -82,7 +81,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:polar(V,color:Q))
 ELSE	abort
 
-polar-shape-1
+polar-shape
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -94,7 +93,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:polar(V,shape:Q))
 ELSE	abort
 
-polar-color-shape-1
+polar-color-shape
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -106,7 +105,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:polar(V,color:Q,shape:P))
 ELSE	abort
 
-ask-color-1
+ask-color
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -117,7 +116,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:askcolor(V))
 ELSE	abort
 
-ask-shape-1
+ask-shape
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -128,7 +127,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:askshape(V))
 ELSE	abort
 
-openask-1
+openask
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -165,7 +164,7 @@ IF		¬ty(Y>Z)
 THEN	put(sa:accept(V))
 ELSE	abort
 
-reject-1
+reject
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -177,4 +176,3 @@ IF		¬ty(Y>Z)
 		Assert(V)
 THEN	put(sa:reject(V))
 ELSE	abort
-*//

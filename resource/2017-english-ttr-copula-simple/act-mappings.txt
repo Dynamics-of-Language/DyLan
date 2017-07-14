@@ -1,0 +1,18 @@
+info-color >> [info(,color :]
+info-shape >> [info(,shape :]
+info-color-shape >> [info(,color :,shape :]
+
+polar-color >> [polar(,color:]
+polar-shape >> [polar(,shape:]
+polar-color-shape >> [polar(,color :,shape :]
+
+info-neg-color >> [infoneg(,color :]
+info-neg-shape >> [infoneg(,shape :]
+info-neg-color-shape >> [infoneg(,color :,shape :]
+
+ask-color >> [askcolor(]
+ask-shape >> [askshape(]
+openask >> [openask(]
+
+accept >> [accept(]
+reject >> [reject(]

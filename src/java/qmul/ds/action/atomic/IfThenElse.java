@@ -206,6 +206,11 @@ public class IfThenElse extends Effect implements Serializable {
 		
 	}
 
+	@Override
+	public IfThenElse clone(){
+		IfThenElse ite = new IfThenElse(this.IF.clone(), this.THEN.clone(), this.ELSE.clone());
+		return ite;
+	}
 	private static int findEndIndexOfEmbeddedITE(List<String> strings, int indexOfIF) {
 		int embedLevel = 1;
 		int j = indexOfIF + 1;
@@ -545,6 +550,18 @@ public class IfThenElse extends Effect implements Serializable {
 		return this.IF;
 
 	}
+	
+	public void addNewLabelintoIF(Label label) {
+		Label[] ifs = new Label[this.IF.length + 1];
+		for (int i = 0; i < IF.length; i++) {
+			Label l = IF[i];
+			ifs[i] = l;
+		}
+		ifs[this.IF.length] = label;
+		
+		this.IF = ifs;
+	}
+
 
 	/**
 	 * 
@@ -717,13 +734,8 @@ public class IfThenElse extends Effect implements Serializable {
 			}
 			return false;
 		}
-
 	}
-
 	
-	
-	
-
 	public static final int tabSizeForPrinting = 6;// min tab size is 4
 
 	public String toString() {
@@ -770,5 +782,4 @@ public class IfThenElse extends Effect implements Serializable {
 
 		return ELSE;
 	}
-
 }

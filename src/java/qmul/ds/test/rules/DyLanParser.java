@@ -9,11 +9,14 @@ import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
+import qmul.ds.Context;
 import qmul.ds.ContextParser;
 import qmul.ds.DSParser;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.ParserTuple;
 import qmul.ds.Utterance;
+import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRField;
 import qmul.ds.formula.TTRFormula;
@@ -51,7 +54,6 @@ public class DyLanParser {
 		this.loadParser(parserFilename);
 		this.loadParser(dataFilename);
 	}
-	
 	
 	public void loadParser(String filename) {
 		if (filename == null)
@@ -94,7 +96,7 @@ public class DyLanParser {
 	}
 	
 	public ParseForm parse(String text) {
-		 logger.info("got text " + text);
+		 logger.debug("got text " + text);
 
 		if (parser != null && text.length() > 0) {
 			// Tokenizer<? extends HasWord> toke = tlp.getTokenizerFactory()
@@ -116,7 +118,7 @@ public class DyLanParser {
 				} else
 					successful = parser.parseUtterance(utt);
 			} catch (Exception e) {
-//				logger.info("^^ exception: " + e);
+//				logger.debug("^^ exception: " + e);
 				return new ParseForm(utt, e);
 			}
 
@@ -126,8 +128,11 @@ public class DyLanParser {
 					tuples.clear();
 
 					tuples.add(p.getState().getCurrentTuple());
+					
+					Context<DAGTuple, GroundableEdge> context = p.getContext();
+					
+					return this.displayBestParse(utt, context);
 				}
-				return this.displayBestParse(utt);
 			} else {
 				return new ParseForm(utt, new Exception("Cannot parse the utterance at "));
 			}
@@ -136,7 +141,7 @@ public class DyLanParser {
 	}
 
 	private int tupleNumber = 0;
-	private ParseForm displayBestParse(Utterance utt) {
+	private ParseForm displayBestParse(Utterance utt, Context<DAGTuple, GroundableEdge> context) {
 		if (parser instanceof qmul.ds.Parser)
 			tuples = new ArrayList<ParserTuple>(
 					((qmul.ds.Parser) parser).getState());
@@ -147,7 +152,7 @@ public class DyLanParser {
 		tuple.getTree();
 		Tree tree = (tuple == null ? null : tuple.getTree());
 		TTRFormula sem = (tuple == null ? null : tuple.getSemantics());
-		return new ParseForm(utt, sem, tree);
+		return new ParseForm(utt, sem, tree, context);
 	}
 
 	/**
@@ -189,10 +194,10 @@ public class DyLanParser {
 				else
 					parser = null;
 
-				logger.info("loaded parser");
+				logger.debug("loaded parser");
 				// parser = new SimpleParser(filename);
 				initParser();
-				logger.info("Initialised Parser");
+				logger.debug("Initialised Parser");
 			} catch (Exception ex) {
 				logger.error(ex.getMessage());
 				parser = null;
@@ -203,6 +208,27 @@ public class DyLanParser {
 			}
 		}
 	}
+	
+	public Context<DAGTuple, GroundableEdge>  getContext(){
+		if (parser != null && parser instanceof InteractiveContextParser) {
+			InteractiveContextParser p = (InteractiveContextParser) parser;
+			tuples.clear();
+
+			tuples.add(p.getState().getCurrentTuple());
+			
+			return p.getContext();
+		}
+		return null;
+	}
+	
+	public Tree getTree(){
+		if (parser != null && parser instanceof InteractiveContextParser) {
+			InteractiveContextParser p = (InteractiveContextParser) parser;
+			
+			return p.getBestTuple().getTree();
+		}
+		return null;
+	}
 
 	public class ParseForm {
 		private Utterance utt;
@@ -212,8 +238,8 @@ public class DyLanParser {
 		private boolean hasException = false;
 		private Tree tree;
 		private Exception exception;
-		
-		public ParseForm(){}	
+		private Context<DAGTuple, GroundableEdge> context;
+	
 	
 		public ParseForm(Utterance utt, TTRFormula ttr, qmul.ds.tree.Tree tree, boolean isGrounded){
 			this.utt = utt;
@@ -260,17 +286,18 @@ public class DyLanParser {
 			}
 		}
 		
-		public ParseForm(Utterance utt, TTRFormula ttr, Tree tree){
+		public ParseForm(Utterance utt, TTRFormula ttr, Tree tree, Context<DAGTuple, GroundableEdge> context){
 			this.utt = utt;
 			this.ttr = ttr;
 			this.tree = tree;
+			this.context = context;
 		}
 		
 		public ParseForm(Utterance utt, Exception e){
 			this.utt = utt;
 			this.exception = e;
-//			logger.info("e: " + e);
-//			logger.info("this.exception: " + this.exception);
+//			logger.debug("e: " + e);
+//			logger.debug("this.exception: " + this.exception);
 			this.hasException = true;
 		}
 		
@@ -316,6 +343,10 @@ public class DyLanParser {
 		
 		public Map<OntologyType, String> getGroundMap(){
 			return this.groundMap;
+		}
+		
+		public Context<DAGTuple, GroundableEdge> getContext(){
+			return this.context;
 		}
 	}
 	

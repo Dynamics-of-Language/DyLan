@@ -101,9 +101,9 @@ public class Action implements Serializable {
 
 	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
 	{
-		
 		return action.exec(tree, context);
 	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

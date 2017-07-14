@@ -13,15 +13,21 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.stanford.nlp.util.Pair;
-
+import qmul.ds.Context;
 import qmul.ds.ParseState;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.GroundableEdge;
+import qmul.ds.formula.Formula;
 import qmul.ds.learn.Hypothesiser;
 import qmul.ds.learn.LexicalHypothesis;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.LabelFactory;
 
 /**
  * A generally available computational {@link Action}
@@ -104,9 +110,6 @@ public class ComputationalAction extends Action implements Comparable<Computatio
 			return new ComputationalAction(name, this.action);
 		
 		return new ComputationalAction(name, this.action.instantiate());
-		
-		
-
 		
 	}
 
