@@ -239,7 +239,7 @@ public class IfThenElse extends Effect implements Serializable {
 	 * the corresponding set of metas.
 	 * 
 	 * */
-	private void setupBacktrackers(List<Meta<?>> exceptions) {
+	public void setupBacktrackers(List<Meta<?>> exceptions) {
 		this.backtracker = new Backtracker();
 
 		for (Label label : IF) {
@@ -561,8 +561,7 @@ public class IfThenElse extends Effect implements Serializable {
 		
 		this.IF = ifs;
 	}
-
-
+	
 	/**
 	 * 
 	 * @return all metas at this ite plus all those at all higher ite's in which this ite is embedded

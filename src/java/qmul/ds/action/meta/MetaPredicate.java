@@ -7,14 +7,15 @@
  * WARRANTIES.
  *******************************************************************************/
 
-package qmul.ds.formula;
+package qmul.ds.action.meta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import qmul.ds.action.meta.Meta;
-import qmul.ds.action.meta.MetaElement;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Predicate;
+import qmul.ds.formula.Variable;
 
 /**
  * A {@link Predicate} metavariable as used e.g. PredicateArgumentFormulae, e.g. P(x,y).
@@ -93,7 +94,10 @@ public class MetaPredicate extends Predicate implements Serializable {
 	 */
 	@Override
 	public Formula substitute(Formula f1, Formula f2) {
-		if (this.equals(f1)) {
+		if (this.getValue()==null)
+			return this;
+		
+		if (this.getValue().equals(f1)) {
 			return f2;
 		} else {
 			return this;

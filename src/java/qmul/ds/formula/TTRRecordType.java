@@ -25,6 +25,7 @@ import qmul.ds.Utterance;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
+import qmul.ds.action.meta.MetaPredicate;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.UtteredWord;
@@ -2836,7 +2837,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public MetaPredicate getFreshPredicateMetaVariable() {
 		lastIndexOfPredicateMeta++;
 		
-		return MetaPredicate.get(Formula.META_PREDICATE_PATTERN+lastIndexOfPredicateMeta);
+		return MetaPredicate.get(Formula.META_PREDICATE_ROOT_PATTERN+lastIndexOfPredicateMeta);
 		
 	}
 

@@ -7,10 +7,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -36,12 +41,17 @@ public class AnalyseDialogue{
 	
 	private static final String dir = "corpus/";
 	private static final String filename = "/dialogues.txt";
+	private static final String slot_values_file = "/slot-values.txt";
 	private static final String analysis_fir = "analysis/";
 	private static final String exception_file = "unparsable_dialogues.txt";
 	private static final String parsed_file = "parsable_dialogues_ttr.txt";
 	private static final String parsable_file = "parsable_dialogues.txt";
+	private static final String action_map_file = "act-mapping.txt";
 	public static final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple";
+	
+	private Set<String> actSet;
 	private List<Dialogue> dlgList;
+	private Map<String, Set<String>> slot_values;
 	private String corpus;
 	
 	private DyLanParser dlParser;
@@ -49,13 +59,55 @@ public class AnalyseDialogue{
 	public AnalyseDialogue(String domain, String english_ttr_url){
 		this.initialDyLanParser(english_ttr_url);
 		this.loadDialogues(domain);
+		this.loadSlotValues();
 	}
-	
+
 	private void initialDyLanParser(String english_ttr_url) {
 		if(english_ttr_url == null)
 			english_ttr_url = this.ENGLISHTTRURL;
 		
 		dlParser = new DyLanParser(english_ttr_url, null);
+	}
+	
+	private void loadSlotValues() {
+		if(slot_values == null)
+			slot_values = new HashMap<String, Set<String>>();
+		else
+			slot_values.clear();
+		
+		BufferedReader br = null;
+	    String line = "";
+	    String splitBy = ":";
+	        
+	    try {
+			String path = this.dir + corpus + this.slot_values_file;
+			br = new BufferedReader(new FileReader(path));
+			List<String> curDialogue = new ArrayList<String>();
+			while ((line = br.readLine()) != null) {
+				line = line.trim().toLowerCase();
+				
+				if(!line.trim().isEmpty() && !line.trim().startsWith("//")){
+					
+					String[] items = line.trim().split(splitBy);
+					
+					String slot = items[0];
+					String[] values = items[1].trim().split(",");
+					slot_values.put(slot, new HashSet<String>(Arrays.asList(values)));
+				}
+			}
+			
+			logger.info("slot_values: " + slot_values);
+			
+		} catch (IOException e) {logger.error("Error: " + e.getMessage());}
+		finally{
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+		               e.printStackTrace();
+		           }
+		       }
+		}
 	}
 
 	private void loadDialogues(String corpus){
@@ -104,6 +156,7 @@ public class AnalyseDialogue{
 	public void start(){
 		Queue<String> utt_queue = new LinkedList<String>();
 		Queue<String> utt_ttr_queue = new LinkedList<String>();
+		actSet = new TreeSet<String>();
 		
 		if(this.dlgList != null && !this.dlgList.isEmpty()){
 			for(Dialogue dlg: this.dlgList){
@@ -128,9 +181,10 @@ public class AnalyseDialogue{
 					for(int i=0; i< utt.getTotalNumberOfSegments(); i++){
 //						logger.info("utt.getUttSegment("+i+"): " + utt.getUttSegment(i));
 						text = utt.getUttSegment(i);
-						text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
+						text = text.replaceAll("%colorvalue", this.slot_values.get("%colorvalue").iterator().next()).replaceAll("%shapevalue", this.slot_values.get("%shapevalue").iterator().next());
 						String act = utt.getDAt(i);
 						act = this.convert_act_to_sa_name(act);
+						actSet.add(act);
 						
 						// parse the text using DyLan module
 						// if throw an exception, print the entire dialogue into a separate .txt file, otherwise, keep parsing
@@ -202,6 +256,17 @@ public class AnalyseDialogue{
 					} catch (IOException e1) {
 						logger.error(e1.getMessage());
 					}
+				}
+			}
+		}
+
+		if(!actSet.isEmpty()){
+			for(String act: actSet){
+				
+				try {
+					appendExceptionToFile(this.action_map_file, act+" >> \r\n");
+				} catch (IOException e1) {
+					logger.error(e1.getMessage());
 				}
 			}
 		}

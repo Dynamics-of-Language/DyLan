@@ -87,7 +87,11 @@ public class MetaFormula extends Formula implements Serializable {
 	 */
 	@Override
 	public Formula substitute(Formula f1, Formula f2) {
-		if (this.equals(f1)) {
+		System.out.println("Subst in metaformula:"+this);
+		if (this.getValue()==null)
+			return this;
+		
+		if (this.getValue().equals(f1)) {
 			return f2;
 		} else {
 			return this;

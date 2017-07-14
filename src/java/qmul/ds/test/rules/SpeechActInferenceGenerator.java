@@ -6,26 +6,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
 import qmul.ds.Dialogue;
 import qmul.ds.Utterance;
-import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
-import qmul.ds.dag.DAGEdge;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
+import qmul.ds.formula.AtomicFormula;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.PredicateArgumentFormula;
+import qmul.ds.formula.TTRField;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.test.rules.DyLanParser.ParseForm;
 import qmul.ds.tree.Node;
@@ -37,13 +41,16 @@ public class SpeechActInferenceGenerator {
 	static Logger logger = Logger.getLogger(SpeechActInferenceGenerator.class);
 	
 	private static final String dir = "corpus/";
+	private static final String slot_values_file = "/slot-values.txt";
 	private static final String parsed_file = "/analysis/parsable_dialogues.txt";
 	public static final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple/";
 	public static final String ACTMAP = "act-mappings.txt";
 	private List<Dialogue> dlgList;
-	private SpeechActInferenceGrammar sa_gammar_templates;
+	private HashMap<String, ComputationalAction> sa_gammar_templates;
 	private SpeechActInferenceGrammar sa_inference_map;
 	private Map<String, List<String>> act_map;
+	private Map<String, Set<String>> slot_values;
+	
 	private String corpus;
 	
 	private DyLanParser dlParser;
@@ -51,21 +58,19 @@ public class SpeechActInferenceGenerator {
 	private String rescource_dir;
 	
 	public SpeechActInferenceGenerator(String corpus, String english_ttr_url){
-		this.loadDialogues(corpus);
-		
 		if(english_ttr_url == null)
 			english_ttr_url = this.ENGLISHTTRURL;
-
 		this.rescource_dir = english_ttr_url;
-				
-		this.sa_gammar_templates = new SpeechActInferenceGrammar(english_ttr_url, "speech-act-grammar-template.txt");
-//		logger.debug("sa_gammar_templates: " +sa_gammar_templates + "--"+ sa_gammar_templates.get("info-color").getEffect().toString());
 		
-		this.sa_inference_map = new SpeechActInferenceGrammar();
-		
-		this.act_map = this.loadActMappings(english_ttr_url);
+		this.loadDialogues(corpus);
+		this.loadSlotValues();
 
 		this.initialDyLanParser(english_ttr_url);
+				
+		this.sa_gammar_templates = (HashMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, "speech-act-grammar-template.txt").clone();
+//		logger.debug("sa_gammar_templates: " +sa_gammar_templates + "--"+ sa_gammar_templates.get("info-color").getEffect().toString());
+		this.sa_inference_map = new SpeechActInferenceGrammar();
+		this.act_map = this.loadActMappings(english_ttr_url);
 	}
 	
 	private Map<String, List<String>> loadActMappings(String english_ttr_url) {
@@ -113,6 +118,47 @@ public class SpeechActInferenceGenerator {
 		
 		dlParser = new DyLanParser(english_ttr_url, null);
 	}
+
+	private void loadSlotValues() {
+		if(slot_values == null)
+			slot_values = new HashMap<String, Set<String>>();
+		else
+			slot_values.clear();
+		
+		BufferedReader br = null;
+	    String line = "";
+	    String splitBy = ":";
+	        
+	    try {
+			String path = this.dir + corpus + this.slot_values_file;
+			br = new BufferedReader(new FileReader(path));
+			List<String> curDialogue = new ArrayList<String>();
+			while ((line = br.readLine()) != null) {
+				line = line.trim().toLowerCase();
+				
+				if(!line.trim().isEmpty() && !line.trim().startsWith("//")){
+					
+					String[] items = line.trim().split(splitBy);
+					
+					String slot = items[0];
+					String[] values = items[1].trim().split(",");
+					slot_values.put(slot, new HashSet<String>(Arrays.asList(values)));
+				}
+			}
+			
+			logger.info("slot_values: " + slot_values);
+			
+		} catch (IOException e) {logger.error("Error: " + e.getMessage());}
+		finally{
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+		               e.printStackTrace();
+		           }
+		       }
+		}
+	}
 	
 	private void loadDialogues(String corpus){
 		if(dlgList == null)
@@ -156,6 +202,7 @@ public class SpeechActInferenceGenerator {
 
 	private void start() {
 		for(Dialogue dlg: this.dlgList){
+			logger.info("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
 			this.dlParser.initParser();
 			
@@ -188,9 +235,10 @@ public class SpeechActInferenceGenerator {
 					Node rootNode = resultTree.getRootNode().clone();
 					Node pointedNode = resultTree.getPointedNode().clone();
 					Formula f = pointedNode.getFormula();
-
-					TTRRecordType ttr = (TTRRecordType) pointedNode.getFormula();
-					logger.debug("act => " + act + " ==== " + pointedNode + " ==== " + ttr);
+					
+					TTRRecordType ttr = this.abstractOutSlotValues((TTRRecordType)f);
+					logger.debug("act => " + act + " ==== " + pointedNode);
+					logger.info("@@@@@@@@@@@@@@@@@@@@@ act => " + act + " ==== " + ttr);
 					
 					Tree newTree = null;
 					Iterator<Entry<String, ComputationalAction>> iterator = sa_inference_map.entrySet().iterator();
@@ -202,38 +250,59 @@ public class SpeechActInferenceGenerator {
 						if(this.isInteger(sub)){
 							logger.debug("act(" + act + ") ==== key(" + key + ")");
 							ComputationalAction cAct = entry.getValue();
-							logger.info("cAct: " + cAct.getEffect());
+							logger.debug("cAct: " + cAct.getName());
 							
 							newTree = cAct.exec(resultTree, context);
+							
+							Effect effect_template = cAct.getEffect();
+							if(effect_template instanceof IfThenElse)
+								((IfThenElse)effect_template).setupBacktrackers(new ArrayList<Meta<?>>());
 						}
 					}
 
 					if(newTree != null){
 						if(!hasSpeechActOn(newTree.getPointedNode(), act)){
+							logger.info("cannot find any clues on : " + act);
 							List<ComputationalAction> actions = this.findComputationalAction(this.sa_gammar_templates, act);
 							
 							for(ComputationalAction action: actions){
-								 Effect effect = this.addNewFormula(action.getEffect(), f);
+								Effect effect_template = action.getEffect();
+								logger.debug("old Effect:  \r\n" + effect_template);
+								
+								Effect effect = this.addNewFormula(effect_template, f);
+								logger.debug("new Effect at (" + act + "): \r\n" + effect);
+								logger.debug("old Effect again:  \r\n" + action.getEffect());
+								
+//								if(effect instanceof IfThenElse)
+//									((IfThenElse)effect).setupBacktrackers(new ArrayList<Meta<?>>());
 								
 								this.sa_inference_map.addNewComputationalAction(act, effect);
-								logger.debug("new Effect at (" + act + "): " + effect);
 							}
 						}
 					}
 					else{
+						logger.info("cannot complie a new tree on " + act);
 						List<ComputationalAction> actions = this.findComputationalAction(this.sa_gammar_templates, act);
 						
 						for(ComputationalAction action: actions){
-							 Effect effect = this.addNewFormula(action.getEffect(), f);
+							Effect effect_template = action.getEffect();
+							logger.debug("old Effect:  \r\n" + effect_template);
+							
+							Effect effect = this.addNewFormula(effect_template, f);
+							logger.debug("new Effect at (" + act + "): \r\n" + effect);
+							logger.debug("old Effect again:  \r\n" + action.getEffect());
+							
+//							if(effect instanceof IfThenElse)
+//								((IfThenElse)effect).setupBacktrackers(new ArrayList<Meta<?>>());
 							
 							this.sa_inference_map.addNewComputationalAction(act, effect);
-							logger.debug("new Effect at (" + act + "): " + effect);
 						}
 					}
 				}
 			}
 		}
-		this.sa_inference_map.exportToFile(this.rescource_dir, "learned-speech-act-inference-grammar.txt");
+		
+		this.sa_inference_map.exportToFile(this.rescource_dir, "speech-act-inference-grammar-learned.txt");
 	}
 	
 	private Effect addNewFormula(Effect effect, Formula f) {
@@ -245,18 +314,21 @@ public class SpeechActInferenceGenerator {
 			
 			Label label2 = LabelFactory.create("W1<<"+f+"");
 			ite.addNewLabelintoIF(label2);
+			
 			return ite;
 		}
 		return effect;
 	}
 
-	private List<ComputationalAction> findComputationalAction(SpeechActInferenceGrammar map, String act) {
+	private List<ComputationalAction> findComputationalAction(HashMap<String, ComputationalAction> map, String act) {
 		List<ComputationalAction> action_list = new ArrayList<ComputationalAction>();
 		
 		Iterator<Entry<String, ComputationalAction>> iterator = map.entrySet().iterator();
 		while(iterator.hasNext()){
 			Entry<String, ComputationalAction> entry = iterator.next();
 			String key = entry.getKey();
+			ComputationalAction action = entry.getValue();
+//			logger.info("Effect("+key+"): \r\n" + action.getEffect());
 			
 			if(key.trim().equals(act)){
 				action_list.add(entry.getValue());
@@ -264,7 +336,7 @@ public class SpeechActInferenceGenerator {
 			else {
 				String sub = key.replace(act+"-", "");
 				if(this.isInteger(sub)){
-					action_list.add(entry.getValue());
+					action_list.add(action);
 				}
 			}
 		}
@@ -318,21 +390,99 @@ public class SpeechActInferenceGenerator {
 		return false;
 	}
 	
+	/**
+	 * Abstracts out the slot values according to slot_values
+	 * 
+	 * @param rec
+	 * @return new record type with slot values abstracted
+	 */
+
+	public TTRRecordType abstractOutSlotValues(TTRRecordType rec) {
+
+		TTRRecordType result = new TTRRecordType();
+
+		for (TTRField f : rec.getFields()) {
+			TTRField newF = new TTRField(f);
+			if (f.getType() != null && f.getType() instanceof AtomicFormula) {
+				AtomicFormula af = (AtomicFormula) f.getType();
+				logger.debug("------------------ af.getName(): " + af.getName());
+
+				Iterator<Entry<String, Set<String>>> iterator1 = this.slot_values.entrySet().iterator();
+				while(iterator1.hasNext()){
+					Entry<String, Set<String>> entry = iterator1.next();
+					Set<String> values = entry.getValue();
+					if (values.contains(af.getName())) {
+						logger.debug("------------------ I found something I have in values : " + af.getName());
+						newF.setType(result.getFreshAtomicMetaVariable());
+					}
+				}
+
+
+			} else if (f.getType() != null && f.getType() instanceof PredicateArgumentFormula) {
+				PredicateArgumentFormula paf = (PredicateArgumentFormula) f.getType();
+				logger.debug("------------------ paf.getPredicate().getName(): " + paf.getPredicate().getName());
+				
+				Iterator<Entry<String, Set<String>>> iterator1 = this.slot_values.entrySet().iterator();
+				while(iterator1.hasNext()){
+					Entry<String, Set<String>> entry = iterator1.next();
+					Set<String> values = entry.getValue();
+					if (values.contains(paf.getPredicate().getName())) {
+						logger.debug("------------------ I found something I have in values : " + paf.getPredicate().getName());
+						newF.setType(
+								new PredicateArgumentFormula(result.getFreshPredicateMetaVariable(), paf.getArguments()));
+					}
+				}
+			}
+
+			result.add(newF);
+		}
+
+		return result.removeHead();
+
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+//    /**
+//     * Abstracts out the slot values according to slot_values - replaces them by
+//     * the right kinds of meta-variable. (PredicateMetaVariable or
+//     * FormulaMetavariable)
+//     * 
+//     * @param rec
+//     * @return new record type with slot values abstracted
+//     */
+//	public TTRRecordType abstractOutSlotValues(TTRRecordType rec) {
+//
+//		TTRRecordType result = new TTRRecordType();
+//
+//		for (TTRField f : rec.getFields()) {
+//			TTRField newF = new TTRField(f);
+//			if (f.getType() != null && f.getType() instanceof AtomicFormula) {
+//				AtomicFormula af = (AtomicFormula) f.getType();
+//
+//				Iterator<Entry<String, Set<String>>> iterator1 = this.slot_values.entrySet().iterator();
+//				while(iterator1.hasNext()){
+//					Entry<String, Set<String>> entry = iterator1.next();
+//					Set<String> values = entry.getValue();
+//					if (values.contains(af.getName())) {
+//						logger.info("------------------ I found something I have in values : " + af.getName());
+//						newF.setType(result.getFreshAtomicMetaVariable());
+//					}
+//				}
+//				
+//				if (slot_values.contains(af.getName())) {
+//
+//				}
+//
+//			} else if (f.getType() != null && f.getType() instanceof PredicateArgumentFormula) {
+//				PredicateArgumentFormula paf = (PredicateArgumentFormula) f.getType();
+//				if (slot_values.contains(paf.getPredicate().getName()))
+//
+//			}
+//
+//			result.add(newF);
+//		}
+//
+//		return result;
+//	}
 	
 	
 	public static void main(String[] args){

@@ -255,14 +255,16 @@ public class TTRField extends Formula{
 	 */
 	@Override
 	public TTRField substitute(Formula f1, Formula f2) {
-		if (type != null) {
-			if (type.equals(f1)) {
-
-				TTRField newF = new TTRField(new TTRLabel(label), dsType, f2);
-
-				return newF;
-			}
-		}
+//		if (type != null) {
+//			if (type.equals(f1)) {
+//
+//				TTRField newF = new TTRField(new TTRLabel(label), dsType, f2);
+//
+//				return newF;
+//			}
+//		}
+		
+		
 		return new TTRField(label.substitute(f1, f2), dsType,
 				(type != null) ? type.substitute(f1, f2) : type);
 
