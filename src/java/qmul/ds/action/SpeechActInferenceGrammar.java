@@ -46,9 +46,9 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 
 	public static final String FILE_NAME = "speech-act-inference-grammar.txt";
 
-	private static final String ALWAYS_GOOD_PREFIX = "*";
+	public static final String ALWAYS_GOOD_PREFIX = "*";
 
-	private static final String BACKTRACK_ON_SUCCESS_PREFIX = "+";
+	public static final String BACKTRACK_ON_SUCCESS_PREFIX = "+";
 
 	/**
 	 * Read a set of {@link ComputationalAction}s from file
