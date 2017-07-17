@@ -16,7 +16,7 @@ THEN	IF		<Z>+Q
 		THEN	abort
 		ELSE	IF		<Z>+neg
 				THEN	abort
-				ELSE	put(sa:info(V,color:Q))
+				ELSE	put(sa:info(V,color:P8))
 ELSE	abort
 
 info-shape
@@ -30,7 +30,7 @@ THEN	IF		<Z>+Q
 		THEN	abort
 		ELSE	IF		<Z>+neg
 				THEN	abort
-				ELSE	put(sa:info(V,shape:Q))
+				ELSE	put(sa:info(V,shape:P9))
 ELSE	abort
 
 info-color-shape
@@ -44,7 +44,7 @@ THEN	IF		<Z>+Q
 		THEN	abort
 		ELSE	IF		<Z>+neg
 				THEN	abort
-				ELSE	put(sa:info(V,color:Q,shape:P))
+				ELSE	put(sa:info(V,color:P8,shape:P9))
 ELSE	abort
 
 info-neg-color
@@ -55,7 +55,7 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		<Z>+neg
 		PrevSpeaker(V)
-THEN	put(sa:infoneg(V,color:Q))
+THEN	put(sa:infoneg(V,color:P8))
 ELSE	abort
 
 info-neg-shape
@@ -66,7 +66,7 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		<Z>+neg
 		PrevSpeaker(V)
-THEN	put(sa:infoneg(V,shape:Q))
+THEN	put(sa:infoneg(V,shape:P9))
 ELSE	abort
 
 polar-color
@@ -78,7 +78,7 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		PrevSpeaker(V)
-THEN	put(sa:polar(V,color:Q))
+THEN	put(sa:polar(V,color:P8))
 ELSE	abort
 
 polar-shape
@@ -90,7 +90,7 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		PrevSpeaker(V)
-THEN	put(sa:polar(V,shape:Q))
+THEN	put(sa:polar(V,shape:P9))
 ELSE	abort
 
 polar-color-shape
@@ -102,7 +102,7 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		PrevSpeaker(V)
-THEN	put(sa:polar(V,color:Q,shape:P))
+THEN	put(sa:polar(V,color:P8,shape:P9))
 ELSE	abort
 
 ask-color

@@ -137,6 +137,10 @@ public class ComputationalAction extends Action implements Comparable<Computatio
 		return super.getName();
 	}
 	
+	public void setName(String name){
+		this.name = name;
+	}
+	
 	public boolean equals(Object other)
 	{
 		if (!(other instanceof ComputationalAction))

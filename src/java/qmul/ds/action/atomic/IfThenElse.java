@@ -14,8 +14,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,7 @@ import qmul.ds.action.meta.MetaElement;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.SpeechAct;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
@@ -785,23 +788,46 @@ public class IfThenElse extends Effect implements Serializable {
 	}
 
 	public void substitues(Map<String, Formula> replacements) {
-		for(Effect e: this.THEN){
-			if(e instanceof IfThenElse){
-				System.err.println("THEN: " + (IfThenElse)e);
+		for(Effect e1: this.THEN){
+			if(e1.toString().contains("put(")){
+			
+				String act_str = e1.toString().substring(e1.toString().indexOf("put(sa:")+7, e1.toString().length()-1);
+				logger.info("------------- Found the 'put' in: " + e1 + "; act_str: " + act_str);
 				
-				if(e.toString().contains("put("))
-					System.err.println("Found the put in:" + e);
-					
+				SpeechAct subst = new SpeechAct(act_str);
+				Iterator<Entry<String, Formula>> iterator = replacements.entrySet().iterator();
+				while(iterator.hasNext()){
+					Entry<String, Formula> entry = iterator.next();
+					String key = entry.getKey();
+					Formula f2 = entry.getValue();
+					subst = subst.substitute(Formula.create(key), f2);
+				}
+				logger.info("------------- subst: " + subst);
+			}
+			else{
+				if(e1 instanceof IfThenElse)
+					((IfThenElse)e1).substitues(replacements);
 			}
 		}
 		
-		for(Effect e: this.ELSE){
-			if(e instanceof IfThenElse){
-				System.err.println("ELSE: " + (IfThenElse)e);
+		for(Effect e2: this.ELSE){
+			if(e2.toString().contains("put(")){
+				String act_str = e2.toString().substring(e2.toString().indexOf("put(sa:")+7, e2.toString().length()-1);
+				logger.info("------------- Found the 'put' in: " + e2 + "; act_str: " + act_str);
 				
-				if(e.toString().contains("put("))
-					System.err.println("Found the put in:" + e);
-					
+				SpeechAct subst = new SpeechAct(act_str);
+				Iterator<Entry<String, Formula>> iterator = replacements.entrySet().iterator();
+				while(iterator.hasNext()){
+					Entry<String, Formula> entry = iterator.next();
+					String key = entry.getKey();
+					Formula f2 = entry.getValue();
+					subst = subst.substitute(Formula.create(key), f2);
+				}
+				logger.info("------------- subst: " + subst);
+			}
+			else{
+				if(e2 instanceof IfThenElse)
+					((IfThenElse)e2).substitues(replacements);
 			}
 		}
 	}

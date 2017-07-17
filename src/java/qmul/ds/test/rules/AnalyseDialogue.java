@@ -265,7 +265,7 @@ public class AnalyseDialogue{
 			for(String act: actSet){
 				
 				try {
-					appendExceptionToFile(this.action_map_file, act+"\r\n");
+					appendExceptionToFile(this.action_map_file, act+" >> \r\n");
 				} catch (IOException e1) {
 					logger.error(e1.getMessage());
 				}
@@ -314,7 +314,7 @@ public class AnalyseDialogue{
 		
 		logger.info("before: " + action +" -- after: " + sa_name);
 		
-		return sa_name + " >> ";
+		return sa_name;
 	}
 	
 	/*********************** Main Function **************************/

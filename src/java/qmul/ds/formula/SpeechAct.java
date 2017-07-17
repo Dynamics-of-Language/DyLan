@@ -153,21 +153,21 @@ public class SpeechAct extends Formula {
 	
 	public static void main(String[] args)
 	{
-		SpeechAct a=new SpeechAct("info(V,color:%colorvalue,shape:%shapevalue)");
+		SpeechAct a=new SpeechAct("info(V, color : P)");
 		System.out.println("before substitution:"+a.content.toDebugString());
-		SpeechAct subst=a.substitute(Formula.create("%colorvalue"), Formula.create("P1"));
+		SpeechAct subst=a.substitute(Formula.create("P8"), Formula.create("P1"));
 		
 		System.out.println(a);
 		System.out.println(subst.content);
 		//System.out.println(a.content.get(new TTRLabel("actor")));
 		System.out.println(subst);
 
-		SpeechAct subst2=subst.substitute(Formula.create("%shapevalue"), Formula.create("P2"));
-		
-		System.out.println(subst);
-		System.out.println(subst2.content);
-		//System.out.println(a.content.get(new TTRLabel("actor")));
-		System.out.println(subst2);
+//		SpeechAct subst2=subst.substitute(Formula.create("%shapevalue"), Formula.create("P2"));
+//		
+//		System.out.println(subst);
+//		System.out.println(subst2.content);
+//		//System.out.println(a.content.get(new TTRLabel("actor")));
+//		System.out.println(subst2);
 		
 		//System.out.println(sa);
 		

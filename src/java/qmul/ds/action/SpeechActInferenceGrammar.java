@@ -190,71 +190,44 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 		logger.trace(this);
 	}
 	
-	public void addNewComputationalAction(String name, Effect effect){
-		String key = this.getNewKey(name);
-		logger.debug("name: " + name +"; key= " + key); 
-		
-		this.put(key, new ComputationalAction(key, effect));
-	}
-	
-	private String getNewKey(String name){
-		int index = 0;
-		
-		Iterator<Entry<String, ComputationalAction>> iterator = this.entrySet().iterator();
-		while(iterator.hasNext()){
-			Entry<String, ComputationalAction> entry = iterator.next();
-			String key = entry.getKey();
-
-			if(key.contains(name)){
-				String sub = key.replace(name+"-", "");
-				
-				if(this.isInteger(sub.trim())){
-					int exisit_index = Integer.valueOf(sub.trim());
-					if(exisit_index >= index)
-						index = exisit_index;
-				}
-			}
-		}
-		
-		return name + "-" + String.valueOf(index+1);
-	}
-
-	private boolean isInteger(String s) {
-	    try { 
-	        Integer.parseInt(s); 
-	    } catch(NumberFormatException e) { 
-	        return false; 
-	    } catch(NullPointerException e) {
-	        return false;
-	    }
-	    // only got here if we didn't return false
-	    return true;
-	}
-	
-	public void exportToFile(String dir, String fileName){
-		File file = new File(dir, fileName);
-		try {
-			if(!file.exists())
-				file.createNewFile();
-			
-			FileWriter fileWriter = new FileWriter(file, true);
-	        
-			Iterator<Entry<String, ComputationalAction>> iterator = this.entrySet().iterator();
-			while(iterator.hasNext()){
-				Entry<String, ComputationalAction> entry = iterator.next();
-				String key = entry.getKey();
-				fileWriter.append(key+"\n");
-				
-				ComputationalAction action = entry.getValue();
-				fileWriter.append(action.getEffect()+"\n");
-				
-				fileWriter.append("\r\n");
-			}
-	        fileWriter.close();
-		} catch (FileNotFoundException e) {
-			logger.warn("No speech act inference file " + file.getAbsolutePath());
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-		}
-	}
+//	public void addNewComputationalAction(String name, Effect effect){
+//		String key = this.getNewKey(name);
+//		logger.debug("name: " + name +"; key= " + key); 
+//		
+//		this.put(key, new ComputationalAction(key, effect));
+//	}
+//	
+//	private String getNewKey(String name){
+//		int index = 0;
+//		
+//		Iterator<Entry<String, ComputationalAction>> iterator = this.entrySet().iterator();
+//		while(iterator.hasNext()){
+//			Entry<String, ComputationalAction> entry = iterator.next();
+//			String key = entry.getKey();
+//
+//			if(key.contains(name)){
+//				String sub = key.replace(name+"-", "");
+//				
+//				if(this.isInteger(sub.trim())){
+//					int exisit_index = Integer.valueOf(sub.trim());
+//					if(exisit_index >= index)
+//						index = exisit_index;
+//				}
+//			}
+//		}
+//		
+//		return name + "-" + String.valueOf(index+1);
+//	}
+//
+//	private boolean isInteger(String s) {
+//	    try { 
+//	        Integer.parseInt(s); 
+//	    } catch(NumberFormatException e) { 
+//	        return false; 
+//	    } catch(NullPointerException e) {
+//	        return false;
+//	    }
+//	    // only got here if we didn't return false
+//	    return true;
+//	}
 }
