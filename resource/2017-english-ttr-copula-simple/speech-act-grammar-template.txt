@@ -171,7 +171,9 @@ IF		¬ty(Y>Z)
 		Assert(V)
 		Fo(W1)
 		W1 << [...]
-THEN	put(sa:accept(V))
+THEN	IF		<Z>+neg
+		THEN	abort
+		ELSE	put(sa:accept(V))
 ELSE	abort
 
 accept-2
@@ -187,7 +189,9 @@ IF		¬ty(Y>Z)
 		¬V=W
 		Fo(W1)
 		W1 << [...]
-THEN	put(sa:accept(V))
+THEN	IF		<Z>+neg
+		THEN	abort
+		ELSE	put(sa:accept(V))
 ELSE	abort
 
 reject

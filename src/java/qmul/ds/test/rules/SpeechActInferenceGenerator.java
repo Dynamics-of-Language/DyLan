@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -593,10 +594,73 @@ public class SpeechActInferenceGenerator {
 				}
 			}
 		}
-		
 		this.exportToFile(sa_inference_map, this.rescource_dir, "speech-act-inference-grammar-learned.txt");
+		this.test();
 	}
-	
+
+	private void test() {
+		for(Dialogue dlg: this.dlgList){
+			logger.info("----------------- New Dialogue -----------------");
+			// reset the dylan parser for new dialogue
+			this.dlParser.initParser();
+			ParseForm result = null;
+			
+			for(Utterance utt: dlg){
+				for(int i=0; i< utt.getTotalNumberOfSegments(); i++){
+//					logger.debug("utt.getUttSegment("+i+"): " + utt.getUttSegment(i));
+					String text = utt.getUttSegment(i);
+					text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
+					String act = utt.getDAt(i);
+					
+					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
+						text += ".";
+					
+					String[] words = text.split(" ");
+					for(int j=0; j < words.length; j++){
+						String word = utt.getSpeaker() + ": " + words[j];
+						result = dlParser.parse(word);
+					}
+
+					Tree resultTree = result.getContxtalTree().clone();
+					Context<DAGTuple, GroundableEdge> context = result.getContext();
+					
+					Tree newTree = null;
+					Collection<List<ComputationalAction>> actions = this.sa_inference_map.values();
+					
+					outofloop:
+					for(List<ComputationalAction> action_list: actions){
+						for(ComputationalAction cAct: action_list){
+							logger.debug("Computational Action: " + cAct.getName());
+							newTree = cAct.exec(resultTree, context);
+							
+							if(newTree != null)
+								break outofloop;
+						}
+					}
+					
+					if(newTree != null){
+						String speech_act = "";
+						
+						if(newTree.getPointedNode() != null){
+							for(Label l: newTree.getPointedNode()){
+								String label_str = l.toString().trim();
+								if(label_str.startsWith("sa:"))
+									speech_act = label_str.trim();
+							}
+						}
+						
+						logger.info("act("+act+"); "+"text("+text+"); " + " --> " + speech_act);
+						try {
+							this.exportToFile("speech_tag.txt", text + " :: act("+act+") --> " + speech_act);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
 	
 	
 	private Map<String, List<String>> findComputationalActionTemplates(HashMap<String, List<String>> map, String act) {
@@ -676,6 +740,23 @@ public class SpeechActInferenceGenerator {
 		}
 	}
 
+	private void exportToFile(String filename, String line) throws IOException{
+		String path = this.dir + corpus + "/" + filename;
+
+		File newfile = new File(path);
+		FileWriter fileWriter = new FileWriter(newfile, true);
+		if(!newfile.exists()){
+			newfile.createNewFile(); 
+			fileWriter.write(line+"\r\n");
+		}
+		
+		else
+	        fileWriter.append(line+"\r\n");
+
+        fileWriter.close();
+	}
+	
+	
 	private boolean isInteger(String s) {
 	    try { 
 	        Integer.parseInt(s); 
@@ -798,7 +879,6 @@ public class SpeechActInferenceGenerator {
 		String comman  = scanInput.nextLine();
 			
 		if(comman.trim().equals("y")){
-			learner.start();
 			learner.start();
 		}
 		else if(comman.trim().equals("n"))

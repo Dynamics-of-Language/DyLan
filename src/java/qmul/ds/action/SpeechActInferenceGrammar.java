@@ -143,6 +143,8 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 			boolean backtrackOnSuccess = false;
 			List<String> lines = new ArrayList<String>();
 			while ((line = reader.readLine()) != null) {
+//				logger.info("processing: " + line);
+				
 				line = Lexicon.comment(line.trim());
 				if ((line == null) || (line.isEmpty() && lines.isEmpty())) {
 					continue;

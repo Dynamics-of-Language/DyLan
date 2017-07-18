@@ -5,176 +5,790 @@ Can be learned from data annotated with speech acts (by parsing and generating t
 
 *//
 
-//*
-info-color-1
-IF	  	¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		PrevSpeaker(V)
-THEN	IF		<Z>+Q
-		THEN	abort
-		ELSE	IF		<Z>+neg
-				THEN	abort
-				ELSE	put(sa:info(V,color:Q))
-ELSE	abort
+info-shape-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x21 : e|e15==eq : es|x16 : e|x19==this : e|p46==shape(x21) : t|pred3==shape(x16) : cn|p34==attr(pred3) : t|p33==def(x16) : t|p45==subj(e15, x16) : t|p37==of(x16, x19) : t|p44==obj(e15, x21) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : U2))
+ELSE  abort
 
 info-shape-1
-IF	  	¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		PrevSpeaker(V)
-THEN	IF		<Z>+Q
-		THEN	abort
-		ELSE	IF		<Z>+neg
-				THEN	abort
-				ELSE	put(sa:info(V,shape:Q))
-ELSE	abort
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x1==sys : e|e3==think : es|x4==that : e|e6==eq : es|x8 : e|p2==pres(e3) : t|pred1==P2(x8) : cn|p13==shape(pred1) : t|p4==obj(e3, e6) : t|p5==subj(e3, x1) : t|p11==obj(e6, x8) : t|p12==subj(e6, x4) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : P2(x8)))
+ELSE  abort
 
-info-color-shape-1
-IF	  	¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		PrevSpeaker(V)
-THEN	IF		<Z>+Q
-		THEN	abort
-		ELSE	IF		<Z>+neg
-				THEN	abort
-				ELSE	put(sa:info(V,color:Q,shape:P))
-ELSE	abort
+info-shape-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x21==U2 : e|p34==shape(x21) : t|pred1==shape(x21) : cn|p27==attr(pred1) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : U2))
+ELSE  abort
 
-info-neg-color-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>+neg
-		PrevSpeaker(V)
-THEN	put(sa:infoneg(V,color:Q))
-ELSE	abort
+info-shape-3
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x6 : e|e3==eq : es|x2==that : e|pred1==P2(x6) : cn|p9==shape(pred1) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : P2(x6)))
+ELSE  abort
 
-info-neg-shape-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>+neg
-		PrevSpeaker(V)
-THEN	put(sa:infoneg(V,shape:Q))
-ELSE	abort
+info-shape-4
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x13 : e|e4==eq : es|x9==this : e|pred1==P2(x13) : cn|p24==shape(pred1) : t|p23==subj(e4, x9) : t|p22==obj(e4, x13) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : P2(x13)))
+ELSE  abort
 
-polar-color-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		+Q
-		¬<Z>+meta
-		PrevSpeaker(V)
-THEN	put(sa:polar(V,color:Q))
-ELSE	abort
+info-shape-5
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x2 : e|p2==shape(x2) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : U2))
+ELSE  abort
 
-polar-shape-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		+Q
-		¬<Z>+meta
-		PrevSpeaker(V)
-THEN	put(sa:polar(V,shape:Q))
-ELSE	abort
-
-polar-color-shape-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		+Q
-		¬<Z>+meta
-		PrevSpeaker(V)
-THEN	put(sa:polar(V,color:Q,shape:P))
-ELSE	abort
-
-ask-color-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>(+Q & +meta)
-		PrevSpeaker(V)
-THEN	put(sa:askcolor(V))
-ELSE	abort
+ask-shape-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x7 : e|pred1==shape(x7) : cn|p11==attr(pred1) : t|p10==def(x7) : t]
+      PrevSpeaker(V)
+THEN  put(sa:askshape(V))
+ELSE  abort
 
 ask-shape-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>(+Q & +meta)
-		PrevSpeaker(V)
-THEN	put(sa:askshape(V))
-ELSE	abort
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x19 : e|pred5==shape(x19) : cn|p29==attr(pred5) : t]
+      PrevSpeaker(V)
+THEN  put(sa:askshape(V))
+ELSE  abort
 
-openask-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>(+Q & +meta)
-		PrevSpeaker(V)
-THEN	put(sa:openask(V))
-ELSE	abort
+polar-color-shape-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Fo(W1)
+      W1<<[x8 : e|p13==P4(x8) : t|p14==color(p13) : t|pred1==P2(x8) : cn|p15==shape(pred1) : t]
+      PrevSpeaker(V)
+THEN  put(sa:polar(V, color : P4(x8), shape : P2(x8)))
+ELSE  abort
 
-accept-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		¬<Z>+Q
-		PrevSpeaker(V)
-		Assert(V)
-THEN	put(sa:accept(V))
-ELSE	abort
-
-accept-2
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		¬<Z>+Q
-		PrevSpeaker(V)
-		Assert(V)
-		Assert(W)
-		¬V=W
-THEN	put(sa:accept(V))
-ELSE	abort
+reject-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      <Z>+neg
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x16==U2 : e|p27==color(x16) : t]
+THEN  put(sa:reject(V))
+ELSE  abort
 
 reject-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		¬<Z>+Q
-		<Z>+neg
-		PrevSpeaker(V)
-		Assert(V)
-THEN	put(sa:reject(V))
-ELSE	abort
-*//
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      <Z>+neg
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x3==this : e|e2==eq : es|x5 : e|p2==pres(e2) : t|pred1==P4(x5) : cn|p12==shape(pred1) : t|p9==P2(x5) : t|p10==color(p9) : t|p4==obj(e2, x5) : t|p5==subj(e2, x3) : t]
+THEN  put(sa:reject(V))
+ELSE  abort
+
+info-color-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x4==U2 : e|e5==eq : es|x2 : e|p10==color(x4) : t|p2==def(x2) : t|pred1==color(x2) : cn|p3==attr(pred1) : t|p9==subj(e5, x2) : t|p8==obj(e5, x4) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, color : U2))
+ELSE  abort
+
+info-color-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x6 : e|e3==eq : es|x2==that : e|p9==P2(x6) : t|p10==color(p9) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, color : P2(x6)))
+ELSE  abort
+
+info-color-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x9 : e|p14==color(x9) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, color : U2))
+ELSE  abort
+
+polar-color-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Fo(W1)
+      W1<<[x14 : e|e16==eq : es|x9 : e|p29==color(x14) : t|p18==def(x9) : t|pred2==color(x9) : cn|p23==attr(pred2) : t|p28==subj(e16, x9) : t|p27==obj(e16, x14) : t]
+      PrevSpeaker(V)
+THEN  put(sa:polar(V, color : U2))
+ELSE  abort
+
+polar-color-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Fo(W1)
+      W1<<[x30==U2 : e|p54==color(x30) : t]
+      PrevSpeaker(V)
+THEN  put(sa:polar(V, color : U2))
+ELSE  abort
+
+polar-color-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Fo(W1)
+      W1<<[x4==this : e|e2==eq : es|x7 : e|p2==pres(e2) : t|p11==P2(x7) : t|p12==color(p11) : t|p4==obj(e2, x7) : t|p5==subj(e2, x4) : t]
+      PrevSpeaker(V)
+THEN  put(sa:polar(V, color : P2(x7)))
+ELSE  abort
+
+openask-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x3 : e|p4==here(x3) : t|p5==def(x3) : t]
+      PrevSpeaker(V)
+THEN  put(sa:openask(V))
+ELSE  abort
+
+openask-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x1==you : e|e2==try : es|x4==this : e|p2==imperative(e2) : t|p4==obj(e2, x4) : t|p5==subj(e2, x1) : t]
+      PrevSpeaker(V)
+THEN  put(sa:openask(V))
+ELSE  abort
+
+info-color-shape-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x4==U2 : e|e5==eq : es|x2 : e|p9==color(x4) : t|p2==def(x2) : t|pred1==P2(x2) : cn|p3==shape(pred1) : t|p8==subj(e5, x2) : t|p7==obj(e5, x4) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, color : U2, shape : P2(x2)))
+ELSE  abort
+
+info-color-shape-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[p9 : t|pred1 : cn|x6 : e|e3==eq : es|x2==this : e|p10==color(p9) : t|p11==shape(pred1) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, color : P4(x6), shape : P2(x6)))
+ELSE  abort
+
+info-color-shape-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[x6==U2 : e|p9==shape(x6) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, shape : U2, color : ))
+ELSE  abort
+
+info-color-shape-3
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Fo(W1)
+      W1<<[p6 : t|pred1 : cn|x4 : e|p7==color(p6) : t|p8==shape(pred1) : t]
+      PrevSpeaker(V)
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    <Z>+neg
+            THEN  abort
+            ELSE  put(sa:info(V, color : P4(x4), shape : P2(x4)))
+ELSE  abort
+
+ask-color-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x2 : e|e4==eq : es|x9==this : e|p5==pres(e4) : t|pred1==color(x2) : cn|p2==attr(pred1) : t|p6==obj(e4, x9) : t|p7==subj(e4, x2) : t]
+      PrevSpeaker(V)
+THEN  put(sa:askcolor(V))
+ELSE  abort
+
+ask-color-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x3 : e|pred1==color(x3) : cn|p7==attr(pred1) : t|p4==here(x3) : t|p5==def(x3) : t]
+      PrevSpeaker(V)
+THEN  put(sa:askcolor(V))
+ELSE  abort
+
+ask-color-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      <Z>(+Q& +meta)
+      Fo(W1)
+      W1<<[x9 : e|pred3==color(x9) : cn|p20==attr(pred3) : t|p19==def(x9) : t]
+      PrevSpeaker(V)
+THEN  put(sa:askcolor(V))
+ELSE  abort
+
+polar-shape-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Fo(W1)
+      W1<<[x31==U2 : e|e26==eq : es|x28 : e|p58==shape(x31) : t|p49==def(x28) : t|p48==here(x28) : t|pred8==shape(x28) : cn|p51==attr(pred8) : t|p57==subj(e26, x28) : t|p56==obj(e26, x31) : t]
+      PrevSpeaker(V)
+THEN  put(sa:polar(V, shape : U2))
+ELSE  abort
+
+polar-shape-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Fo(W1)
+      W1<<[x7 : e|e7==eq : es|x2 : e|x5==this : e|p15==shape(x7) : t|pred1==shape(x2) : cn|p3==attr(pred1) : t|p2==def(x2) : t|p14==subj(e7, x2) : t|p6==for(x2, x5) : t|p13==obj(e7, x7) : t]
+      PrevSpeaker(V)
+THEN  put(sa:polar(V, shape : U2))
+ELSE  abort
+
+accept-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x6 : e|e5==eq : es|x3 : e|p14==color(x6) : t|p5==def(x3) : t|p4==here(x3) : t|pred1==color(x3) : cn|p7==attr(pred1) : t|p13==subj(e5, x3) : t|p12==obj(e5, x6) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x6 : e|e5==eq : es|x3 : e|p14==color(x6) : t|p5==def(x3) : t|p4==here(x3) : t|pred1==color(x3) : cn|p7==attr(pred1) : t|p13==subj(e5, x3) : t|p12==obj(e5, x6) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x4==U2 : e|e3==eq : es|x1==this : e|p6==color(x4) : t|p5==subj(e3, x1) : t|p4==obj(e3, x4) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-3
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x4==U2 : e|e3==eq : es|x1==this : e|p6==color(x4) : t|p5==subj(e3, x1) : t|p4==obj(e3, x4) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-4
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x1==sys : e|e3==think : es|x4==that : e|e6==eq : es|x8 : e|p2==pres(e3) : t|pred1==P2(x8) : cn|p13==shape(pred1) : t|p4==obj(e3, e6) : t|p5==subj(e3, x1) : t|p11==obj(e6, x8) : t|p12==subj(e6, x4) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-5
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x1==sys : e|e3==think : es|x4==that : e|e6==eq : es|x8 : e|p2==pres(e3) : t|pred1==P2(x8) : cn|p13==shape(pred1) : t|p4==obj(e3, e6) : t|p5==subj(e3, x1) : t|p11==obj(e6, x8) : t|p12==subj(e6, x4) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-6
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x6 : e|e3==eq : es|x2==that : e|pred1==P2(x6) : cn|p9==shape(pred1) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-7
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x6 : e|e3==eq : es|x2==that : e|pred1==P2(x6) : cn|p9==shape(pred1) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-8
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x7==U2 : e|p13==color(x7) : t|pred1==color(x7) : cn|p2==attr(pred1) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-9
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x7==U2 : e|p13==color(x7) : t|pred1==color(x7) : cn|p2==attr(pred1) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-10
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x21==U2 : e|e15==eq : es|x18==this : e|p33==shape(x21) : t|p32==subj(e15, x18) : t|p31==obj(e15, x21) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-11
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x21==U2 : e|e15==eq : es|x18==this : e|p33==shape(x21) : t|p32==subj(e15, x18) : t|p31==obj(e15, x21) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-12
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[p9 : t|pred1 : cn|x6 : e|e3==eq : es|x2==this : e|p10==color(p9) : t|p11==shape(pred1) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-13
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[p9 : t|pred1 : cn|x6 : e|e3==eq : es|x2==this : e|p10==color(p9) : t|p11==shape(pred1) : t|p8==subj(e3, x2) : t|p7==obj(e3, x6) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-14
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x31==U2 : e|e26==eq : es|x28 : e|p58==shape(x31) : t|p49==def(x28) : t|p48==here(x28) : t|pred8==shape(x28) : cn|p51==attr(pred8) : t|p57==subj(e26, x28) : t|p56==obj(e26, x31) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-15
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x31==U2 : e|e26==eq : es|x28 : e|p58==shape(x31) : t|p49==def(x28) : t|p48==here(x28) : t|pred8==shape(x28) : cn|p51==attr(pred8) : t|p57==subj(e26, x28) : t|p56==obj(e26, x31) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-16
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x4 : e|p6==P4(x4) : t|p7==color(p6) : t|pred1==P2(x4) : cn|p8==shape(pred1) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-17
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x4 : e|p6==P4(x4) : t|p7==color(p6) : t|pred1==P2(x4) : cn|p8==shape(pred1) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-18
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x7==U2 : e|e7==eq : es|x2 : e|x5==this : e|p15==shape(x7) : t|pred1==shape(x2) : cn|p3==attr(pred1) : t|p2==def(x2) : t|p14==subj(e7, x2) : t|p6==for(x2, x5) : t|p13==obj(e7, x7) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-19
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x7==U2 : e|e7==eq : es|x2 : e|x5==this : e|p15==shape(x7) : t|pred1==shape(x2) : cn|p3==attr(pred1) : t|p2==def(x2) : t|p14==subj(e7, x2) : t|p6==for(x2, x5) : t|p13==obj(e7, x7) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-20
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Fo(W1)
+      W1<<[x9==U2 : e|e7==eq : es|x7 : e|p25==color(x9) : t|p17==def(x7) : t|pred2==color(x7) : cn|p18==attr(pred2) : t|p24==subj(e7, x7) : t|p23==obj(e7, x9) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
+accept-21
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬<Z>+Q
+      PrevSpeaker(V)
+      Assert(V)
+      Assert(W)
+      ¬V=W
+      Fo(W1)
+      W1<<[x9==U2 : e|e7==eq : es|x7 : e|p25==color(x9) : t|p17==def(x7) : t|pred2==color(x7) : cn|p18==attr(pred2) : t|p24==subj(e7, x7) : t|p23==obj(e7, x9) : t]
+THEN  IF    <Z>+neg
+      THEN  abort
+      ELSE  put(sa:accept(V))
+ELSE  abort
+
