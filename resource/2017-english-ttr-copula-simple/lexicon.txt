@@ -8,6 +8,7 @@ square                          concept_name	                       	square					
 circle							concept_name							circle					s3			shape
 triangle						concept_name							triangle				s3			shape
 name							count						name						  s3							name
+job							count						job						  s3							job
 shape							count						shape						  s3							attr
 color							count						color						  s3							attr
 shape							count						shape						  s3							attr
@@ -30,6 +31,9 @@ yellow							concept_name							yellow				s3			color
 orange							concept_name							orange					s3			color
 black							concept_name							black				s3			color
 new								adj								new
+good								adj								good
+great								adj								great
+right						  	adj						right
 new								adj_postcop								new
 called							naming_adj						called
 named							naming_adj						named					

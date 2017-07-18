@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
+import qmul.ds.action.meta.MetaFormula;
 
 /**
  * A {@link Formula} metavariable as used within, other, bigger formulae, such as a TTRRecordType.
@@ -93,10 +94,31 @@ public class FormulaMetavariable extends Formula implements Serializable {
 	 */
 	@Override
 	public Formula substitute(Formula f1, Formula f2) {
-		if (this.equals(f1)) {
-			return f2;
-		} else {
+		
+		if (this.getValue()==null && !(f1 instanceof FormulaMetavariable))
 			return this;
+		else if (this.getValue()==null)
+		{
+			FormulaMetavariable metaF1=(FormulaMetavariable)f1;
+			if (metaF1.meta.getName().equals(meta.getName()))
+				return f2;
+			else
+				return this;
+			
+		}
+		else
+		{
+			//if we are here, value of this meta is non-null
+			if (this.getValue().equals(f1) && f2 instanceof FormulaMetavariable) {
+				return f2;
+			} else if (this.getValue().equals(f1)){
+				
+				meta.setValue(f2);
+				return this;
+			}
+			else 
+				return this;
+			
 		}
 	}
 

@@ -27,7 +27,6 @@ import qmul.ds.Context;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
-import qmul.ds.action.meta.MetaPredicate;
 import qmul.ds.action.meta.MetaTTRRecordType;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;

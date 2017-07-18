@@ -155,7 +155,7 @@ public class SpeechAct extends Formula {
 	{
 		SpeechAct a=new SpeechAct("info(V, color : P)");
 		System.out.println("before substitution:"+a.content.toDebugString());
-		SpeechAct subst=a.substitute(Formula.create("P8"), Formula.create("P1"));
+		SpeechAct subst=a.substitute(Formula.create("P"), Formula.create("P1"));
 		
 		System.out.println(a);
 		System.out.println(subst.content);

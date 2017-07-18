@@ -33,6 +33,7 @@ import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.AtomicFormula;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.Predicate;
 import qmul.ds.formula.PredicateArgumentFormula;
 import qmul.ds.formula.TTRField;
 import qmul.ds.formula.TTRRecordType;
@@ -53,7 +54,6 @@ public class SpeechActInferenceGenerator {
 	public final String ACTMAP = "act-mappings.txt";
 	private List<Dialogue> dlgList;
 //	private HashMap<String, ComputationalAction> sa_gammar_templates;
-//	private SpeechActInferenceGrammar sa_inference_map;
 
 	private HashMap<String, List<String>> sa_gammar_templates;
 	private HashMap<String, List<ComputationalAction>> sa_inference_map;
@@ -78,14 +78,9 @@ public class SpeechActInferenceGenerator {
 		this.loadDialogues(corpus);
 		this.loadSlotValues();
 		this.loadTeamplates(english_ttr_url);		
-		logger.info("sa_gammar_templates: " +sa_gammar_templates);
+		logger.debug("sa_gammar_templates: " +sa_gammar_templates);
 		
 		this.sa_inference_map = new HashMap<String, List<ComputationalAction>>();
-				
-//		this.sa_gammar_templates = (HashMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, "speech-act-grammar-template.txt").clone();
-//		logger.info("sa_gammar_templates: " +sa_gammar_templates + "--"+ sa_gammar_templates.get("info-color").getEffect().toString());
-		
-//		this.sa_inference_map = new SpeechActInferenceGrammar();
 	}
 	
 	
@@ -200,7 +195,7 @@ public class SpeechActInferenceGenerator {
 				}
 			}
 			
-			logger.info("slot_values: " + slot_values);
+			logger.debug("slot_values: " + slot_values);
 			
 		} catch (IOException e) {logger.error("Error: " + e.getMessage());}
 		finally{
@@ -253,12 +248,12 @@ public class SpeechActInferenceGenerator {
 			logger.error(e);
 			logger.error("Error reading speech act grammar from " + br);
 		}
-		logger.info("Loaded speech act grammar with " + this.sa_gammar_templates.size() + " speech act inference action entries.");
+		logger.debug("Loaded speech act grammar with " + this.sa_gammar_templates.size() + " speech act inference action entries.");
 	}
 	
 	/************************ ENF of Class Initialiasation *******************************/
 
-	private void start() {
+	private void start(boolean keepTest) {
 		for(Dialogue dlg: this.dlgList){
 			logger.info("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
@@ -271,6 +266,8 @@ public class SpeechActInferenceGenerator {
 					String text = utt.getUttSegment(i);
 					text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
 					String act = utt.getDAt(i);
+					
+					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
 					
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
@@ -293,7 +290,7 @@ public class SpeechActInferenceGenerator {
 					logger.debug("@@@@@@ meta replacements: " + this.meta_replacements);
 					
 					if(act.equals("info-color-shape")){
-						logger.info("@@@---@@@ act => " + act + " ==== " + ttr);
+						logger.debug("@@@---@@@ act => " + act + " ==== " + ttr);
 					}
 					
 					Tree newTree = null;
@@ -302,10 +299,10 @@ public class SpeechActInferenceGenerator {
 					if(action_list != null){
 						// go through all existing grammars under the particular action
 						for(ComputationalAction cAct: action_list){
-							logger.debug("Computational Action: " + cAct.getName());
-
+							logger.debug("Exec sa template: " + cAct.getName());
+							logger.debug("On tree:"+resultTree);
 							newTree = cAct.exec(resultTree, context);
-							
+							logger.debug("result:"+newTree);
 							Effect effect_template = cAct.getEffect();
 							if(effect_template instanceof IfThenElse){
 								((IfThenElse)effect_template).setupBacktrackers(new ArrayList<Meta<?>>());
@@ -332,7 +329,7 @@ public class SpeechActInferenceGenerator {
 											TTRRecordType exist_ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
 			
 											boolean isSubsumed = exist_ttr.subsumes(ttr);
-											logger.info("isSubsumed: {" + exist_ttr +"}\r\n  {" + ttr + "} \r\n = " + isSubsumed);
+											logger.info("["+j+"] isSubsumed: {" + exist_ttr +"}\r\n  {" + ttr + "} \r\n = " + isSubsumed);
 											
 											if(!isSubsumed){
 												newList.add(cAct);
@@ -346,7 +343,7 @@ public class SpeechActInferenceGenerator {
 						
 						// creat new Computational Action with new ttr formula
 						Map<String, List<String>> act_templates = this.findComputationalActionTemplates(this.sa_gammar_templates, act);
-						logger.info("act_templates(" + act_templates.size() + ")");
+						logger.debug("act_templates(" + act_templates.size() + ")");
 						
 						Iterator<Entry<String, List<String>>> iterator1 = act_templates.entrySet().iterator();
 						while(iterator1.hasNext()){
@@ -354,6 +351,7 @@ public class SpeechActInferenceGenerator {
 							
 							// cope with action name 
 							String name = entry.getKey();
+							logger.info("act_template: " + name);
 							boolean alwaysGood = name.startsWith(SpeechActInferenceGrammar.ALWAYS_GOOD_PREFIX);
 							if (alwaysGood) {
 								name = name.substring(SpeechActInferenceGrammar.ALWAYS_GOOD_PREFIX.length());
@@ -369,7 +367,10 @@ public class SpeechActInferenceGenerator {
 							
 							List<String> act_lines = new ArrayList<String>();
 							for(String line:  lines){
+								logger.info(line);
+								
 								if(line.contains("W1 << [...]")){
+									ttr.resetMetas();
 									String newline = line.replace("[...]", ttr.toString());
 									act_lines.add(newline);
 								}
@@ -594,11 +595,12 @@ public class SpeechActInferenceGenerator {
 				}
 			}
 		}
-		this.exportToFile(sa_inference_map, this.rescource_dir, "speech-act-inference-grammar-learned.txt");
-		this.test();
+		this.exportToFile(sa_inference_map, this.rescource_dir, "speech-act-inference-grammar.txt");
+		if(keepTest)
+			this.test1();
 	}
 
-	private void test() {
+	private void test1() {
 		for(Dialogue dlg: this.dlgList){
 			logger.info("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
@@ -623,6 +625,13 @@ public class SpeechActInferenceGenerator {
 
 					Tree resultTree = result.getContxtalTree().clone();
 					Context<DAGTuple, GroundableEdge> context = result.getContext();
+
+					try {
+						this.exportToFile("speech_tag.txt", text + " :: act("+act+")");
+						this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					
 					Tree newTree = null;
 					Collection<List<ComputationalAction>> actions = this.sa_inference_map.values();
@@ -630,8 +639,11 @@ public class SpeechActInferenceGenerator {
 					outofloop:
 					for(List<ComputationalAction> action_list: actions){
 						for(ComputationalAction cAct: action_list){
-							logger.debug("Computational Action: " + cAct.getName());
+
+							logger.info("(Testing) Exec sa template: " + cAct.getName());
+							logger.info("On tree:"+resultTree);
 							newTree = cAct.exec(resultTree, context);
+							logger.info("result:"+newTree);
 							
 							if(newTree != null)
 								break outofloop;
@@ -651,7 +663,8 @@ public class SpeechActInferenceGenerator {
 						
 						logger.info("act("+act+"); "+"text("+text+"); " + " --> " + speech_act);
 						try {
-							this.exportToFile("speech_tag.txt", text + " :: act("+act+") --> " + speech_act);
+							this.exportToFile("speech_tag.txt", "  --> " + speech_act);
+							this.exportToFile("speech_tag.txt", "");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -660,11 +673,66 @@ public class SpeechActInferenceGenerator {
 			}
 		}
 	}
+	
+	private void test2() {
+		for(Dialogue dlg: this.dlgList){
+			logger.info("----------------- New Dialogue -----------------");
+			// reset the dylan parser for new dialogue
+			this.dlParser.initParser();
+			ParseForm result = null;
+			
+			for(Utterance utt: dlg){
+				for(int i=0; i< utt.getTotalNumberOfSegments(); i++){
+//					logger.debug("utt.getUttSegment("+i+"): " + utt.getUttSegment(i));
+					String text = utt.getUttSegment(i);
+					text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
+					String act = utt.getDAt(i);
+					
+					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
+						text += ".";
+					
+					String[] words = text.split(" ");
+					for(int j=0; j < words.length; j++){
+						String word = utt.getSpeaker() + ": " + words[j];
+						result = dlParser.parse(word);
+					}
 
+					Tree resultTree = result.getContxtalTree().clone();
+					Context<DAGTuple, GroundableEdge> context = result.getContext();
+
+					try {
+						this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
+						this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
+						
+						List<String> speech_act_list = new ArrayList<String>();
+						
+						if(resultTree.getPointedNode() != null){
+							for(Label l: resultTree.getPointedNode()){
+								String label_str = l.toString().trim();
+								if(label_str.startsWith("sa:") && label_str.contains(utt.getSpeaker()))
+									speech_act_list.add(label_str.trim());
+							}
+						}
+						
+						logger.info("act("+act+"); "+"text("+text+"); " + " --> " + speech_act_list);
+						try {
+							this.exportToFile("speech_tag.txt", "  --> " + speech_act_list);
+							this.exportToFile("speech_tag.txt", "");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 	
 	
 	private Map<String, List<String>> findComputationalActionTemplates(HashMap<String, List<String>> map, String act) {
-		logger.info("++++++++++ act : " + act);
+		logger.debug("++++++++++ act : " + act);
 		logger.debug("++++++++++ ComputationalAction MAP : " + map);
 		Map<String, List<String>> act_map = new HashMap<String, List<String>>();
 			
@@ -696,7 +764,7 @@ public class SpeechActInferenceGenerator {
 				String f = entry.getValue();
 				line = line.replace(key, f);
 			}
-			logger.info("------------- new line: " + line);
+			logger.debug("------------- new line: " + line);
 			
 			return line;
 		}
@@ -772,13 +840,13 @@ public class SpeechActInferenceGenerator {
 	// check if the pointed Node contains particular speech-act
 	private boolean hasSpeechActOn(Node pointedNode, String act){
 		if(pointedNode != null){
-			logger.info("@@@@@@@@@@@@@ act: " + act + " -- Pointed Node: " + pointedNode);
+			logger.debug("@@@@@@@@@@@@@ act: " + act + " -- Pointed Node: " + pointedNode);
 			
 			for(Label l: pointedNode){
 				String label_str = l.toString().trim();
 				if(label_str.startsWith("sa:")){
 					label_str = label_str.replace("sa:", "");
-					logger.info("@@@@@@@@@@@@@ Label String: " + label_str);
+					logger.debug("@@@@@@@@@@@@@ Label String: " + label_str);
 					
 					if(act_map != null && act_map.containsKey(act)){
 						
@@ -792,7 +860,7 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(anyMatch){
-							logger.info("++++++++++ label_str: " + label_str + ";   act: " + act);
+							logger.debug("++++++++++ label_str: " + label_str + ";   act: " + act);
 							return true;
 						}
 					}
@@ -829,7 +897,7 @@ public class SpeechActInferenceGenerator {
 						logger.debug("------------------ I found something I have in af : " + af.getName() + "; Fresh Atomic Meta Variable: " + result.getFreshAtomicMetaVariable());
 						Formula replaced = result.getFreshAtomicMetaVariable();
 						replaced.resetMetas();
-						logger.info("------------------ replaced : " + replaced + " -- getMetas: " + replaced.getMetas());
+						logger.debug("------------------ replaced : " + replaced + " -- getMetas: " + replaced.getMetas());
 						newF.setType(replaced);
 						
 						String key = entry.getKey().trim();
@@ -850,14 +918,15 @@ public class SpeechActInferenceGenerator {
 					if (values.contains(paf.getPredicate().getName())) {
 						logger.debug("------------------ I found something I have in paf : " + paf.getPredicate().getName() + "; Arguments : " + paf.getArguments());
 						logger.debug("------------------ result.getFreshPredicateMetaVariable() : " + result.getFreshPredicateMetaVariable());
-						Formula replaced = new PredicateArgumentFormula(result.getFreshPredicateMetaVariable(), paf.getArguments());
+						Predicate meta  = result.getFreshPredicateMetaVariable();
+						Formula replaced = new PredicateArgumentFormula(meta, paf.getArguments());
 						replaced.resetMetas();
-						logger.info("------------------ replaced : " + replaced + " -- getMetas: " + replaced.getMetas());
+						logger.debug("------------------ replaced : " + replaced + " -- getMetas: " + replaced.getMetas());
 						newF.setType(replaced);
 
 						String key = entry.getKey().trim();
 //						key = key.equals("%colorvalue") ? "P8" : "P9";
-						meta_replacements.put(key, replaced.toString());
+						meta_replacements.put(key, meta.toString());
 					}
 				}
 			}
@@ -865,7 +934,7 @@ public class SpeechActInferenceGenerator {
 			result.add(newF);
 		}
 		
-		logger.info("new TTR Record Type: " + result.removeHead());
+		logger.debug("new TTR Record Type: " + result.removeHead());
 
 		return result.removeHead();
 
@@ -878,8 +947,11 @@ public class SpeechActInferenceGenerator {
 		Scanner scanInput = new Scanner(System.in);
 		String comman  = scanInput.nextLine();
 			
-		if(comman.trim().equals("y")){
-			learner.start();
+		if(comman.trim().equals("1")){
+			learner.start(false);
+		}
+		else if(comman.trim().equals("2")){
+			learner.test2();
 		}
 		else if(comman.trim().equals("n"))
 			System.exit(0);
@@ -912,7 +984,7 @@ public class SpeechActInferenceGenerator {
 	}
 
 	private List<ComputationalAction> findComputationalAction(HashMap<String, ComputationalAction> map, String act) {
-		logger.info("++++++++++ act : " + act);
+		logger.debug("++++++++++ act : " + act);
 		logger.debug("++++++++++ ComputationalAction MAP : " + map);
 		
 		List<ComputationalAction> action_list = new ArrayList<ComputationalAction>();

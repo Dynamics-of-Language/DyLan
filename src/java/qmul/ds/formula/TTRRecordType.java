@@ -25,7 +25,6 @@ import qmul.ds.Utterance;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
-import qmul.ds.action.meta.MetaPredicate;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.UtteredWord;

@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.MetaPredicate;
+import qmul.ds.formula.Predicate;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.tree.label.Label;
 
 /**
  * A {@link Formula} metavariable as used in rule specs e.g. X, Y
@@ -88,14 +92,32 @@ public class MetaFormula extends Formula implements Serializable {
 	@Override
 	public Formula substitute(Formula f1, Formula f2) {
 		System.out.println("Subst in metaformula:"+this);
-		if (this.getValue()==null)
+		if (this.getValue()==null && !(f1 instanceof MetaFormula))
 			return this;
-		
-		if (this.getValue().equals(f1)) {
-			return f2;
-		} else {
-			return this;
+		else if (this.getValue()==null)
+		{
+			MetaFormula metaF1=(MetaFormula)f1;
+			if (metaF1.meta.getName().equals(meta.getName()))
+				return f2;
+			else
+				return this;
+			
 		}
+		else
+		{
+			//if we are here, value of this meta is non-null
+			if (this.getValue().equals(f1) && f2 instanceof MetaFormula) {
+				return f2;
+			} else if (this.getValue().equals(f1)){
+				
+				meta.setValue(f2);
+				return this;
+			}
+			else 
+				return this;
+			
+		}
+
 	}
 
 	/*
@@ -127,6 +149,7 @@ public class MetaFormula extends Formula implements Serializable {
 	 */
 	@Override
 	public String toString() {
+		
 		return meta.toString();
 	}
 
@@ -160,6 +183,24 @@ public class MetaFormula extends Formula implements Serializable {
 			return false;
 		
 		return meta.getValue().subsumesMapped(f, new HashMap<Variable, Variable>());
+		
+	}
+	
+	
+	public static void main(String[] a)
+	{
+		TTRRecordType rec=TTRRecordType.parse("[x==arash:e|y==U1:e|p==like(x,y):t]");
+		TTRRecordType rec1=TTRRecordType.parse("[x==arash:e|y==yanchao:e|p==like(x,y):t]");
+		System.out.println(rec.subsumes(rec1));
+		System.out.println(rec);
+		
+		Predicate p2=(MetaPredicate)Formula.create("P2");
+		TTRRecordType subst=rec.substitute(new Predicate("like"), p2);
+		
+		System.out.println(subst);
+		
+		
+		
 		
 	}
 	
