@@ -16,7 +16,7 @@ THEN	IF		<Z>+Q
 		THEN	abort
 		ELSE	IF		(+neg || <Z>+neg)
 				THEN	abort
-				ELSE	put(sa:info(V,color:Q))
+				ELSE	put(sa:info(V,color:P8))
 ELSE	abort
 
 info-shape
@@ -30,7 +30,7 @@ THEN	IF		<Z>+Q
 		THEN	abort
 		ELSE	IF		(+neg || <Z>+neg)
 				THEN	abort
-				ELSE	put(sa:info(V,shape:%shapevalue))
+				ELSE	put(sa:info(V,shape:P9))
 ELSE	abort
 
 info-color-shape
@@ -44,7 +44,7 @@ THEN	IF		<Z>+Q
 		THEN	abort
 		ELSE	IF		(+neg || <Z>+neg)
 				THEN	abort
-				ELSE	put(sa:info(V,color:%colorvalue,shape:%shapevalue))
+				ELSE	put(sa:info(V,color:P8,shape:P9))
 ELSE	abort
 
 
@@ -56,7 +56,7 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:infoneg(V,color:%colorvalue))
+THEN	put(sa:infoneg(V,color:P8))
 ELSE	abort
 
 info-neg-shape
@@ -67,7 +67,7 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:infoneg(V,shape:%shapevalue))
+THEN	put(sa:infoneg(V,shape:P9))
 ELSE	abort
 
 info-neg-color-shape
@@ -78,7 +78,7 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:infoneg(V,color:%colorvalue,shape:%shapevalue))
+THEN	put(sa:infoneg(V,color:P8,shape:P9))
 ELSE	abort
 
 polar-color
@@ -90,7 +90,7 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		Speaker(V)
-THEN	put(sa:polar(V,color:%colorvalue))
+THEN	put(sa:polar(V,color:P8))
 ELSE	abort
 
 polar-shape
@@ -102,7 +102,7 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		Speaker(V)
-THEN	put(sa:polar(V,shape:%shapevalue))
+THEN	put(sa:polar(V,shape:P9))
 ELSE	abort
 
 polar-color-shape
@@ -114,7 +114,7 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		Speaker(V)
-THEN	put(sa:polar(V,color:%colorvalue,shape:%shapevalue))
+THEN	put(sa:polar(V,color:P8,shape:P9))
 ELSE	abort
 
 ask-color
@@ -165,23 +165,6 @@ THEN	IF		<Z>+Q
 		ELSE	put(sa:openask(V))
 ELSE	abort
 
-//A: this is red <rt> B: yes
-accept-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		¬<Z>+Q
-		PrevSpeaker(V)
-		Assert(V)
-		Assert(W)
-		¬V=W
-THEN	IF		(+neg || <Z>+neg)
-		THEN	abort
-		ELSE	put(sa:accept(V))
-ELSE	abort
-
 //A: this is red. B: good job.
 accept-2
 IF		¬ty(Y>Z)
@@ -194,20 +177,6 @@ IF		¬ty(Y>Z)
 THEN	IF		(+neg || <Z>+neg)
 		THEN	abort
 		ELSE	put(sa:accept(V))
-ELSE	abort
-
-
-//e.g. A: this is red. B: no
-reject-1
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		¬<Z>+Q
-		+neg
-		Assert(V)
-THEN	put(sa:reject(V))
 ELSE	abort
 
 //e.g. that's incorrect
@@ -246,7 +215,7 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:infoneg(V,color:%colorvalue))
+THEN	put(sa:infoneg(V,color:P8))
 ELSE	abort
 
 reject-shape
@@ -259,7 +228,7 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:infoneg(V,shape:%shapevalue))
+THEN	put(sa:infoneg(V,shape:P9))
 ELSE	abort
 
 reject-color-shape
@@ -272,5 +241,5 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:infoneg(V,color:%colorvalue,shape:%shapevalue))
+THEN	put(sa:infoneg(V,color:P8,shape:P9))
 ELSE	abort
