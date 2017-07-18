@@ -79,7 +79,7 @@ public class SpeechActInferenceGenerator {
 		this.loadSlotValues();
 
 		this.sa_gammar_templates = (HashMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
-		logger.info("sa_gammar_templates: " +sa_gammar_templates);
+		logger.debug("sa_gammar_templates: " +sa_gammar_templates);
 		
 		this.sa_inference_map = new HashMap<String, List<ComputationalAction>>();
 	}
@@ -214,7 +214,7 @@ public class SpeechActInferenceGenerator {
 
 	private void start(boolean keepTest) {
 		for(Dialogue dlg: this.dlgList){
-			logger.info("----------------- New Dialogue -----------------");
+			logger.debug("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
 			this.dlParser.initParser();
 			ParseForm result = null;
@@ -244,8 +244,8 @@ public class SpeechActInferenceGenerator {
 					
 					TTRRecordType ttr = this.abstractOutSlotValues((TTRRecordType)f);
 					logger.info(" ---> pointed Node: " + pointedNode);
-					logger.info(" ---> abstracted TTR: " + ttr);
-					logger.info(" ---> meta_replacements: " + this.meta_replacements);
+					logger.debug(" ---> abstracted TTR: " + ttr);
+					logger.debug(" ---> meta_replacements: " + this.meta_replacements);
 					
 					if(hasSpeechActOn(resultTree.getPointedNode(), act)){
 						this.find_speech_act(resultTree.getPointedNode());
@@ -279,7 +279,7 @@ public class SpeechActInferenceGenerator {
 							// go through all existing grammars under the particular action
 							for(ComputationalAction cAct: action_list){
 								Effect effect_template = cAct.getEffect();
-								logger.info("effect_template: " + effect_template);
+								logger.debug("effect_template: " + effect_template);
 								
 								if(effect_template instanceof IfThenElse){
 									Label[] if_labels = ((IfThenElse)effect_template).getIFClause().clone();
@@ -290,8 +290,8 @@ public class SpeechActInferenceGenerator {
 											TTRRecordType exist_ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
 											exist_ttr.resetMetas();
 											
-//											boolean isSubsumed = exist_ttr.subsumes(ttr);
-											boolean isSubsumed = ttr.subsumes(exist_ttr);
+											boolean isSubsumed = exist_ttr.subsumes(ttr);
+//											boolean isSubsumed = ttr.subsumes(exist_ttr);
 											logger.debug("isSubsumed: " + isSubsumed +" ==> " + exist_ttr +"\r\n  " + ttr + "");
 											
 											if(!isSubsumed){
@@ -301,12 +301,12 @@ public class SpeechActInferenceGenerator {
 									}
 								}
 							}
-							this.sa_inference_map.put(act, newList);
+//							this.sa_inference_map.put(act, newList);
 						}
 
 						// creat new Computational Action with new ttr formula
 						List<ComputationalAction> actions = this.findComputationalAction(this.sa_gammar_templates, act);
-						logger.info("actions(" + actions.size() + ")");
+						logger.debug("actions(" + actions.size() + ")");
 						
 						ComputationalAction current_action = null;
 						for(ComputationalAction action: actions){
@@ -361,12 +361,12 @@ public class SpeechActInferenceGenerator {
 					speech_act.add(label_str.trim());
 			}
 		}
-		logger.info("existing speech_act tags: " + speech_act);
+		logger.debug("existing speech_act tags: " + speech_act);
 	}
 
 	private void test() {
 		for(Dialogue dlg: this.dlgList){
-			logger.info("----------------- New Dialogue -----------------");
+			logger.debug("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
 			this.dlParser.initParser();
 			ParseForm result = null;
@@ -403,7 +403,7 @@ public class SpeechActInferenceGenerator {
 							}
 						}
 						
-						logger.info("act("+act+"); "+"text("+text+"); " + " --> " + speech_act_list);
+						logger.debug("act("+act+"); "+"text("+text+"); " + " --> " + speech_act_list);
 						try {
 							this.exportToFile("speech_tag.txt", "  --> " + speech_act_list);
 							this.exportToFile("speech_tag.txt", "");
@@ -486,13 +486,13 @@ public class SpeechActInferenceGenerator {
 	// check if the pointed Node contains particular speech-act
 	private boolean hasSpeechActOn(Node pointedNode, String act){
 		if(pointedNode != null){
-			logger.info("--- act: " + act + " -- Pointed Node: " + pointedNode);
+			logger.debug("--- act: " + act + " -- Pointed Node: " + pointedNode);
 			
 			for(Label l: pointedNode){
 				String label_str = l.toString().trim();
 				if(label_str.startsWith("sa:")){
 					label_str = label_str.replace("sa:", "");
-					logger.info("--- Label String: " + label_str);
+					logger.debug("--- Label String: " + label_str);
 					
 					if(act_map != null && act_map.containsKey(act)){
 						
@@ -506,7 +506,7 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(anyMatch){
-							logger.info("++++++++++ label_str: " + label_str + ";   act: " + act);
+							logger.debug("++++++++++ label_str: " + label_str + ";   act: " + act);
 							return true;
 						}
 					}
@@ -595,14 +595,19 @@ public class SpeechActInferenceGenerator {
 		Scanner scanInput = new Scanner(System.in);
 		String comman  = scanInput.nextLine();
 			
-		if(comman.trim().equals("1")){
+		if(comman.trim().equals("1"))
 			learner.start(false);
-		}
-		else if(comman.trim().equals("2")){
+		else if(comman.trim().equals("2"))
 			learner.test();
-		}
+		else if(comman.trim().equals("3"))
+		    learner.start(true);
 		else if(comman.trim().equals("n"))
 			System.exit(0);
+		
+		
+//		TTRRecordType ttr1 = TTRRecordType.parse("[x12 : e|pred1==shape(x12) : cn|p18==attr(pred1) : t|p17==def(x12) : t]");
+//		TTRRecordType ttr2 = TTRRecordType.parse("[x12 : e|head==x12 : e|p17==def(x12) : t|pred1==shape(x12) : cn|p18==attr(pred1) : t]");
+//		System.out.println("subsumes: " + ttr1.subsumes(ttr2));
 	}
 	
 	

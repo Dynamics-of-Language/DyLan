@@ -5,6 +5,19 @@ Can be learned from data annotated with speech acts (by parsing and generating t
 
 *//
 
+check
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:check(V))
+ELSE	abort
+
+
 info-color
 IF	  	¬ty(Y>Z)
 		ty(X)
@@ -128,6 +141,17 @@ IF		¬ty(Y>Z)
 THEN	put(sa:askcolor(V))
 ELSE	abort
 
+ask-color-info-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		<Z>(+Q & +meta)
+		Speaker(V)
+THEN	put(sa:askcolor(V,shape:P9))
+ELSE	abort
+
 ask-shape
 IF		¬ty(Y>Z)
 		ty(X)
@@ -137,6 +161,17 @@ IF		¬ty(Y>Z)
 		<Z>(+Q & +meta)
 		Speaker(V)
 THEN	put(sa:askshape(V))
+ELSE	abort
+
+ask-shape-info-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		<Z>(+Q & +meta)
+		Speaker(V)
+THEN	put(sa:askshape(V,color:P8))
 ELSE	abort
 
 
@@ -215,7 +250,7 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:infoneg(V,color:P8))
+THEN	put(sa:reject(V,color:P8))
 ELSE	abort
 
 reject-shape
@@ -228,7 +263,7 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:infoneg(V,shape:P9))
+THEN	put(sa:reject(V,shape:P9))
 ELSE	abort
 
 reject-color-shape
@@ -241,5 +276,5 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:infoneg(V,color:P8,shape:P9))
+THEN	put(sa:reject(V,color:P8,shape:P9))
 ELSE	abort
