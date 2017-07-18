@@ -2,8 +2,8 @@ info-color >> [info(,color :]
 info-shape >> [info(,shape :]
 info-color-shape >> [info(,color :,shape :]
 
-polar-color >> [polar(,color:]
-polar-shape >> [polar(,shape:]
+polar-color >> [polar(,color :]
+polar-shape >> [polar(,shape :]
 polar-color-shape >> [polar(,color :,shape :]
 
 info-neg-color >> [infoneg(,color :]

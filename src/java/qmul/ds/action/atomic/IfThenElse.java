@@ -787,48 +787,52 @@ public class IfThenElse extends Effect implements Serializable {
 		return ELSE;
 	}
 
-	public void substitues(Map<String, Formula> replacements) {
-		for(Effect e1: this.THEN){
-			if(e1.toString().contains("put(")){
+	public void replaceVariables(Map<Formula, Formula> replacements) {
+		for(int i=0; i< this.THEN.length; i++){
+			Effect e1 = this.THEN[i];
 			
+			if(e1.toString().startsWith("put(sa:")){
 				String act_str = e1.toString().substring(e1.toString().indexOf("put(sa:")+7, e1.toString().length()-1);
-				logger.info("------------- Found the 'put' in: " + e1 + "; act_str: " + act_str);
-				
 				SpeechAct subst = new SpeechAct(act_str);
-				Iterator<Entry<String, Formula>> iterator = replacements.entrySet().iterator();
+				logger.info("--- Found the 'put' in: " + e1 + "; act_str: " + subst.toString());
+				
+				Iterator<Entry<Formula, Formula>> iterator = replacements.entrySet().iterator();
 				while(iterator.hasNext()){
-					Entry<String, Formula> entry = iterator.next();
-					String key = entry.getKey();
+					Entry<Formula, Formula> entry = iterator.next();
+					Formula f1 = entry.getKey();
 					Formula f2 = entry.getValue();
-					subst = subst.substitute(Formula.create(key), f2);
+					subst = subst.substitute(f1, f2);
 				}
-				logger.info("------------- subst: " + subst);
+				logger.info("--- subst: " + subst);
+				
+				Effect newEfect = EffectFactory.create("put(sa:"+subst+")");
+				this.THEN[i] = newEfect;
 			}
-			else{
-				if(e1 instanceof IfThenElse)
-					((IfThenElse)e1).substitues(replacements);
-			}
+			else if(e1 instanceof IfThenElse)
+				((IfThenElse)e1).replaceVariables(replacements);
 		}
-		
-		for(Effect e2: this.ELSE){
-			if(e2.toString().contains("put(")){
+
+		for(int j=0; j< this.ELSE.length; j++){
+			Effect e2 = this.ELSE[j];
+			if(e2.toString().startsWith("put(sa")){
 				String act_str = e2.toString().substring(e2.toString().indexOf("put(sa:")+7, e2.toString().length()-1);
-				logger.info("------------- Found the 'put' in: " + e2 + "; act_str: " + act_str);
-				
 				SpeechAct subst = new SpeechAct(act_str);
-				Iterator<Entry<String, Formula>> iterator = replacements.entrySet().iterator();
+				logger.info("--- Found the 'put' in: " + e2 + "; act_str: " + subst.toString());
+				
+				Iterator<Entry<Formula, Formula>> iterator = replacements.entrySet().iterator();
 				while(iterator.hasNext()){
-					Entry<String, Formula> entry = iterator.next();
-					String key = entry.getKey();
+					Entry<Formula, Formula> entry = iterator.next();
+					Formula f1 = entry.getKey();
 					Formula f2 = entry.getValue();
-					subst = subst.substitute(Formula.create(key), f2);
+					subst = subst.substitute(f1, f2);
 				}
-				logger.info("------------- subst: " + subst);
+				logger.info("--- subst: " + subst);
+
+				Effect newEfect = EffectFactory.create("put(sa:"+subst+")");
+				this.ELSE[j] = newEfect;
 			}
-			else{
-				if(e2 instanceof IfThenElse)
-					((IfThenElse)e2).substitues(replacements);
-			}
+			else if(e2 instanceof IfThenElse)
+				((IfThenElse)e2).replaceVariables(replacements);
 		}
 	}
 }
