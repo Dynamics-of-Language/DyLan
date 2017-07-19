@@ -327,7 +327,7 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(current_action != null){
-							logger.debug("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
+							logger.info("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
 							
 							Effect effect_template = current_action.getEffect();
 							Effect effect = this.addNewFormula(effect_template, ttr);
@@ -381,6 +381,8 @@ public class SpeechActInferenceGenerator {
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 					
+					logger.info("  --> " + utt.getSpeaker() + ": " + text + " :: act("+act+")");
+					
 					String[] words = text.split(" ");
 					for(int j=0; j < words.length; j++){
 						String word = utt.getSpeaker() + ": " + words[j];
@@ -388,6 +390,7 @@ public class SpeechActInferenceGenerator {
 					}
 
 					Tree resultTree = result.getContxtalTree().clone();
+					logger.info("  --> " + resultTree.getPointedNode());
 
 					try {
 						this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
@@ -403,8 +406,8 @@ public class SpeechActInferenceGenerator {
 							}
 						}
 						
-						logger.debug("act("+act+"); "+"text("+text+"); " + " --> " + speech_act_list);
 						try {
+							logger.info("  --> " + speech_act_list);
 							this.exportToFile("speech_tag.txt", "  --> " + speech_act_list);
 							this.exportToFile("speech_tag.txt", "");
 						} catch (IOException e) {

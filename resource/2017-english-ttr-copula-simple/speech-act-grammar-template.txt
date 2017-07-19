@@ -17,6 +17,51 @@ IF	  	¬ty(Y>Z)
 THEN	put(sa:check(V))
 ELSE	abort
 
+doknowknow
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknow(V))
+ELSE	abort
+
+donotknow-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowcolor(V))
+ELSE	abort
+
+donotknow-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V))
+ELSE	abort
+
+repeatrequest
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:repeatrequest(V))
+ELSE	abort
+
 
 info-color
 IF	  	¬ty(Y>Z)
