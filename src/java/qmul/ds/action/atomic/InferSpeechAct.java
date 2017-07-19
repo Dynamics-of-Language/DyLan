@@ -81,6 +81,8 @@ public class InferSpeechAct extends Effect {
 		
 		Tree clone=tree.clone();
 		boolean doneRemoval=false;
+		
+		loopbreak:
 		for(ComputationalAction action: sag.values())
 		{
 			
@@ -96,6 +98,7 @@ public class InferSpeechAct extends Effect {
 				}
 				
 				clone=result;
+				break loopbreak;
 			}
 			
 		}

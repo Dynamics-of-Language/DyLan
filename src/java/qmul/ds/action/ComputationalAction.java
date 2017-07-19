@@ -22,6 +22,7 @@ import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.TTRRecordType;
 import qmul.ds.learn.Hypothesiser;
 import qmul.ds.learn.LexicalHypothesis;
 import qmul.ds.tree.Node;
@@ -148,5 +149,22 @@ public class ComputationalAction extends Action implements Comparable<Computatio
 		ComputationalAction o=(ComputationalAction)other;
 		return o.getName().equals(o.getName())&&this.action.equals(o.action);
 		
+	}
+	
+	public Formula getType(){
+		if(this.action instanceof IfThenElse){
+			Label[] if_labels = ((IfThenElse)this.action).getIFClause().clone();
+			
+			for(int j=0; j < if_labels.length; j++){
+				Label label = if_labels[j];
+				if(label.toString().contains("W1<<")){
+					TTRRecordType ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
+					ttr.resetMetas();
+					return ttr;
+				}
+			}
+		}
+		
+		return null;
 	}
 }

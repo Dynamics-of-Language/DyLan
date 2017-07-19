@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -51,7 +52,7 @@ public class SpeechActInferenceGenerator {
 	public final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple/";
 	public final String ACTMAP = "act-mappings.txt";
 	private List<Dialogue> dlgList;
-	private HashMap<String, ComputationalAction> sa_gammar_templates;
+	private TreeMap<String, ComputationalAction> sa_gammar_templates;
 
 //	private HashMap<String, List<String>> sa_gammar_templates;
 	private HashMap<String, List<ComputationalAction>> sa_inference_map;
@@ -76,7 +77,7 @@ public class SpeechActInferenceGenerator {
 		this.loadDialogues(corpus);
 		this.loadSlotValues();
 
-		this.sa_gammar_templates = (HashMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
+		this.sa_gammar_templates = (TreeMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
 		logger.debug("sa_gammar_templates: " +sa_gammar_templates);
 		
 		this.sa_inference_map = new HashMap<String, List<ComputationalAction>>();
@@ -663,7 +664,7 @@ public class SpeechActInferenceGenerator {
 		return effect;
 	}
 
-	private List<ComputationalAction> findComputationalAction(HashMap<String, ComputationalAction> map, String act) {
+	private List<ComputationalAction> findComputationalAction(TreeMap<String, ComputationalAction> map, String act) {
 		logger.debug("------ act : " + act);
 		logger.debug("------ ComputationalAction MAP : " + map);
 		

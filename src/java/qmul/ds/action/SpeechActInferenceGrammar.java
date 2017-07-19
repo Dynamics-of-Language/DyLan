@@ -18,10 +18,16 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +44,7 @@ import qmul.ds.action.atomic.Effect;
  * 
  * @author arash
  */
-public class SpeechActInferenceGrammar extends HashMap<String, ComputationalAction> implements Serializable {
+public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalAction> implements Serializable {
 
 	private static Logger logger = Logger.getLogger(SpeechActInferenceGrammar.class);
 
@@ -188,9 +194,50 @@ public class SpeechActInferenceGrammar extends HashMap<String, ComputationalActi
 			logger.error(e);
 			logger.error("Error reading speech act grammar from " + reader);
 		}
+		
+		this.sortActMap(this);
+		
 		logger.info("Loaded speech act grammar with " + size() + " speech act inference action entries.");
 		logger.trace(this);
 	}
+	
+	private void sortActMap(TreeMap<String, ComputationalAction> treemap){
+		List<Map.Entry<String, ComputationalAction>> list = new LinkedList<Map.Entry<String, ComputationalAction>>(treemap.entrySet());
+		
+		Comparator<Map.Entry<String, ComputationalAction>> comparator = new Comparator<Map.Entry<String, ComputationalAction>>() {
+			public int compare(Map.Entry<String, ComputationalAction> o1,
+                    Map.Entry<String, ComputationalAction> o2) {
+				ComputationalAction act1 =  o1.getValue();
+				ComputationalAction act2 =  o2.getValue();
+				
+				if(act1.getType() == null)
+					return 1;
+				else if(act2.getType() == null) 
+					return -1;
+				else if(act1.getType().subsumes(act2.getType()))
+					return 1;
+				else if(act2.getType().subsumes(act1.getType()))
+					return -1;
+				
+				return 0;
+			}
+		};
+		Collections.sort(list,comparator);
+		
+		// Convert sorted map back to a Map
+		TreeMap<String, ComputationalAction> sorted = new TreeMap<String, ComputationalAction>();
+				
+		for (Iterator<Map.Entry<String, ComputationalAction>> it = list.iterator(); it.hasNext();) {
+			Map.Entry<String, ComputationalAction> entry = it.next();
+			sorted.put(entry.getKey(), entry.getValue());
+		}
+		
+		logger.info("sorted: " + sorted.size());
+		
+		this.clear();
+		this.putAll(sorted);
+	}
+	
 	
 //	public void addNewComputationalAction(String name, Effect effect){
 //		String key = this.getNewKey(name);
