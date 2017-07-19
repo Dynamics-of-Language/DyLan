@@ -213,6 +213,7 @@ public class SpeechActInferenceGenerator {
 	/************************ ENF of Class Initialiasation *******************************/
 
 	private void start(boolean keepTest) {
+		String prev_act = null;
 		for(Dialogue dlg: this.dlgList){
 			logger.debug("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
@@ -226,6 +227,20 @@ public class SpeechActInferenceGenerator {
 					text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
 					String act = utt.getDAt(i);
 					
+					if(prev_act != null && prev_act.contains("polar")){
+						logger.info("--- prev_act: " + prev_act + "; current_act: "+ act);
+						if(act.contains("accept")){
+							act = prev_act.replace("polar", "info");
+						}
+						
+						else if(act.contains("reject")){
+							act = prev_act.replace("polar", "info-neg");
+						}
+						
+						logger.info("--- new current_act: "+ act);
+					}
+					
+					if(act.contains("ask"))
 					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
 					
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
@@ -243,6 +258,7 @@ public class SpeechActInferenceGenerator {
 					Formula f = pointedNode.getFormula();
 					
 					TTRRecordType ttr = this.abstractOutSlotValues((TTRRecordType)f);
+					if(act.contains("ask"))
 					logger.info(" ---> pointed Node: " + pointedNode);
 					logger.debug(" ---> abstracted TTR: " + ttr);
 					logger.debug(" ---> meta_replacements: " + this.meta_replacements);
@@ -301,7 +317,7 @@ public class SpeechActInferenceGenerator {
 									}
 								}
 							}
-//							this.sa_inference_map.put(act, newList);
+							this.sa_inference_map.put(act, newList);
 						}
 
 						// creat new Computational Action with new ttr formula
@@ -327,11 +343,15 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(current_action != null){
-							logger.info("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
+							if(act.contains("ask"))
+								logger.info("selected action template: " + current_action.getName());
+							
+							logger.debug("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
 							
 							Effect effect_template = current_action.getEffect();
 							Effect effect = this.addNewFormula(effect_template, ttr);
 							effect = this.replaceMetaVariable(effect, this.meta_replacements);
+							if(act.contains("ask"))
 							logger.info("new Effect at (" + act + "): \r\n" + effect);
 							
 							List<ComputationalAction> actList = new ArrayList<ComputationalAction>();
@@ -342,6 +362,8 @@ public class SpeechActInferenceGenerator {
 							this.sa_inference_map.put(act, actList);
 						}
 					}
+					
+					prev_act = act;
 				}
 			}
 		}
@@ -381,6 +403,7 @@ public class SpeechActInferenceGenerator {
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 					
+					if(act.contains("ask"))
 					logger.info("  --> " + utt.getSpeaker() + ": " + text + " :: act("+act+")");
 					
 					String[] words = text.split(" ");
@@ -390,6 +413,7 @@ public class SpeechActInferenceGenerator {
 					}
 
 					Tree resultTree = result.getContxtalTree().clone();
+					if(act.contains("ask"))
 					logger.info("  --> " + resultTree.getPointedNode());
 
 					try {
@@ -407,6 +431,7 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						try {
+							if(act.contains("ask"))
 							logger.info("  --> " + speech_act_list);
 							this.exportToFile("speech_tag.txt", "  --> " + speech_act_list);
 							this.exportToFile("speech_tag.txt", "");

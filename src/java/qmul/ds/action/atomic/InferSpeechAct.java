@@ -8,8 +8,8 @@
  *******************************************************************************/
 package qmul.ds.action.atomic;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
@@ -17,8 +17,10 @@ import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.formula.Formula;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.SpeechActLabel;
 
 /**
  * Atomic action for speech act inference according to rules specified (optionally) in speech-act-inference-grammar.txt
@@ -78,17 +80,49 @@ public class InferSpeechAct extends Effect {
 		SpeechActInferenceGrammar sag=context.getSAGrammar();
 		
 		Tree clone=tree.clone();
-		
+		boolean doneRemoval=false;
 		for(ComputationalAction action: sag.values())
 		{
+			
 			Tree result=action.exec(clone, context);
+			
 			if (result!=null)
+			{
+				
+				if (!doneRemoval)
+				{
+					removeSAAnnotations(tree);
+					doneRemoval=true;
+				}
+				
 				clone=result;
+			}
 			
 		}
 		
+		
 		return (T)clone;
 	}
+	
+	
+
+	private void removeSAAnnotations(Tree tree) {
+		
+		Node pointed=tree.getPointedNode();
+		Set<Label> resultLabels=new HashSet<Label>();
+		for(Label l: pointed)
+		{
+			if (!(l instanceof SpeechActLabel))
+				resultLabels.add(l);
+				
+				
+		}
+		
+		pointed.clear();
+		pointed.addAll(resultLabels);
+	}
+
+
 
 	/*
 	 * (non-Javadoc)
