@@ -181,7 +181,7 @@ IF		¬ty(Y>Z)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		<Z>(+Q & +meta)
+		(+Q || <Z>+Q)
 		Speaker(V)
 THEN	put(sa:askcolor(V))
 ELSE	abort
@@ -192,7 +192,7 @@ IF		¬ty(Y>Z)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		<Z>(+Q & +meta)
+		(+Q || <Z>+Q)
 		Speaker(V)
 THEN	put(sa:askcolor(V,shape:P9))
 ELSE	abort
@@ -203,7 +203,7 @@ IF		¬ty(Y>Z)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		<Z>(+Q & +meta)
+		(+Q || <Z>+Q)
 		Speaker(V)
 THEN	put(sa:askshape(V))
 ELSE	abort
@@ -214,7 +214,7 @@ IF		¬ty(Y>Z)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		<Z>(+Q & +meta)
+		(+Q || <Z>+Q)
 		Speaker(V)
 THEN	put(sa:askshape(V,color:P8))
 ELSE	abort
@@ -227,7 +227,7 @@ IF		¬ty(Y>Z)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		<Z>+Q
+		(+Q || <Z>+Q)
 		Speaker(V)
 THEN	put(sa:openask(V))
 ELSE	abort
@@ -240,7 +240,7 @@ IF		¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		Assert(V)
-THEN	IF		<Z>+Q
+THEN	IF		(+Q || <Z>+Q)
 		THEN	abort
 		ELSE	put(sa:openask(V))
 ELSE	abort

@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,7 +23,6 @@ import qmul.ds.Context;
 import qmul.ds.Dialogue;
 import qmul.ds.Utterance;
 import qmul.ds.action.ComputationalAction;
-import qmul.ds.action.Lexicon;
 import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
@@ -228,7 +226,7 @@ public class SpeechActInferenceGenerator {
 					String act = utt.getDAt(i);
 					
 					if(prev_act != null && prev_act.contains("polar")){
-						logger.info("--- prev_act: " + prev_act + "; current_act: "+ act);
+						logger.debug("--- prev_act: " + prev_act + "; current_act: "+ act);
 						if(act.contains("accept")){
 							act = prev_act.replace("polar", "info");
 						}
@@ -237,7 +235,7 @@ public class SpeechActInferenceGenerator {
 							act = prev_act.replace("polar", "info-neg");
 						}
 						
-						logger.info("--- new current_act: "+ act);
+						logger.debug("--- new current_act: "+ act);
 					}
 					
 					if(act.contains("ask"))
@@ -306,8 +304,8 @@ public class SpeechActInferenceGenerator {
 											TTRRecordType exist_ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
 											exist_ttr.resetMetas();
 											
-											boolean isSubsumed = exist_ttr.subsumes(ttr);
-//											boolean isSubsumed = ttr.subsumes(exist_ttr);
+//											boolean isSubsumed = exist_ttr.subsumes(ttr);
+											boolean isSubsumed = ttr.subsumes(exist_ttr);
 											logger.debug("isSubsumed: " + isSubsumed +" ==> " + exist_ttr +"\r\n  " + ttr + "");
 											
 											if(!isSubsumed){
@@ -344,15 +342,13 @@ public class SpeechActInferenceGenerator {
 						
 						if(current_action != null){
 							if(act.contains("ask"))
-								logger.info("selected action template: " + current_action.getName());
-							
-							logger.debug("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
+								logger.info("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
 							
 							Effect effect_template = current_action.getEffect();
 							Effect effect = this.addNewFormula(effect_template, ttr);
 							effect = this.replaceMetaVariable(effect, this.meta_replacements);
 							if(act.contains("ask"))
-							logger.info("new Effect at (" + act + "): \r\n" + effect);
+							logger.debug("new Effect at (" + act + "): \r\n" + effect);
 							
 							List<ComputationalAction> actList = new ArrayList<ComputationalAction>();
 							if(this.sa_inference_map.containsKey(act))
@@ -362,6 +358,8 @@ public class SpeechActInferenceGenerator {
 							this.sa_inference_map.put(act, actList);
 						}
 					}
+					else
+						logger.info("this action [" + act + "] has been pick up sucessfully");
 					
 					prev_act = act;
 				}
