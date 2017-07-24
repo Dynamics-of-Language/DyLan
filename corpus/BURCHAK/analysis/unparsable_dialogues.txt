@@ -1,6 +1,6 @@
 usr: it is % colorvalue <rt>
 sys: % colorvalue <rt>
-usr: yes. the shape now? <rt>
+usr: yes. the shape? <rt>
 sys: % colorvalue <rt>
 usr: yes. and the shape is % shapevalue <rt>
 sys: % shapevalue <rt>
@@ -9,7 +9,17 @@ sys: % colorvalue <rt>
 usr: yes <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: good job <rt>
-@@ Exception: Cannot parse the utterance at : usr: now? -- text: the shape now? <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: the color is % colorvalue <rt>
+sys: % colorvalue? <rt>
+usr: yes. the shape is % shapevalue <rt>
+sys: % shapevalue <rt>
+usr: yes <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: great <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: so do you know this color? <rt>
@@ -25,15 +35,7 @@ sys: % shapevalue <rt>
 usr: % colorvalue <rt>
 sys: oh yeah % colorvalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so do you know this color? <rt>
-@@ existing TTR context: null
-
-usr: so what is this color? <rt>
-sys: % colorvalue <rt>
-usr: yep <rt>
-sys: % shapevalue <rt>
-usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so what is this color? <rt>
+@@ Exception: null: usr: color? -- text: so do you know this color? <rt>
 @@ existing TTR context: null
 
 sys: % colorvalue? <rt>
@@ -46,21 +48,16 @@ sys: ok <rt>
 @@ Exception: Cannot parse the utterance at : usr: another -- text: that is another shape <rt>
 @@ existing TTR context: null
 
+sys: % colorvalue % shapevalue <rt>
+usr: yep <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
 usr: it 's a % colorvalue % shapevalue <rt>
 sys: so a % colorvalue % shapevalue? <rt>
 usr: no. % colorvalue % shapevalue <rt>
 sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : sys: so -- text: so a red square? <rt>
-@@ existing TTR context: null
-
-sys: % shapevalue <rt>
-usr: and the color? <rt>
-sys: % colorvalue <rt>
-usr: good <rt>
-sys: % shapevalue <rt>
-usr: this is a % shapevalue <rt>
-sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : usr: and -- text: and the color? <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: it's a red square <rt>
 @@ existing TTR context: null
 
 usr: this is still a % shapevalue <rt>
@@ -68,7 +65,21 @@ sys: % shapevalue <rt>
 usr: % colorvalue % shapevalue. what is it? <rt>
 sys: i do n't know the color <rt>
 usr: the shape is % shapevalue still. the color is % colorvalue <rt>
-@@ Exception: Cannot parse the utterance at : usr: still -- text: this is still a square <rt>
+@@ Exception: Cannot parse the utterance at : usr: square. -- text: red square.
+@@ existing TTR context: null
+
+usr: what is the object? <rt>
+sys: % colorvalue % shapevalue? <rt>
+usr: it 's % colorvalue <rt>
+@@ Exception: Cannot parse the utterance at : sys: square? -- text: red square? <rt>
+@@ existing TTR context: null
+
+sys: what is the color? <rt>
+usr: % colorvalue <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: correct <rt>
+sys: yay <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: this object? <rt>
@@ -80,7 +91,7 @@ sys: % shapevalue <rt>
 usr: the color is now % colorvalue <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: yep <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so it is what? <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: what is this shape? <rt>
@@ -88,7 +99,7 @@ sys: % colorvalue % shapevalue? <rt>
 usr: no. % colorvalue % shapevalue <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: good job <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: square? -- text: red square? <rt>
 @@ existing TTR context: null
 
 sys: % colorvalue % shapevalue <rt>
@@ -100,7 +111,18 @@ usr: shape rights. color is wrong <rt>
 sys: then? <rt>
 usr: % colorvalue. % colorvalue % shapevalue <rt>
 sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : usr: say -- text: say that again? <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: what 's this? <rt>
+sys: % colorvalue <rt>
+usr: yes <rt>
+sys: % shapevalue? <rt>
+usr: correct. put it together? <rt>
+sys: % colorvalue? <rt>
+usr: % colorvalue <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: put -- text: put it together? <rt>
 @@ existing TTR context: null
 
 usr: this color is called % colorvalue. you got that? <rt>
@@ -112,7 +134,7 @@ sys: okay <rt>
 usr: and what is the shape? <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-sys: this is a % colorvalue <rt>
+sys: this is % colorvalue <rt>
 usr: yes <rt>
 sys: got it. this is a % colorvalue % shapevalue <rt>
 usr: yes <rt>
@@ -122,7 +144,16 @@ sys: % colorvalue? <rt>
 usr: and shape? <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: this is a red <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: this one? <rt>
+sys: % colorvalue % shapevalue? <rt>
+usr: yes <rt>
+sys: the color is % colorvalue? <rt>
+usr: yes <rt>
+sys: okay <rt>
+@@ Exception: Cannot parse the utterance at : sys: square? -- text: red square? <rt>
 @@ existing TTR context: null
 
 usr: what shape is this? <rt>
@@ -132,7 +163,19 @@ sys: okay % colorvalue <rt>
 usr: so what do we have here? <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: good <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so this is a new color  red <rt>
+@@ Exception: Cannot parse the utterance at : usr: what -- text: so what do we have here? <rt>
+@@ existing TTR context: null
+
+usr: you know this <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: what is this? <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: good <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: what is this? <rt>
@@ -142,17 +185,25 @@ sys: okay <rt>
 @@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red red <rt>
 @@ existing TTR context: null
 
+sys: % shapevalue <rt>
+usr: yes <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: what is this? <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
 usr: the color is % colorvalue <rt>
 sys: repeat that? <rt>
 usr: the color is % colorvalue <rt>
 sys: i have a % colorvalue % shapevalue <rt>
 usr: great <rt>
 @@ Exception: Cannot parse the utterance at : sys: repeat -- text: repeat that? <rt>
-@@ existing TTR context: null
-
-usr: color % colorvalue <rt>
-sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : usr: color -- text: color red <rt>
 @@ existing TTR context: null
 
 usr: now the color is % colorvalue. and the shape? <rt>
@@ -164,7 +215,7 @@ sys: ok % colorvalue <rt>
 usr: yeah <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: good <rt>
-@@ Exception: Cannot parse the utterance at : usr: now -- text: now the color is red.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: what 's this color? <rt>
@@ -178,29 +229,23 @@ sys: again? <rt>
 usr: the color is % colorvalue <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: yeah <rt>
-@@ Exception: Cannot parse the utterance at : sys: its -- text: what is its shape again? <rt>
+@@ Exception: Cannot parse the utterance at : sys: again? -- text: again? <rt>
 @@ existing TTR context: null
 
-usr: this object is? <rt>
+usr: do you know this? <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yeah <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: this object is <rt>
 sys: % colorvalue? <rt>
 usr: sorry? <rt>
 sys: % colorvalue <rt>
 usr: yes. and it is a shape of % shapevalue <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: is? -- text: this object is? <rt>
-@@ existing TTR context: null
-
-usr: this object is also % colorvalue <rt>
-sys: yes it is <rt>
-sys: but what is it called? <rt>
-usr: it is known as % shapevalue <rt>
-sys: % shapevalue <rt>
-usr: yes <rt>
-sys: what is the shape again? <rt>
-usr: % shapevalue <rt>
-sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : usr: also -- text: this object is also red <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: this object is <rt>
 @@ existing TTR context: null
 
 sys: so we have a % shapevalue <rt>
@@ -209,56 +254,74 @@ sys: % colorvalue <rt>
 usr: yes <rt>
 sys: a % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : sys: so -- text: so we have a square <rt>
-@@ existing TTR context: null
-
-usr: the item you can see is what color? <rt>
-sys: % colorvalue <rt>
-usr: the shape is known as a % shapevalue <rt>
-sys: % shapevalue? <rt>
-usr: % shapevalue <rt>
-sys: good <rt>
-@@ Exception: Cannot parse the utterance at : usr: item -- text: the item you can see is what color? <rt>
+@@ Exception: Cannot parse the utterance at : usr: do. -- text: we do.
 @@ existing TTR context: null
 
 usr: what shape do we have? <rt>
 sys: % shapevalue <rt>
-usr: it is in a color known as % colorvalue <rt>
+usr: it is color known as % colorvalue <rt>
 sys: % colorvalue? <rt>
 usr: yes. so what do we have? <rt>
 sys: a % colorvalue % shapevalue <rt>
 usr: excellent <rt>
-@@ Exception: Cannot parse the utterance at : usr: in -- text: it is in a color known as red <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: a red square <rt>
+@@ existing TTR context: null
+
+usr: what do we have? <rt>
+sys: we have a % colorvalue % shapevalue? <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: we have a red square? <rt>
+@@ existing TTR context: null
+
+usr: what is this? <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: good job <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: % shapevalue % colorvalue <rt>
 @@ Exception: Cannot parse the utterance at : usr: <rt> -- text: square red <rt>
 @@ existing TTR context: null
 
-usr: the % shapevalue is % colorvalue. % shapevalue is shape. % colorvalue is color <rt>
-@@ Exception: Cannot parse the utterance at : usr: color -- text: red is color <rt>
-@@ existing TTR context: null
-
-usr: the % shapevalue is % colorvalue. % shapevalue is shape. % colorvalue is color <rt>
-@@ Exception: Cannot parse the utterance at : usr: color -- text: red is color <rt>
-@@ existing TTR context: null
-
 usr: the % shapevalue is % colorvalue. % shapevalue shape. % colorvalue color <rt>
 @@ Exception: Cannot parse the utterance at : usr: shape. -- text: square shape.
 @@ existing TTR context: null
 
-usr: this is? <rt>
+usr: this is a % colorvalue % shapevalue <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yes good <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square <rt>
+@@ existing TTR context: null
+
+usr: this is a % colorvalue % shapevalue <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square <rt>
+@@ existing TTR context: null
+
+sys: % shapevalue <rt>
+usr: yes <rt>
+sys: a % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: a red square <rt>
+@@ existing TTR context: null
+
+usr: this is <rt>
 sys: this is a % shapevalue <rt>
 usr: yes. the color is % colorvalue <rt>
 sys: a % colorvalue % shapevalue <rt>
 usr: well done <rt>
 sys: thank you <rt>
-@@ Exception: Cannot parse the utterance at : usr: is? -- text: this is? <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: this is <rt>
+@@ existing TTR context: null
+
+usr: this is a % colorvalue % shapevalue <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square <rt>
 @@ existing TTR context: null
 
 usr: this is an % shapevalue too <rt>
 sys: % colorvalue % shapevalue <rt>
-@@ Exception: Cannot parse the utterance at : usr: too -- text: this is an square too <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: how about this one? <rt>
@@ -267,12 +330,17 @@ usr: the shape is right. the color is % colorvalue <rt>
 sys: % colorvalue <rt>
 usr: yeah <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: how -- text: how about this one? <rt>
+@@ Exception: Cannot parse the utterance at : sys: square? -- text: red square? <rt>
 @@ existing TTR context: null
 
 sys: % colorvalue % shapevalue <rt>
 usr: cool <rt>
-@@ Exception: Cannot parse the utterance at : usr: cool -- text: cool <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: % colorvalue % shapevalue <rt>
+sys: oh okay <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: it 's still % colorvalue <rt>
@@ -281,19 +349,33 @@ sys: % shapevalue? <rt>
 usr: % shapevalue oops % shapevalue <rt>
 sys: okay % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: still -- text: it's still red <rt>
+@@ Exception: Cannot parse the utterance at : usr: oops -- text: square oops square <rt>
 @@ existing TTR context: null
 
-usr: its still % shapevalue. now the color is % colorvalue <rt>
-sys: % colorvalue <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yes good <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: try this? <rt>
+sys: % colorvalue % shapevalue <rt>
 usr: yes <rt>
-sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : usr: its -- text: its still square.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 sys: % colorvalue % shapevalue <rt>
 usr: perfect <rt>
-@@ Exception: Cannot parse the utterance at : usr: perfect -- text: perfect <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 sys: i know nohthing <rt>
@@ -339,10 +421,10 @@ sys: forgot the shape <rt>
 usr: % shapevalue. % shapevalue % colorvalue <rt>
 sys: % shapevalue % colorvalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: color? -- text: color? <rt>
+@@ Exception: Cannot parse the utterance at : sys: forgot -- text: forgot the shape <rt>
 @@ existing TTR context: null
 
-usr: again a completely new color % colorvalue opps % colorvalue <rt>
+usr: again a new color % colorvalue oops % colorvalue <rt>
 sys: % colorvalue? <rt>
 usr: yes <rt>
 sys: % colorvalue % shapevalue <rt>
@@ -350,7 +432,7 @@ usr: bingo <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: close. the color is right. the shape is % shapevalue <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: completely -- text: again a completely new color red opps red <rt>
+@@ Exception: Cannot parse the utterance at : usr: oops -- text: again a new color red oops red <rt>
 @@ existing TTR context: null
 
 usr: what 's this? <rt>
@@ -364,18 +446,6 @@ usr: yep <rt>
 @@ existing TTR context: null
 
 usr: what do you recognize? <rt>
-sys: color % colorvalue? <rt>
-usr: no. % colorvalue <rt>
-sys: % colorvalue <rt>
-usr: yes. what about the shape? <rt>
-sys: no <rt>
-usr: % shapevalue <rt>
-sys: % shapevalue <rt>
-usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : sys: color -- text: color red? <rt>
-@@ existing TTR context: null
-
-usr: what do you recognize? <rt>
 sys: % shapevalue <rt>
 usr: no. % shapevalue <rt>
 sys: % colorvalue <rt>
@@ -386,7 +456,7 @@ sys: % shapevalue % colorvalue <rt>
 usr: yay <rt>
 sys: i do n't know the color <rt>
 usr: it is % colorvalue <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: square red <rt>
 @@ existing TTR context: null
 
 sys: oh it is % colorvalue <rt>
@@ -397,7 +467,7 @@ sys: % shapevalue <rt>
 usr: yes <rt>
 sys: so it is a % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : sys: so -- text: so it is a red square <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: so it is a red square <rt>
 @@ existing TTR context: null
 
 usr: color is <rt>
@@ -409,7 +479,7 @@ sys: % shapevalue <rt>
 usr: yes <rt>
 sys: so it is a % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: color -- text: color is <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: color is <rt>
 @@ existing TTR context: null
 
 sys: i think that is a % shapevalue too <rt>
@@ -421,7 +491,7 @@ usr: yes <rt>
 sys: so it is a % colorvalue % shapevalue <rt>
 usr: yes <rt>
 sys: great <rt>
-@@ Exception: Cannot parse the utterance at : sys: too -- text: i think that is a square too <rt>
+@@ Exception: Cannot parse the utterance at : sys: it -- text: so it is a red square <rt>
 @@ existing TTR context: null
 
 sys: that is a % colorvalue object <rt>
@@ -431,7 +501,27 @@ usr: yes <rt>
 sys: and what shape? <rt>
 usr: % shapevalue <rt>
 sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : sys: and -- text: and what shape? <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: that is a red object <rt>
+@@ existing TTR context: null
+
+sys: it is a % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: it is a red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: right <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: it is a % colorvalue % shapevalue <rt>
+usr: great <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: it is a red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: right <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 sys: do n't remember the color <rt>
@@ -453,14 +543,49 @@ usr: % shapevalue <rt>
 sys: so the % shapevalue is % colorvalue? <rt>
 usr: yes <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : sys: so -- text: so the square is red? <rt>
+@@ Exception: Cannot parse the utterance at : sys: the -- text: so the square is red? <rt>
+@@ existing TTR context: null
+
+sys: what shape is this? <rt>
+usr: % shapevalue <rt>
+sys: a % colorvalue % shapevalue? <rt>
+usr: yes <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: a red square? <rt>
+@@ existing TTR context: null
+
+sys: what color is this? <rt>
+usr: % colorvalue <rt>
+sys: the % shapevalue is % colorvalue <rt>
+usr: this is a % colorvalue % shapevalue <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: good job <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square <rt>
 @@ existing TTR context: null
 
 sys: what shape is this % colorvalue object? <rt>
 usr: it is a % colorvalue % shapevalue <rt>
 sys: a % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: null: usr: it -- text: it is a red square <rt>
+@@ Exception: Cannot parse the utterance at : sys: object? -- text: what shape is this red object? <rt>
+@@ existing TTR context: null
+
+sys: % shapevalue? <rt>
+usr: % shapevalue <rt>
+sys: what is the shape of this again? <rt>
+usr: this is a % shapevalue. the color is % colorvalue. % colorvalue % shapevalue <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: is this % colorvalue object? <rt>
+usr: this is a % shapevalue <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: yep <rt>
+sys: okay <rt>
+@@ Exception: Cannot parse the utterance at : sys: object? -- text: is this red object? <rt>
 @@ existing TTR context: null
 
 sys: what color is this % shapevalue? <rt>
@@ -469,7 +594,7 @@ sys: % colorvalue % shapevalue <rt>
 sys: ok i forgot the shape of this % colorvalue <rt>
 usr: % colorvalue <rt>
 sys: % colorvalue <rt>
-@@ Exception: Cannot parse the utterance at : sys: forgot -- text: ok i forgot the shape of this red <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square.
 @@ existing TTR context: null
 
 sys: ok a % colorvalue % shapevalue <rt>
@@ -487,12 +612,25 @@ sys: ok <rt>
 @@ Exception: Cannot parse the utterance at : usr: remember -- text: do you remember the shape? <rt>
 @@ existing TTR context: null
 
+sys: % shapevalue <rt>
+usr: yep <rt>
+sys: a % colorvalue % shapevalue? <rt>
+usr: yes <rt>
+sys: good <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: a red square? <rt>
+@@ existing TTR context: null
+
+sys: a % colorvalue % shapevalue? <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: a red square? <rt>
+@@ existing TTR context: null
+
 usr: this is % colorvalue color. say it back <rt>
 sys: % colorvalue <rt>
 usr: yes. % shapevalue is the shape. so it 's % colorvalue % shapevalue <rt>
 sys: % shapevalue <rt>
 usr: yep <rt>
-@@ Exception: Cannot parse the utterance at : usr: say -- text: say it back <rt>
+@@ Exception: Cannot parse the utterance at : usr: back -- text: say it back <rt>
 @@ existing TTR context: null
 
 usr: what color? <rt>
@@ -504,6 +642,11 @@ sys: yes <rt>
 @@ Exception: Cannot parse the utterance at : sys: then? -- text: then? <rt>
 @@ existing TTR context: null
 
+sys: this is a % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: this is a red square <rt>
+@@ existing TTR context: null
+
 usr: what about shape? <rt>
 sys: % shapevalue <rt>
 usr: yes. do you remember color then? <rt>
@@ -511,7 +654,22 @@ sys: i do n't remember this <rt>
 usr: it 's % colorvalue <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: % colorvalue % shapevalue <rt>
-@@ Exception: Cannot parse the utterance at : usr: shape? -- text: what about shape? <rt>
+@@ Exception: Cannot parse the utterance at : usr: remember -- text: do you remember color then? <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: yes <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: this object is a % colorvalue % shapevalue <rt>
@@ -523,7 +681,7 @@ sys: % colorvalue <rt>
 usr: yes. and % shapevalue is a shape <rt>
 sys: a % colorvalue % shapevalue <rt>
 usr: yep <rt>
-@@ Exception: Cannot parse the utterance at : usr: can -- text: sorry can you repeat it for me? <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this object is a red square <rt>
 @@ existing TTR context: null
 
 usr: so what is this color? <rt>
@@ -532,7 +690,7 @@ usr: yep. and the shape is % shapevalue. % shapevalue sorry % shapevalue for the
 sys: ok <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: great <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so what is this color? <rt>
+@@ Exception: Popping usr: for@you off stack when traversing:BacktrackingEdge (id=29,word=usr: init-repair@you): [usr: square@you]: usr: <rt> -- text: square sorry square for the shape <rt>
 @@ existing TTR context: null
 
 sys: % shapevalue <rt>
@@ -540,7 +698,7 @@ usr: yep. this color is % colorvalue <rt>
 sys: % colorvalue <rt>
 usr: yep. so this object s is s % colorvalue % shapevalue. got it? <rt>
 sys: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so this object s is s red square.
+@@ Exception: Cannot parse the utterance at : usr: s -- text: so this object s is s red square.
 @@ existing TTR context: null
 
 usr: do you know this color? <rt>
@@ -562,7 +720,7 @@ sys: % colorvalue <rt>
 usr: yep. it is a % colorvalue % shapevalue. got it? <rt>
 sys: ok <rt>
 usr: cool <rt>
-@@ Exception: Cannot parse the utterance at : sys: ok -- text: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: it is a red square.
 @@ existing TTR context: null
 
 usr: can you guess what it is? <rt>
@@ -572,7 +730,7 @@ sys: got it <rt>
 usr: can you try again? <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: good job <rt>
-@@ Exception: Cannot parse the utterance at : usr: nope. -- text: nope.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: what is this? <rt>
@@ -580,7 +738,7 @@ sys: % colorvalue % shapevalue <rt>
 usr: no. this color is % colorvalue <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: what is it? <rt>
@@ -599,7 +757,12 @@ usr: do you know how to call it? <rt>
 sys: % shapevalue <rt>
 usr: nope. it is % shapevalue <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: how -- text: do you know how to call it? <rt>
+@@ Exception: Cannot parse the utterance at : usr: to -- text: do you know how to call it? <rt>
+@@ existing TTR context: null
+
+usr: this is a % colorvalue % shapevalue <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square <rt>
 @@ existing TTR context: null
 
 usr: and this is a % colorvalue % shapevalue <rt>
@@ -611,22 +774,22 @@ usr: now it is a % shapevalue as well <rt>
 sys: again please? <rt>
 usr: it is a % colorvalue % shapevalue <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: now -- text: now it is a square as well <rt>
+@@ Exception: Cannot parse the utterance at : sys: please? -- text: again please? <rt>
 @@ existing TTR context: null
 
 usr: this is a % colorvalue % shapevalue. % shapevalue shape <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: square shape <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square.
 @@ existing TTR context: null
 
 usr: now it is a % colorvalue % shapevalue <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: now -- text: now it is a red square <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: now it is a red square <rt>
 @@ existing TTR context: null
 
 usr: now it is a % colorvalue % shapevalue <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: now -- text: now it is a red square <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: now it is a red square <rt>
 @@ existing TTR context: null
 
 usr: this is a % colorvalue. % colorvalue % colorvalue % shapevalue <rt>
@@ -636,14 +799,22 @@ sys: okay <rt>
 
 usr: color is % colorvalue. it is a % colorvalue % shapevalue <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: color -- text: color is red.
+@@ Exception: Cannot parse the utterance at : usr: red -- text: it is a red square <rt>
 @@ existing TTR context: null
 
-sys: % shapevalue <rt>
-usr: no. % shapevalue <rt>
-sys: % colorvalue <rt>
+usr: this is a % colorvalue % shapevalue <rt>
+sys: okay <rt>
+@@ Exception: Cannot parse the utterance at : usr: red -- text: this is a red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
 usr: correct <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: correct <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 sys: the color is % colorvalue <rt>
@@ -654,7 +825,7 @@ sys: % colorvalue <rt>
 usr: shape is? <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : usr: no -- text: red no red square <rt>
 @@ existing TTR context: null
 
 usr: what is color? <rt>
@@ -662,21 +833,34 @@ sys: % colorvalue <rt>
 usr: good. and shapes? <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: color? -- text: what is color? <rt>
+@@ Exception: Cannot parse the utterance at : usr: shapes -- text: and shapes ? <rt>
 @@ existing TTR context: null
 
-sys: % colorvalue <rt>
-usr: yes <rt>
-sys: what shape? <rt>
-usr: % shapevalue <rt>
-sys: % colorvalue <rt>
-usr: yes <rt>
-sys: shape? <rt>
-usr: this shape is % shapevalue <rt>
-sys: this shape now is % shapevalue? <rt>
-usr: yes <rt>
-sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : sys: now -- text: this shape now is square? <rt>
+sys: % colorvalue % shapevalue <rt>
+usr: correct <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: correct <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: correct <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue % shapevalue <rt>
+usr: correct <rt>
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: this is % colorvalue % shapevalue <rt>
+sys: okay <rt>
+usr: again? <rt>
+sys: no <rt>
+@@ Exception: Cannot parse the utterance at : usr: again? -- text: again? <rt>
 @@ existing TTR context: null
 
 sys: % shapevalue shape <rt>
@@ -698,14 +882,7 @@ sys: % colorvalue. and shape? <rt>
 usr: % shapevalue <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: color? -- text: color? <rt>
-@@ existing TTR context: null
-
-sys: % shapevalue? <rt>
-usr: yes <rt>
-sys: color? <rt>
-usr: % colorvalue <rt>
-@@ Exception: Cannot parse the utterance at : sys: color? -- text: color? <rt>
+@@ Exception: Cannot parse the utterance at : sys: know -- text: don't know <rt>
 @@ existing TTR context: null
 
 sys: % colorvalue % shapevalue <rt>
@@ -718,27 +895,17 @@ sys: % colorvalue? <rt>
 usr: yes <rt>
 sys: % colorvalue % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
-@@ existing TTR context: null
-
-usr: do you know this? <rt>
-sys: % colorvalue <rt>
-usr: no. it 's % colorvalue <rt>
-sys: got it <rt>
-usr: say that again? <rt>
-sys: % colorvalue <rt>
-usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: now i have % colorvalue color and % shapevalue shape <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: now -- text: now i have red color and square shape <rt>
+@@ Exception: Cannot parse the utterance at : usr: color -- text: now i have red color and square shape <rt>
 @@ existing TTR context: null
 
 usr: % colorvalue color and % shapevalue shape <rt>
 sys: i can remember it <rt>
-@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red color and square shape <rt>
+@@ Exception: Cannot parse the utterance at : usr: and -- text: red color and square shape <rt>
 @@ existing TTR context: null
 
 usr: same color as before % colorvalue <rt>
@@ -746,9 +913,42 @@ sys: awesome <rt>
 @@ Exception: Cannot parse the utterance at : usr: same -- text: same colour as before red <rt>
 @@ existing TTR context: null
 
+usr: % colorvalue % shapevalue <rt>
+sys: ok <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: % colorvalue % shapevalue <rt>
+sys: okay <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+usr: % colorvalue % shapevalue <rt>
+sys: great <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
+sys: % colorvalue <rt>
+usr: what is it? <rt>
+sys: % colorvalue % shapevalue? <rt>
+usr: bingo <rt>
+sys: awesome <rt>
+@@ Exception: Cannot parse the utterance at : sys: square? -- text: red square? <rt>
+@@ existing TTR context: null
+
+usr: % colorvalue % shapevalue <rt>
+sys: great <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
+@@ existing TTR context: null
+
 usr: % colorvalue % shapevalue too <rt>
 sys: ok <rt>
-@@ Exception: Cannot parse the utterance at : usr: too -- text: red square too <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square too <rt>
+@@ existing TTR context: null
+
+usr: % colorvalue % shapevalue <rt>
+sys: okay <rt>
+@@ Exception: Cannot parse the utterance at : usr: <rt> -- text: red square <rt>
 @@ existing TTR context: null
 
 usr: do you know what color is this object? <rt>
@@ -760,7 +960,7 @@ sys: % colorvalue <rt>
 usr: very good. and the shape? <rt>
 sys: % shapevalue <rt>
 usr: right <rt>
-@@ Exception: Cannot parse the utterance at : usr: so -- text: so what color is it? <rt>
+@@ Exception: Cannot parse the utterance at : usr: very -- text: very good.
 @@ existing TTR context: null
 
 usr: do you know the color of this object? <rt>
@@ -779,7 +979,7 @@ sys: afraid not <rt>
 usr: % colorvalue. do you want to repeat it? <rt>
 sys: % colorvalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: color? -- text: and color? <rt>
+@@ Exception: Cannot parse the utterance at : sys: afraid -- text: afraid not <rt>
 @@ existing TTR context: null
 
 usr: do you recognize the shape of this object? <rt>
@@ -797,7 +997,7 @@ sys: % colorvalue <rt>
 usr: very good. and the shape? <rt>
 sys: % shapevalue <rt>
 usr: good <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: i 'm -- text: i'm not sure <rt>
 @@ existing TTR context: null
 
 usr: what about the color of this object? <rt>
@@ -809,7 +1009,7 @@ sys: % shapevalue <rt>
 usr: good. and the color? <rt>
 sys: % colorvalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: object? -- text: what about the color of this object? <rt>
+@@ Exception: Cannot parse the utterance at : sys: idea -- text: no idea <rt>
 @@ existing TTR context: null
 
 usr: do you remember the shape of this object? <rt>
@@ -826,48 +1026,6 @@ usr: % shapevalue. and the color? <rt>
 sys: % colorvalue <rt>
 usr: yes <rt>
 @@ Exception: Cannot parse the utterance at : usr: remember -- text: do you remember the shape of this object? <rt>
-@@ existing TTR context: null
-
-usr: what shape is this object? <rt>
-sys: % shapevalue? <rt>
-usr: no. % shapevalue <rt>
-sys: ok <rt>
-usr: and the color? <rt>
-sys: % colorvalue <rt>
-usr: no. it 's % colorvalue <rt>
-sys: oh <rt>
-usr: and the shape? <rt>
-sys: % shapevalue <rt>
-usr: good. and the color? <rt>
-sys: % colorvalue <rt>
-usr: great <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
-@@ existing TTR context: null
-
-usr: what color is this? <rt>
-sys: % colorvalue <rt>
-usr: no. the color is % colorvalue. and the shape? <rt>
-sys: % shapevalue <rt>
-usr: no. it is % shapevalue <rt>
-sys: ok <rt>
-usr: and the color? <rt>
-sys: % colorvalue <rt>
-usr: good. what about the shape? <rt>
-sys: % shapevalue? <rt>
-usr: no. % shapevalue <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
-@@ existing TTR context: null
-
-usr: the color? <rt>
-sys: % colorvalue <rt>
-usr: good. and the shape? <rt>
-sys: % shapevalue <rt>
-usr: no. % shapevalue <rt>
-sys: ok <rt>
-usr: what shape is it? <rt>
-sys: % shapevalue <rt>
-usr: good <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
 @@ existing TTR context: null
 
 usr: do you remember this shape? <rt>
@@ -892,24 +1050,6 @@ usr: correct <rt>
 
 usr: what about this shape? <rt>
 sys: % shapevalue <rt>
-usr: good. and the color? <rt>
-sys: % colorvalue <rt>
-usr: correct <rt>
-@@ Exception: Cannot parse the utterance at : usr: shape? -- text: what about this shape? <rt>
-@@ existing TTR context: null
-
-usr: this color? <rt>
-sys: % colorvalue <rt>
-usr: % shapevalue <rt>
-sys: % colorvalue <rt>
-usr: no. % colorvalue <rt>
-sys: % shapevalue <rt>
-usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
-@@ existing TTR context: null
-
-usr: what about this shape? <rt>
-sys: % shapevalue <rt>
 usr: no. try again <rt>
 sys: shape? <rt>
 usr: yes <rt>
@@ -919,15 +1059,7 @@ sys: % colorvalue <rt>
 usr: good. and the shape? <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: shape? -- text: what about this shape? <rt>
-@@ existing TTR context: null
-
-usr: what color is this? <rt>
-sys: % colorvalue <rt>
-usr: no. do you want to try the color again? <rt>
-sys: % colorvalue? <rt>
-usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : usr: again -- text: try again <rt>
 @@ existing TTR context: null
 
 sys: % colorvalue <rt>
@@ -940,15 +1072,7 @@ sys: % shapevalue <rt>
 usr: good. and the color? <rt>
 sys: % colorvalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
-@@ existing TTR context: null
-
-usr: what about this shape? <rt>
-sys: % shapevalue <rt>
-usr: good. and the color? <rt>
-sys: % colorvalue <rt>
-usr: good <rt>
-@@ Exception: Cannot parse the utterance at : usr: shape? -- text: what about this shape? <rt>
+@@ Exception: Cannot parse the utterance at : sys: ca n't -- text: can't remember <rt>
 @@ existing TTR context: null
 
 usr: this shape? <rt>
@@ -960,7 +1084,7 @@ sys: % colorvalue <rt>
 usr: good. and the shape? <rt>
 sys: % shapevalue <rt>
 usr: yes <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : usr: one -- text: one more time <rt>
 @@ existing TTR context: null
 
 usr: do you know the shape? <rt>
@@ -979,13 +1103,6 @@ sys: okay <rt>
 @@ Exception: Cannot parse the utterance at : sys: remember -- text: not remember the shape <rt>
 @@ existing TTR context: null
 
-sys: the shape for this is % shapevalue? <rt>
-usr: yes <rt>
-sys: now the color? <rt>
-usr: the color is % colorvalue <rt>
-@@ Exception: Cannot parse the utterance at : sys: now -- text: now the color? <rt>
-@@ existing TTR context: null
-
 sys: the shape is % colorvalue? <rt>
 usr: no <rt>
 sys: ok i know what is the shape again? <rt>
@@ -1000,6 +1117,18 @@ usr: okay <rt>
 sys: it is a % colorvalue % shapevalue <rt>
 usr: no. it is a % colorvalue % shapevalue <rt>
 sys: okay <rt>
-@@ Exception: Cannot parse the utterance at : usr: no. -- text: no.
+@@ Exception: Cannot parse the utterance at : sys: red -- text: it is a red square <rt>
+@@ existing TTR context: null
+
+sys: is it a % colorvalue % shapevalue? <rt>
+usr: the color is correct. the shape is not. it is a % shapevalue <rt>
+sys: got it <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: is it a red square? <rt>
+@@ existing TTR context: null
+
+sys: is it a % colorvalue % shapevalue? <rt>
+usr: close. but the color is % colorvalue <rt>
+sys: okay <rt>
+@@ Exception: Cannot parse the utterance at : sys: red -- text: is it a red square? <rt>
 @@ existing TTR context: null
 
