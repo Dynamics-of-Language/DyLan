@@ -43,8 +43,6 @@ that						  demonst						that						  s3							obj
 see							  v_tran_fin					see							  pres                          nons3
 see							  v_tran_inf					see							  inf							per
 sees						  v_tran_fin					see							  pres							s3
-//see							  v_intran_fin					see							  pres                          nons3
-//see							  v_intran_inf					see							  inf							per
 can 						  v_aux_inf                     can                           modal
 do						      v_aux_inf                     do                            pres
 would						  v_aux_inf						would						  pres
