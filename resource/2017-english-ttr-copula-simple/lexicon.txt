@@ -115,7 +115,8 @@ get							  v_tran_subj_drop			get							pres						nons3
 have						  v_tran_inf					have						inf						nons3
 have						  v_tran_fin					have						pres					nons3
 here						  manner_adv					here			
-recognise					  v_tran_fin					remember					pres					nons3
+remember					  v_tran_fin					remember					pres					nons3
+remember					  v_tran_inf					remember					pres					nons3
 recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
 recognize					  v_tran_fin					recognise					pres					nons3
