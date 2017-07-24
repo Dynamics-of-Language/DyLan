@@ -11,8 +11,7 @@ name							count						name						  s3							name
 job							count						job						  s3							job
 shape							count						shape						  s3							attr
 color							count						color						  s3							attr
-shape							count						shape						  s3							attr
-color							mass						color						  s3							attr
+//color							mass						color						  s3							attr
 shape							mass						shape						  s3							attr
 object							object						s3							object
 one								object						s3							object
@@ -31,10 +30,10 @@ yellow							concept_name							yellow				s3			color
 orange							concept_name							orange					s3			color
 black							concept_name							black				s3			color
 new								adj								new
+correct							adj								correct
 good								adj								good
 great								adj								great
 right						  	adj						right
-new								adj_postcop								new
 called							naming_adj						called
 named							naming_adj						named					
 this						  det_demonst					here						  s3
@@ -57,9 +56,9 @@ an                            det_indef                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
 the							  det_def						iota
-//what                          pron_whq                      obj
+what                          pron_whq                      obj
 what						  pron_whq_det					obj
-//what						  pron_what_rel					obj
+what						  pron_what_rel					obj
 //which						  pron_whq						obj
 .							  assert						A
 ?							  question						Q
@@ -104,11 +103,15 @@ about						  prep_e						about
 try							  v_tran_fin_imperative			try							imper					s2
 got							  v_tran_fin					get							past					nons3
 get							  v_tran_inf					get							inf						nons3
-try							  v_tran_inf					get							inf						nons3
-try							  v_tran_fin					get							inf						nons3
+get							  v_tran_fin					get							pres						nons3
+try							  v_tran_inf					try							inf						nons3
+try							  v_tran_fin					try							pres						nons3
+got							  v_tran_subj_drop			get							past						nons3
+get							  v_tran_subj_drop			get							pres						nons3	
 have						  v_tran_inf					have						inf						nons3
 have						  v_tran_fin					have						pres					nons3
 here						  manner_adv					here			
+recognise					  v_tran_fin					remember					pres					nons3
 recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
 recognize					  v_tran_fin					recognise					pres					nons3
@@ -131,3 +134,5 @@ wants                         v_subjcon_fin                 want                
 want                          v_subjcon_inf                 want                          inf                          nons3
 to							  to_subjcon					to
 again						  manner_adv					again
+say							  v_tran_fin					say							  pres                          nons3
+say							   v_tran_inf				say					pres					nons3

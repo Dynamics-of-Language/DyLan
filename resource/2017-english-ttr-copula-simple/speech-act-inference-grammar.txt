@@ -1,4 +1,6 @@
 //A: this is red <rt> B: yes
+
+//*
 accept-1
 IF		¬ty(Y>Z)
 		ty(X)
@@ -25,6 +27,6 @@ IF		¬ty(Y>Z)
 		¬<Z>+Q
 		+neg
 		Assert(V)
-THEN	put(sa:reject(V))
-ELSE	abort
-
+THEN		put(sa:reject(V))
+ELSE		abort
+*//

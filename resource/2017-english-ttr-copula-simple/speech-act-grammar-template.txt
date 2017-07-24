@@ -14,8 +14,8 @@ IF	  	¬ty(Y>Z)
 		¬<Z>+Q
 		¬(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:check(V))
-ELSE	abort
+THEN		put(sa:check(V))
+ELSE		abort
 
 doknowknow
 IF		¬ty(Y>Z)
@@ -25,8 +25,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:donotknow(V))
-ELSE	abort
+THEN		put(sa:donotknow(V))
+ELSE		abort
 
 donotknow-color
 IF		¬ty(Y>Z)
@@ -36,8 +36,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:donotknowcolor(V))
-ELSE	abort
+THEN		put(sa:donotknowcolor(V))
+ELSE		abort
 
 donotknow-shape
 IF		¬ty(Y>Z)
@@ -47,8 +47,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:donotknowshape(V))
-ELSE	abort
+THEN		put(sa:donotknowshape(V))
+ELSE		abort
 
 repeatrequest
 IF	  	¬ty(Y>Z)
@@ -57,10 +57,10 @@ IF	  	¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		Speaker(V)
-THEN	IF		(+neg || <Z>+neg)
-		THEN	abort
-		ELSE	put(sa:repeatrequest(V))
-ELSE	abort
+THEN		IF		(+neg || <Z>+neg)
+		THEN		abort
+		ELSE		put(sa:repeatrequest(V))
+ELSE		abort
 
 
 info-color
@@ -70,11 +70,11 @@ IF	  	¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		Speaker(V)
-THEN	IF		<Z>+Q
-		THEN	abort
-		ELSE	IF		(+neg || <Z>+neg)
-				THEN	abort
-				ELSE	put(sa:info(V,color:P8))
+THEN		IF		<Z>+Q
+		THEN		abort
+		ELSE		IF		(+neg || <Z>+neg)
+				THEN		abort
+				ELSE		put(sa:info(V,color:P8))
 ELSE	abort
 
 info-shape
@@ -84,12 +84,12 @@ IF	  	¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		Speaker(V)
-THEN	IF		<Z>+Q
-		THEN	abort
-		ELSE	IF		(+neg || <Z>+neg)
-				THEN	abort
-				ELSE	put(sa:info(V,shape:P9))
-ELSE	abort
+THEN		IF		<Z>+Q
+		THEN		abort
+		ELSE		IF		(+neg || <Z>+neg)
+				THEN		abort
+				ELSE		put(sa:info(V,shape:P9))
+ELSE		abort
 
 info-color-shape
 IF	  	¬ty(Y>Z)
@@ -98,12 +98,12 @@ IF	  	¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		Speaker(V)
-THEN	IF		<Z>+Q
-		THEN	abort
-		ELSE	IF		(+neg || <Z>+neg)
-				THEN	abort
-				ELSE	put(sa:info(V,color:P8,shape:P9))
-ELSE	abort
+THEN		IF		<Z>+Q
+		THEN		abort
+		ELSE		IF		(+neg || <Z>+neg)
+				THEN		abort
+				ELSE		put(sa:info(V,color:P8,shape:P9))
+ELSE		abort
 
 
 info-neg-color
@@ -114,8 +114,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:infoneg(V,color:P8))
-ELSE	abort
+THEN		put(sa:infoneg(V,color:P8))
+ELSE		abort
 
 info-neg-shape
 IF		¬ty(Y>Z)
@@ -125,8 +125,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:infoneg(V,shape:P9))
-ELSE	abort
+THEN		put(sa:infoneg(V,shape:P9))
+ELSE		abort
 
 info-neg-color-shape
 IF		¬ty(Y>Z)
@@ -136,8 +136,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+neg || <Z>+neg)
 		Speaker(V)
-THEN	put(sa:infoneg(V,color:P8,shape:P9))
-ELSE	abort
+THEN		put(sa:infoneg(V,color:P8,shape:P9))
+ELSE		abort
 
 polar-color
 IF		¬ty(Y>Z)
@@ -148,8 +148,8 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		Speaker(V)
-THEN	put(sa:polar(V,color:P8))
-ELSE	abort
+THEN		put(sa:polar(V,color:P8))
+ELSE		abort
 
 polar-shape
 IF		¬ty(Y>Z)
@@ -160,8 +160,8 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		Speaker(V)
-THEN	put(sa:polar(V,shape:P9))
-ELSE	abort
+THEN		put(sa:polar(V,shape:P9))
+ELSE		abort
 
 polar-color-shape
 IF		¬ty(Y>Z)
@@ -172,8 +172,8 @@ IF		¬ty(Y>Z)
 		+Q
 		¬<Z>+meta
 		Speaker(V)
-THEN	put(sa:polar(V,color:P8,shape:P9))
-ELSE	abort
+THEN		put(sa:polar(V,color:P8,shape:P9))
+ELSE		abort
 
 ask-color
 IF		¬ty(Y>Z)
@@ -183,8 +183,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+Q || <Z>+Q)
 		Speaker(V)
-THEN	put(sa:askcolor(V))
-ELSE	abort
+THEN		put(sa:askcolor(V))
+ELSE		abort
 
 ask-color-info-shape
 IF		¬ty(Y>Z)
@@ -194,8 +194,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+Q || <Z>+Q)
 		Speaker(V)
-THEN	put(sa:askcolor(V,shape:P9))
-ELSE	abort
+THEN		put(sa:askcolor(V,shape:P9))
+ELSE		abort
 
 ask-shape
 IF		¬ty(Y>Z)
@@ -205,8 +205,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+Q || <Z>+Q)
 		Speaker(V)
-THEN	put(sa:askshape(V))
-ELSE	abort
+THEN		put(sa:askshape(V))
+ELSE		abort
 
 ask-shape-info-color
 IF		¬ty(Y>Z)
@@ -216,8 +216,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+Q || <Z>+Q)
 		Speaker(V)
-THEN	put(sa:askshape(V,color:P8))
-ELSE	abort
+THEN		put(sa:askshape(V,color:P8))
+ELSE		abort
 
 
 //e.g. what is this?
@@ -229,8 +229,8 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		(+Q || <Z>+Q)
 		Speaker(V)
-THEN	put(sa:openask(V))
-ELSE	abort
+THEN		put(sa:openask(V))
+ELSE		abort
 
 //e.g. try this one
 openask-2
@@ -240,10 +240,10 @@ IF		¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		Assert(V)
-THEN	IF		(+Q || <Z>+Q)
-		THEN	abort
-		ELSE	put(sa:openask(V))
-ELSE	abort
+THEN		IF		(+Q || <Z>+Q)
+		THEN		abort
+		ELSE		put(sa:openask(V))
+ELSE		abort
 
 //A: this is red. B: good job.
 accept-2
@@ -254,10 +254,10 @@ IF		¬ty(Y>Z)
 		¬?+eval
 		¬<Z>+Q
 		Assert(V)
-THEN	IF		(+neg || <Z>+neg)
-		THEN	abort
-		ELSE	put(sa:accept(V))
-ELSE	abort
+THEN		IF		(+neg || <Z>+neg)
+		THEN		abort
+		ELSE		put(sa:accept(V))
+ELSE		abort
 
 //e.g. that's incorrect
 reject-2
@@ -269,8 +269,8 @@ IF		¬ty(Y>Z)
 		¬<Z>+Q
 		¬<Z>+neg
 		Assert(V)
-THEN	put(sa:reject(V))
-ELSE	abort
+THEN		put(sa:reject(V))
+ELSE		abort
 
 //e.g. that's not correct
 reject-3
@@ -282,8 +282,8 @@ IF		¬ty(Y>Z)
 		¬<Z>+Q
 		<Z>+neg
 		Assert(V)
-THEN	put(sa:reject(V))
-ELSE	abort
+THEN		put(sa:reject(V))
+ELSE		abort
 
 reject-color
 IF		¬ty(Y>Z)
@@ -295,8 +295,8 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:reject(V,color:P8))
-ELSE	abort
+THEN		put(sa:reject(V,color:P8))
+ELSE		abort
 
 reject-shape
 IF		¬ty(Y>Z)
@@ -308,8 +308,8 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:reject(V,shape:P9))
-ELSE	abort
+THEN		put(sa:reject(V,shape:P9))
+ELSE		abort
 
 reject-color-shape
 IF		¬ty(Y>Z)
@@ -321,5 +321,5 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:reject(V,color:P8,shape:P9))
-ELSE	abort
+THEN		put(sa:reject(V,color:P8,shape:P9))
+ELSE		abort

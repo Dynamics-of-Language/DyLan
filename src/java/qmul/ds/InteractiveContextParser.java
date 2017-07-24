@@ -227,9 +227,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					continue;
 
 				tried.get(ca).add(cur.second);
-				Tree res = ca.exec(cur.second.clone(), context);
 				logger.debug("Applying ca: " + ca);
 				logger.debug("to: " + cur.second);
+				
+				Tree res = ca.exec(cur.second.clone(), context);
 				logger.debug("result: " + res);
 				if (res != null) {
 					List<Action> newActions = new ArrayList<Action>(cur.first);

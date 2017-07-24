@@ -730,7 +730,7 @@ public class IfThenElse extends Effect implements Serializable {
 						} else {
 							// if not, re-instantiate it TODO and remember not
 							// to backtrack again?
-							logger.trace("unbacktracking:" + meta);
+							logger.debug("unbacktracking:" + meta);
 							meta.unbacktrack();
 						}
 					}
