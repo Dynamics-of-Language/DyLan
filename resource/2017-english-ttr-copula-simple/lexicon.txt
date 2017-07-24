@@ -17,7 +17,7 @@ object							object						s3							object
 one								object						s3							object
 item								object						s3							object
 blue                            color_adj	                       	blue
-//red							    color_adj							red
+red							    color_adj							red
 green							color_adj							green
 purple							color_adj							purple
 yellow							color_adj							yellow
