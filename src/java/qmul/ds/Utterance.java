@@ -111,7 +111,7 @@ public class Utterance {
 	}
 
 	public static void main(String a[]) {
-		Utterance utt = new Utterance("A: do you like me? yes?");
+		Utterance utt = new Utterance("A: no. it is");
 		System.out.println("words: "+utt.words);
 		System.out.println(utt);
 		

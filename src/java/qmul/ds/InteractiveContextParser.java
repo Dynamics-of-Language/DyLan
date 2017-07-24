@@ -205,6 +205,46 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			return;
 		}
 
+		
+		/**
+		 * First we are going to apply the actions that don't have any left adjustment
+		 * 
+		 */
+		Collection<LexicalAction> allActions=lexicon.get(word.word());
+		Collection<LexicalAction> leftAdjustActions=new ArrayList<LexicalAction>();
+		
+		Tree current=getState().getCurrentTuple().getTree().clone();
+		for(LexicalAction la:allActions)
+		{
+			if (la.requiresLeftAdjustment())
+			{
+				leftAdjustActions.add(la);
+			}
+			else
+			{
+				
+				logger.debug("applying "+la+" without left adjustment");
+				logger.debug("to tree: "+current);
+				Tree res = la.exec(current, context);
+				logger.debug("result: " + res);
+				if (res != null) {
+					DAGTuple tuple=getState().getNewTuple(res);
+					List<Action> edgeActs=new ArrayList<Action>();
+					edgeActs.add(la);
+					GroundableEdge edge=getState().getNewEdge(edgeActs, word);
+					getState().addChild(tuple, edge);
+					
+				}
+				
+			}
+		}
+		
+		if (leftAdjustActions.isEmpty())
+			return;
+		
+		/**
+		 * Now we do the left adjustment:
+		 */
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(new ArrayList<Action>(),
 				getState().getCurrentTuple().tree.clone());
 
@@ -245,9 +285,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		logger.debug("Now attempting to apply lexical action for:"+getState().wordStack().peek());
 		for (Pair<List<Action>, Tree> pair : global) {
 
-			UtteredWord w = getState().wordStack().peek();
-			logger.debug("top of stack:" + getState().wordStack().peek());
-			for (LexicalAction la : lexicon.get(w.word())) {
+			
+			logger.debug("top of stack:" + word);
+			for (LexicalAction la : leftAdjustActions) {
 				// set right-edge indicators (e.g. '.' or '?') and acceptances
 				// to not replayable
 				// TODO: should be part of the lexical entry? Need to think
@@ -271,7 +311,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					if (indexOfTRP == 0)
 					{
 						logger.debug("TRP at the beginning");
-						wordEdge = getState().getNewNewClauseEdge(newActs, w);
+						wordEdge = getState().getNewNewClauseEdge(newActs, word);
 					}
 					else if (indexOfTRP>0)
 					{
@@ -306,7 +346,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 						logger.debug("going forward along it");
 						getState().setCurrentTuple(getState().getDest(completionEdge));
 						
-						wordEdge = getState().getNewNewClauseEdge(newActs.subList(indexOfTRP, newActs.size()), w);
+						wordEdge = getState().getNewNewClauseEdge(newActs.subList(indexOfTRP, newActs.size()), word);
 						if (non_repairing_action_types.contains(la.getLexicalActionType()))
 							wordEdge.setRepairable(false);
 
@@ -323,9 +363,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 						
 					}
 					else
-						wordEdge = getState().getNewEdge(newActs, w);
+						wordEdge = getState().getNewEdge(newActs, word);
 
-					logger.debug("created word edge with word:" + w);
+					logger.debug("created word edge with word:" + word);
 					logger.debug("edge before adding:" + wordEdge);
 
 					if (non_repairing_action_types.contains(la.getLexicalActionType()))

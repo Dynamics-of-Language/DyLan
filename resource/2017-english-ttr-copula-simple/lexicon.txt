@@ -11,12 +11,13 @@ name							count						name						  s3							name
 job							count						job						  s3							job
 shape							count						shape						  s3							attr
 color							count						color						  s3							attr
-//color							mass						color						  s3							attr
+color							mass						color						  s3							attr
 shape							mass						shape						  s3							attr
 object							object						s3							object
 one								object						s3							object
+item								object						s3							object
 blue                            color_adj	                       	blue
-red							    color_adj							red
+//red							    color_adj							red
 green							color_adj							green
 purple							color_adj							purple
 yellow							color_adj							yellow
@@ -35,7 +36,8 @@ good								adj								good
 great								adj								great
 right						  	adj						right
 called							naming_adj						called
-named							naming_adj						named					
+named							naming_adj						named
+known							naming_adj						known					
 this						  det_demonst					here						  s3
 that						  det_demonst					there					      s3
 this						  demonst  						this						  s3							obj
@@ -47,6 +49,7 @@ can 						  v_aux_inf                     can                           modal
 do						      v_aux_inf                     do                            pres
 would						  v_aux_inf						would						  pres
 it							  demonst						this						  s3							obj
+its							  its							its
 //it							  pron_nom						s3							  obj
 //it							  pron_acc						s3							  obj
 a                             det_indef                     eps
@@ -54,12 +57,14 @@ an                            det_indef                     eps
 a                             det_indef_postcop				eps
 an                            det_indef_postcop				eps
 the							  det_def						iota
+how                          pron_whq                      obj
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
 what						  pron_what_rel					obj
 //which						  pron_whq						obj
 .							  assert						A
 ?							  question						Q
+?							  question_meta				Q
 //uhu							  accept						uhu
 ok							  accept						ok
 yes							  yes							yes
@@ -83,6 +88,7 @@ awesome						  yes						    awesome
 awesome						  accept						awesome	
 //wow						  accept						wow
 no							  reject						not
+no.							  reject						not
 close						  reject						close
 nope						  reject						nope
 not							  not_np							not
@@ -132,5 +138,12 @@ wants                         v_subjcon_fin                 want                
 want                          v_subjcon_inf                 want                          inf                          nons3
 to							  to_subjcon					to
 again						  manner_adv					again
+now						  	  manner_adv					now
 say							  v_tran_fin					say							  pres                          nons3
 say							   v_tran_inf				say					pres					nons3
+say							  v_tran_fin_imperative		say							imper
+so							  null						so
+still						  null						still
+also							  null						also
+as							  null						also
+too							  null						too

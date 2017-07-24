@@ -290,5 +290,10 @@ public class LexicalAction extends Action {
 			return false;
 		return true;
 	}
+	
+	public boolean requiresLeftAdjustment()
+	{
+		return !noLeftAdjustment;
+	}
 
 }

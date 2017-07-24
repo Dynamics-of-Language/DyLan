@@ -259,14 +259,14 @@ THEN    IF		</\0\/1>Ex.x
 	        		go(/\0)
 ELSE    abort
 
-my(PERSON)
+its(QUANT)
 IF      ?ty(e)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-        Speaker(X)
-THEN		make(\/1)
+THEN    put(person(s3))
+		make(\/1)
         go(\/1)
-        ttrput(R^[r:(R ++ [p==of(R.head,X):t]) | x1==(iota, r.head, r):e | head==x1:e])
+        ttrput(R^(R ++ [x==this:e|head==R.head:e|p==of(head,x):t]))
         put(ty(cn>e))
         put(!)
         go(/\1)
@@ -282,7 +282,8 @@ THEN		make(\/1)
 		put(ty(e))
 		ttrput([x:e|head==x:e])
 		go(/\0)
-ELSE		abort
+ELSE    abort
+
 
 your(QUANT)
 IF      ?ty(e)
@@ -459,9 +460,14 @@ ELSE    IF		?ty(e)
       	 ELSE	abort	
 		
 
+//*
+WARN: hacky
+as in e.g. the color is called red; or a color called red. It's hacky..... 
 
+*//
 naming_adj(PRED)
 IF		?ty(e)
+		</\0>+BE
 THEN		make(\/1)
 		go(\/1)
 		put(ty(e>e))
@@ -470,7 +476,39 @@ THEN		make(\/1)
 		make(\/0)
 		go(\/0)
 		put(?ty(e))
-ELSE		abort
+ELSE		IF		ty(e)
+				¬<\/1>Ex.x
+        			¬<\/0>Ex.x
+        			¬<\/L>Ex.x
+        			fo(X)
+        	THEN		put(?+eval)
+        			make(\/L)
+        			go(\/L)
+        			put(?ty(t))
+        			make(\/0)
+        			go(\/0)
+        			put(ty(e))
+        			put(fo(X))
+        			go(/\0)
+        			make(\/1)
+        			go(\/1)
+        			put(?ty(e>t))
+        			make(\/1)
+        			go(\/1)
+        			ttrput(R1^R2^(R1 ++ (R2 ++ [p==PRED(R2.head,R1.head):t])))
+        			put(ty(e>(e>t)))
+        			put(!)
+        			go(/\1)
+        			make(\/0)
+        			go(\/0)
+        			put(?ty(e))
+        	ELSE		abort
+        			
+        			
+				
+
+
+
 
 i(PERSON,CLASS)
 IF		?ty(e)
@@ -1364,7 +1402,6 @@ ELSE		abort
 prep_e(PRED)
 IF		ty(e)
 		¬<\/L>Ex.x
-		¬+Q
 		fo(X)		
 THEN		put(?+eval)
 		make(\/L)
@@ -1429,6 +1466,7 @@ ELSE		IF		ty(t)
 								infer-sa
 		ELSE    IF		ty(e)
 						tn(0*)
+						Speaker(W)
 				THEN		IF		<Z>+Q
 						THEN		ground
 								infer-sa
@@ -1456,20 +1494,21 @@ ELSE		IF		ty(t)
 				¬</\0\/1>Ex.x
 				¬</\L>Ex.x
 				¬?+eval
-				PrevSpeaker(W)
-		THEN  	IF		Assert(W)
+				Speaker(V)
+		THEN  	IF		Assert(V)
 				THEN		ground
 						infer-sa
-			 	ELSE		put(Assert(W))
+			 	ELSE		put(Assert(V))
 						ground
 						infer-sa
 		ELSE  	IF		ty(e)
 						tn(0*)
-				THEN		IF		Assert(W)
+						Speaker(V)
+				THEN		IF		Assert(V)
 						THEN		ground
 								delete(?Ex.tn(x))
 								infer-sa
-					 	ELSE		put(Assert(W))
+					 	ELSE		put(Assert(V))
 								ground
 								delete(?Ex.tn(x))
 								infer-sa
@@ -1506,7 +1545,7 @@ ELSE		IF	  	ty(t)
 				ELSE		abort
 		
 		
-//*
+*question_meta(PRED)
 IF		?ty(e)
 		¬<\/0>Ex.x
 		¬<\/1>Ex.x
@@ -1516,7 +1555,7 @@ THEN		put(+Q)
 		delete(?ty(e))
 		ttrput([x:e|head==x:e])
 ELSE		abort
-*//
+
 
 
 greet(PRED)
@@ -1591,6 +1630,8 @@ THEN		IF		Speaker(Y)
 										<Z>+Q
 								THEN		addaxiom
 								ELSE		abort	
+								
+
 //*
 and
 IF		Speaker(Y)
@@ -1680,3 +1721,11 @@ IF		?ty(e)
         ¬<\/L>Ex.x
 THEN		put(+neg)
 ELSE		abort
+
+
+*null(PRED)
+IF		ty(X)
+THEN		do_nothing
+ELSE		IF		?ty(X)
+		THEN		do_nothing
+		ELSE		do_nothing
