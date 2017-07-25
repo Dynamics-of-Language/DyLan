@@ -1,5 +1,7 @@
 is                            v_be                  	pres                          s3
 's							  v_be                  	pres                          s3
+am                            v_be                  	pres                          s3
+'m							  v_be                  	pres                          s3
 was							  v_be                  	pres                          s3
 square                          count                       square                        s3                            shape
 circle                          count                       circle                        s3                            shape
@@ -31,7 +33,11 @@ yellow							concept_name							yellow				s3			color
 orange							concept_name							orange					s3			color
 black							concept_name							black				s3			color
 new								adj								new
+same                            adj                             same
+another                         adj                          	another
 correct							adj								correct
+incorrect							adj							incorrect
+wrong							adj								wrong
 good								adj								good
 great								adj								great
 right						  	adj						right
@@ -46,6 +52,7 @@ see							  v_tran_fin					see							  pres                          nons3
 see							  v_tran_inf					see							  inf							per
 sees						  v_tran_fin					see							  pres							s3
 can 						  v_aux_inf                     can                           modal
+ca 						  	  v_aux_inf                     ca                            modal
 do						      v_aux_inf                     do                            pres
 would						  v_aux_inf						would						  pres
 it							  demonst						this						  s3							obj
@@ -66,6 +73,7 @@ what						  pron_what_rel					obj
 ?							  question						Q
 ?							  question_meta				Q
 //uhu							  accept						uhu
+yes							  accept						yes
 ok							  accept						ok
 yes							  yes							yes
 yes							  accept						yes
@@ -78,6 +86,7 @@ yay					      	  accept						yay
 good						  accept						good
 great						  accept						great
 okay						  accept						okay
+okay						  accept						okay
 yeah						  accept						yeah
 right						  accept						right
 correct						  accept						correct	
@@ -86,6 +95,8 @@ bingo						  accept						bingo
 bingo						  yes							bingo
 awesome						  yes						    awesome	
 awesome						  accept						awesome	
+perfect						  yes						    perfect	
+perfect						  accept						perfect	
 //wow						  accept						wow
 no							  reject						not
 no.							  reject						not
@@ -115,8 +126,7 @@ get							  v_tran_subj_drop			get							pres						nons3
 have						  v_tran_inf					have						inf						nons3
 have						  v_tran_fin					have						pres					nons3
 here						  manner_adv					here			
-remember					  v_tran_fin					remember					pres					nons3
-remember					  v_tran_inf					remember					pres					nons3
+recognise					  v_tran_fin					remember					pres					nons3
 recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
 recognize					  v_tran_fin					recognise					pres					nons3
@@ -124,12 +134,18 @@ recognize					  v_tran_inf					recognise					pres					nons3
 describe					  v_tran_fin					describe					pres					nons3
 describe					  v_tran_inf					describe					pres					nons3
 describes					  v_tran_fin					describe					pres					s3
-know					  v_tran_fin					know					pres					nons3
-know					  v_tran_inf					know					pres					nons3
-know					  v_intran_inf					know					pres					nons3
-know					  v_intran_fin					know					pres					nons3
+know					  v_tran_fin						know					pres					nons3
+know					  v_tran_inf						know					pres					nons3
+know					  v_intran_inf						know					pres					nons3
+know					  v_intran_fin						know					pres					nons3
 know					  v_tran_obj_prop_inf				know					pres					nons3
 know					  v_tran_obj_prop_fin				know					pres					nons3		
+remember				  v_tran_fin						remember					pres					nons3
+remember				  v_tran_inf						remember					pres					nons3
+remember				  v_intran_inf						remember					pres					nons3
+remember				  v_intran_fin						remember					pres					nons3
+remember				  v_tran_obj_prop_inf				remember					pres					nons3
+remember				  v_tran_obj_prop_fin				remember					pres					nons3		
 think					  v_tran_obj_prop_fin				think					pres					nons3
 think					  v_tran_obj_prop_inf				think					pres					nons3
 guess					  v_tran_fin					guess					pres					nons3
@@ -148,3 +164,5 @@ still						  null						still
 also							  null						also
 as							  null						also
 too							  null						too
+ok							  null                      ok
+then                          null                      then
