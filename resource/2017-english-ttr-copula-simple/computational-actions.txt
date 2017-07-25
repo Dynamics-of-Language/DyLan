@@ -229,3 +229,12 @@ THEN		delete(?Ex.fo(x))
 		put(fo(X))
 ELSE		abort
 
+substitution-vp
+IF		ty(e>t)
+		?Ex.fo(x)
+		¬<\/0>Ex.x
+		¬<\/1>Ex.x
+		</\C>(ty(e>t) & fo(X))
+THEN		delete(?Ex.fo(x))
+		put(fo(X))
+ELSE		abort

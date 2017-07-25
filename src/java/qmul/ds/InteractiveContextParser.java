@@ -64,10 +64,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	String[] acksa = { "uhu" };
 	List<String> acks = Arrays.asList(acksa);
-	String[] repairand = { "uhh", "errm", "err", "er", "well", "oh", "uh", "erm", "uhm", "um", "oh" };
+	String[] repairand = { "uhh", "errm", "err", "er", "oh", "uh", "erm", "uhm", "um", "oh"};
 	String[] restarter = { "yeah" };
 	List<String> repairanda = Arrays.asList(repairand);
-	String[] forceRepairand = { "sorry"};
+	String[] forceRepairand = { "sorry", "oops"};
 	List<String> forcedRepairanda = Arrays.asList(forceRepairand);
 
 	List<String> restarters = Arrays.asList(restarter);
@@ -507,24 +507,6 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			return getState();
 		}
 
-		if (this.repairanda.contains(word.word())) {
-			logger.info("repair possible");
-			this.getState().thisIsFirstTupleAfterLastWord();
-			this.getState().setRepairProcessing(true);
-			return this.getState();
-		} else if (this.restarters.contains(word.word()) && getState().repairProcessingEnabled()) {
-			logger.info("forcing restart on next word");
-			this.forcedRestart = true;
-			this.getState().thisIsFirstTupleAfterLastWord();
-			return this.getState();
-		} else if (this.forcedRepairanda.contains(word.word())) {
-			logger.info("forcing repair on next word");
-			this.forcedRepair = true;
-			this.getState().thisIsFirstTupleAfterLastWord();
-			this.getState().setRepairProcessing(true);
-			return this.getState();
-		}
-
 		if (this.forcedRestart || this.forcedRepair) {
 
 			logger.info("initiating restart or repair");
@@ -532,8 +514,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			getState().initiateLocalRepair();
 
 			if (!parse()) {
-				logger.info("OOPS! Couldn't parse word as restart");
-				logger.error("OOPS! Couldn't parse word as restart");
+				logger.info("OOPS! Couldn't parse word as restart or repair");
+				logger.error("OOPS! Couldn't parse word as restart or repair");
 				this.forcedRestart = false;
 				this.forcedRepair=false;
 				return null;
@@ -552,6 +534,26 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		}
 
+		
+		if (this.repairanda.contains(word.word())) {
+			logger.info("repair possible");
+			this.getState().thisIsFirstTupleAfterLastWord();
+			this.getState().setRepairProcessing(true);
+			return this.getState();
+		} else if (this.restarters.contains(word.word()) && getState().repairProcessingEnabled()) {
+			logger.info("forcing restart on next word");
+			this.forcedRestart = true;
+			this.getState().thisIsFirstTupleAfterLastWord();
+			return this.getState();
+		} else if (this.forcedRepairanda.contains(word.word())) {
+			logger.info("forcing repair on next word");
+			this.forcedRepair = true;
+			this.getState().thisIsFirstTupleAfterLastWord();
+			this.getState().setRepairProcessing(true);
+			return this.getState();
+		}
+
+		
 		Collection<LexicalAction> actions = this.lexicon.get(word.word());
 		if (actions == null || actions.isEmpty()) {
 			logger.error("Word not in Lexicon: " + word);
