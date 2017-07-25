@@ -11,6 +11,8 @@ package qmul.ds.action.atomic;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.ComputationalAction;
@@ -38,6 +40,7 @@ public class InferSpeechAct extends Effect {
 	private static final long serialVersionUID = 1L;
 
 	public static final String FUNCTOR = "infer-sa";
+	protected static Logger logger=Logger.getLogger(InferSpeechAct.class);
 
 	
 
@@ -80,31 +83,30 @@ public class InferSpeechAct extends Effect {
 		SpeechActInferenceGrammar sag=context.getSAGrammar();
 		
 		Tree clone=tree.clone();
-		boolean doneRemoval=false;
 		
+		removeSAAnnotations(clone);
 		loopbreak:
 		for(ComputationalAction action: sag.values())
 		{
+			logger.debug("trying speech act rule:"+action.getName());
+			logger.debug("on tree:"+clone);
 			
 			Tree result=action.exec(clone, context);
 			
+			
 			if (result!=null)
 			{
+				logger.debug("success: "+result);
 				
-				if (!doneRemoval)
-				{
-					removeSAAnnotations(tree);
-					doneRemoval=true;
-				}
-				
-				clone=result;
-				break loopbreak;
+				return (T)result;
 			}
+			else
+				logger.debug("failed");
 			
 		}
 		
 		
-		return (T)clone;
+		return (T)tree.clone();
 	}
 	
 	

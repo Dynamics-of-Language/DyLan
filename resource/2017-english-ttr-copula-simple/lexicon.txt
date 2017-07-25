@@ -1,8 +1,8 @@
 is                            v_be                  	pres                          s3
 's							  v_be                  	pres                          s3
-am                            v_be                  	pres                          s3
-'m							  v_be                  	pres                          s3
-was							  v_be                  	pres                          s3
+am                            v_be                  	pres                          nons3
+'m							  v_be                  	pres                          nons3
+was							  v_be                  	past                          s3
 square                          count                       square                        s3                            shape
 circle                          count                       circle                        s3                            shape
 triangle						count						triangle					  s3							shape
@@ -68,7 +68,7 @@ how                          pron_whq                      obj
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
 what						  pron_what_rel					obj
-//which						  pron_whq						obj
+which						  pron_whq						obj
 .							  assert						A
 ?							  question						Q
 ?							  question_meta				Q
@@ -115,7 +115,9 @@ but							  and							null
 of							  prep_e						of
 for						      prep_e						for
 about						  prep_e						about
+with							  prep_es					with
 try							  v_tran_fin_imperative			try							imper					s2
+try							  v_intran_fin_imperative			try							imper					s2
 got							  v_tran_fin					get							past					nons3
 get							  v_tran_inf					get							inf						nons3
 get							  v_tran_fin					get							pres						nons3
@@ -126,7 +128,6 @@ get							  v_tran_subj_drop			get							pres						nons3
 have						  v_tran_inf					have						inf						nons3
 have						  v_tran_fin					have						pres					nons3
 here						  manner_adv					here			
-recognise					  v_tran_fin					remember					pres					nons3
 recognise					  v_tran_fin					recognise					pres					nons3
 recognise					  v_tran_inf					recognise					pres					nons3
 recognize					  v_tran_fin					recognise					pres					nons3
@@ -166,3 +167,6 @@ as							  null						also
 too							  null						too
 ok							  null                      ok
 then                          null                      then
+lets							 null					   lets
+oops							 null					   oops
+opps							 null					   opps

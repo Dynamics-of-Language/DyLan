@@ -125,7 +125,9 @@ IF		Speaker(X)
 		¬</\L>Ex.x
 		¬?+eval
 		<Z>+Q
-THEN		go(Z)
+		+eoc
+THEN		delete(+eoc)
+		go(Z)
 ELSE		abort
 
 late-star-adj-q
@@ -207,7 +209,7 @@ ELSE		IF		ty(X)
 				¬</\L>Ex.x
 				¬?+eval
 				PrevSpeaker(W)
-				(<Z>+Q || Assert(W))
+				+eoc
 		THEN		addaxiom
 		ELSE		abort
 

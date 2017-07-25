@@ -878,7 +878,25 @@ THEN		put(ty(e))
 		put(?ty(e))
 ELSE		abort
 
-		
+v_intran_fin_imperative(PRED,TENSE,PERSON)
+IF		?ty(e)
+		</\0\/1>Ex.x
+		Addressee(X)
+THEN		put(ty(e))
+		delete(?ty(e))
+		ttrput([x==X:e|head==x:e])
+		go(/\0)
+		go(\/1)	
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		ttrput([head:es|p1==imperative(head):t])
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))
+		v_intran_content(PRED)
+ELSE		abort		
 		
 v_tran_fin_imperative(PRED,TENSE,PERSON)
 IF		?ty(e)
@@ -1154,7 +1172,7 @@ ELSE		IF		?ty(t)
 						make(\/0)
 						go(\/0)
 						put(?ty(e))
-				ELSE		IF		</\L>Ex.x
+				ELSE		IF		(<\/*>?Ex.tn(x) || </\L>Ex.x)
 						THEN		abort
 						ELSE		put(+Q)
 								make(\/1)
@@ -1237,7 +1255,7 @@ ELSE		IF		?ty(t)
 						make(\/0)
 						go(\/0)
 						put(?ty(e))
-				ELSE		IF		</\L>Ex.x
+				ELSE		IF		(<\/*>?Ex.tn(x) || </\L>Ex.x)
 						THEN		abort
 						ELSE		put(+Q)
 								make(\/1)
@@ -1313,7 +1331,7 @@ ELSE		IF		?ty(t)
 						make(\/0)
 						go(\/0)
 						put(?ty(e))
-				ELSE		IF		</\L>Ex.x
+				ELSE		IF		(<\/*>?Ex.tn(x) || </\L>Ex.x)
 						THEN		abort
 						ELSE		put(+Q)
 								make(\/1)
@@ -1348,7 +1366,7 @@ ELSE		IF		?ty(t)
 
 prep_es(PRED)
 IF		ty(t)
-		¬<\/L>Ex.x		
+		¬<\/L>Ex.x
 THEN		IF		<\/*>?Ex.tn(x)
 			  	<\/*>ty(e)
 		THEN		put(?+eval)
@@ -1403,30 +1421,33 @@ prep_e(PRED)
 IF		ty(e)
 		¬<\/L>Ex.x
 		fo(X)		
-THEN		put(?+eval)
-		make(\/L)
-		go(\/L)
-		put(?ty(t))
-		make(\/1)
-		go(\/1)
-		put(?ty(e>t))
-		make(\/1)
-		go(\/1)
-		ttrput(R1^R2^(R1 ++ (R2 ++ [p==PRED(R2.head,R1.head):t])))
-		put(ty(e>(e>t)))
-		put(!)
-		go(/\1)
-		go(/\1)
-		make(\/0)
-		go(\/0)
-		put(fo(X))
-		put(ty(e))
-		put(!)
-		go(/\0)
-		go(\/1)
-		make(\/0)
-		go(\/0)
-		put(?ty(e))
+THEN		IF		+Q
+				¬?Ex.tn(x)
+		THEN		abort
+		ELSE		put(?+eval)
+				make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/1)
+				go(\/1)
+				put(?ty(e>t))
+				make(\/1)
+				go(\/1)
+				ttrput(R1^R2^(R1 ++ (R2 ++ [p==PRED(R2.head,R1.head):t])))
+				put(ty(e>(e>t)))
+				put(!)
+				go(/\1)
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(fo(X))
+				put(ty(e))
+				put(!)
+				go(/\0)
+				go(\/1)
+				make(\/0)
+				go(\/0)
+				put(?ty(e))
 ELSE		abort
 
 
@@ -1446,7 +1467,7 @@ ELSE		abort
 //(2) Also the ?Ex.tn(x) that we delete is to prevent the pointer ever returning to the root ?ty(t). i.e. any further deveopment is constrained to 
 //below the unfixed node. 
 //(3) Also, sometimes deleting ?Ex.tn(x) when it's not there.... but that's okay for now. another embedded ITE makes the damn things unreadable.
-
+//+eoc marks end of clause
 release_turn(PRED)	
 IF		ty(Y>Z)
 THEN		abort
@@ -1458,27 +1479,33 @@ ELSE		IF		ty(t)
 		THEN		IF		<Z>+Q
 				THEN		ground
 						infer-sa
+						put(+eoc)
 				ELSE		IF		Assert(W)
 						THEN		ground
+								put(+eoc)
 								infer-sa
 						ELSE		put(Assert(W))
 								ground
+								put(+eoc)
 								infer-sa
 		ELSE    IF		ty(e)
 						tn(0*)
 						Speaker(W)
 				THEN		IF		<Z>+Q
 						THEN		ground
-								infer-sa
 								delete(?Ex.tn(x))
+								put(+eoc)
+								infer-sa
 						ELSE		IF		Assert(W)
 								THEN		ground
-										infer-sa
 										delete(?Ex.tn(x))
+										put(+eoc)
+										infer-sa
 								ELSE		put(Assert(W))
 										ground
-										infer-sa
 										delete(?Ex.tn(x))
+										put(+eoc)
+										infer-sa
 				ELSE		abort
 
 
@@ -1497,9 +1524,11 @@ ELSE		IF		ty(t)
 				Speaker(V)
 		THEN  	IF		Assert(V)
 				THEN		ground
+						put(+eoc)
 						infer-sa
 			 	ELSE		put(Assert(V))
 						ground
+						put(+eoc)
 						infer-sa
 		ELSE  	IF		ty(e)
 						tn(0*)
@@ -1507,10 +1536,12 @@ ELSE		IF		ty(t)
 				THEN		IF		Assert(V)
 						THEN		ground
 								delete(?Ex.tn(x))
+								put(+eoc)
 								infer-sa
 					 	ELSE		put(Assert(V))
 								ground
 								delete(?Ex.tn(x))
+								put(+eoc)
 								infer-sa
 				ELSE		abort
 
@@ -1528,20 +1559,24 @@ ELSE		IF	  	ty(t)
 				¬?+eval
 		THEN  	IF	  	<Z>+Q
 			    THEN  	ground
+			    			put(+eoc)
 			    			infer-sa
 			    ELSE  	put(+Q)
 			    			ground
+			    			put(+eoc)
 			    			infer-sa
 		ELSE   	IF		ty(e)
 						tn(0*)
 				THEN		IF	  	<Z>+Q
 			    			THEN  	ground
-					    			infer-sa
 					    			delete(?Ex.tn(x))
+					    			put(+eoc)
+					    			infer-sa
 					    ELSE  	put(+Q)
 					    			ground
-					    			infer-sa
 					    			delete(?Ex.tn(x))
+					    			put(+eoc)
+					    			infer-sa
 				ELSE		abort
 		
 		

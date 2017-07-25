@@ -51,6 +51,7 @@ public class SubsumesLabel extends Label implements Serializable {
 		this(s, null);
 	}
 
+
 	public boolean check(Node n) {
 
 		
@@ -112,5 +113,7 @@ public class SubsumesLabel extends Label implements Serializable {
 		
 		
 	}
+	
+	
 
 }
