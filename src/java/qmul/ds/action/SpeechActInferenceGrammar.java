@@ -32,6 +32,11 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.atomic.Effect;
+import qmul.ds.action.atomic.IfThenElse;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.TTRRecordType;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.SubsumesLabel;
 
 /**
  * A set of {@link ComputationalAction}s that define speech act inference rules,
@@ -210,13 +215,13 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 				ComputationalAction act1 =  o1.getValue();
 				ComputationalAction act2 =  o2.getValue();
 				
-				if(act1.getType() == null)
+				if(getType(act1) == null)
 					return 1;
-				else if(act2.getType() == null) 
+				else if(getType(act2) == null) 
 					return -1;
-				else if(act1.getType().subsumes(act2.getType()))
+				else if(getType(act1).subsumes(getType(act2)))
 					return 1;
-				else if(act2.getType().subsumes(act1.getType()))
+				else if(getType(act2).subsumes(getType(act1)))
 					return -1;
 				
 				return 0;
@@ -236,6 +241,31 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 		
 		this.clear();
 		this.putAll(sorted);
+	}
+	
+
+	
+	public Formula getType(ComputationalAction action){
+		if(action != null){
+			Effect effect = action.getEffect();
+			
+			if(effect instanceof IfThenElse){
+				Label[] if_labels = ((IfThenElse)effect).getIFClause().clone();
+				
+				for(int j=0; j < if_labels.length; j++){
+					Label label = if_labels[j];
+					
+					if(label instanceof SubsumesLabel){
+//					if(label.toString().contains("W1<<")){		
+						TTRRecordType ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
+						ttr.resetMetas();
+						return ttr;
+					}
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	

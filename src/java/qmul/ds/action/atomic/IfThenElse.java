@@ -56,7 +56,7 @@ public class IfThenElse extends Effect implements Serializable {
 	private Effect[] ELSE;
 	private int embeddingLevel = 0;
 	private IfThenElse parent;
-
+	
 	/**
 	 * @param IF
 	 * @param THEN
@@ -85,7 +85,6 @@ public class IfThenElse extends Effect implements Serializable {
 
 	public IfThenElse(List<String> strings) {
 		this(strings, 0, null);
-
 	}
 
 	/**
@@ -210,12 +209,7 @@ public class IfThenElse extends Effect implements Serializable {
 		System.out.println(e);
 		
 	}
-
-	@Override
-	public IfThenElse clone(){
-		IfThenElse ite = new IfThenElse(this.IF.clone(), this.THEN.clone(), this.ELSE.clone());
-		return ite;
-	}
+	
 	private static int findEndIndexOfEmbeddedITE(List<String> strings, int indexOfIF) {
 		int embedLevel = 1;
 		int j = indexOfIF + 1;

@@ -27,7 +27,6 @@ import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
-import qmul.ds.action.meta.Meta;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.AtomicFormula;
@@ -74,11 +73,12 @@ public class SpeechActInferenceGenerator {
 
 		this.initialDyLanParser(english_ttr_url);
 		this.act_map = this.loadActMappings(english_ttr_url);
+		logger.info("act_map: " + act_map);
 		this.loadDialogues(corpus);
 		this.loadSlotValues();
 
 		this.sa_gammar_templates = (TreeMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
-		logger.debug("sa_gammar_templates: " +sa_gammar_templates);
+		logger.info("sa_gammar_templates: " +sa_gammar_templates.size());
 		
 		this.sa_inference_map = new HashMap<String, List<ComputationalAction>>();
 	}
@@ -211,7 +211,7 @@ public class SpeechActInferenceGenerator {
 	
 	/************************ ENF of Class Initialiasation *******************************/
 
-	private void start(boolean keepTest) {
+	private void start() {
 		String prev_act = null;
 		for(Dialogue dlg: this.dlgList){
 			logger.debug("----------------- New Dialogue -----------------");
@@ -227,19 +227,25 @@ public class SpeechActInferenceGenerator {
 					String act = utt.getDAt(i);
 					
 					if(prev_act != null && prev_act.contains("polar")){
-						logger.debug("--- prev_act: " + prev_act + "; current_act: "+ act);
-						if(act.contains("accept")){
+						logger.info("--- prev_act: " + prev_act + "; current_act: "+ act);
+						if(act.equals("accept")){
 							act = prev_act.replace("polar", "info");
 						}
 						
-						else if(act.contains("reject")){
+						else if(act.equals("reject")){
 							act = prev_act.replace("polar", "info-neg");
 						}
 						
-						logger.debug("--- new current_act: "+ act);
+						logger.info("--- new current_act: "+ act);
 					}
 					
-					if(act.contains("ask"))
+					if(act.contains("accept-info")){
+						logger.info("--- original current_act: "+ act);
+						act = act.replace("accept-", "");
+						logger.info("--- new current_act: "+ act);
+					}
+										
+//					if(act.contains("ask"))
 					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
 					
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
@@ -258,11 +264,14 @@ public class SpeechActInferenceGenerator {
 					
 					TTRRecordType ttr = this.abstractOutSlotValues((TTRRecordType)f);
 					if(act.contains("ask"))
-					logger.info(" ---> pointed Node: " + pointedNode);
+					logger.debug(" ---> pointed Node: " + pointedNode);
 					logger.debug(" ---> abstracted TTR: " + ttr);
 					logger.debug(" ---> meta_replacements: " + this.meta_replacements);
 					
-					if(hasSpeechActOn(resultTree.getPointedNode(), act)){
+
+					logger.info("££££££££ check for the parser itself");
+					if(hasSpeechActOn(pointedNode, act)){
+						logger.info("££££££££ attached with " + act);
 						this.find_speech_act(resultTree.getPointedNode());
 						break;
 					}
@@ -279,12 +288,13 @@ public class SpeechActInferenceGenerator {
 							logger.debug("result:"+newTree);
 							Effect effect = cAct.getEffect();
 							if(effect instanceof IfThenElse){
-								((IfThenElse)effect).setupBacktrackers(new ArrayList<Meta<?>>());
+								((IfThenElse)effect).resetMetas();
 								logger.debug("getMetas: " + ((IfThenElse)effect).getMetas());
 							}
 						}
 					}
-					
+
+					logger.info("££££££££ check for the new tree");
 					if((newTree != null && !hasSpeechActOn(newTree.getPointedNode(), act)) || newTree == null){
 						
 						// Check whether the ttr subsumes to one of the exisiting formula
@@ -331,10 +341,11 @@ public class SpeechActInferenceGenerator {
 							Tree tree = current_action.exec(resultTree, context);
 							Effect effect_template = current_action.getEffect();
 							if(effect_template instanceof IfThenElse){
-								((IfThenElse)effect_template).setupBacktrackers(new ArrayList<Meta<?>>());
+								((IfThenElse)effect_template).resetMetas();
 								logger.debug("getMetas: " + ((IfThenElse)effect_template).getMetas());
 							}
-							
+
+							logger.info("££££££££ check for the template");
 							if(tree != null && !hasSpeechActOn(tree.getPointedNode(), act))
 								break;
 							else
@@ -342,14 +353,17 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(current_action != null){
-							if(act.contains("ask"))
-								logger.info("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
+							logger.debug("selected action template: " + current_action.getName() + "\r\n" + current_action.getEffect());
+							
+							if(current_action.getName().trim().equals("accept-2")){
+								logger.info("+++ prev_act = " + prev_act + "; selected action = " + current_action.getName() );
+							}
 							
 							Effect effect_template = current_action.getEffect();
-							Effect effect = this.addNewFormula(effect_template, ttr);
+							IfThenElse effect = this.addNewFormula(effect_template, ttr);
 							effect = this.replaceMetaVariable(effect, this.meta_replacements);
-							if(act.contains("ask"))
 							logger.debug("new Effect at (" + act + "): \r\n" + effect);
+							logger.debug("check on the action template: \r\n" + current_action.getEffect());
 							
 							List<ComputationalAction> actList = new ArrayList<ComputationalAction>();
 							if(this.sa_inference_map.containsKey(act))
@@ -360,17 +374,13 @@ public class SpeechActInferenceGenerator {
 						}
 					}
 					else
-						logger.info("this action [" + act + "] has been pick up sucessfully");
+						logger.debug("this action [" + act + "] has been pick up sucessfully");
 					
 					prev_act = act;
 				}
 			}
 		}
 		this.exportToFile(sa_inference_map, this.rescource_dir, "speech-act-inference-grammar.txt");
-		if(keepTest){
-			this.initialDyLanParser(this.rescource_dir);
-			test();
-		}
 	}
 
 	private void find_speech_act(Node pointedNode) {
@@ -385,7 +395,12 @@ public class SpeechActInferenceGenerator {
 		logger.debug("existing speech_act tags: " + speech_act);
 	}
 
-	private void test() {
+
+	private void test() throws Exception {
+		String prev_act = null;
+		int correctness = 0;
+		int total = 0;
+		
 		for(Dialogue dlg: this.dlgList){
 			logger.debug("----------------- New Dialogue -----------------");
 			// reset the dylan parser for new dialogue
@@ -394,10 +409,30 @@ public class SpeechActInferenceGenerator {
 			
 			for(Utterance utt: dlg){
 				for(int i=0; i< utt.getTotalNumberOfSegments(); i++){
+					total ++;
+					
 //					logger.debug("utt.getUttSegment("+i+"): " + utt.getUttSegment(i));
 					String text = utt.getUttSegment(i);
 					text = text.replaceAll("%colorvalue", "red").replaceAll("%shapevalue", "square");
 					String act = utt.getDAt(i);
+					
+					if(prev_act != null && prev_act.contains("polar")){
+						logger.debug("--- prev_act: " + prev_act + "; current_act: "+ act);
+						if(act.equals("accept")){
+							act = prev_act.replace("polar", "info");
+						}
+						
+						else if(act.equals("reject")){
+							act = prev_act.replace("polar", "info-neg");
+						}
+						
+						logger.debug("--- new current_act: "+ act);
+					}
+					
+					if(act.contains("accept-info"))
+						act = act.replace("accept-", "");
+					
+					logger.debug("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
 					
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
@@ -412,42 +447,81 @@ public class SpeechActInferenceGenerator {
 					}
 
 					Tree resultTree = result.getContxtalTree().clone();
-					if(act.contains("ask"))
-					logger.info("  --> " + resultTree.getPointedNode());
+					logger.debug("  --> " + resultTree.getPointedNode());
 
 					try {
-						this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
-						this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
 						
-						List<String> speech_act_list = new ArrayList<String>();
+						
+						String speech_act = null;
 						
 						if(resultTree.getPointedNode() != null){
 							for(Label l: resultTree.getPointedNode()){
 								String label_str = l.toString().trim();
-								if(label_str.startsWith("sa:") && label_str.contains(utt.getSpeaker()))
-									speech_act_list.add(label_str.trim());
+								if(label_str.startsWith("sa:") && label_str.contains(utt.getSpeaker())){
+									speech_act= label_str.trim();
+									break;
+								}
 							}
 						}
 						
-						try {
-							if(act.contains("ask"))
-							logger.info("  --> " + speech_act_list);
-							this.exportToFile("speech_tag.txt", "  --> " + speech_act_list);
+						// check the correctness of the tagged speech act from the parser:
+						logger.info("act = " + act +" | speech_act = " +speech_act); 
+						List<String> pattern_list = act_map.get(act);
+						if (this.checkEquality(speech_act, pattern_list, act)){
+							correctness++;
+							
+							this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
+							this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
+							this.exportToFile("speech_tag.txt", "  --> " + speech_act);
 							this.exportToFile("speech_tag.txt", "");
-						} catch (IOException e) {
-							e.printStackTrace();
+						}
+						else{
+							this.exportToFile("speech_tag_with_error.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
+							this.exportToFile("speech_tag_with_error.txt", "  --> " + resultTree.getPointedNode());
+							this.exportToFile("speech_tag_with_error.txt", "  --> " + speech_act);
+							this.exportToFile("speech_tag_with_error.txt", "");
 						}
 						
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
+					prev_act = act;
 				}
 			}
 		}
+		
+		
+		try {
+			this.exportToFile("speech_tag.txt", "				Number of Utterances:  " + (double)total);
+			this.exportToFile("speech_tag.txt", "			   Number of Correctness:  " + (double)correctness);
+			this.exportToFile("speech_tag.txt", "Overall Accuracy of Speech Act Tags:  " + ((double)correctness/(double)total));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+
+	private boolean checkEquality(String speech_act, List<String> pattern_list, String act) throws Exception {
+		if(speech_act != null && !speech_act.trim().isEmpty()){
+			if(pattern_list != null && !pattern_list.isEmpty()){
+				for(String pattern: pattern_list){
+					if(!speech_act.contains(pattern))
+						return false;
+				}
+				
+				return true;
+			}
+			else 
+				throw new Exception("pattern_list is unavailable for " + act);
+		}
+		
+		return false;
+	}
+
 
 	private void exportToFile(HashMap<String, List<ComputationalAction>> map, String dir,
 			String fileName) {
+		
+//		logger.info("------------ START Export SpeechAct to File -----------");
 		if(map != null){
 			File file = new File(dir, fileName);
 			try {
@@ -465,6 +539,21 @@ public class SpeechActInferenceGenerator {
 					for(int i=0; i < actionList.size(); i++){
 						String action_name = key+"-"+i;
 						ComputationalAction action = actionList.get(i);
+						
+						Effect effect = action.getEffect();
+						if(effect instanceof IfThenElse){
+							((IfThenElse)effect).resetMetas();
+							logger.debug("getMetas: " + ((IfThenElse)effect).getMetas());
+						}
+						
+						if(effect.toString().contains("V=sys") || effect.toString().contains("P2=") || effect.toString().contains("P4=")){
+							try {
+								throw new Exception("found an error: " + effect);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						
 						action.setName(action_name);
 						fileWriter.append(action_name+"\n");
 						fileWriter.append(action.getEffect()+"\n");
@@ -513,7 +602,7 @@ public class SpeechActInferenceGenerator {
 	// check if the pointed Node contains particular speech-act
 	private boolean hasSpeechActOn(Node pointedNode, String act){
 		if(pointedNode != null){
-			logger.debug("--- act: " + act + " -- Pointed Node: " + pointedNode);
+			logger.info("--- act: " + act + " -- Pointed Node: " + pointedNode);
 			
 			for(Label l: pointedNode){
 				String label_str = l.toString().trim();
@@ -533,7 +622,7 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(anyMatch){
-							logger.debug("++++++++++ label_str: " + label_str + ";   act: " + act);
+							logger.info("++++++++++ label_str: " + label_str + ";   act: " + act);
 							return true;
 						}
 					}
@@ -612,7 +701,6 @@ public class SpeechActInferenceGenerator {
 		logger.debug("new TTR Record Type: " + result.removeHead());
 
 		return result.removeHead();
-
 	}
 
 	public static void main(String[] args){
@@ -623,11 +711,14 @@ public class SpeechActInferenceGenerator {
 		String comman  = scanInput.nextLine();
 			
 		if(comman.trim().equals("1"))
-			learner.start(false);
-		else if(comman.trim().equals("2"))
-			learner.test();
-		else if(comman.trim().equals("3"))
-		    learner.start(true);
+			learner.start();
+		else if(comman.trim().equals("2")){
+			try {
+				learner.test();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		else if(comman.trim().equals("n"))
 			System.exit(0);
 		
@@ -639,29 +730,32 @@ public class SpeechActInferenceGenerator {
 	
 	
 	/************************ Old Functions ************************/
-	private Effect replaceMetaVariable(Effect effect, Map<Formula, Formula> replacements) {
-		if(effect instanceof IfThenElse){
-			IfThenElse ite = ((IfThenElse)effect).clone();
-			ite.replaceVariables(replacements);
-			return ite;
-		}
-		return effect;
+	private IfThenElse replaceMetaVariable(IfThenElse original, Map<Formula, Formula> replacements) {
+		original.resetMetas();
+		logger.debug("this.toString().split('\n'): " + Arrays.asList(original.toString().split("\n")));
+		IfThenElse new_ite = new IfThenElse(Arrays.asList(original.toString().split("\n")));
+		
+		new_ite.replaceVariables(replacements);
+		return new_ite;
 	}
 
-	private Effect addNewFormula(Effect effect, Formula f) {
+	private IfThenElse addNewFormula(Effect effect, Formula f) {
 		if(effect instanceof IfThenElse){
-			IfThenElse ite = ((IfThenElse)effect).clone();
+			((IfThenElse)effect).resetMetas();
+
+			logger.debug("this.toString().split('\n'): " + Arrays.asList(((IfThenElse)effect).toString().split("\n")));
+			IfThenElse new_ite = new IfThenElse(Arrays.asList(((IfThenElse)effect).toString().split("\n")));
 			
 			Label label1 = LabelFactory.create("Fo(W1)");
-			ite.addNewLabelintoIF(label1);
+			new_ite.addNewLabelintoIF(label1);
 			
 			f.resetMetas();
 			Label label2 = LabelFactory.create("W1<<"+f+"");
-			ite.addNewLabelintoIF(label2);
+			new_ite.addNewLabelintoIF(label2);
 			
-			return ite;
+			return new_ite;
 		}
-		return effect;
+		return null;
 	}
 
 	private List<ComputationalAction> findComputationalAction(TreeMap<String, ComputationalAction> map, String act) {
