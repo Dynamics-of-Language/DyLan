@@ -232,6 +232,8 @@ public class IfThenElse extends Effect implements Serializable {
 
 	}
 
+	
+	
 	protected Backtracker backtracker = null;
 
 	/*
@@ -265,6 +267,33 @@ public class IfThenElse extends Effect implements Serializable {
 
 			}
 		}
+	}
+	/**
+	 * WARNING: should only be called AFTER setupBacktrackers has been called once. i.e. after all metas
+	 * have been added to backtracker.
+	 */
+	public void resetMetas()
+	{
+		for (Label label : IF) {
+			
+			label.resetMetas();
+		}
+		for (Effect effect : THEN) {
+			if (effect instanceof IfThenElse) {
+				IfThenElse ite = (IfThenElse) effect;
+				ite.resetMetas();
+
+			}
+		}
+		for (Effect effect : ELSE) {
+			if (effect instanceof IfThenElse) {
+				IfThenElse ite = (IfThenElse) effect;
+				ite.resetMetas();
+
+			}
+		}
+		
+		
 	}
 
 	private List<Meta<?>> getMetasHereAndAbove() {
