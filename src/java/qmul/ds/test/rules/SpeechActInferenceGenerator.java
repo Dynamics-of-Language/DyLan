@@ -846,10 +846,10 @@ public class SpeechActInferenceGenerator {
 			// (3)
 //			curDialogue.add("usr: got that? <rt> -- check");
 //			curDialogue.add("sys: ok <rt> -- accept");
-			
-
-			curDialogue.add("sys: red square <rt> -- info-color-shape");
-			curDialogue.add("usr: close. -- reject");
+		
+			// (4)
+//			curDialogue.add("usr: what is the object? <rt> -- openask");
+//			curDialogue.add("sys: red square? <rt> -- polar-color-shape");
 			
 			Dialogue dlg = new Dialogue(curDialogue);
 			try {
