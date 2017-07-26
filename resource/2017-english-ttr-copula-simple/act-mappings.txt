@@ -34,4 +34,6 @@ reject-color >> [reject(,color :]
 reject-shape >> [reject(,shape :]
 
 repeatrequest >> [repeatrequest(]
+try >> [try(]
+keepgoing >> [keepgoing(]
 check >> [check(]
