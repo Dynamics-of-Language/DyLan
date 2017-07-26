@@ -88,6 +88,18 @@ THEN	IF		(+neg || <Z>+neg)
 		ELSE	put(sa:repeatrequest(V))
 ELSE	abort
 
+try
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:try(V))
+ELSE	abort
+
 
 info-color
 IF	  	¬ty(Y>Z)
@@ -244,7 +256,6 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 THEN	put(sa:askshape(V,color:P8))
 ELSE	abort
-
 
 keepgoing
 IF		¬ty(Y>Z)

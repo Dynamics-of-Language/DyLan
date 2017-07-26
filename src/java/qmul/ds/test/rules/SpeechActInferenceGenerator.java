@@ -450,9 +450,10 @@ public class SpeechActInferenceGenerator {
 					logger.debug("  --> " + resultTree.getPointedNode());
 
 					try {
-						
-						
 						String speech_act = null;
+						
+						this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
+						this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
 						
 						if(resultTree.getPointedNode() != null){
 							for(Label l: resultTree.getPointedNode()){
@@ -464,23 +465,25 @@ public class SpeechActInferenceGenerator {
 							}
 						}
 						
+						this.exportToFile("speech_tag.txt", "  --> " + speech_act);
+						
 						// check the correctness of the tagged speech act from the parser:
-						logger.info("act = " + act +" | speech_act = " +speech_act); 
-						List<String> pattern_list = act_map.get(act);
-						if (this.checkEquality(speech_act, pattern_list, act)){
-							correctness++;
-							
-							this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
-							this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
-							this.exportToFile("speech_tag.txt", "  --> " + speech_act);
-							this.exportToFile("speech_tag.txt", "");
+						
+						if(act.equals("null")){
+							if(speech_act == null)
+									correctness ++;
 						}
+						
 						else{
-							this.exportToFile("speech_tag_with_error.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
-							this.exportToFile("speech_tag_with_error.txt", "  --> " + resultTree.getPointedNode());
-							this.exportToFile("speech_tag_with_error.txt", "  --> " + speech_act);
-							this.exportToFile("speech_tag_with_error.txt", "");
+							logger.info("act = " + act +" | speech_act = " +speech_act); 
+							List<String> pattern_list = act_map.get(act);
+							if (this.checkEquality(speech_act, pattern_list, act))
+								correctness++;
+							else
+								this.exportToFile("speech_tag.txt", "  --> ERROR!!!");
 						}
+
+						this.exportToFile("speech_tag.txt", "");
 						
 					} catch (IOException e1) {
 						e1.printStackTrace();
