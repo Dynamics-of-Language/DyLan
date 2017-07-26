@@ -1822,10 +1822,10 @@ IF		¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		¬+Q
-		Speaker(X)
-THEN		IF		Assert(X)
-		THEN		do_nothing
-		ELSE		put(Assert(X))
+		Assert(X)
+		Speaker(Y)
+		+eoc
+THEN		put(Assert(Y))
 ELSE		abort
 
 
