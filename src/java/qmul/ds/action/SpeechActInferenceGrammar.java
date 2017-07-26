@@ -201,9 +201,33 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 		}
 		
 		this.sortActMap(this);
+		for(ComputationalAction act: this.values()){
+			try {
+				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "act:  " + act.getName());
+				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", act.getEffect().toString());
+				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		logger.info("Loaded speech act grammar with " + size() + " speech act inference action entries.");
 		logger.trace(this);
+	}
+	
+	private void exportToFile(String path, String line) throws IOException{
+		File newfile = new File(path);
+		FileWriter fileWriter = new FileWriter(newfile, true);
+		if(!newfile.exists()){
+			newfile.createNewFile(); 
+			fileWriter.write(line+"\r\n");
+		}
+		
+		else
+	        fileWriter.append(line+"\r\n");
+
+        fileWriter.close();
 	}
 	
 	private void sortActMap(TreeMap<String, ComputationalAction> treemap){

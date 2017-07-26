@@ -318,7 +318,7 @@ IF		¬ty(Y>Z)
 		Assert(V)
 THEN	IF		(+neg || <Z>+neg)
 		THEN	abort
-		ELSE	put(sa:accept(V, color:P8))
+		ELSE	put(sa:acceptcolor(V))
 ELSE	abort
 
 //A: this is a red square. B: square/shape is correct.
@@ -332,7 +332,7 @@ IF		¬ty(Y>Z)
 		Assert(V)
 THEN	IF		(+neg || <Z>+neg)
 		THEN	abort
-		ELSE	put(sa:accept(V, shape:P9))
+		ELSE	put(sa:acceptshape(V))
 ELSE	abort
 
 //e.g. that's incorrect
@@ -343,7 +343,7 @@ IF		¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		¬<Z>+Q
-		¬<Z>+neg
+		¬(+neg || <Z>+neg)
 		Assert(V)
 THEN	put(sa:reject(V))
 ELSE	abort
@@ -356,38 +356,12 @@ IF		¬ty(Y>Z)
 		¬</\L>Ex.x
 		¬?+eval
 		¬<Z>+Q
-		<Z>+neg
+		(+neg || <Z>+neg)
 		Assert(V)
 THEN	put(sa:reject(V))
 ELSE	abort
 
-reject-color
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>+neg
-		Speaker(V)
-		PrevSpeaker(W)
-		¬Assert(W)
-THEN	put(sa:reject(V,color:P8))
-ELSE	abort
-
-reject-shape
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		<Z>+neg
-		Speaker(V)
-		PrevSpeaker(W)
-		¬Assert(W)
-THEN	put(sa:reject(V,shape:P9))
-ELSE	abort
-
-reject-color-shape
+reject-color-1
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -397,5 +371,42 @@ IF		¬ty(Y>Z)
 		Speaker(V)
 		PrevSpeaker(W)
 		¬Assert(W)
-THEN	put(sa:reject(V,color:P8,shape:P9))
+THEN	put(sa:rejectcolor(V))
+ELSE	abort
+
+reject-color-2
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+		PrevSpeaker(W)
+		¬Assert(W)
+THEN	put(sa:rejectcolor(V))
+ELSE	abort
+
+reject-shape-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+		PrevSpeaker(W)
+		¬Assert(W)
+THEN	put(sa:rejectshape(V))
+ELSE	abort
+
+reject-shape-2
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+		PrevSpeaker(W)
+		¬Assert(W)
+THEN	put(sa:rejectshape(V))
 ELSE	abort
