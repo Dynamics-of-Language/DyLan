@@ -17,7 +17,8 @@ IF	  	¬ty(Y>Z)
 THEN	put(sa:check(V))
 ELSE	abort
 
-doknowknow
+// a: i don't know this
+donotknow-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -28,8 +29,20 @@ IF		¬ty(Y>Z)
 THEN	put(sa:donotknow(V))
 ELSE	abort
 
+// a: i forgot this
+donotknow-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknow(V))
+ELSE	abort
+
 // a: i don't know the color
-donotknow-color
+donotknow-color-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -40,8 +53,20 @@ IF		¬ty(Y>Z)
 THEN	put(sa:donotknowcolor(V))
 ELSE	abort
 
+// a: i forgot the color
+donotknow-color-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowcolor(V))
+ELSE	abort
+
 // a: i don't know the shape
-donotknow-shape
+donotknow-shape-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -52,8 +77,20 @@ IF		¬ty(Y>Z)
 THEN	put(sa:donotknowshape(V))
 ELSE	abort
 
+// a: i forgot this shape
+donotknow-shape-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V))
+ELSE	abort
+
 // a: i don't know the color of this square
-donotknow-color-info-shape
+donotknow-color-info-shape-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -64,14 +101,38 @@ IF		¬ty(Y>Z)
 THEN		put(sa:donotknowcolor(V,shape:P9))
 ELSE		abort
 
+// a: i forgot the color of this square
+donotknow-color-info-shape-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN		put(sa:donotknowcolor(V,shape:P9))
+ELSE		abort
+
 // a: i don't know the shape of this red object
-donotknow-shape-info-color
+donotknow-shape-info-color-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
 		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V,color:P8))
+ELSE	abort
+
+// a: i forgot the shape of this red object
+donotknow-shape-info-color-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
 		Speaker(V)
 THEN	put(sa:donotknowshape(V,color:P8))
 ELSE	abort
@@ -99,7 +160,6 @@ THEN	IF		(+neg || <Z>+neg)
 		THEN	abort
 		ELSE	put(sa:try(V))
 ELSE	abort
-
 
 info-color
 IF	  	¬ty(Y>Z)
@@ -142,7 +202,6 @@ THEN		IF		<Z>+Q
 					THEN	abort
 					ELSE	put(sa:info(V,color:P8,shape:P9))
 ELSE	abort
-
 
 info-neg-color
 IF		¬ty(Y>Z)
@@ -269,7 +328,7 @@ THEN	put(sa:keepgoing(V))
 ELSE	abort
 
 //e.g. what is this?
-openask-1
+openask-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -281,7 +340,7 @@ THEN	put(sa:openask(V))
 ELSE	abort
 
 //e.g. try this one
-openask-2
+openask-1
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -294,7 +353,7 @@ THEN	IF		(+Q || <Z>+Q)
 ELSE	abort
 
 //A: this is red. B: good job.
-accept-2
+accept-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -336,7 +395,7 @@ THEN	IF		(+neg || <Z>+neg)
 ELSE	abort
 
 //e.g. that's incorrect
-reject-2
+reject-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -349,7 +408,7 @@ THEN	put(sa:reject(V))
 ELSE	abort
 
 //e.g. that's not correct
-reject-3
+reject-1
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
@@ -361,29 +420,36 @@ IF		¬ty(Y>Z)
 THEN	put(sa:reject(V))
 ELSE	abort
 
-reject-color-1
+reject-color-0
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
 		(+neg || <Z>+neg)
-		Speaker(V)
-		PrevSpeaker(W)
-		¬Assert(W)
+		Assert(V)
 THEN	put(sa:rejectcolor(V))
 ELSE	abort
 
-reject-color-2
+reject-color-1
 IF		¬ty(Y>Z)
 		ty(X)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		Speaker(V)
-		PrevSpeaker(W)
-		¬Assert(W)
+		Assert(V)
 THEN	put(sa:rejectcolor(V))
+ELSE	abort
+
+reject-shape-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Assert(V)
+THEN	put(sa:rejectshape(V))
 ELSE	abort
 
 reject-shape-1
@@ -392,21 +458,6 @@ IF		¬ty(Y>Z)
 		¬</\0\/1>Ex.x
 		¬</\L>Ex.x
 		¬?+eval
-		(+neg || <Z>+neg)
-		Speaker(V)
-		PrevSpeaker(W)
-		¬Assert(W)
-THEN	put(sa:rejectshape(V))
-ELSE	abort
-
-reject-shape-2
-IF		¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		Speaker(V)
-		PrevSpeaker(W)
-		¬Assert(W)
+		Assert(V)
 THEN	put(sa:rejectshape(V))
 ELSE	abort

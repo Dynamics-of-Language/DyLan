@@ -474,7 +474,7 @@ public class SpeechActInferenceGenerator {
 					try {
 						String speech_act = null;
 						
-						this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " :: act("+act+")");
+						this.exportToFile("speech_tag.txt", utt.getSpeaker() + ": " + text + " -- " + act);
 						this.exportToFile("speech_tag.txt", "  --> " + resultTree.getPointedNode());
 						
 						if(resultTree.getPointedNode() != null){
@@ -825,14 +825,31 @@ public class SpeechActInferenceGenerator {
 		}
 		else if(comman.trim().equals("3")){
 			List<String> curDialogue = new ArrayList<String>();
-//			curDialogue.add("usr: what is the color? <rt> -- ask-color");
-//			curDialogue.add("sys: i don't know this. <rt> -- donotknow");
 			
-//			curDialogue.add("sys: forgot the shape <rt> -- donotknow-shape");
+			// didn't solve:
+			// (1)
+//			curDialogue.add("sys: so a red square? <rt> -- polar-color-shape");
+//			curDialogue.add("usr: no. -- info-neg-color-shape");
+			
+//			curDialogue.add("sys: square <rt> -- info-shape");
+//			curDialogue.add("usr: no. -- reject");
+			
+//			curDialogue.add("sys: red square <rt> -- info-color-shape");
+//			curDialogue.add("usr: close. -- reject");
+
+			// (2)
+//			curDialogue.add("usr: this object is? <rt> -- openask");
+//			curDialogue.add("sys: but what is it called? <rt> -- openask");
+//			curDialogue.add("usr: this is? <rt> -- openask");
+//			curDialogue.add("usr: color is? <rt> -- ask-color");
+			
+			// (3)
+//			curDialogue.add("usr: got that? <rt> -- check");
+//			curDialogue.add("sys: ok <rt> -- accept");
 			
 
-			curDialogue.add("sys: the color is red? <rt> -- polar-color");
-			
+			curDialogue.add("sys: red square <rt> -- info-color-shape");
+			curDialogue.add("usr: close. -- reject");
 			
 			Dialogue dlg = new Dialogue(curDialogue);
 			try {

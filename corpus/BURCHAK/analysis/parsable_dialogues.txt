@@ -1,0 +1,1229 @@
+usr: it is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes. -- accept
+usr: and the shape is square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes. -- accept
+usr: and the color is? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+usr: the color is red <rt> -- info-color
+sys: red? <rt> -- polar-color
+usr: yes. -- accept
+usr: the shape is square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: great <rt> -- accept
+
+usr: so do you know this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: correct. -- accept
+usr: the shape is square <rt> -- info-shape
+sys: red? <rt> -- polar-color
+usr: correct. -- accept
+usr: and this shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: great. -- accept
+usr: and this color? -- ask-color
+usr: what is this color? <rt> -- ask-color
+sys: i don't know the color <rt> -- donotknow-color
+usr: red <rt> -- info-color
+sys: yeah. -- accept
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: square <rt> -- info-shape
+sys: ok <rt> -- accept
+
+usr: so what is this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yep <rt> -- accept
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+sys: red? <rt> -- polar-color
+usr: yep. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: square <rt> -- info-shape
+usr: that is another shape <rt> -- reject-shape
+sys: ok <rt> -- accept
+
+usr: this color is red <rt> -- info-color
+sys: ok <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yep <rt> -- accept
+
+sys: this is red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: it's a red square <rt> -- info-color-shape
+sys: so a red square? <rt> -- polar-color-shape
+usr: no. -- reject
+usr: red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good <rt> -- accept
+sys: square <rt> -- info-shape
+usr: this is a square <rt> -- info-shape
+sys: okay <rt> -- accept
+
+usr: this is still a square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: red square. -- info-color-shape
+usr: what is it? <rt> -- openask
+sys: i don't know the color <rt> -- donotknow-color
+usr: the shape is square still. -- info-shape
+usr: the color is red <rt> -- info-color
+
+usr: what is the object? <rt> -- openask
+sys: red square? <rt> -- polar-color-shape
+usr: it's red <rt> -- info-color
+
+sys: what is the color? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+sys: yay <rt> -- accept
+
+usr: this object? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: so it is what? <rt> -- openask
+sys: a red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+sys: square <rt> -- info-shape
+usr: the color is now red <rt> -- info-color
+sys: red square <rt> -- info-color-shape
+usr: yep <rt> -- accept
+
+usr: what is this shape? <rt> -- ask-shape
+sys: red square? <rt> -- polar-color-shape
+usr: no. -- reject
+usr: red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: say that again? <rt> -- repeatrequest
+sys: red square <rt> -- info-color-shape
+usr: shape is right. -- accept-shape
+usr: color is wrong <rt> -- reject-color
+sys: so what is the color? <rt> -- ask-color
+usr: red. -- info-color
+usr: red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+usr: what's this? <rt> -- openask
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: square? <rt> -- polar-shape
+usr: correct. -- accept
+usr: put it together? <rt> -- repeatrequest
+sys: red? <rt> -- polar-color
+usr: red <rt> -- info-color
+sys: ok <rt> -- accept
+
+usr: this color is called red. -- info-color
+usr: you got that? <rt> -- check
+sys: yeah <rt> -- accept
+usr: the shape is called square. -- info-shape
+usr: red square <rt> -- info-color-shape
+sys: what is the color? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: okay <rt> -- accept
+usr: and what is the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: this is red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: got it. -- accept
+sys: this is a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+sys: this is a square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: red? <rt> -- polar-color
+usr: and shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: this one? <rt> -- openask
+sys: red square? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+sys: the color is red? <rt> -- polar-color
+usr: yes <rt> -- accept
+sys: okay <rt> -- accept
+
+usr: what color is this? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: the shape of this is square <rt> -- info-shape
+sys: erm okay. -- accept
+sys: square <rt> -- info-shape
+usr: square <rt> -- info-shape
+sys: this is red square? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+
+usr: what shape is this? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: so this is a red object <rt> -- info-color
+sys: okay. -- accept
+sys: red <rt> -- info-color
+usr: so what do we have here? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: good <rt> -- accept
+
+usr: you know this <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: what is this? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: good <rt> -- accept
+
+usr: what is this? <rt> -- openask
+sys: red <rt> -- info-color
+usr: red is good. -- accept-color
+usr: red is the color <rt> -- info-color
+sys: okay <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: what is this? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: the color is red <rt> -- info-color
+sys: repeat that? <rt> -- repeatrequest
+usr: the color is red <rt> -- info-color
+sys: i have a red square <rt> -- info-color-shape
+usr: great <rt> -- accept
+
+usr: color is red <rt> -- info-color
+sys: okay <rt> -- accept
+
+usr: now the color is red <rt> -- info-color
+sys: yeah <rt> -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: a square <rt> -- info-shape
+usr: right <rt> -- accept
+sys: what is the color? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: ok. -- accept
+sys: red <rt> -- info-color
+usr: yeah <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: good <rt> -- accept
+
+usr: what's this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yeah <rt> -- accept
+sys: red. -- info-color
+sys: what is its shape again? <rt> -- ask-shape
+usr: the shape is square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yeah <rt> -- accept
+sys: again? <rt> -- repeatrequest
+usr: red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: yeah <rt> -- accept
+
+usr: do you know this? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: yeah <rt> -- accept
+
+usr: this object is? <rt> -- openask
+sys: red? <rt> -- polar-color
+usr: again? <rt> -- repeatrequest
+sys: red <rt> -- info-color
+usr: yes. -- accept
+usr: and it is a shape of square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: this object is also red <rt> -- info-color
+sys: yes it is <rt> -- accept
+sys: but what is it called? <rt> -- openask
+usr: it is known as square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: what is the shape again? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: okay <rt> -- accept
+
+sys: so we have a square <rt> -- info-shape
+usr: we do. -- accept
+usr: the color is known as red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: what is this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: the shape is known as a square <rt> -- info-shape
+sys: square? <rt> -- polar-shape
+usr: square <rt> -- info-shape
+sys: good <rt> -- accept
+
+usr: what shape do we have? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: it is known as red <rt> -- info-color
+sys: red? <rt> -- polar-color
+usr: yes. -- accept
+usr: so what do we have? <rt> -- openask
+sys: a red square <rt> -- info-color-shape
+usr: excellent <rt> -- accept
+
+usr: what is this shape? <rt> -- ask-shape
+sys: it is a square <rt> -- info-shape
+usr: yep. -- accept
+usr: and  the color is red <rt> -- info-color
+sys: got it <rt> -- accept
+
+usr: what do we have? <rt> -- openask
+sys: we have a red square? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+
+usr: what is this? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+
+usr: the square is red <rt> -- info-color-shape
+
+usr: the square is red <rt> -- info-color-shape
+
+usr: the square is red. -- info-color-shape
+usr: square is shape. -- info-shape
+usr: red is color <rt> -- info-color
+
+usr: the square is red. -- info-color-shape
+usr: square is shape. -- info-shape
+usr: red is color <rt> -- info-color
+
+usr: the square is red. -- info-color-shape
+usr: shape is square. -- info-shape
+usr: color is red  <rt> -- info-color
+
+usr: the square is red <rt> -- info-color-shape
+
+usr: the square is red <rt> -- info-color-shape
+
+usr: this is a red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: yes good <rt> -- accept
+
+usr: this is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: this is? <rt> -- openask
+sys: this is a square <rt> -- info-shape
+usr: yes. -- accept
+usr: the color is red <rt> -- info-color
+sys: a red square <rt> -- info-color-shape
+usr: well done <rt> -- accept
+
+usr: this is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: this is an square too <rt> -- info-shape
+sys: red square <rt> -- info-color-shape
+
+usr: how about this one? <rt> -- openask
+sys: red square? <rt> -- polar-color-shape
+usr: the shape is right. -- accept-shape
+usr: the color is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yeah <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: cool <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: oh okay <rt> -- accept
+
+usr: it's still red <rt> -- info-color
+sys: yep <rt> -- accept
+sys: square? <rt> -- polar-shape
+usr: square <rt> -- info-shape
+sys: okay. -- accept
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: its still square. -- info-shape
+usr: now the color is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: okay <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yes good <rt> -- accept
+
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: what's the name of the shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: what's the color? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: try this? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: perfect <rt> -- accept
+
+sys: i don't know this <rt> -- donotknow
+usr: the color is red. -- info-color
+usr: got that? <rt> -- check
+sys: ok <rt> -- accept
+usr: the shape is a square <rt> -- info-shape
+sys: square? <rt> -- polar-shape
+usr: yes <rt> -- accept
+sys: so it's a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+sys: ok <rt> -- accept
+
+usr: do you know this color? <rt> -- ask-color
+sys: is it red? <rt> -- polar-color
+usr: it is. -- accept
+usr: the shape is a square <rt> -- info-shape
+sys: again? <rt> -- repeatrequest
+usr: square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yep <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: indeed <rt> -- accept
+
+usr: this one? <rt> -- openask
+sys: red? <rt> -- polar-color
+usr: yes <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: red <rt> -- info-color
+usr: yep <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: great job <rt> -- accept
+
+sys: what is this? <rt> -- openask
+usr: square <rt> -- info-shape
+sys: okay. -- accept
+sys: square <rt> -- info-shape
+usr: yep <rt> -- accept
+sys: square <rt> -- info-shape
+usr: color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yep <rt> -- accept
+sys: forgot the shape <rt> -- donotknow-shape
+usr: square. -- info-shape
+usr: red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: this is red <rt> -- info-color
+sys: red? <rt> -- polar-color
+usr: yes <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: bingo <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: close. -- reject
+usr: the color is right. -- accept-color
+usr: the shape is square <rt> -- info-shape
+sys: ok <rt> -- accept
+
+usr: what's this? <rt> -- openask
+sys: square? <rt> -- polar-shape
+usr: yep. -- accept
+usr: what's the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yay <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: yep <rt> -- accept
+
+usr: what do you recognise? <rt> -- openask
+sys: color is red? <rt> -- polar-color
+usr: no. -- reject
+usr: red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes. -- accept
+usr: what about the shape? <rt> -- ask-shape
+sys: i don't know this <rt> -- donotknow
+usr: square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: what do you recognise? <rt> -- openask
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: square <rt> -- info-shape
+sys: red <rt> -- info-color
+usr: yay <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: no. -- reject
+usr: it's square <rt> -- info-shape
+sys: red square <rt> -- info-color-shape
+usr: yay <rt> -- accept
+sys: i don't know the color <rt> -- donotknow-color
+usr: it is red <rt> -- info-color
+
+sys: oh it is red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: the shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: so it is a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: color is? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: the shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: so it is a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: i think that is a square too <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: and what color is this? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: red? <rt> -- polar-color
+usr: yes <rt> -- accept
+sys: so it is a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+sys: great <rt> -- accept
+
+sys: that is a red object <rt> -- info-color
+usr: red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: and what shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: okay <rt> -- accept
+
+sys: it is a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: that is a square <rt> -- info-shape
+usr: yes. -- accept
+usr: and this is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: right <rt> -- accept
+
+sys: it is a red square <rt> -- info-color-shape
+usr: great <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: right <rt> -- accept
+
+sys: i don't know the color <rt> -- donotknow-color
+usr: color is red <rt> -- info-color
+sys: ok <rt> -- accept
+usr: shape is square <rt> -- info-shape
+sys: the color is? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: okay got it <rt> -- accept
+
+sys: what is the color of this? <rt> -- ask-color
+usr: the color is red <rt> -- info-color
+sys: red? <rt> -- polar-color
+usr: yes <rt> -- accept
+sys: what is the shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: so the square is red? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: what shape is this? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: a red square? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: what color is this? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: the square is red <rt> -- info-color-shape
+usr: this is a red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+sys: what shape is this red object? <rt> -- ask-shape
+usr: it is a red square <rt> -- info-color-shape
+sys: a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: square? <rt> -- polar-shape
+usr: square <rt> -- info-shape
+sys: what is the shape of this again? <rt> -- ask-shape
+usr: this is a square. -- info-shape
+usr: the color is red. -- info-color
+usr: red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: is this red object? <rt> -- polar-color
+usr: this is a square <rt> -- info-shape
+sys: red square <rt> -- info-color-shape
+usr: yep <rt> -- accept
+sys: okay <rt> -- accept
+
+sys: what color is this square? <rt> -- ask-color-info-shape
+usr: this is a red square. -- info-color-shape
+usr: red <rt> -- info-color
+sys: red square <rt> -- info-color-shape
+sys: ok i forgot this shape <rt> -- donotknow-shape-info-color
+usr: red <rt> -- info-color
+sys: red <rt> -- info-color
+
+sys: a red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+sys: what is the color of this square? <rt> -- ask-color
+usr: this square is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+sys: what is the color? <rt> -- ask-color
+usr: this color is red <rt> -- info-color
+sys: red? <rt> -- polar-color
+usr: yes. -- accept
+usr: do you know the shape? <rt> -- ask-shape
+sys: it is a red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: yep <rt> -- accept
+sys: a red square? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+sys: good <rt> -- accept
+
+sys: a red square? <rt> -- polar-color-shape
+usr: yes <rt> -- accept
+
+usr: this color is red. -- info-color
+usr: can you repeat it? <rt> -- repeatrequest
+sys: red <rt> -- info-color
+usr: yes. -- accept
+usr: square is the shape. -- info-shape
+usr: so it's red square <rt> -- info-color-shape
+sys: square <rt> -- info-shape
+usr: yep <rt> -- accept
+
+usr: what color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: and the shape? <rt> -- ask-shape
+usr: this shape is square <rt> -- info-shape
+sys: okay <rt> -- accept
+usr: it's square <rt> -- info-shape
+sys: yes <rt> -- accept
+
+sys: this is a red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: what about shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes. -- accept
+usr: do you know color then? <rt> -- ask-color
+sys: i don't know this <rt> -- donotknow-color
+usr: it's red <rt> -- info-color
+sys: red square <rt> -- info-color-shape
+usr: red square <rt> -- info-color-shape
+
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: this object is a red square <rt> -- info-color-shape
+sys: yes <rt> -- accept
+usr: can you repeat it? <rt> -- repeatrequest
+sys: i forgot the color <rt> -- donotknow-color
+usr: it is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes. -- accept
+usr: and square is a shape <rt> -- info-shape
+sys: a red square <rt> -- info-color-shape
+usr: yep <rt> -- accept
+
+usr: so what is this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yep. -- accept
+usr: and the shape is square. -- info-shape
+usr: square for the shape <rt> -- info-shape
+sys: ok <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: great <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: yep. -- accept
+usr: this color is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yep. -- accept
+usr: so this object is red square. -- info-color-shape
+usr: got it? <rt> -- check
+sys: yes <rt> -- accept
+
+usr: do you know this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good job. -- accept
+usr: and the shape is square <rt> -- info-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: square <rt> -- info-shape
+usr: and color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: well done <rt> -- accept
+
+usr: what shape is it? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yep. -- accept
+usr: and the color is called red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yep. -- accept
+usr: it is a red square. -- info-color-shape
+usr: got it? <rt> -- check
+sys: ok <rt> -- accept
+usr: cool <rt> -- accept
+
+usr: can you guess what it is? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: nope. -- reject
+usr: it is square <rt> -- info-shape
+sys: got it <rt> -- accept
+usr: can you try it again? <rt> -- repeatrequest
+sys: red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+usr: what is this? <rt> -- openask
+sys: red square <rt> -- info-color-shape
+usr: no. -- reject
+usr: this color is red <rt> -- info-color
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: what is it? <rt> -- openask
+sys: red <rt> -- info-color
+usr: and shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: the shape is correct. -- accept-shape
+usr: but the color is wrong. -- reject-color
+usr: it is red <rt> -- info-color
+sys: okay <rt> -- accept
+usr: can you try it again? <rt> -- repeatrequest
+sys: red square <rt> -- info-color-shape
+usr: yep <rt> -- accept
+
+usr: do you know what it is? <rt> -- openask
+sys: square <rt> -- info-shape
+usr: nope. -- reject
+usr: it is square <rt> -- info-shape
+sys: ok <rt> -- accept
+
+usr: this is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: and this is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: now it is a square as well <rt> -- info-shape
+sys: again please? <rt> -- repeatrequest
+usr: a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: this is a red square. -- info-color-shape
+usr: shape is square <rt> -- info-shape
+sys: ok <rt> -- accept
+
+usr: now it is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: now it is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: this is a red object. -- info-color
+usr: red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+usr: color is red. -- info-color
+usr: it is a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: this is a red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+usr: the color is red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: correct <rt> -- accept
+sys: what shape is it? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+
+sys: square <rt> -- info-shape
+usr: correct <rt> -- accept
+sys: red <rt> -- info-color
+usr: correct. -- accept
+usr: square <rt> -- info-shape
+
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: correct <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: square <rt> -- info-shape
+sys: red <rt> -- info-color
+usr: correct <rt> -- accept
+
+sys: the color is red <rt> -- info-color
+usr: no. -- reject
+usr: red. -- info-color
+usr: red square <rt> -- info-color-shape
+sys: red square <rt> -- info-color-shape
+usr: yes. -- accept
+usr: color is? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: shape is ? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: what is color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: and shape ? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+
+sys: red square <rt> -- info-color-shape
+usr: correct <rt> -- accept
+
+usr: this is red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+usr: again? <rt> -- repeatrequest
+sys: a red square <rt> -- info-color-shape
+usr: good job <rt> -- accept
+
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: what shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: shape? <rt> -- ask-shape
+usr: this shape is square <rt> -- info-shape
+sys: this shape now is square? <rt> -- polar-shape
+usr: yes <rt> -- accept
+sys: ok <rt> -- accept
+
+sys: shape is square <rt> -- info-shape
+usr: yes <rt> -- accept
+sys: color? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+sys: it's red <rt> -- info-color
+usr: yes. -- accept
+usr: shape is square  <rt> -- info-shape
+sys: right <rt> -- accept
+
+usr: color? <rt> -- ask-color
+sys: i don't know this <rt> -- donotknow
+usr: red <rt> -- info-color
+sys: red. -- info-color
+sys: and shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+sys: square? <rt> -- polar-shape
+usr: yes <rt> -- accept
+sys: color? <rt> -- ask-color
+usr: red <rt> -- info-color
+
+sys: red square <rt> -- info-color-shape
+usr: no. -- reject
+usr: square <rt> -- info-shape
+sys: got it <rt> -- accept
+usr: shape? <rt> -- ask-shape
+sys: square? <rt> -- polar-shape
+usr: yes. -- accept
+usr: color? <rt> -- ask-color
+sys: red? <rt> -- polar-color
+usr: yes <rt> -- accept
+sys: red square <rt> -- info-color-shape
+usr: yes <rt> -- accept
+
+usr: do you know this? <rt> -- openask
+sys: red <rt> -- info-color
+usr: no. -- reject
+usr: it's red <rt> -- info-color
+sys: got it <rt> -- accept
+usr: say that again? <rt> -- repeatrequest
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: the shape is square <rt> -- info-shape
+sys: great <rt> -- accept
+
+usr: now i have a red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: i can know it <rt> -- accept
+
+usr: this is still red <rt> -- info-color
+sys: awesome <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: great <rt> -- accept
+
+sys: red <rt> -- info-color
+usr: what is it? <rt> -- openask
+sys: red square? <rt> -- polar-color-shape
+usr: bingo <rt> -- accept
+sys: awesome <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: great <rt> -- accept
+
+usr: red square too <rt> -- info-color-shape
+sys: ok <rt> -- accept
+
+usr: red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+usr: do you know what color is this object? <rt> -- ask-color
+sys: i don't know this <rt> -- donotknow
+usr: it is red. -- info-color
+usr: and the shape? <rt> -- ask-shape
+sys: sorry i don't know this <rt> -- donotknow
+usr: square. -- info-shape
+usr: so what color is it? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good job. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: right <rt> -- accept
+
+usr: do you know the color of this object? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: sorry i don't know this <rt> -- donotknow
+usr: square <rt> -- info-shape
+sys: ok <rt> -- accept
+
+usr: do you recognize this shape? <rt> -- ask-shape
+sys: i don't know this <rt> -- donotknow
+usr: it is a square. -- info-shape
+usr: and color? <rt> -- ask-color
+sys: i don't know it <rt> -- donotknow
+usr: red. -- info-color
+usr: do you want to repeat it? <rt> -- repeatrequest
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: do you recognize the shape of this object? <rt> -- ask-shape
+sys: i don't know this <rt> -- donotknow
+usr: square. -- info-shape
+usr: and the color? <rt> -- ask-color
+sys: red? <rt> -- polar-color
+usr: no. -- reject
+usr: red <rt> -- info-color
+sys: ok <rt> -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: i'm not sure <rt> -- donotknow
+usr: square <rt> -- info-shape
+sys: okay <rt> -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good job. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good <rt> -- accept
+
+usr: what about the color of this object? <rt> -- ask-color
+sys: no idea <rt> -- donotknow
+usr: red <rt> -- info-color
+sys: cool <rt> -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: do you know the shape of this object? <rt> -- ask-shape
+sys: i'm not sure <rt> -- donotknow
+usr: it is a square <rt> -- info-shape
+sys: okay <rt> -- accept
+usr: and the color? <rt> -- ask-color
+sys: square? <rt> -- polar-shape
+usr: no. -- reject
+usr: red <rt> -- info-color
+sys: ok <rt> -- accept
+usr: lets try again with the shape <rt> -- repeatrequest
+sys: square <rt> -- info-shape
+usr: square. -- info-shape
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: what shape is this object? <rt> -- ask-shape
+sys: square? <rt> -- polar-shape
+usr: no. -- reject
+usr: square <rt> -- info-shape
+sys: ok <rt> -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: no. -- reject
+usr: it's red <rt> -- info-color
+sys: okay <rt> -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: great <rt> -- accept
+
+usr: what color is this? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: no. -- reject
+usr: the color is red. -- info-color
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: it is square <rt> -- info-shape
+sys: ok <rt> -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: what about the shape? <rt> -- ask-shape
+sys: square? <rt> -- polar-shape
+usr: no. -- reject
+usr: square <rt> -- info-shape
+
+usr: the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: square <rt> -- info-shape
+sys: ok <rt> -- accept
+usr: what shape is it? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good <rt> -- accept
+
+usr: do you know this shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: and the color? <rt> -- ask-color
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: red <rt> -- info-color
+sys: oh ok <rt> -- accept
+usr: what color is it? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: do you know this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: correct <rt> -- accept
+
+usr: what about this shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: correct <rt> -- accept
+
+usr: this color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: square <rt> -- info-shape
+sys: red <rt> -- info-color
+usr: no. -- reject
+usr: red <rt> -- info-color
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: what about this shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: try again <rt> -- try
+sys: i don't know <rt> -- donotknow
+usr: square. -- info-shape
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+usr: what color is this? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: no. -- reject
+usr: do you want to try the color again? <rt> -- ask-color
+sys: red? <rt> -- polar-color
+usr: yes <rt> -- accept
+
+sys: red <rt> -- info-color
+usr: no. -- reject
+usr: red. -- info-color
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: the shape is square. -- info-shape
+usr: and the color? <rt> -- ask-color
+sys: i don't know <rt> -- donotknow
+usr: the color is red. -- info-color
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: yes <rt> -- accept
+
+usr: what about this shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: good. -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good <rt> -- accept
+
+usr: this shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: no. -- reject
+usr: one more time <rt> -- try
+sys: square <rt> -- info-shape
+usr: yes. -- accept
+usr: and the color? <rt> -- ask-color
+sys: red <rt> -- info-color
+usr: good. -- accept
+usr: and the shape? <rt> -- ask-shape
+sys: square <rt> -- info-shape
+usr: yes <rt> -- accept
+
+sys: what is the shape? <rt> -- ask-shape
+usr: square <rt> -- info-shape
+sys: and the color? <rt> -- ask-color
+usr: red <rt> -- info-color
+sys: what is the color for this one? <rt> -- ask-color
+usr: the color is red <rt> -- info-color
+
+usr: do you know the shape? <rt> -- ask-shape
+sys: the name is square? <rt> -- polar-shape
+usr: no. -- reject
+usr: it is square <rt> -- info-shape
+sys: okay <rt> -- accept
+
+usr: what do you think this is? <rt> -- openask
+sys: the color is red <rt> -- info-color
+usr: correct <rt> -- accept
+sys: i don't know the shape <rt> -- donotknow-shape
+usr: a square <rt> -- info-shape
+sys: okay <rt> -- accept
+
+sys: the shape for this is square? <rt> -- polar-shape
+usr: yes <rt> -- accept
+sys: now the color? <rt> -- ask-color
+usr: the color is red <rt> -- info-color
+
+sys: the shape is square? <rt> -- polar-shape
+usr: no <rt> -- reject
+sys: so what is the shape again? <rt> -- ask-shape
+usr: the shape is square <rt> -- info-shape
+sys: i know the shape now <rt> -- accept
+usr: so what's the shape? <rt> -- ask-shape
+sys: it shape is square <rt> -- info-shape
+usr: okay <rt> -- accept
+
+sys: it is a red square <rt> -- info-color-shape
+usr: no. -- reject
+usr: it is a red square <rt> -- info-color-shape
+sys: okay <rt> -- accept
+
+sys: is it a red square? <rt> -- polar-color-shape
+usr: the color is correct. -- accept-color
+usr: the shape is not. -- reject-shape
+usr: it is a square <rt> -- info-shape
+sys: got it <rt> -- accept
+
+sys: is it a red square? <rt> -- polar-color-shape
+usr: close. -- reject
+usr: but the color is red <rt> -- info-color
+sys: okay <rt> -- accept
+
