@@ -41,6 +41,7 @@ correct							adj								correct
 incorrect							adj							incorrect
 wrong							adj								wrong
 good								adj								good
+excellent								adj								excellent
 great								adj								great
 right						  	adj						right
 sure								adj						sure
@@ -90,10 +91,12 @@ yeah					      accept						yeah
 yay 						  yes							yay
 yay					      	  accept						yay
 good						  accept						good
+excellent					  accept						excellent
 great						  accept						great
 okay						  accept						okay
-okay						  accept						okay
-yeah						  accept						yeah
+ok						  	  accept						ok
+indeed						  yes							indeed
+indeed						  accept						indeed
 right						  accept						right
 correct						  accept						correct	
 correct						  yes							yes
