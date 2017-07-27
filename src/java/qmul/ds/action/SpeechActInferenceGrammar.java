@@ -302,9 +302,9 @@ public class SpeechActInferenceGrammar extends SortedListPartialOrder<Computatio
 			Formula f1 = getType(act1);
 			Formula f2 = getType(act2);
 
-			logger.info("formula in action 1: " + f1);
+			logger.debug("formula in action 1: " + f1);
 
-			logger.info("formula in action 2: " + f2);
+			logger.debug("formula in action 2: " + f2);
 
 			if (f1 == null) {
 				return -1;
