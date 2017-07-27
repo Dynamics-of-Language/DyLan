@@ -1587,8 +1587,8 @@ ELSE		IF		ty(t)
 				Speaker(W)
 		THEN		IF		<Z>+Q
 				THEN		ground
-						infer-sa
 						put(+eoc)
+						infer-sa
 				ELSE		IF		Assert(W)
 						THEN		ground
 								put(+eoc)
