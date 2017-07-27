@@ -41,11 +41,11 @@ correct							adj								correct
 incorrect							adj							incorrect
 wrong							adj								wrong
 good								adj								good
-excellent								adj								excellent
 great								adj								great
 right						  	adj						right
 sure								adj						sure
 more								adj						more
+excellent							adj				    excellent
 called							naming_adj						called
 named							naming_adj						named
 known							naming_adj						known					
@@ -91,12 +91,10 @@ yeah					      accept						yeah
 yay 						  yes							yay
 yay					      	  accept						yay
 good						  accept						good
-excellent					  accept						excellent
 great						  accept						great
 okay						  accept						okay
-ok						  	  accept						ok
-indeed						  yes							indeed
-indeed						  accept						indeed
+okay						  accept						okay
+yeah						  accept						yeah
 right						  accept						right
 correct						  accept						correct	
 correct						  yes							yes
@@ -109,6 +107,7 @@ awesome						  accept						awesome
 perfect						  yes						    perfect	
 perfect						  accept						perfect	
 //wow						  accept						wow
+excellent						  accept						excellent
 no							  reject						not
 no.							  reject						not
 close						  reject						close
@@ -138,6 +137,8 @@ get							  v_tran_inf					get							inf						nons3
 get							  v_tran_fin					get							pres						nons3
 try							  v_tran_inf					try							inf						nons3
 try							  v_tran_fin					try							pres						nons3
+try							  v_intran_fin					try							pres						nons3
+try							  v_intran_inf					try							inf						nons3
 got							  v_tran_subj_drop			get							past						nons3
 forgot							  v_tran_subj_drop			forget							past						nons3
 get							  v_tran_subj_drop			get							pres						nons3	
@@ -178,6 +179,7 @@ again						  manner_adv					again
 again						  manner_adv_complete		again
 sorry						  manner_adv_complete		sorry
 now						  	  manner_adv					now
+back						      manner_adv					back
 say							  v_tran_fin					say							  pres                          nons3
 say							   v_tran_inf				say					pres					nons3
 say							  v_tran_fin_imperative		say							imper
@@ -192,4 +194,6 @@ lets							 null					   lets
 oops							 null					   oops
 opps							 null					   opps
 now						     null					   now
-please						null							please
+please						 null					   please
+nothing						nothing						s3
+indeed						null							indeed

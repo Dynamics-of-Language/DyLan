@@ -89,9 +89,20 @@ THEN    IF		</\0\/1>Ex.x
 		        ttrput([x==PRED:e|head==x:e])
 ELSE    abort
 
-
-
-
+nothing(PERSON)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		</\0\/1>Ex.x
+				</\0\/1>(ty(e>t) || ?ty(e>t))
+				¬</\0\/1>person(PERSON)
+				</\0\/1>person(X)
+		THEN		abort
+		ELSE		put(ty(e))
+		        delete(?ty(e))
+		        ttrput([x:e|head==x:e])
+		        put(+neg)
+ELSE    abort
 
 det_num(QUANT,PERSON)
 IF      ?ty(e)
