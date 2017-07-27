@@ -1580,10 +1580,7 @@ ELSE		abort
 release_turn(PRED)	
 IF		ty(Y>Z)
 THEN		abort
-ELSE		IF		ty(t)
-				¬</\0\/1>Ex.x
-				¬</\L>Ex.x
-				¬?+eval
+ELSE		IF		complete
 				Speaker(W)
 		THEN		IF		<Z>+Q
 				THEN		ground
@@ -1626,10 +1623,7 @@ ELSE		IF		ty(t)
 assert(PRED)
 IF		ty(Y>Z)
 THEN		abort
-ELSE		IF		ty(t)
-				¬</\0\/1>Ex.x
-				¬</\L>Ex.x
-				¬?+eval
+ELSE		IF		complete
 				Speaker(V)
 		THEN  	IF		Assert(V)
 				THEN		ground
@@ -1662,10 +1656,7 @@ ELSE		IF		ty(t)
 question(PRED)
 IF		ty(Y>Z)
 THEN		abort
-ELSE		IF	  	ty(t)
-				¬</\0\/1>Ex.x
-				¬</\L>Ex.x
-				¬?+eval
+ELSE		IF	  	complete
 		THEN  	IF	  	<Z>+Q
 			    THEN  	ground
 			    			put(+eoc)
