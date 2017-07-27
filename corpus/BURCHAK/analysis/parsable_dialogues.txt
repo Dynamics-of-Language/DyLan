@@ -411,7 +411,7 @@ usr: perfect <rt> -- accept
 sys: i don't know this <rt> -- donotknow
 usr: the color is red. -- info-color
 usr: got that? <rt> -- check
-sys: ok <rt> -- accept
+sys: yes <rt> -- accept
 usr: the shape is a square <rt> -- info-shape
 sys: square? <rt> -- polar-shape
 usr: yes <rt> -- accept
@@ -587,7 +587,7 @@ usr: this is a red square <rt> -- info-color-shape
 sys: red square <rt> -- info-color-shape
 usr: good job <rt> -- accept
 
-sys: what shape is this red object? <rt> -- ask-shape
+sys: what shape is this red object? <rt> -- ask-shape-info-color
 usr: it is a red square <rt> -- info-color-shape
 sys: a red square <rt> -- info-color-shape
 usr: yes <rt> -- accept
@@ -734,7 +734,7 @@ sys: red <rt> -- info-color
 usr: yep. -- accept
 usr: it is a red square. -- info-color-shape
 usr: got it? <rt> -- check
-sys: ok <rt> -- accept
+sys: yes <rt> -- accept
 usr: cool <rt> -- accept
 
 usr: can you guess what it is? <rt> -- openask

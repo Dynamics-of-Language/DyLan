@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,19 +28,17 @@ import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.formula.Formula;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.SubsumesLabel;
+import qmul.util.SortedListPartialOrder;
 
 /**
  * A set of {@link ComputationalAction}s that define speech act inference rules,
  * e.g.
  * 
- * IF  		ty(t)
- * 	   		sem << [x==that:e|p==right(x):t] 
- * THEN 	put(sa:accept) 
- * ELSE 	abort
+ * IF ty(t) sem << [x==that:e|p==right(x):t] THEN put(sa:accept) ELSE abort
  * 
  * @author arash
  */
-public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> implements Serializable {
+public class SpeechActInferenceGrammar extends SortedListPartialOrder<ComputationalAction> implements Serializable {
 
 	private static Logger logger = Logger.getLogger(SpeechActInferenceGrammar.class);
 
@@ -52,6 +49,8 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 	public static final String ALWAYS_GOOD_PREFIX = "*";
 
 	public static final String BACKTRACK_ON_SUCCESS_PREFIX = "+";
+	
+	
 
 	/**
 	 * Read a set of {@link ComputationalAction}s from file
@@ -60,19 +59,21 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 	 *            containing the computational-actions.txt file
 	 */
 	public SpeechActInferenceGrammar(File dir) {
-		super();
-		logger.info("Reading Speech Act Grammar from:"+dir);
-		System.out.println("Reading Speech Act Grammar from:"+dir);
+		super(new SpecificityComparator());
+		logger.info("Reading Speech Act Grammar from:" + dir);
+		System.out.println("Reading Speech Act Grammar from:" + dir);
 		File file = new File(dir, FILE_NAME);
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			initActions(reader);
 		} catch (FileNotFoundException e) {
-			
+
 			logger.warn("No speech act inference file " + file.getAbsolutePath());
-			
+
 		}
 	}
+	
+	
 
 	/**
 	 * Read a set of {@link ComputationalAction}s from file
@@ -81,6 +82,7 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 	 *            containing the computational-actions.txt file
 	 */
 	public SpeechActInferenceGrammar(String dirNameOrURL) {
+		super(new SpecificityComparator());
 		BufferedReader reader;
 		try {
 			if (dirNameOrURL.matches("(https?|file):.*")) {
@@ -98,7 +100,7 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 			logger.error("Error reading speech act grammar file " + dirNameOrURL);
 		}
 	}
-	
+
 	/**
 	 * Read a set of {@link ComputationalAction}s from file
 	 * 
@@ -106,6 +108,7 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 	 *            containing the computational-actions.txt file
 	 */
 	public SpeechActInferenceGrammar(String dirNameOrURL, String filename) {
+		super(new SpecificityComparator());
 		BufferedReader reader;
 		try {
 			if (dirNameOrURL.matches("(https?|file):.*")) {
@@ -125,11 +128,11 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 	}
 
 	public SpeechActInferenceGrammar() {
-		super();
+		super(new SpecificityComparator());
 	}
 
 	public SpeechActInferenceGrammar(SpeechActInferenceGrammar nonoptionalGrammar) {
-		super(nonoptionalGrammar);
+		super(nonoptionalGrammar,new SpecificityComparator());
 	}
 
 	/**
@@ -144,10 +147,12 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 			String name = null;
 			boolean alwaysGood = false;
 			boolean backtrackOnSuccess = false;
+			//List<ComputationalAction> all = new ArrayList<ComputationalAction>();
+
 			List<String> lines = new ArrayList<String>();
 			while ((line = reader.readLine()) != null) {
-//				logger.info("processing: " + line);
-				
+				// logger.info("processing: " + line);
+
 				line = Lexicon.comment(line.trim());
 				if ((line == null) || (line.isEmpty() && lines.isEmpty())) {
 					continue;
@@ -171,8 +176,8 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 					if (backtrackOnSuccess) {
 						name = name.substring(BACKTRACK_ON_SUCCESS_PREFIX.length());
 					}
-					logger.debug(
-							"New speech act inference action: " + name + " (" + alwaysGood + "," + backtrackOnSuccess + ")");
+					logger.debug("New speech act inference action: " + name + " (" + alwaysGood + ","
+							+ backtrackOnSuccess + ")");
 				} else {
 					lines.add(line);
 				}
@@ -191,132 +196,165 @@ public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> im
 			logger.error(e);
 			logger.error("Error reading speech act grammar from " + reader);
 		}
-		
-		this.sortBySpecificity(this);
-		
-		for(ComputationalAction act: this){
-			try {
-				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "act:  " + act.getName());
-//				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", act.getEffect().toString());
-				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		
+
+		 for(ComputationalAction act: this){
+			 try {
+				 this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt",
+				 "act: " + act.getName());
+				 this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt",
+				 act.getEffect().toString());
+				 this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt",
+				 "");
+			 } catch (IOException e) {
+				 e.printStackTrace();
+			 }
+		 }
+
 		logger.info("Loaded speech act grammar with " + size() + " speech act inference action entries.");
 		logger.trace(this);
 	}
-	
-	private void exportToFile(String path, String line) throws IOException{
+
+	private void exportToFile(String path, String line) throws IOException {
 		File newfile = new File(path);
 		FileWriter fileWriter = new FileWriter(newfile, true);
-		if(!newfile.exists()){
-			newfile.createNewFile(); 
-			fileWriter.write(line+"\r\n");
+		if (!newfile.exists()) {
+			newfile.createNewFile();
+			fileWriter.write(line + "\r\n");
 		}
-		
+
 		else
-	        fileWriter.append(line+"\r\n");
+			fileWriter.append(line + "\r\n");
 
-        fileWriter.close();
+		fileWriter.close();
 	}
+
+//	private void sortBySpecificity(ArrayList<ComputationalAction> grammar) {
+//
+//		
+//		SortedSet<ComputationalAction> sorted = new TreeSet<ComputationalAction>(comparator);
+//
+//		sorted.addAll(grammar);
+//		for (ComputationalAction act : sorted) {
+//			try {
+//				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt",
+//						"act:  " + act.getName());
+//				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt",
+//						act.getEffect().toString());
+//				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		this.addAll(sorted);
+//		// Collections.sort(grammar,comparator);
+//	}
+
 	
-	private void sortBySpecificity(ArrayList<ComputationalAction> grammar){
-		
-		Comparator<ComputationalAction> comparator = new Comparator<ComputationalAction>() {
-			public int compare(ComputationalAction act1,
-                    ComputationalAction act2) {
-				
-				Formula f1 = getType(act1);
-				Formula f2 = getType(act2);
-				
-				
-				if(f1 == null){
-					return -1;
-				}
-				else if(f2 == null){
-					return 1;
-				}
-				else if(f1.subsumes(f2)){
-					return 1;
-				}
-				else if(f2.subsumes(f1)){
-					return -1;
-				}
-				
-				return 0;
+
+	// public void addNewComputationalAction(String name, Effect effect){
+	// String key = this.getNewKey(name);
+	// logger.debug("name: " + name +"; key= " + key);
+	//
+	// this.put(key, new ComputationalAction(key, effect));
+	// }
+	//
+	// private String getNewKey(String name){
+	// int index = 0;
+	//
+	// Iterator<Entry<String, ComputationalAction>> iterator =
+	// this.entrySet().iterator();
+	// while(iterator.hasNext()){
+	// Entry<String, ComputationalAction> entry = iterator.next();
+	// String key = entry.getKey();
+	//
+	// if(key.contains(name)){
+	// String sub = key.replace(name+"-", "");
+	//
+	// if(this.isInteger(sub.trim())){
+	// int exisit_index = Integer.valueOf(sub.trim());
+	// if(exisit_index >= index)
+	// index = exisit_index;
+	// }
+	// }
+	// }
+	//
+	// return name + "-" + String.valueOf(index+1);
+	// }
+	//
+	// private boolean isInteger(String s) {
+	// try {
+	// Integer.parseInt(s);
+	// } catch(NumberFormatException e) {
+	// return false;
+	// } catch(NullPointerException e) {
+	// return false;
+	// }
+	// // only got here if we didn't return false
+	// return true;
+	// }
+}
+	class SpecificityComparator implements Comparator<ComputationalAction> {
+		private static Logger logger = Logger.getLogger(SpecificityComparator.class);
+
+		public int compare(ComputationalAction act1, ComputationalAction act2) {
+
+			Formula f1 = getType(act1);
+			Formula f2 = getType(act2);
+
+			logger.info("formula in action 1: " + f1);
+
+			logger.info("formula in action 2: " + f2);
+
+			if (f1 == null) {
+				return -1;
 			}
-		};
-		Collections.sort(grammar,comparator);
-	}
-	
 
-	
-	public Formula getType(ComputationalAction action){
-		if(action != null){
-			Effect effect = action.getEffect();
-			
-			if(effect instanceof IfThenElse){
-				Label[] if_labels = ((IfThenElse)effect).getIFClause().clone();
-				
-				for(int j=0; j < if_labels.length; j++){
-					Label label = if_labels[j];
-					
-					if(label instanceof SubsumesLabel){
-						return ((SubsumesLabel)label).getRightArgument();
-//					if(label.toString().contains("W1<<")){		
-//						TTRRecordType ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
-//						ttr.resetMetas();
-//						return ttr;
+			if (f2 == null) {
+				return 1;
+			}
+
+			f1.resetMetas();
+			f2.resetMetas();
+
+			if (f1.subsumes(f2)) {
+				return 1;
+			}
+
+			f1.resetMetas();
+			f2.resetMetas();
+
+			if (f2.subsumes(f1)) {
+				return -1;
+			}
+
+			return 0;
+		}
+
+		public Formula getType(ComputationalAction action) {
+			if (action != null) {
+				Effect effect = action.getEffect();
+
+				if (effect instanceof IfThenElse) {
+					Label[] if_labels = ((IfThenElse) effect).getIFClause().clone();
+
+					for (int j = 0; j < if_labels.length; j++) {
+						Label label = if_labels[j];
+
+						if (label instanceof SubsumesLabel) {
+							return ((SubsumesLabel) label).getRightArgument();
+							// if(label.toString().contains("W1<<")){
+							// TTRRecordType ttr =
+							// TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
+							// ttr.resetMetas();
+							// return ttr;
+						}
 					}
 				}
 			}
+
+			return null;
 		}
-		
-		return null;
 	}
-	
-	
-//	public void addNewComputationalAction(String name, Effect effect){
-//		String key = this.getNewKey(name);
-//		logger.debug("name: " + name +"; key= " + key); 
-//		
-//		this.put(key, new ComputationalAction(key, effect));
-//	}
-//	
-//	private String getNewKey(String name){
-//		int index = 0;
-//		
-//		Iterator<Entry<String, ComputationalAction>> iterator = this.entrySet().iterator();
-//		while(iterator.hasNext()){
-//			Entry<String, ComputationalAction> entry = iterator.next();
-//			String key = entry.getKey();
-//
-//			if(key.contains(name)){
-//				String sub = key.replace(name+"-", "");
-//				
-//				if(this.isInteger(sub.trim())){
-//					int exisit_index = Integer.valueOf(sub.trim());
-//					if(exisit_index >= index)
-//						index = exisit_index;
-//				}
-//			}
-//		}
-//		
-//		return name + "-" + String.valueOf(index+1);
-//	}
-//
-//	private boolean isInteger(String s) {
-//	    try { 
-//	        Integer.parseInt(s); 
-//	    } catch(NumberFormatException e) { 
-//	        return false; 
-//	    } catch(NullPointerException e) {
-//	        return false;
-//	    }
-//	    // only got here if we didn't return false
-//	    return true;
-//	}
-}
+
+

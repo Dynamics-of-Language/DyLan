@@ -41,6 +41,7 @@ import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
+import qmul.util.SortedListPartialOrder;
 
 public class SpeechActInferenceGenerator {
 	static Logger logger = Logger.getLogger(SpeechActInferenceGenerator.class);
@@ -49,10 +50,10 @@ public class SpeechActInferenceGenerator {
 	private final String slot_values_file = "/slot-values.txt";
 	private final String parsed_file = "/analysis/parsable_dialogues.txt";
 	private final String SPEECHACT_GRAMMAR_TEMPLATE = "speech-act-grammar-template.txt";
-	public final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple/";
+	public final static String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple/";
 	public final String ACTMAP = "act-mappings.txt";
 	private List<Dialogue> dlgList;
-	private ArrayList<ComputationalAction> sa_gammar_templates;
+	private SortedListPartialOrder<ComputationalAction> sa_gammar_templates;
 
 //	private HashMap<String, List<String>> sa_gammar_templates;
 	private HashMap<String, List<ComputationalAction>> sa_inference_map;
@@ -78,7 +79,7 @@ public class SpeechActInferenceGenerator {
 		this.loadDialogues(corpus);
 		this.loadSlotValues();
 
-		this.sa_gammar_templates = (ArrayList<ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
+		this.sa_gammar_templates = (SortedListPartialOrder<ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
 		logger.debug("sa_gammar_templates: " +sa_gammar_templates.size());
 		
 		this.sa_inference_map = new HashMap<String, List<ComputationalAction>>();
@@ -252,7 +253,16 @@ public class SpeechActInferenceGenerator {
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 					
-					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
+					logger.debug("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
+					
+					if(act.equals("ask-shape"))
+						logger.info("------ ask-shap: " + text);
+					
+//						try {
+//							throw new Exception("ERROR!!: " + text);
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
 					
 					
 					String[] words = text.split(" ");
@@ -268,14 +278,14 @@ public class SpeechActInferenceGenerator {
 					
 					TTRRecordType ttr = this.abstractOutSlotValues((TTRRecordType)f);
 					if(act.contains("ask") || act.equals("accept"))
-					logger.info(" ---> pointed Node: " + pointedNode);
+					logger.debug(" ---> pointed Node: " + pointedNode);
 					logger.debug(" ---> abstracted TTR: " + ttr);
 					logger.debug(" ---> meta_replacements: " + this.meta_replacements);
 					
 
-//					logger.info("££££££££ check for the parser itself");
+//					logger.debug("££££££££ check for the parser itself");
 					if(hasSpeechActOn(pointedNode, act)){
-//						logger.info("££££££££ attached with " + act);
+//						logger.debug("££££££££ attached with " + act);
 						this.find_speech_act(resultTree.getPointedNode());
 						break;
 					}
@@ -371,8 +381,8 @@ public class SpeechActInferenceGenerator {
 							logger.debug("selected action template: " + selected_template.getName() + "\r\n" + selected_template.getEffect());
 
 							if(selected_template.getName().trim().contains("ask-") || selected_template.getName().trim().contains("info-neg-")){
-								logger.info("+++ prev_act = " + prev_act + "; selected action = " + selected_template.getName() );
-								logger.info(selected_template.getEffect());
+								logger.debug("+++ prev_act = " + prev_act + "; selected action = " + selected_template.getName() );
+								logger.debug(selected_template.getEffect());
 							}
 							
 							Effect effect_template = selected_template.getEffect();
@@ -380,7 +390,7 @@ public class SpeechActInferenceGenerator {
 							effect = this.replaceMetaVariable(effect, this.meta_replacements);
 
 							if(selected_template.getName().trim().contains("ask-") || selected_template.getName().trim().contains("info-neg-"))
-							logger.info("new Effect at (" + act + "): \r\n" + effect);
+							logger.debug("new Effect at (" + act + "): \r\n" + effect);
 							logger.debug("check on the action template: \r\n" + selected_template.getEffect());
 							
 							List<ComputationalAction> actList = new ArrayList<ComputationalAction>();
@@ -455,12 +465,12 @@ public class SpeechActInferenceGenerator {
 					if(act.equals("accept") && (text.contains("it is") || text.contains("we do")))
 						act = prev_act.replace("polar", "info");
 					
-					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act(" + act + ")");
+					logger.debug("utt: " + utt.getSpeaker() + ": " + text + " --- act(" + act + ")");
 					
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 					
-					logger.info("  --> " + utt.getSpeaker() + ": " + text + " :: act("+act+")");
+					logger.debug("  --> " + utt.getSpeaker() + ": " + text + " :: act("+act+")");
 					
 					String[] words = text.split(" ");
 					for(int j=0; j < words.length; j++){
@@ -497,12 +507,12 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						else{
-							logger.info("act = " + act +" | speech_act = " +speech_act); 
+							logger.debug("act = " + act +" | speech_act = " +speech_act); 
 							List<String> pattern_list = act_map.get(act);
 							if (this.checkEquality(speech_act, pattern_list, act))
 								correctness++;
 							else{
-								this.exportToFile("speech_tag.txt", "  --> ERROR!!!");
+								this.exportToFile("speech_tag.txt", "  --> ERROR!!!   " + "act(" + act + ")" + " -- " + "speech_act(" + speech_act + ")");
 								error_set.add("act(" + act + ")" + " -- " + "speech_act(" + speech_act + ")");
 							}
 						}
@@ -576,7 +586,7 @@ public class SpeechActInferenceGenerator {
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 
-					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act(" + act + ")");
+					logger.debug("utt: " + utt.getSpeaker() + ": " + text + " --- act(" + act + ")");
 					
 					String[] words = text.split(" ");
 					for(int j=0; j < words.length; j++){
@@ -590,8 +600,8 @@ public class SpeechActInferenceGenerator {
 						
 					String speech_act = null;
 						
-					logger.info(utt.getSpeaker() + ": " + text + " :: act("+act+")");
-					logger.info("  --> " + resultTree.getPointedNode());
+					logger.debug(utt.getSpeaker() + ": " + text + " :: act("+act+")");
+					logger.debug("  --> " + resultTree.getPointedNode());
 						
 					if(resultTree.getPointedNode() != null){
 						for(Label l: resultTree.getPointedNode()){
@@ -603,7 +613,7 @@ public class SpeechActInferenceGenerator {
 						}
 					}
 						
-					logger.info("  --> " + speech_act);
+					logger.debug("  --> " + speech_act);
 						
 					prev_act = act;
 				}
@@ -633,7 +643,7 @@ public class SpeechActInferenceGenerator {
 	private void exportToFile(HashMap<String, List<ComputationalAction>> map, String dir,
 			String fileName) {
 		
-//		logger.info("------------ START Export SpeechAct to File -----------");
+//		logger.debug("------------ START Export SpeechAct to File -----------");
 		if(map != null){
 			File file = new File(dir, fileName);
 			try {
@@ -706,13 +716,13 @@ public class SpeechActInferenceGenerator {
 	// check if the pointed Node contains particular speech-act
 	private boolean hasSpeechActOn(Node pointedNode, String act){
 		if(pointedNode != null){
-			logger.info("--- act: " + act + " -- Pointed Node: " + pointedNode);
+			logger.debug("--- act: " + act + " -- Pointed Node: " + pointedNode);
 			
 			for(Label l: pointedNode){
 				String label_str = l.toString().trim();
 				if(label_str.startsWith("sa:")){
 					label_str = label_str.replace("sa:", "");
-					logger.info("--- Label String: " + label_str);
+					logger.debug("--- Label String: " + label_str);
 					
 					if(act_map != null && act_map.containsKey(act)){
 						
@@ -726,7 +736,7 @@ public class SpeechActInferenceGenerator {
 						}
 						
 						if(anyMatch){
-							logger.info("++++++++++ label_str: " + label_str + ";   act: " + act);
+							logger.debug("++++++++++ label_str: " + label_str + ";   act: " + act);
 							return true;
 						}
 					}
@@ -839,7 +849,7 @@ public class SpeechActInferenceGenerator {
 
 			// (2)
 //			curDialogue.add("usr: this object is? <rt> -- openask");
-			curDialogue.add("sys: but what is it called? <rt> -- openask");
+//			curDialogue.add("sys: but what is it called? <rt> -- openask");
 //			curDialogue.add("usr: this is? <rt> -- openask");
 //			curDialogue.add("usr: color is? <rt> -- ask-color");
 			
@@ -848,11 +858,11 @@ public class SpeechActInferenceGenerator {
 //			curDialogue.add("sys: ok <rt> -- accept");
 		
 			// (4)
-//			curDialogue.add("usr: what is the object? <rt> -- openask");
-//			curDialogue.add("sys: red square? <rt> -- polar-color-shape");
+			curDialogue.add("usr: what shape is this object? <rt> -- ask-shape");
+			curDialogue.add("sys: square? <rt> -- polar-shape");
 			
 			
-			curDialogue.add("sys: red <rt> -- info-color");
+//			curDialogue.add("sys: square? <rt> -- polar-shape");
 			
 			Dialogue dlg = new Dialogue(curDialogue);
 			try {
@@ -865,10 +875,13 @@ public class SpeechActInferenceGenerator {
 			System.exit(0);
 		
 		
-//		TTRRecordType ttr1 = TTRRecordType.parse("[x24 : e|e17==eq : es|x21 : e|p44==wrong(x24) : t|pred6==color(x21) : cn|p38==attr(pred6) : t|p41==pres(e17) : t|p43==subj(e17, x21) : t|p42==obj(e17, x24) : t]");
-//		TTRRecordType ttr2 = TTRRecordType.parse("[x24 : e|e17==eq : es|x21 : e|p44==wrong(x24) : t|head==e17 : es|pred6==color(x21) : cn|p38==attr(pred6) : t|p41==pres(e17) : t|p43==subj(e17, x21) : t|p42==obj(e17, x24) : t]");
+//		TTRRecordType ttr1 = TTRRecordType.parse("[x27 : e|pred6==P2(x27) : cn|p58==shape(pred6) : t]");
+//		TTRRecordType ttr2 = TTRRecordType.parse("[x4 : e|p6==P4(x4) : t|p7==color(p6) : t|pred1==P2(x4) : cn|p8==shape(pred1) : t]");
 //		System.out.println("subsumes: " + ttr1.subsumes(ttr2));
 //		System.out.println("subsumes: " + ttr2.subsumes(ttr1));
+		
+//		new SpeechActInferenceGrammar(SpeechActInferenceGenerator.ENGLISHTTRURL, "grammar_test.txt");
+//		new SpeechActInferenceGrammar(SpeechActInferenceGenerator.ENGLISHTTRURL, "speech-act-inference-grammar.txt");
 	}
 	
 	
@@ -901,7 +914,7 @@ public class SpeechActInferenceGenerator {
 		return null;
 	}
 
-	private List<ComputationalAction> findComputationalAction(ArrayList<ComputationalAction> grammar, String act) {
+	private List<ComputationalAction> findComputationalAction(SortedListPartialOrder<ComputationalAction> grammar, String act) {
 		logger.debug("------ act : " + act);
 		
 		List<ComputationalAction> action_list = new ArrayList<ComputationalAction>();

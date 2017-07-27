@@ -28,6 +28,19 @@ IF		¬ty(Y>Z)
 THEN	put(sa:reject(V))
 ELSE	abort
 
+ask-shape-info-color-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      (+Q || <Z>+Q)
+      Speaker(V)
+      Fo(W1)
+      W1<<[x14 : e|e4==eq : es|x10==this : e|p16==P2(x14) : t|p17==color(p16) : t|p5==pres(e4) : t|p7==subj(e4, x10) : t|p6==obj(e4, x14) : t]
+THEN  put(sa:askshape(V, color : P2))
+ELSE  abort
+
 info-color-0
 IF    ¬Ty(Y>Z)
       Ty(X)
@@ -159,7 +172,7 @@ IF    ¬Ty(Y>Z)
       (+neg || <Z>+neg)
       Speaker(V)
       Fo(W1)
-      W1<<[x49==U2 : e|p78==shape(x49) : t]
+      W1<<[x53==U2 : e|p78==shape(x53) : t]
 THEN  put(sa:infoneg(V, shape : U2))
 ELSE  abort
 
@@ -307,7 +320,7 @@ IF    ¬Ty(Y>Z)
       (+Q || <Z>+Q)
       Speaker(V)
       Fo(W1)
-      W1<<[x14 : e|e4==eq : es|x10==this : e|p16==P2(x14) : t|p17==color(p16) : t|p5==pres(e4) : t|p7==subj(e4, x10) : t|p6==obj(e4, x14) : t]
+      W1<<[x13 : e|pred3==shape(x13) : cn|p15==attr(pred3) : t]
 THEN  put(sa:askshape(V))
 ELSE  abort
 
@@ -320,7 +333,7 @@ IF    ¬Ty(Y>Z)
       (+Q || <Z>+Q)
       Speaker(V)
       Fo(W1)
-      W1<<[x11 : e|pred3==shape(x11) : cn|p15==attr(pred3) : t]
+      W1<<[x4 : e|e4==eq : es|x9 : e|pred1==shape(x4) : cn|p3==attr(pred1) : t|p11==def(x9) : t|p10==here(x9) : t|p5==pres(e4) : t|p7==subj(e4, x9) : t|p6==obj(e4, x4) : t]
 THEN  put(sa:askshape(V))
 ELSE  abort
 
@@ -333,7 +346,7 @@ IF    ¬Ty(Y>Z)
       (+Q || <Z>+Q)
       Speaker(V)
       Fo(W1)
-      W1<<[x4 : e|e4==eq : es|x9 : e|pred1==shape(x4) : cn|p3==attr(pred1) : t|p11==def(x9) : t|p10==here(x9) : t|p5==pres(e4) : t|p7==subj(e4, x9) : t|p6==obj(e4, x4) : t]
+      W1<<[x20 : e|e25==eq : es|x25==this : e|pred3==shape(x20) : cn|p27==attr(pred3) : t|p29==pres(e25) : t|p31==subj(e25, x25) : t|p30==obj(e25, x20) : t]
 THEN  put(sa:askshape(V))
 ELSE  abort
 
@@ -346,7 +359,7 @@ IF    ¬Ty(Y>Z)
       (+Q || <Z>+Q)
       Speaker(V)
       Fo(W1)
-      W1<<[x18 : e|e24==eq : es|x23==this : e|pred3==shape(x18) : cn|p27==attr(pred3) : t|p29==pres(e24) : t|p31==subj(e24, x23) : t|p30==obj(e24, x18) : t]
+      W1<<[x24 : e|p36==def(x24) : t|pred4==shape(x24) : cn|p37==attr(pred4) : t]
 THEN  put(sa:askshape(V))
 ELSE  abort
 
@@ -359,24 +372,11 @@ IF    ¬Ty(Y>Z)
       (+Q || <Z>+Q)
       Speaker(V)
       Fo(W1)
-      W1<<[x22 : e|p36==def(x22) : t|pred4==shape(x22) : cn|p37==attr(pred4) : t]
-THEN  put(sa:askshape(V))
-ELSE  abort
-
-ask-shape-5
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      (+Q || <Z>+Q)
-      Speaker(V)
-      Fo(W1)
       W1<<[x5 : e|e5==know : es|x2==you : e|pred3==shape(x5) : cn|p20==attr(pred3) : t|p19==def(x5) : t|p2==pres(e5) : t|p10==subj(e5, x2) : t|p9==obj(e5, x5) : t]
 THEN  put(sa:askshape(V))
 ELSE  abort
 
-ask-shape-6
+ask-shape-5
 IF    ¬Ty(Y>Z)
       Ty(X)
       ¬</\0\/1>Ex.x
@@ -531,7 +531,7 @@ IF    ¬Ty(Y>Z)
       ¬<Z>+meta
       Speaker(V)
       Fo(W1)
-      W1<<[x25==U2 : e|p54==color(x25) : t]
+      W1<<[x26==U2 : e|p56==color(x26) : t]
 THEN  put(sa:polar(V, color : U2))
 ELSE  abort
 
@@ -543,7 +543,7 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[x24==U2 : e|p41==shape(x24) : t]
+      W1<<[x26==U2 : e|p41==shape(x26) : t]
 THEN  IF    <Z>+Q
       THEN  abort
       ELSE  IF    (+neg || <Z>+neg)
@@ -559,7 +559,7 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[x13==U2 : e|e14==eq : es|x10==this : e|p36==shape(x13) : t|p33==pres(e14) : t|p35==subj(e14, x10) : t|p34==obj(e14, x13) : t]
+      W1<<[x15==U2 : e|e14==eq : es|x12==this : e|p36==shape(x15) : t|p33==pres(e14) : t|p35==subj(e14, x12) : t|p34==obj(e14, x15) : t]
 THEN  IF    <Z>+Q
       THEN  abort
       ELSE  IF    (+neg || <Z>+neg)
@@ -784,7 +784,7 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[x21==you : e|e15==say : es|x24==that : e|p38==imperative(e15) : t|p43==again(e15) : t|p39==obj(e15, x24) : t|p40==subj(e15, x21) : t]
+      W1<<[x23==you : e|e16==say : es|x26==that : e|p38==imperative(e16) : t|p43==again(e16) : t|p39==obj(e16, x26) : t|p40==subj(e16, x23) : t]
 THEN  IF    (+neg || <Z>+neg)
       THEN  abort
       ELSE  put(sa:repeatrequest(V))
@@ -812,7 +812,7 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[e32==try : es|x37==you : e|x40 : e|p74==imperative(e32) : t|p76==again(e32) : t|p78==def(x40) : t|pred6==shape(x40) : cn|p79==attr(pred6) : t|p75==subj(e32, x37) : t|p77==with(e32, x40) : t]
+      W1<<[e33==try : es|x39==you : e|x42 : e|p74==imperative(e33) : t|p76==again(e33) : t|p78==def(x42) : t|pred6==shape(x42) : cn|p79==attr(pred6) : t|p75==subj(e33, x39) : t|p77==with(e33, x42) : t]
 THEN  IF    (+neg || <Z>+neg)
       THEN  abort
       ELSE  put(sa:repeatrequest(V))
@@ -943,6 +943,19 @@ IF    ¬Ty(Y>Z)
 THEN  put(sa:donotknowshape(V, color : P8))
 ELSE  abort
 
+donotknow-1-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      ¬(+neg || <Z>+neg)
+      Speaker(V)
+      Fo(W1)
+      W1<<[x23 : e|e14==eq : es|x19==sys : e|p49==sure(x23) : t|p46==pres(e14) : t|p48==subj(e14, x19) : t|p47==obj(e14, x23) : t]
+THEN  put(sa:donotknow(V))
+ELSE  abort
+
 polar-color-shape-0
 IF    ¬Ty(Y>Z)
       Ty(X)
@@ -1007,20 +1020,7 @@ IF    ¬Ty(Y>Z)
       (+neg || <Z>+neg)
       Speaker(V)
       Fo(W1)
-      W1<<[x23 : e|e14==eq : es|x19==sys : e|p49==sure(x23) : t|p46==pres(e14) : t|p48==subj(e14, x19) : t|p47==obj(e14, x23) : t]
-THEN  put(sa:donotknow(V))
-ELSE  abort
-
-donotknow-0-2
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      (+neg || <Z>+neg)
-      Speaker(V)
-      Fo(W1)
-      W1<<[x16==sys : e|e24==know : es|p29==pres(e24) : t|p41==subj(e24, x16) : t]
+      W1<<[x18==sys : e|e22==know : es|p29==pres(e22) : t|p36==subj(e22, x18) : t]
 THEN  put(sa:donotknow(V))
 ELSE  abort
 
@@ -1063,62 +1063,6 @@ IF    ¬Ty(Y>Z)
 THEN  put(sa:infoneg(V, color : U2))
 ELSE  abort
 
-reject-1-0
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      ¬<Z>+Q
-      (+neg || <Z>+neg)
-      Assert(V)
-      Fo(W1)
-      W1<<[x4 : e|pred1==P2(x4) : cn|p8==shape(pred1) : t|p6==P4(x4) : t|p7==color(p6) : t]
-THEN  put(sa:reject(V))
-ELSE  abort
-
-reject-1-1
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      ¬<Z>+Q
-      (+neg || <Z>+neg)
-      Assert(V)
-      Fo(W1)
-      W1<<[x3==U2 : e|p5==color(x3) : t]
-THEN  put(sa:reject(V))
-ELSE  abort
-
-reject-1-2
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      ¬<Z>+Q
-      (+neg || <Z>+neg)
-      Assert(V)
-      Fo(W1)
-      W1<<[x12==U2 : e|p20==shape(x12) : t]
-THEN  put(sa:reject(V))
-ELSE  abort
-
-reject-1-3
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      ¬<Z>+Q
-      (+neg || <Z>+neg)
-      Assert(V)
-      Fo(W1)
-      W1<<[x4 : e|e3==eq : es|x1==this : e|p6==P2(x4) : t|p7==color(p6) : t|pred1==P4(x4) : cn|p8==shape(pred1) : t|p2==pres(e3) : t|p5==subj(e3, x1) : t|p4==obj(e3, x4) : t]
-THEN  put(sa:reject(V))
-ELSE  abort
-
 try-0
 IF    ¬Ty(Y>Z)
       Ty(X)
@@ -1127,7 +1071,7 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[e15==try : es|x14==you : e|p25==imperative(e15) : t|p27==again(e15) : t|p26==subj(e15, x14) : t]
+      W1<<[e16==try : es|x16==you : e|p25==imperative(e16) : t|p27==again(e16) : t|p26==subj(e16, x16) : t]
 THEN  IF    (+neg || <Z>+neg)
       THEN  abort
       ELSE  put(sa:try(V))
@@ -1141,23 +1085,10 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[x9==one : e|x10 : e|p15==counting(x10) : t|pred2==time(x10) : cn|p18==cn(pred2) : t|p17==more(x10) : t|p16==count(x10, x9) : t]
+      W1<<[x11==one : e|x12 : e|p15==counting(x12) : t|pred2==time(x12) : cn|p18==cn(pred2) : t|p17==more(x12) : t|p16==count(x12, x11) : t]
 THEN  IF    (+neg || <Z>+neg)
       THEN  abort
       ELSE  put(sa:try(V))
-ELSE  abort
-
-reject-shape-0-0
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      (+neg || <Z>+neg)
-      Assert(V)
-      Fo(W1)
-      W1<<[x7 : e|e8==eq : es|x11 : e|pred2==color(x7) : cn|p18==attr(pred2) : t|p17==def(x7) : t|p24==def(x11) : t|pred3==shape(x11) : cn|p25==attr(pred3) : t|p26==pres(e8) : t|p28==subj(e8, x11) : t|p27==obj(e8, x7) : t]
-THEN  put(sa:rejectshape(V))
 ELSE  abort
 
 reject-shape-1-0
@@ -1169,6 +1100,18 @@ IF    ¬Ty(Y>Z)
       Assert(V)
       Fo(W1)
       W1<<[x16 : e|e19==eq : es|x12==that : e|pred2==shape(x16) : cn|p30==attr(pred2) : t|p29==another(x16) : t|p26==pres(e19) : t|p28==subj(e19, x12) : t|p27==obj(e19, x16) : t]
+THEN  put(sa:rejectshape(V))
+ELSE  abort
+
+reject-shape-1-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Assert(V)
+      Fo(W1)
+      W1<<[x7 : e|e8==eq : es|x11 : e|pred2==color(x7) : cn|p18==attr(pred2) : t|p17==def(x7) : t|p24==def(x11) : t|pred3==shape(x11) : cn|p25==attr(pred3) : t|p26==pres(e8) : t|p28==subj(e8, x11) : t|p27==obj(e8, x7) : t]
 THEN  put(sa:rejectshape(V))
 ELSE  abort
 
@@ -1212,7 +1155,7 @@ IF    ¬Ty(Y>Z)
       ¬?+eval
       Speaker(V)
       Fo(W1)
-      W1<<[x8 : e|e5==eq : es|x5==this : e|p13==P2(x8) : t|p14==color(p13) : t|pred2==P4(x8) : cn|p15==shape(pred2) : t|p10==pres(e5) : t|p12==subj(e5, x5) : t|p11==obj(e5, x8) : t]
+      W1<<[x10 : e|e5==eq : es|x7==this : e|p13==P2(x10) : t|p14==color(p13) : t|pred2==P4(x10) : cn|p15==shape(pred2) : t|p10==pres(e5) : t|p12==subj(e5, x7) : t|p11==obj(e5, x10) : t]
 THEN  IF    <Z>+Q
       THEN  abort
       ELSE  IF    (+neg || <Z>+neg)
@@ -1230,7 +1173,7 @@ IF    ¬Ty(Y>Z)
       ¬<Z>+meta
       Speaker(V)
       Fo(W1)
-      W1<<[x49==U2 : e|p78==shape(x49) : t]
+      W1<<[x53==U2 : e|p78==shape(x53) : t]
 THEN  put(sa:polar(V, shape : U2))
 ELSE  abort
 
