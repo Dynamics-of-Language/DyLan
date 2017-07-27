@@ -75,11 +75,12 @@ how                          pron_whq                      obj
 what                          pron_whq                      obj
 what						  pron_whq_det					obj
 what						  pron_what_rel					obj
-which						  pron_whq						obj
+what						  pron_what_det_rel				obj
+which						  pron_whq					obj
 .							  assert						A
-?							  question						Q
+?							  question					Q
 ?							  question_meta				Q
-//uhu							  accept						uhu
+//uhu						  accept					uhu
 yes							  accept						yes
 ok							  accept						ok
 yes							  yes							yes

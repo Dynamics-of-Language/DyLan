@@ -863,7 +863,44 @@ THEN		delete(?ty(e))
 		ELSE		abort
 ELSE		abort
 		
-
+pron_what_det_rel(CLASS)
+IF		?ty(e)
+		¬?Ex.tn(x)
+		¬<\/L>Ex.x
+		¬<\/1>Ex.x
+		¬<\/0>Ex.x
+THEN		delete(?ty(e))
+		put(ty(e))
+		ttrput([x:e|head==x:e])
+		put(person(s3))
+		put(?+eval)
+		IF		fo(X)
+		THEN		make(\/L)
+				go(\/L)
+				put(?ty(t))
+				make(\/*)
+				go(\/*)
+				put(?Ex.tn(x))
+				put(?ty(e))
+				make(\/1)
+				go(\/1)
+				put(ty(cn>e))
+				ttrput(R2^(R2 ++ [head==R2.head:e]))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(?ty(cn))
+				make(\/1)
+				go(\/1)
+				put(?ty(e>cn))
+				go(/\1)
+				make(\/0)
+				go(\/0)
+				put(ty(e))
+				put(fo(X))
+				go(/\0)
+		ELSE		abort
+ELSE		abort
 
 
 
