@@ -85,7 +85,7 @@ public class InferSpeechAct extends Effect {
 		Tree clone=tree.clone();
 		
 		removeSAAnnotations(clone);
-		for(ComputationalAction action: sag.values())
+		for(ComputationalAction action: sag)
 		{
 			logger.debug("trying speech act rule:"+action.getName());
 			logger.debug("on tree:"+clone);

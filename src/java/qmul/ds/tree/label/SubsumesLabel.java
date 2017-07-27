@@ -109,9 +109,15 @@ public class SubsumesLabel extends Label implements Serializable {
 		System.out.println(rt1);
 		System.out.println(rt1.subsumes(rt));
 		System.out.println(rt1);
-		
-		
-		
+				
+	}
+
+	public Formula getRightArgument() {
+		return this.right;
+	}
+
+	public Formula getLeftArgument() {
+		return this.left;
 	}
 	
 	

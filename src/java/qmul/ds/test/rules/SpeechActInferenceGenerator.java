@@ -52,7 +52,7 @@ public class SpeechActInferenceGenerator {
 	public final String ENGLISHTTRURL = "resource/2017-english-ttr-copula-simple/";
 	public final String ACTMAP = "act-mappings.txt";
 	private List<Dialogue> dlgList;
-	private TreeMap<String, ComputationalAction> sa_gammar_templates;
+	private ArrayList<ComputationalAction> sa_gammar_templates;
 
 //	private HashMap<String, List<String>> sa_gammar_templates;
 	private HashMap<String, List<ComputationalAction>> sa_inference_map;
@@ -78,7 +78,7 @@ public class SpeechActInferenceGenerator {
 		this.loadDialogues(corpus);
 		this.loadSlotValues();
 
-		this.sa_gammar_templates = (TreeMap<String, ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
+		this.sa_gammar_templates = (ArrayList<ComputationalAction>) new SpeechActInferenceGrammar(english_ttr_url, SPEECHACT_GRAMMAR_TEMPLATE);
 		logger.debug("sa_gammar_templates: " +sa_gammar_templates.size());
 		
 		this.sa_inference_map = new HashMap<String, List<ComputationalAction>>();
@@ -839,7 +839,7 @@ public class SpeechActInferenceGenerator {
 
 			// (2)
 //			curDialogue.add("usr: this object is? <rt> -- openask");
-//			curDialogue.add("sys: but what is it called? <rt> -- openask");
+			curDialogue.add("sys: but what is it called? <rt> -- openask");
 //			curDialogue.add("usr: this is? <rt> -- openask");
 //			curDialogue.add("usr: color is? <rt> -- ask-color");
 			
@@ -850,6 +850,9 @@ public class SpeechActInferenceGenerator {
 			// (4)
 //			curDialogue.add("usr: what is the object? <rt> -- openask");
 //			curDialogue.add("sys: red square? <rt> -- polar-color-shape");
+			
+			
+			curDialogue.add("sys: red <rt> -- info-color");
 			
 			Dialogue dlg = new Dialogue(curDialogue);
 			try {
@@ -898,20 +901,16 @@ public class SpeechActInferenceGenerator {
 		return null;
 	}
 
-	private List<ComputationalAction> findComputationalAction(TreeMap<String, ComputationalAction> map, String act) {
+	private List<ComputationalAction> findComputationalAction(ArrayList<ComputationalAction> grammar, String act) {
 		logger.debug("------ act : " + act);
-		logger.debug("------ ComputationalAction MAP : " + map);
 		
 		List<ComputationalAction> action_list = new ArrayList<ComputationalAction>();
 		
-		Iterator<Entry<String, ComputationalAction>> iterator = map.entrySet().iterator();
-		while(iterator.hasNext()){
-			Entry<String, ComputationalAction> entry = iterator.next();
-			String key = entry.getKey();
-			ComputationalAction action = entry.getValue();
+		for(ComputationalAction action: grammar){
+			String key = action.getName();
 			
 			if(key.trim().equals(act)){
-				action_list.add(entry.getValue());
+				action_list.add(action);
 			}
 			else {
 				String sub = key.replace(act+"-", "");

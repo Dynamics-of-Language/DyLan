@@ -20,21 +20,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.SubsumesLabel;
 
@@ -49,7 +41,7 @@ import qmul.ds.tree.label.SubsumesLabel;
  * 
  * @author arash
  */
-public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalAction> implements Serializable {
+public class SpeechActInferenceGrammar extends ArrayList<ComputationalAction> implements Serializable {
 
 	private static Logger logger = Logger.getLogger(SpeechActInferenceGrammar.class);
 
@@ -164,7 +156,7 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 					ComputationalAction action = new ComputationalAction(name, lines);
 					action.setAlwaysGood(alwaysGood);
 					action.setBacktrackOnSuccess(backtrackOnSuccess);
-					put(name, action);
+					add(action);
 					logger.debug("Added as: " + action);
 					lines.clear();
 					name = null;
@@ -187,7 +179,7 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 			}
 			if (!lines.isEmpty()) {
 				ComputationalAction action = new ComputationalAction(name, lines);
-				put(name, action);
+				add(action);
 				action.setAlwaysGood(alwaysGood);
 				action.setBacktrackOnSuccess(backtrackOnSuccess);
 				logger.debug("Added as: " + action + "(always good:" + action.isAlwaysGood() + ", exhaustive:"
@@ -200,11 +192,12 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 			logger.error("Error reading speech act grammar from " + reader);
 		}
 		
-		this.sortActMap(this);
-		for(ComputationalAction act: this.values()){
+		this.sortBySpecificity(this);
+		
+		for(ComputationalAction act: this){
 			try {
 				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "act:  " + act.getName());
-				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", act.getEffect().toString());
+//				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", act.getEffect().toString());
 				this.exportToFile("resource/2017-english-ttr-copula-simple/sorted_actions.txt", "");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -230,41 +223,33 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
         fileWriter.close();
 	}
 	
-	private void sortActMap(TreeMap<String, ComputationalAction> treemap){
-		List<Map.Entry<String, ComputationalAction>> list = new LinkedList<Map.Entry<String, ComputationalAction>>(treemap.entrySet());
+	private void sortBySpecificity(ArrayList<ComputationalAction> grammar){
 		
-		Comparator<Map.Entry<String, ComputationalAction>> comparator = new Comparator<Map.Entry<String, ComputationalAction>>() {
-			public int compare(Map.Entry<String, ComputationalAction> o1,
-                    Map.Entry<String, ComputationalAction> o2) {
-				ComputationalAction act1 =  o1.getValue();
-				ComputationalAction act2 =  o2.getValue();
+		Comparator<ComputationalAction> comparator = new Comparator<ComputationalAction>() {
+			public int compare(ComputationalAction act1,
+                    ComputationalAction act2) {
 				
-				if(getType(act1) == null)
-					return 1;
-				else if(getType(act2) == null) 
+				Formula f1 = getType(act1);
+				Formula f2 = getType(act2);
+				
+				
+				if(f1 == null){
 					return -1;
-				else if(getType(act1).subsumes(getType(act2)))
+				}
+				else if(f2 == null){
 					return 1;
-				else if(getType(act2).subsumes(getType(act1)))
+				}
+				else if(f1.subsumes(f2)){
+					return 1;
+				}
+				else if(f2.subsumes(f1)){
 					return -1;
+				}
 				
 				return 0;
 			}
 		};
-		Collections.sort(list,comparator);
-		
-		// Convert sorted map back to a Map
-		TreeMap<String, ComputationalAction> sorted = new TreeMap<String, ComputationalAction>();
-				
-		for (Iterator<Map.Entry<String, ComputationalAction>> it = list.iterator(); it.hasNext();) {
-			Map.Entry<String, ComputationalAction> entry = it.next();
-			sorted.put(entry.getKey(), entry.getValue());
-		}
-		
-		logger.info("sorted: " + sorted.size());
-		
-		this.clear();
-		this.putAll(sorted);
+		Collections.sort(grammar,comparator);
 	}
 	
 
@@ -280,10 +265,11 @@ public class SpeechActInferenceGrammar extends TreeMap<String, ComputationalActi
 					Label label = if_labels[j];
 					
 					if(label instanceof SubsumesLabel){
+						return ((SubsumesLabel)label).getRightArgument();
 //					if(label.toString().contains("W1<<")){		
-						TTRRecordType ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
-						ttr.resetMetas();
-						return ttr;
+//						TTRRecordType ttr = TTRRecordType.parse(label.toString().substring(label.toString().indexOf("W1<<")+4));
+//						ttr.resetMetas();
+//						return ttr;
 					}
 				}
 			}

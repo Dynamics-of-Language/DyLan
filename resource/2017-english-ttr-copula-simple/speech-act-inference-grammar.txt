@@ -25,8 +25,8 @@ IF		¬ty(Y>Z)
 		¬<Z>+Q
 		+neg
 		Assert(V)
-THEN		put(sa:reject(V))
-ELSE		abort
+THEN	put(sa:reject(V))
+ELSE	abort
 
 info-color-0
 IF    ¬Ty(Y>Z)

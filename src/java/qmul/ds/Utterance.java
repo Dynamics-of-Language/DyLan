@@ -97,7 +97,13 @@ public class Utterance {
 		words=new ArrayList<UtteredWord>();
 		for(HasWord w:ws)
 		{
-			this.words.add(new UtteredWord(w.word(),spk));
+			if(w.word().equals("no.")){
+				this.words.add(new UtteredWord("no",spk));
+				this.words.add(new UtteredWord(".",spk));
+			}
+			
+			else
+				this.words.add(new UtteredWord(w.word(),spk));
 		}
 
 		//add release-turn token
