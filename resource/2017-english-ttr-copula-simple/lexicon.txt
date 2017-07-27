@@ -142,6 +142,7 @@ try							  v_intran_fin					try							pres						nons3
 try							  v_intran_inf					try							inf						nons3
 got							  v_tran_subj_drop			get							past						nons3
 forgot							  v_tran_subj_drop			forget							past						nons3
+forgot							  v_tran_fin			forget							past						nons3
 get							  v_tran_subj_drop			get							pres						nons3	
 have						  v_tran_inf					have						inf						nons3
 have						  v_tran_fin					have						pres					nons3
@@ -189,7 +190,7 @@ still						  null						still
 also							  null						also
 as							  null						also
 too							  null						too
-ok							  null                      ok
+//ok							  null                      ok
 then                          null                      then
 lets							 null					   lets
 oops							 null					   oops
