@@ -374,7 +374,7 @@ public class SpeechActInferenceGenerator {
 										}
 									}
 								}
-								this.sa_inference_map.put(selected_template.getName(), newList);
+//								this.sa_inference_map.put(selected_template.getName(), newList);
 							}
 
 						
