@@ -1272,6 +1272,9 @@ ELSE    abort
 
 
 
+
+
+
 v_aux_inf(PRED,TENSE)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
@@ -1307,6 +1310,23 @@ ELSE		IF		?ty(t)
 								go(\/0)
 								put(?ty(e))
 		ELSE		abort
+
+v_aux_subj_drop(PRED,TENSE)
+IF		?ty(t)
+		¬<\/1>Ex.x
+	 	¬<\/0>Ex.x
+	 	¬<\/*>Ex.x
+	 	Speaker(X)
+THEN 	make(\/0)
+		go(\/0)
+		put(ty(e))
+		ttrput([x1==X:e|head==x1:e])
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(?ty(e>t))
+		aux_content(PRED)
+ELSE		abort
 
 
 

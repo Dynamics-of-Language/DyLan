@@ -55,10 +55,15 @@ this						  demonst  						this						  s3							obj
 that						  demonst						that						  s3							obj
 see							  v_tran_fin					see							  pres                          nons3
 see							  v_tran_inf					see							  inf							per
+see							  v_intran_fin					see							  pres                          nons3
+see							  v_intran_inf					see							  inf							per
 sees						  v_tran_fin					see							  pres							s3
 can 						  v_aux_inf                     can                           modal
 ca 						  	  v_aux_inf                     can                            modal
 do						      v_aux_inf                     do                            pres
+do							  v_aux_subj_drop			   do							pres
+can							  v_aux_subj_drop			   can							pres
+ca							  v_aux_subj_drop			   can							pres
 would						  v_aux_inf						would						  pres
 it							  demonst						this						  s3							obj
 its							  its							its
@@ -199,3 +204,4 @@ now						     null					   now
 please						 null					   please
 nothing						nothing						s3
 indeed						null							indeed
+very							null							very
