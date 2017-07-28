@@ -253,7 +253,7 @@ public class SpeechActInferenceGenerator {
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 					
-					logger.debug("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
+					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act: " + act );
 					
 					if(act.equals("ask-shape"))
 						logger.info("------ ask-shap: " + text);
@@ -465,12 +465,11 @@ public class SpeechActInferenceGenerator {
 					if(act.equals("accept") && (text.contains("it is") || text.contains("we do")))
 						act = prev_act.replace("polar", "info");
 					
-					logger.debug("utt: " + utt.getSpeaker() + ": " + text + " --- act(" + act + ")");
 					
 					if(!text.contains("<rt>") && !text.contains(".") && !text.contains("?"))
 						text += ".";
 					
-					logger.debug("  --> " + utt.getSpeaker() + ": " + text + " :: act("+act+")");
+					logger.info("utt: " + utt.getSpeaker() + ": " + text + " --- act(" + act + ")");
 					
 					String[] words = text.split(" ");
 					for(int j=0; j < words.length; j++){
@@ -478,6 +477,9 @@ public class SpeechActInferenceGenerator {
 						result = dlParser.parse(word);
 					}
 
+					if(result.hasException()){
+						logger.warn(result.getException());
+					}
 					Tree resultTree = result.getContxtalTree().clone();
 					logger.debug("  --> " + resultTree.getPointedNode());
 

@@ -36,7 +36,8 @@ public class Utterance {
 	}
 
 	public Utterance(String text) {
-		
+		if(this.uttSegment_map == null)
+			this.uttSegment_map = new TreeMap<Integer, String>();
 	
 		String[] split=text.split(SPEAKER_SEP);
 		String content=null;
@@ -56,8 +57,6 @@ public class Utterance {
 		
 		String utt = content;
 		if(content.contains("--")){
-			if(this.uttSegment_map == null)
-				this.uttSegment_map = new TreeMap<Integer, String>();
 			if(this.dAtSegment_map == null)
 				this.dAtSegment_map = new TreeMap<Integer, String>();
 			
@@ -65,8 +64,6 @@ public class Utterance {
 			utt = items[0].trim();
 			String dat = items[1].trim();
 			
-		//TODO: keep working on this utterance updates to get dats and utterances
-		
 			utt = utt.replace(". <rt>", " <rt>").replaceAll("\\.\\.\\.", "");
 			String[] utt_segments = utt.split("\\.");
 			String[] dAts = dat.split("&&");
@@ -87,6 +84,21 @@ public class Utterance {
 			else{
 				logger.error("cannot find the matched utt segments("+utt_segments.length+") and dAts("+dAts.length+"):");
 				logger.error(content);
+			}
+		}
+		
+		// don't have action annotated
+		else{
+			utt = utt.replace(". <rt>", " <rt>").replaceAll("\\.\\.\\.", "");
+			String[] utt_segments = utt.split("\\.");
+			
+			for(int i=0; i< utt_segments.length; i++){
+				String segment = utt_segments[i];
+				if(!segment.contains("<rt>") && !segment.contains(".") && !segment.contains("?"))
+					segment += ".";
+				logger.debug("AFTER:: segment: "+ segment);
+				
+				this.uttSegment_map.put(i, utt_segments[i].trim());
 			}
 		}
 		

@@ -17,3 +17,4 @@ _______________
 
 it in "it shape is square" -> "its shape is square"
 "do you know what color is this object?" -> "do you know what color this object is?"
+"its still %shapevalue" -> "it is still %shapevalue"

@@ -4,6 +4,7 @@ accept-shape >>
 ask-color >> 
 ask-color-info-shape >> 
 ask-shape >> 
+ask-shape-info-color >> 
 check >> 
 donotknow >> 
 donotknow-color >> 

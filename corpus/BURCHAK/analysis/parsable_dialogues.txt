@@ -372,7 +372,7 @@ sys: okay. -- accept
 sys: square <rt> -- info-shape
 usr: yes <rt> -- accept
 
-usr: its still square. -- info-shape
+usr: it is still square. -- info-shape
 usr: now the color is red <rt> -- info-color
 sys: red <rt> -- info-color
 usr: yes <rt> -- accept
@@ -962,7 +962,7 @@ sys: ok <rt> -- accept
 usr: red square <rt> -- info-color-shape
 sys: okay <rt> -- accept
 
-usr: do you know what color is this object? <rt> -- ask-color
+usr: do you know what color this object is? <rt> -- ask-color
 sys: i don't know this <rt> -- donotknow
 usr: it is red. -- info-color
 usr: and the shape? <rt> -- ask-shape
@@ -1208,7 +1208,7 @@ sys: so what is the shape again? <rt> -- ask-shape
 usr: the shape is square <rt> -- info-shape
 sys: i know the shape now <rt> -- accept
 usr: so what's the shape? <rt> -- ask-shape
-sys: it shape is square <rt> -- info-shape
+sys: its shape is square <rt> -- info-shape
 usr: okay <rt> -- accept
 
 sys: it is a red square <rt> -- info-color-shape
