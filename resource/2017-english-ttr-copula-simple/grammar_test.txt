@@ -68,15 +68,3 @@ IF    ¬Ty(Y>Z)
       W1<<[x7 : e|e2==eq : es|x4==this : e|p11==P2(x7) : t|p12==color(p11) : t|p2==pres(e2) : t|p5==subj(e2, x4) : t|p4==obj(e2, x7) : t]
 THEN  put(sa:polar(V, color : P2))
 ELSE  abort
-
-act: reject-100
-IF    ¬Ty(Y>Z)
-      Ty(X)
-      ¬</\0\/1>Ex.x
-      ¬</\L>Ex.x
-      ¬?+eval
-      ¬<Z>+Q
-      +neg
-      Assert(V)
-THEN  put(sa:reject(V))
-ELSE  abort

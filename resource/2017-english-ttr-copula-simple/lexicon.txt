@@ -96,12 +96,15 @@ yeah 						  yes							yeah
 yeah					      accept						yeah
 yay 						  yes							yay
 yay					      	  accept						yay
+good						  yes						good
 good						  accept						good
+great						  yes						great
 great						  accept						great
+okay						  yes						okay
 okay						  accept						okay
-okay						  accept						okay
-yeah						  accept						yeah
+right						  yes						right
 right						  accept						right
+correct						  yes						correct	
 correct						  accept						correct	
 correct						  yes							yes
 bingo						  accept						bingo
@@ -113,6 +116,7 @@ awesome						  accept						awesome
 perfect						  yes						    perfect	
 perfect						  accept						perfect	
 //wow						  accept						wow
+excellent						  yes						excellent
 excellent						  accept						excellent
 no							  reject						not
 no.							  reject						not
