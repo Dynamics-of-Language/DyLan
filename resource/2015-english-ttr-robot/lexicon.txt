@@ -103,6 +103,7 @@ again    					  adv							again
 into						  prep_mod_location_goal		into
 over						  prep_mod_location_goal		over
 in							  prep_mod_location_goal		in
+on							  prep_mod_location_goal		on
 above						  prep_mod_location_goal		above
 under						  prep_mod_location_goal		under
 underneath					  prep_mod_location_goal		under
@@ -111,10 +112,13 @@ between 					  prep_mod_location_goal		between
 next						  prep_mod_location_goal		beside
 over						  prep_mod_location				over
 in							  prep_mod_location				in
+on							  prep_mod_location				on
 above						  prep_mod_location				above
 under						  prep_mod_location				under
 underneath					  prep_mod_location				under
 near						  prep_mod_location				near
 between 					  prep_mod_location				between
 next						  prep_mod_location				beside
-and							  conj_entity					and
+and 						  conj_entity					and
+and							  conj_prop						and
+andy						  conj_prop_ellipsis			and
