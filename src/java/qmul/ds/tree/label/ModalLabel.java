@@ -248,22 +248,32 @@ public class ModalLabel extends EmbeddedLabelGroup {
 			logger.debug("modal label check failed");
 			return false;
 		}
+		
+		
 		// otherwise, check within this tree as per normal
 		Node pointedNode = tree.getPointedNode();
 		// check if we are testing with an uninstantiated modality metavariable
 		// - if so, must only instantiate on
 		// success (i.e. must uninstantiate on failure)
+		
+		
 		boolean meta = ((modality instanceof MetaModality) && (((MetaModality) modality)
 				.getValue() == null));
+		
 		for (Node node : tree.getNodes()) {
 
 			if (modality.relates(tree, pointedNode, node)) {
-				//System.out.println("matched "+modality+" "+pointedNode+" "+node);
-				if (checkLabelsConj(node)) {
+				//System.out.println(modality+" relates "+pointedNode+" and "+node);
+				
+				tree.setPointer(node.getAddress());
+				if (checkLabelsConj(tree,context)) {
 					logger.debug("Modal Label check succeeded");
+					tree.setPointer(pointedNode.getAddress());
 					return true;
 				}
+				
 			}
+			
 			// if we're here, the check failed, so uninstantiate previously
 			// uninstantiated modality metavariables
 			// (without losing track of backtracking history)
@@ -271,6 +281,7 @@ public class ModalLabel extends EmbeddedLabelGroup {
 				((MetaModality) modality).getMeta().partialReset();
 			}
 		}
+		tree.setPointer(pointedNode.getAddress());
 		logger.debug("Modal Label check failed");
 		return false;
 	}

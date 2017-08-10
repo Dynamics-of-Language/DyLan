@@ -2836,7 +2836,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public MetaPredicate getFreshPredicateMetaVariable() {
 		lastIndexOfPredicateMeta++;
 		
-		return MetaPredicate.get(Formula.META_PREDICATE_PATTERN+lastIndexOfPredicateMeta);
+		return MetaPredicate.get(Formula.META_PREDICATE_ROOT_PATTERN+lastIndexOfPredicateMeta);
 		
 	}
 

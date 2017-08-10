@@ -97,7 +97,8 @@ public abstract class Formula implements Serializable {
 																									// or
 																									// more
 	public static final Pattern PRED_ARG_PATTERN = Pattern.compile("([a-z][a-z][a-z_0-9]*)\\((.+)\\)");
-	public static final String META_PREDICATE_PATTERN="[P-Q][0-9]*";
+	public static final String META_PREDICATE_ROOT_PATTERN="P";
+	public static final String META_PREDICATE_PATTERN=META_PREDICATE_ROOT_PATTERN+"[0-9]*";
 	public static final Pattern META_PRED_ARG_PATTERN = Pattern.compile("("+META_PREDICATE_PATTERN+")\\((.+)\\)");//e.g. P1(x,y)
 	public static String ATOMIC_FORMULA_PATTERN = "[a-z]+[a-z_0-9]*";
 

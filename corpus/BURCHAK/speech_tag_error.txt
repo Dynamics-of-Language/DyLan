@@ -1,0 +1,4 @@
+(0): act(donotknow) -- speech_act(sa:donotknowcolor(sys))
+(1): act(reject) -- speech_act(sa:infoneg(usr, color : red))
+(2): act(reject) -- speech_act(sa:infoneg(usr, color : red, shape : square))
+(3): act(reject) -- speech_act(sa:infoneg(usr, shape : square))

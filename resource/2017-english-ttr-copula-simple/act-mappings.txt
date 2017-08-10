@@ -1,0 +1,39 @@
+info-color >> [info(,color :]
+info-shape >> [info(,shape :]
+info-color-shape >> [info(,color :,shape :]
+
+polar-color >> [polar(,color :]
+polar-shape >> [polar(,shape :]
+polar-color-shape >> [polar(,color :,shape :]
+
+info-neg-color >> [infoneg(,color :]
+info-neg-shape >> [infoneg(,shape :]
+info-neg-color-shape >> [infoneg(,color :,shape :]
+
+ask-color >> [askcolor(]
+ask-shape >> [askshape(]
+openask >> [openask(]
+ask-color-info-shape >> [askcolor(,shape :]
+ask-shape-info-color >> [askshape(,color :]
+
+donotknow >> [donotknow(]
+donotknow-color >> [donotknowcolor(]
+donotknow-shape >> [donotknowshape(]
+donotknow-shape-info-color >> [donotknowshape(,color :]
+donotknow-color-info-shape >> [donotknowcolor(,shape :]
+
+accept >> [accept(]
+accept-color >> [acceptcolor(]
+//accept-info-color >> []
+//accept-info-color-shape >> []
+//accept-info-shape >> []
+accept-shape >> [acceptshape(]
+
+reject >> [reject(]
+reject-color >> [rejectcolor(]
+reject-shape >> [rejectshape(]
+
+repeatrequest >> [repeatrequest(]
+try >> [try(]
+keepgoing >> [keepgoing(]
+check >> [check(]

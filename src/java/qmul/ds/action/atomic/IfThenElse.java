@@ -14,7 +14,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +29,8 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.SpeechAct;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
@@ -51,7 +56,7 @@ public class IfThenElse extends Effect implements Serializable {
 	private Effect[] ELSE;
 	private int embeddingLevel = 0;
 	private IfThenElse parent;
-
+	
 	/**
 	 * @param IF
 	 * @param THEN
@@ -80,7 +85,6 @@ public class IfThenElse extends Effect implements Serializable {
 
 	public IfThenElse(List<String> strings) {
 		this(strings, 0, null);
-
 	}
 
 	/**
@@ -205,7 +209,7 @@ public class IfThenElse extends Effect implements Serializable {
 		System.out.println(e);
 		
 	}
-
+	
 	private static int findEndIndexOfEmbeddedITE(List<String> strings, int indexOfIF) {
 		int embedLevel = 1;
 		int j = indexOfIF + 1;
@@ -222,6 +226,8 @@ public class IfThenElse extends Effect implements Serializable {
 
 	}
 
+	
+	
 	protected Backtracker backtracker = null;
 
 	/*
@@ -234,7 +240,7 @@ public class IfThenElse extends Effect implements Serializable {
 	 * the corresponding set of metas.
 	 * 
 	 * */
-	private void setupBacktrackers(List<Meta<?>> exceptions) {
+	public void setupBacktrackers(List<Meta<?>> exceptions) {
 		this.backtracker = new Backtracker();
 
 		for (Label label : IF) {
@@ -255,6 +261,33 @@ public class IfThenElse extends Effect implements Serializable {
 
 			}
 		}
+	}
+	/**
+	 * WARNING: should only be called AFTER setupBacktrackers has been called once. i.e. after all metas
+	 * have been added to backtracker.
+	 */
+	public void resetMetas()
+	{
+		for (Label label : IF) {
+			
+			label.resetMetas();
+		}
+		for (Effect effect : THEN) {
+			if (effect instanceof IfThenElse) {
+				IfThenElse ite = (IfThenElse) effect;
+				ite.resetMetas();
+
+			}
+		}
+		for (Effect effect : ELSE) {
+			if (effect instanceof IfThenElse) {
+				IfThenElse ite = (IfThenElse) effect;
+				ite.resetMetas();
+
+			}
+		}
+		
+		
 	}
 
 	private List<Meta<?>> getMetasHereAndAbove() {
@@ -545,7 +578,18 @@ public class IfThenElse extends Effect implements Serializable {
 		return this.IF;
 
 	}
-
+	
+	public void addNewLabelintoIF(Label label) {
+		Label[] ifs = new Label[this.IF.length + 1];
+		for (int i = 0; i < IF.length; i++) {
+			Label l = IF[i];
+			ifs[i] = l;
+		}
+		ifs[this.IF.length] = label;
+		
+		this.IF = ifs;
+	}
+	
 	/**
 	 * 
 	 * @return all metas at this ite plus all those at all higher ite's in which this ite is embedded
@@ -709,7 +753,7 @@ public class IfThenElse extends Effect implements Serializable {
 						} else {
 							// if not, re-instantiate it TODO and remember not
 							// to backtrack again?
-							logger.trace("unbacktracking:" + meta);
+							logger.debug("unbacktracking:" + meta);
 							meta.unbacktrack();
 						}
 					}
@@ -717,13 +761,8 @@ public class IfThenElse extends Effect implements Serializable {
 			}
 			return false;
 		}
-
 	}
-
 	
-	
-	
-
 	public static final int tabSizeForPrinting = 6;// min tab size is 4
 
 	public String toString() {
@@ -771,4 +810,52 @@ public class IfThenElse extends Effect implements Serializable {
 		return ELSE;
 	}
 
+	public void replaceVariables(Map<Formula, Formula> replacements) {
+		for(int i=0; i< this.THEN.length; i++){
+			Effect e1 = this.THEN[i];
+			
+			if(e1.toString().startsWith("put(sa:")){
+				String act_str = e1.toString().substring(e1.toString().indexOf("put(sa:")+7, e1.toString().length()-1);
+				SpeechAct subst = new SpeechAct(act_str);
+				logger.info("--- Found the 'put' in: " + e1 + "; act_str: " + subst.toString());
+				
+				Iterator<Entry<Formula, Formula>> iterator = replacements.entrySet().iterator();
+				while(iterator.hasNext()){
+					Entry<Formula, Formula> entry = iterator.next();
+					Formula f1 = entry.getKey();
+					Formula f2 = entry.getValue();
+					subst = subst.substitute(f1, f2);
+				}
+				logger.info("--- subst: " + subst);
+				
+				Effect newEfect = EffectFactory.create("put(sa:"+subst+")");
+				this.THEN[i] = newEfect;
+			}
+			else if(e1 instanceof IfThenElse)
+				((IfThenElse)e1).replaceVariables(replacements);
+		}
+
+		for(int j=0; j< this.ELSE.length; j++){
+			Effect e2 = this.ELSE[j];
+			if(e2.toString().startsWith("put(sa")){
+				String act_str = e2.toString().substring(e2.toString().indexOf("put(sa:")+7, e2.toString().length()-1);
+				SpeechAct subst = new SpeechAct(act_str);
+				logger.info("--- Found the 'put' in: " + e2 + "; act_str: " + subst.toString());
+				
+				Iterator<Entry<Formula, Formula>> iterator = replacements.entrySet().iterator();
+				while(iterator.hasNext()){
+					Entry<Formula, Formula> entry = iterator.next();
+					Formula f1 = entry.getKey();
+					Formula f2 = entry.getValue();
+					subst = subst.substitute(f1, f2);
+				}
+				logger.info("--- subst: " + subst);
+
+				Effect newEfect = EffectFactory.create("put(sa:"+subst+")");
+				this.ELSE[j] = newEfect;
+			}
+			else if(e2 instanceof IfThenElse)
+				((IfThenElse)e2).replaceVariables(replacements);
+		}
+	}
 }

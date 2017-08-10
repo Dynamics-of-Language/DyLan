@@ -78,7 +78,7 @@ public class SpeechAct extends Formula {
 	}
 	
 	@Override
-	public Formula substitute(Formula f1, Formula f2) {
+	public SpeechAct substitute(Formula f1, Formula f2) {
 		
 		return new SpeechAct(this.content.substitute(f1, f2));
 	}
@@ -153,12 +153,21 @@ public class SpeechAct extends Formula {
 	
 	public static void main(String[] args)
 	{
-		SpeechAct a=new SpeechAct("info(W)");
+		SpeechAct a=new SpeechAct("info(V, color : U1==red)");
+		System.out.println("before substitution:"+a.content.toDebugString());
+		SpeechAct subst=a.substitute(Formula.create("U1"), Formula.create("U2"));
 		
-		
-		System.out.println(a.content);
-		//System.out.println(a.content.get(new TTRLabel("actor")));
 		System.out.println(a);
+		System.out.println(subst.content);
+		//System.out.println(a.content.get(new TTRLabel("actor")));
+		System.out.println(subst);
+
+//		SpeechAct subst2=subst.substitute(Formula.create("%shapevalue"), Formula.create("P2"));
+//		
+//		System.out.println(subst);
+//		System.out.println(subst2.content);
+//		//System.out.println(a.content.get(new TTRLabel("actor")));
+//		System.out.println(subst2);
 		
 		//System.out.println(sa);
 		

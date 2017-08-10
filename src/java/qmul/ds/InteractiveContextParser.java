@@ -64,10 +64,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	String[] acksa = { "uhu" };
 	List<String> acks = Arrays.asList(acksa);
-	String[] repairand = { "uhh", "errm", "err", "er", "well", "oh", "uh", "erm", "uhm", "um", "oh" };
+	String[] repairand = { "uhh", "errm", "err", "er", "uh", "erm", "uhm", "um", "oh"};
 	String[] restarter = { "yeah" };
 	List<String> repairanda = Arrays.asList(repairand);
-	String[] forceRepairand = { "sorry"};
+	String[] forceRepairand = { "sorry", "oops"};
 	List<String> forcedRepairanda = Arrays.asList(forceRepairand);
 
 	List<String> restarters = Arrays.asList(restarter);
@@ -205,6 +205,46 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			return;
 		}
 
+		
+		/**
+		 * First we are going to apply the actions that don't have any left adjustment
+		 * 
+		 */
+		Collection<LexicalAction> allActions=lexicon.get(word.word());
+		Collection<LexicalAction> leftAdjustActions=new ArrayList<LexicalAction>();
+		
+		Tree current=getState().getCurrentTuple().getTree().clone();
+		for(LexicalAction la:allActions)
+		{
+			if (la.requiresLeftAdjustment())
+			{
+				leftAdjustActions.add(la);
+			}
+			else
+			{
+				
+				logger.debug("applying "+la+" without left adjustment");
+				logger.debug("to tree: "+current);
+				Tree res = la.exec(current, context);
+				logger.debug("result: " + res);
+				if (res != null) {
+					DAGTuple tuple=getState().getNewTuple(res);
+					List<Action> edgeActs=new ArrayList<Action>();
+					edgeActs.add(la);
+					GroundableEdge edge=getState().getNewEdge(edgeActs, word);
+					getState().addChild(tuple, edge);
+					
+				}
+				
+			}
+		}
+		
+		if (leftAdjustActions.isEmpty())
+			return;
+		
+		/**
+		 * Now we do the left adjustment:
+		 */
 		Pair<List<Action>, Tree> initPair = new Pair<List<Action>, Tree>(new ArrayList<Action>(),
 				getState().getCurrentTuple().tree.clone());
 
@@ -227,9 +267,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					continue;
 
 				tried.get(ca).add(cur.second);
-				Tree res = ca.exec(cur.second.clone(), context);
 				logger.debug("Applying ca: " + ca);
 				logger.debug("to: " + cur.second);
+				
+				Tree res = ca.exec(cur.second.clone(), context);
 				logger.debug("result: " + res);
 				if (res != null) {
 					List<Action> newActions = new ArrayList<Action>(cur.first);
@@ -244,9 +285,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		logger.debug("Now attempting to apply lexical action for:"+getState().wordStack().peek());
 		for (Pair<List<Action>, Tree> pair : global) {
 
-			UtteredWord w = getState().wordStack().peek();
-			logger.debug("top of stack:" + getState().wordStack().peek());
-			for (LexicalAction la : lexicon.get(w.word())) {
+			
+			logger.debug("top of stack:" + word);
+			for (LexicalAction la : leftAdjustActions) {
 				// set right-edge indicators (e.g. '.' or '?') and acceptances
 				// to not replayable
 				// TODO: should be part of the lexical entry? Need to think
@@ -270,7 +311,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					if (indexOfTRP == 0)
 					{
 						logger.debug("TRP at the beginning");
-						wordEdge = getState().getNewNewClauseEdge(newActs, w);
+						wordEdge = getState().getNewNewClauseEdge(newActs, word);
 					}
 					else if (indexOfTRP>0)
 					{
@@ -305,7 +346,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 						logger.debug("going forward along it");
 						getState().setCurrentTuple(getState().getDest(completionEdge));
 						
-						wordEdge = getState().getNewNewClauseEdge(newActs.subList(indexOfTRP, newActs.size()), w);
+						wordEdge = getState().getNewNewClauseEdge(newActs.subList(indexOfTRP, newActs.size()), word);
 						if (non_repairing_action_types.contains(la.getLexicalActionType()))
 							wordEdge.setRepairable(false);
 
@@ -322,9 +363,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 						
 					}
 					else
-						wordEdge = getState().getNewEdge(newActs, w);
+						wordEdge = getState().getNewEdge(newActs, word);
 
-					logger.debug("created word edge with word:" + w);
+					logger.debug("created word edge with word:" + word);
 					logger.debug("edge before adding:" + wordEdge);
 
 					if (non_repairing_action_types.contains(la.getLexicalActionType()))
@@ -466,24 +507,6 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			return getState();
 		}
 
-		if (this.repairanda.contains(word.word())) {
-			logger.info("repair possible");
-			this.getState().thisIsFirstTupleAfterLastWord();
-			this.getState().setRepairProcessing(true);
-			return this.getState();
-		} else if (this.restarters.contains(word.word()) && getState().repairProcessingEnabled()) {
-			logger.info("forcing restart on next word");
-			this.forcedRestart = true;
-			this.getState().thisIsFirstTupleAfterLastWord();
-			return this.getState();
-		} else if (this.forcedRepairanda.contains(word.word())) {
-			logger.info("forcing repair on next word");
-			this.forcedRepair = true;
-			this.getState().thisIsFirstTupleAfterLastWord();
-			this.getState().setRepairProcessing(true);
-			return this.getState();
-		}
-
 		if (this.forcedRestart || this.forcedRepair) {
 
 			logger.info("initiating restart or repair");
@@ -491,8 +514,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			getState().initiateLocalRepair();
 
 			if (!parse()) {
-				logger.info("OOPS! Couldn't parse word as restart");
-				logger.error("OOPS! Couldn't parse word as restart");
+				logger.info("OOPS! Couldn't parse word as restart or repair");
+				logger.error("OOPS! Couldn't parse word as restart or repair");
 				this.forcedRestart = false;
 				this.forcedRepair=false;
 				return null;
@@ -511,6 +534,26 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		}
 
+		
+		if (this.repairanda.contains(word.word())) {
+			logger.info("repair possible");
+			this.getState().thisIsFirstTupleAfterLastWord();
+			this.getState().setRepairProcessing(true);
+			return this.getState();
+		} else if (this.restarters.contains(word.word()) && getState().repairProcessingEnabled()) {
+			logger.info("forcing restart on next word");
+			this.forcedRestart = true;
+			this.getState().thisIsFirstTupleAfterLastWord();
+			return this.getState();
+		} else if (this.forcedRepairanda.contains(word.word())) {
+			logger.info("forcing repair on next word");
+			this.forcedRepair = true;
+			this.getState().thisIsFirstTupleAfterLastWord();
+			this.getState().setRepairProcessing(true);
+			return this.getState();
+		}
+
+		
 		Collection<LexicalAction> actions = this.lexicon.get(word.word());
 		if (actions == null || actions.isEmpty()) {
 			logger.error("Word not in Lexicon: " + word);

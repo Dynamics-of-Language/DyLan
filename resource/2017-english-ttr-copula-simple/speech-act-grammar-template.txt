@@ -1,0 +1,463 @@
+//*
+
+NEW! Domain-specific actions for speech act inference (with their parameters). 
+Can be learned from data annotated with speech acts (by parsing and generating this file.)
+
+*//
+
+check
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:check(V))
+ELSE	abort
+
+// a: i don't know this
+donotknow-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknow(V))
+ELSE	abort
+
+// a: i forgot this
+donotknow-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknow(V))
+ELSE	abort
+
+// a: i don't know the color
+donotknow-color-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowcolor(V))
+ELSE	abort
+
+// a: i forgot the color
+donotknow-color-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowcolor(V))
+ELSE	abort
+
+// a: i don't know the shape
+donotknow-shape-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V))
+ELSE	abort
+
+// a: i forgot this shape
+donotknow-shape-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V))
+ELSE	abort
+
+// a: i don't know the color of this square
+donotknow-color-info-shape-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN		put(sa:donotknowcolor(V,shape:P9))
+ELSE		abort
+
+// a: i forgot the color of this square
+donotknow-color-info-shape-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN		put(sa:donotknowcolor(V,shape:P9))
+ELSE		abort
+
+// a: i don't know the shape of this red object
+donotknow-shape-info-color-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V,color:P8))
+ELSE	abort
+
+// a: i forgot the shape of this red object
+donotknow-shape-info-color-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:donotknowshape(V,color:P8))
+ELSE	abort
+
+repeatrequest
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:repeatrequest(V))
+ELSE	abort
+
+try
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:try(V))
+ELSE	abort
+
+info-color
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN	IF		<Z>+Q
+		THEN	abort
+		ELSE	IF		(+neg || <Z>+neg)
+				THEN	abort
+				ELSE	put(sa:info(V,color:P8))
+ELSE	abort
+
+info-shape
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN		IF		<Z>+Q
+		THEN		abort
+		ELSE		IF		(+neg || <Z>+neg)
+					THEN	abort
+					ELSE	put(sa:info(V,shape:P9))
+ELSE	abort
+
+info-color-shape
+IF	  	¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Speaker(V)
+THEN		IF		<Z>+Q
+		THEN		abort
+		ELSE		IF		(+neg || <Z>+neg)
+					THEN	abort
+					ELSE	put(sa:info(V,color:P8,shape:P9))
+ELSE	abort
+
+info-neg-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:infoneg(V,color:P8))
+ELSE	abort
+
+info-neg-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:infoneg(V,shape:P9))
+ELSE	abort
+
+info-neg-color-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Speaker(V)
+THEN	put(sa:infoneg(V,color:P8,shape:P9))
+ELSE	abort
+
+polar-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		+Q
+		¬<Z>+meta
+		Speaker(V)
+THEN	put(sa:polar(V,color:P8))
+ELSE	abort
+
+polar-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		+Q
+		¬<Z>+meta
+		Speaker(V)
+THEN		put(sa:polar(V,shape:P9))
+ELSE		abort
+
+polar-color-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		+Q
+		¬<Z>+meta
+		Speaker(V)
+THEN	put(sa:polar(V,color:P8,shape:P9))
+ELSE	abort
+
+ask-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+Q || <Z>+Q)
+		Speaker(V)
+THEN	put(sa:askcolor(V))
+ELSE	abort
+
+ask-color-info-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+Q || <Z>+Q)
+		Speaker(V)
+THEN	put(sa:askcolor(V,shape:P9))
+ELSE	abort
+
+ask-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+Q || <Z>+Q)
+		Speaker(V)
+THEN	put(sa:askshape(V))
+ELSE	abort
+
+ask-shape-info-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+Q || <Z>+Q)
+		Speaker(V)
+THEN	put(sa:askshape(V,color:P8))
+ELSE	abort
+
+keepgoing
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+Q || <Z>+Q)
+		Speaker(V)
+THEN	put(sa:keepgoing(V))
+ELSE	abort
+
+//e.g. what is this?
+openask-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+Q || <Z>+Q)
+		Speaker(V)
+THEN	put(sa:openask(V))
+ELSE	abort
+
+//e.g. try this one
+openask-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Assert(V)
+THEN	IF		(+Q || <Z>+Q)
+		THEN	abort
+		ELSE	put(sa:openask(V))
+ELSE	abort
+
+//A: this is red. B: good job.
+accept-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		Assert(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:accept(V))
+ELSE	abort
+
+//A: this is a red square. B: red/color is correct.
+accept-color
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		Assert(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:acceptcolor(V))
+ELSE	abort
+
+//A: this is a red square. B: square/shape is correct.
+accept-shape
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		Assert(V)
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:acceptshape(V))
+ELSE	abort
+
+//e.g. that's incorrect
+reject-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		¬(+neg || <Z>+neg)
+		Assert(V)
+THEN	put(sa:reject(V))
+ELSE	abort
+
+//e.g. that's not correct
+reject-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		(+neg || <Z>+neg)
+		Assert(V)
+THEN	put(sa:reject(V))
+ELSE	abort
+
+reject-color-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Assert(V)
+THEN	put(sa:rejectcolor(V))
+ELSE	abort
+
+reject-color-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Assert(V)
+THEN	put(sa:rejectcolor(V))
+ELSE	abort
+
+reject-shape-0
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		(+neg || <Z>+neg)
+		Assert(V)
+THEN	put(sa:rejectshape(V))
+ELSE	abort
+
+reject-shape-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		Assert(V)
+THEN	put(sa:rejectshape(V))
+ELSE	abort

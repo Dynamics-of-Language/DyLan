@@ -11,6 +11,8 @@ package qmul.ds.action.atomic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.ParserTuple;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.Label;
@@ -29,6 +31,8 @@ public class Put extends Effect {
 	private static final long serialVersionUID = 1L;
 
 	public static final String FUNCTOR = "put";
+	
+	protected static Logger logger=Logger.getLogger(Put.class);
 
 	private Label label;
 

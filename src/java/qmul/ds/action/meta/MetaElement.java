@@ -115,7 +115,7 @@ public class MetaElement<X> implements Serializable, Meta<X> {
 	/**
 	 * @param value
 	 */
-	protected void setValue(X value) {
+	public void setValue(X value) {
 		this.value = value;
 	}
 

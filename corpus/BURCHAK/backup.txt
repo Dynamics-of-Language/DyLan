@@ -1,0 +1,29 @@
+//A: this is red <rt> B: yes
+accept-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		PrevSpeaker(V)
+		Assert(V)
+		Assert(W)
+		¬V=W
+THEN	IF		(+neg || <Z>+neg)
+		THEN	abort
+		ELSE	put(sa:accept(V))
+ELSE	abort
+
+//e.g. A: this is red. B: no
+reject-1
+IF		¬ty(Y>Z)
+		ty(X)
+		¬</\0\/1>Ex.x
+		¬</\L>Ex.x
+		¬?+eval
+		¬<Z>+Q
+		+neg
+		Assert(V)
+THEN	put(sa:reject(V))
+ELSE	abort

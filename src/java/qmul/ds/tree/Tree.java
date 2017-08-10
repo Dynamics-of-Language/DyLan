@@ -733,25 +733,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			Formula f = n.getFormula();
 			if (dsType != null && f == null) {
 				if (typeMap.containsKey(dsType)) {
-					/**
-					 * Yanchao's grammar is not going to work with
-					 * underspecification.
-					 */
-					// Node
-					// mother=this.get(n.getAddress().go(Modality.parse("/\\")));
-					//
-					//
-					// DSType
-					// motherType=mother.getType()==null?mother.getRequiredType():mother.getType();
-					// if
-					// (dsType.equals(BasicType.cn)&&(motherType.equals(DSType.parse("e>t"))||motherType.equals(DSType.cn)))
-					// n.addLabel(new
-					// FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(c)));
-					// else if
-					// (dsType.equals(DSType.parse("e>t"))&&n.contains(formReq))
-					// n.addLabel(new FormulaLabel(Formula.create("R1^(R1 ++
-					// [e1:es|head==e1:es|p==subj(e1,R1.head):t])").freshenVars(c)));
-					// else
+					
 					n.addLabel(new FormulaLabel(typeMap.get(dsType).freshenVars(c)));
 
 				} else if (!dsType.equals(DSType.t))
@@ -760,6 +742,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 									+ n);
 			}
 		}
+		logger.debug("After adding underspec formulae:"+this);
 
 	}
 
@@ -1068,24 +1051,22 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			// with
 			// unfixed nodes
 			if (unfixedReduced != null && localUnfixedReduced != null)
-				rootReduced = unfixedReduced.removeHead().conjoin(localUnfixedReduced.removeHead());
+				rootReduced = rootReduced.conjoin(unfixedReduced.removeHead().conjoin(localUnfixedReduced.removeHead()));
 
 			else if (unfixedReduced != null && localUnfixedReduced == null)
-				rootReduced = unfixedFunctor ? unfixedReduced : unfixedReduced.removeHead();
+				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced.removeHead());
 			else if (localUnfixedReduced != null)
-				rootReduced = unfixedFunctor ? localUnfixedReduced : localUnfixedReduced.removeHead();
+				rootReduced = unfixedFunctor ? localUnfixedReduced : rootReduced.conjoin(localUnfixedReduced.removeHead());
 		}
-		// only evaluate link if it hasn't been evaluated before. ARASH,
-		// question to himself: Why would it have been evaluated before?
-		// &&root.contains(LabelFactory.create("?+eval"))
-		// uncommented for now... let's see.
+		
 		if (!getDaughters(root, "L").isEmpty()) {
 
 			Formula maxSemL = getMaximalSemantics(get(root.getAddress().downLink()), c);
 
 			rootReduced = rootReduced.conjoin(maxSemL);
 		}
-		logger.debug("done: " + rootReduced);
+		logger.debug("done with: " + root );
+		logger.debug("result: " + rootReduced );
 
 		if (root.contains(questionLabel)) {
 

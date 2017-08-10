@@ -1,0 +1,20 @@
+26 July
+
+this is a square. square sorry circle for the shape:: problem with repairing with NC edge.
+
+Sort out no, sorry, oops etc. Currently not really parsing them. Filter for now.
+
+Do you know how to call it - filter for now.
+
+Same color as before. red. filter for now.
+
+afraid not. Turn to just 'no'
+
+aux subject drop. "can't remember/don't remember"
+not subject drop. "not remember the shape"
+_______________
+27 July
+
+it in "it shape is square" -> "its shape is square"
+"do you know what color is this object?" -> "do you know what color this object is?"
+"its still %shapevalue" -> "it is still %shapevalue"

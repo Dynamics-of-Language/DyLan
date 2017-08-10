@@ -36,7 +36,8 @@ public class Utterance {
 	}
 
 	public Utterance(String text) {
-		
+		if(this.uttSegment_map == null)
+			this.uttSegment_map = new TreeMap<Integer, String>();
 	
 		String[] split=text.split(SPEAKER_SEP);
 		String content=null;
@@ -56,8 +57,6 @@ public class Utterance {
 		
 		String utt = content;
 		if(content.contains("--")){
-			if(this.uttSegment_map == null)
-				this.uttSegment_map = new TreeMap<Integer, String>();
 			if(this.dAtSegment_map == null)
 				this.dAtSegment_map = new TreeMap<Integer, String>();
 			
@@ -65,8 +64,6 @@ public class Utterance {
 			utt = items[0].trim();
 			String dat = items[1].trim();
 			
-		//TODO: keep working on this utterance updates to get dats and utterances
-		
 			utt = utt.replace(". <rt>", " <rt>").replaceAll("\\.\\.\\.", "");
 			String[] utt_segments = utt.split("\\.");
 			String[] dAts = dat.split("&&");
@@ -75,6 +72,11 @@ public class Utterance {
 		
 			if(utt_segments.length == dAts.length){
 				for(int i=0; i< utt_segments.length; i++){
+					String segment = utt_segments[i];
+					if(!segment.contains("<rt>") && !segment.contains(".") && !segment.contains("?"))
+						segment += ".";
+					logger.debug("AFTER:: segment: "+ segment);
+					
 					this.uttSegment_map.put(i, utt_segments[i].trim());
 					this.dAtSegment_map.put(i, dAts[i].trim());
 				}
@@ -85,6 +87,21 @@ public class Utterance {
 			}
 		}
 		
+		// don't have action annotated
+		else{
+			utt = utt.replace(". <rt>", " <rt>").replaceAll("\\.\\.\\.", "");
+			String[] utt_segments = utt.split("\\.");
+			
+			for(int i=0; i< utt_segments.length; i++){
+				String segment = utt_segments[i];
+				if(!segment.contains("<rt>") && !segment.contains(".") && !segment.contains("?"))
+					segment += ".";
+				logger.debug("AFTER:: segment: "+ segment);
+				
+				this.uttSegment_map.put(i, utt_segments[i].trim());
+			}
+		}
+		
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		Tokenizer<? extends HasWord> toke = tlp.getTokenizerFactory()
 				.getTokenizer(new CharArrayReader(utt.toCharArray()));
@@ -92,7 +109,13 @@ public class Utterance {
 		words=new ArrayList<UtteredWord>();
 		for(HasWord w:ws)
 		{
-			this.words.add(new UtteredWord(w.word(),spk));
+			if(w.word().equals("no.")){
+				this.words.add(new UtteredWord("no",spk));
+				this.words.add(new UtteredWord(".",spk));
+			}
+			
+			else
+				this.words.add(new UtteredWord(w.word(),spk));
 		}
 
 		//add release-turn token
@@ -106,7 +129,7 @@ public class Utterance {
 	}
 
 	public static void main(String a[]) {
-		Utterance utt = new Utterance("A: do you like me? yes?");
+		Utterance utt = new Utterance("A: no. it is");
 		System.out.println("words: "+utt.words);
 		System.out.println(utt);
 		

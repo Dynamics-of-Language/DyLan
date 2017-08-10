@@ -298,7 +298,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					continue;
 				}
 				if (line.isEmpty() && !lines.isEmpty()) {
-					actionTemplates.put(name, new LexicalTemplate(name, metavars, lines,noLeftAdjustment));
+					actionTemplates.put(name, new LexicalTemplate(name, metavars, lines, noLeftAdjustment));
 					logger.info((noLeftAdjustment)?"Added Lexical Template for " +"*"+name: "Added Lexical Template for "+name);
 					lines.clear();
 					name = null;

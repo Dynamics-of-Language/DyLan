@@ -231,7 +231,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 				
 				continue;
 			}
-			logger.info("Going forward first along: " + e);
+			logger.info("Going forward first along: " + e.toDebugString());
 			logger.debug("Going forward first along: " + e.toDebugString());
 			if (e instanceof CompletionEdge)
 			{

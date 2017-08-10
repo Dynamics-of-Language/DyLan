@@ -1,0 +1,70 @@
+info-shape-2
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Speaker(V)
+      Fo(W1)
+      W1<<[x27 : e|pred6==P2(x27) : cn|p58==shape(pred6) : t]
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    (+neg || <Z>+neg)
+            THEN  abort
+            ELSE  put(sa:info(V, shape : P2))
+            
+info-color-shape-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      Speaker(V)
+      Fo(W1)
+      W1<<[x4 : e|pred1==P2(x4) : cn|p8==shape(pred1) : t|p6==P4(x4) : t|p7==color(p6) : t]
+THEN  IF    <Z>+Q
+      THEN  abort
+      ELSE  IF    (+neg || <Z>+neg)
+            THEN  abort
+            ELSE  put(sa:info(V, shape : P2, color : P4))
+ELSE  abort
+
+ask-color-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      (+Q || <Z>+Q)
+      Speaker(V)
+      Fo(W1)
+      W1<<[x19 : e|pred4==color(x19) : cn|p44==attr(pred4) : t]
+THEN  put(sa:askcolor(V))
+ELSE  abort
+
+ask-color-1
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      (+Q || <Z>+Q)
+      Speaker(V)
+      Fo(W1)
+      W1<<[x4 : e|e4==eq : es|x10==this : e|pred1==color(x4) : cn|p3==attr(pred1) : t|p5==pres(e4) : t|p7==subj(e4, x10) : t|p6==obj(e4, x4) : t]
+THEN  put(sa:askcolor(V))
+ELSE  abort
+
+polar-color-0
+IF    ¬Ty(Y>Z)
+      Ty(X)
+      ¬</\0\/1>Ex.x
+      ¬</\L>Ex.x
+      ¬?+eval
+      +Q
+      ¬<Z>+meta
+      Speaker(V)
+      Fo(W1)
+      W1<<[x7 : e|e2==eq : es|x4==this : e|p11==P2(x7) : t|p12==color(p11) : t|p2==pres(e2) : t|p5==subj(e2, x4) : t|p4==obj(e2, x7) : t]
+THEN  put(sa:polar(V, color : P2))
+ELSE  abort

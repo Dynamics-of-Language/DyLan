@@ -22,7 +22,7 @@ import qmul.ds.type.DSType;
 
 public class LabelFactory {
 	// REC reserved for MetaTTRFormulae
-	public final static String METAVARIABLE_PATTERN = "[V-Z]|" + ExistentialLabelConjunction.metaVarReplacement;
+	public final static String METAVARIABLE_PATTERN = "[V-Z][0-9]*|" + ExistentialLabelConjunction.metaVarReplacement;
 	public final static String VAR_PATTERN = "[x-z]";
 	private static HashMap<DSType, Label> typeLabels = new HashMap<DSType, Label>();
 

@@ -14,14 +14,14 @@ IF		?ty(t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
         ¬<\/*>+Q
-THEN	make(\/1)
+THEN		make(\/1)
 		go(\/1)
 		put(?ty(e>t))
 		go(/\1)
 		make(\/0)
 		go(\/0)
 		put(?ty(e))
-ELSE	abort
+ELSE		abort
 
 anticipation0
 IF      <\/0>Ex.?x
@@ -96,8 +96,8 @@ ELSE    abort
 anticipationL
 IF		(ty(t) || ty(e>t))
 		<\/L>Ex.x
-THEN	go(\/L)		
-ELSE	abort
+THEN		go(\/L)		
+ELSE		abort
 *//
 
 //*
@@ -125,28 +125,30 @@ IF		Speaker(X)
 		¬</\L>Ex.x
 		¬?+eval
 		<Z>+Q
-THEN	go(Z)
-ELSE	abort
+		+eoc
+THEN		delete(+eoc)
+		go(Z)
+ELSE		abort
 
 late-star-adj-q
 IF		</\0>Ex.?x
-THEN	abort
-ELSE	IF		¬!
+THEN		abort
+ELSE		IF		¬!
 				+Q
        			ty(X)
 		   		¬<\/1>Ex.x
 		        ¬<\/0>Ex.x
 		      	¬<\/*>Ex.x // should actually check for no existing unfixed node in this sub-tree
 		        Ex.tn(x)
-		THEN	delete(+Q)
+		THEN		delete(+Q)
 		        make(\/*)
 		        go(\/*)
 		       	put(?Ex.tn(x))
 		       	put(?ty(X))
 		       	IF		</\*>+BE
-		       	THEN	put(+BE)
-		       	ELSE	do_nothing
-		ELSE	abort
+		       	THEN		put(+BE)
+		       	ELSE		do_nothing
+		ELSE		abort
 
 
 
@@ -157,30 +159,30 @@ IF      Ex.tn(x)
 		¬<\/*>Ex.x
 		<Y>(?Ex.tn(x) & ty(V))
 		subsumes(Y)
-THEN	IF		?ty(V)		           
+THEN		IF		?ty(V)		           
 		THEN    merge(Y)
 				delete(?Ex.tn(x))	
 		ELSE    IF		ty(V) 
 						?Ex.fo(x)
-				THEN	merge(Y)
+				THEN		merge(Y)
 						delete(?Ex.tn(x))
-				ELSE	abort
-ELSE	abort
+				ELSE		abort
+ELSE		abort
 
 *late-star-merge
 IF		ty(Y)
 		Ex.tn(x)
 		<\/*>?Ex.tn(x)
 		<\/*>ty(Y)
-THEN	IF		Fo(X)
-		THEN	delete(Fo(X))
+THEN		IF		Fo(X)
+		THEN		delete(Fo(X))
 				merge(<\/*>)
 				delete(?Ex.tn(x))
 				unreduce
-		ELSE	merge(<\/*>)
+		ELSE		merge(<\/*>)
 				delete(?Ex.tn(x))
 				unreduce
-ELSE	abort
+ELSE		abort
 
 
 
@@ -193,23 +195,23 @@ THEN    conjoin(X)
 		delete(?+eval)
 		IF		</\L>Ex.x
 				¬</\L>?+eval
-		THEN	go(/\L)
+		THEN		go(/\L)
 				put(?+eval)
-		ELSE	do_nothing
+		ELSE		do_nothing
 ELSE    abort
 
-//when to start a new clause
+//when to start a new clause. Conditions: complete tree (of Ty(e) or Ty(t)) and presence speech act label.
 trp
 IF		ty(Y>Z)
-THEN	abort
-ELSE	IF		ty(X)
+THEN		abort
+ELSE		IF		ty(X)
 				¬</\0\/1>Ex.x
 				¬</\L>Ex.x
 				¬?+eval
 				PrevSpeaker(W)
-				(<Z>+Q || Assert(W))
-		THEN	addaxiom
-		ELSE	abort
+				+eoc
+		THEN		addaxiom
+		ELSE		abort
 
 
 
@@ -220,45 +222,19 @@ IF		?Ex.fo(x)
 		</\0>+BE
 		¬<\/0>Ex.x
 		¬<\/1>Ex.x
-		</\C>(ty(e) & fo(X))
-THEN	delete(?Ex.fo(x))
+		</\C>(ty(e) & ¬+Q & fo(X))
+THEN		delete(?Ex.fo(x))
 		put(ty(e))
 		delete(?ty(e))
 		put(fo(X))
-ELSE	abort
+ELSE		abort
 
-//*	
-infer-speech-act
-IF		ty(Y>Z)
-THEN	abort
-ELSE	IF	  	ty(X)
-				¬</\0\/1>Ex.x
-				¬</\L>Ex.x
-				¬?+eval
-				PrevSpeaker(W)
-		THEN	IF		<Z>+Q
-				THEN	IF		?Ex.tn(x)
-						THEN	delete(?Ex.tn(x))
-						ELSE	abort
-				ELSE	IF		?Ex.tn(x)
-						THEN	IF		Assert(W)
-								THEN	delete(?Ex.tn(x))
-								ELSE	put(Assert(W))
-										delete(?Ex.tn(x))
-						ELSE	IF		Assert(W)
-								THEN	abort
-								ELSE	put(Assert(W))
-		ELSE    abort
-		
-
-infer-info
-IF	  	¬ty(Y>Z)
-		ty(X)
-		¬</\0\/1>Ex.x
-		¬</\L>Ex.x
-		¬?+eval
-		Fo(W)
-		W << [x:e|e1==eq:es|x2:e|p2==Q(x2):t|p3==color(p2):t|p==subj(e1,x):t|p1==obj(e1,x2):t]
-THEN	put(sa:info(color:Q))
-ELSE	abort
-*//	
+substitution-vp
+IF		ty(e>t)
+		?Ex.fo(x)
+		¬<\/0>Ex.x
+		¬<\/1>Ex.x
+		</\C>(ty(e>t) & fo(X))
+THEN		delete(?Ex.fo(x))
+		put(fo(X))
+ELSE		abort

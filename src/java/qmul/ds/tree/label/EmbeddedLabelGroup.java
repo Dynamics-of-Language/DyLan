@@ -14,14 +14,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.action.meta.Meta;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 
 /**
- * A label which embeds a group of labels to be checked together somewhere, e.g. a modal label <X>(L1, L2, L3, . . )
+ * A label which embeds a group of labels to be checked together somewhere, e.g.
+ * a modal label <X>(L1, L2, L3, . . )
  * 
  * @author arash
  */
@@ -52,6 +56,7 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 	protected EmbeddedLabelGroup(Set<Label> labels) {
 		this(labels, null);
 	}
+
 	protected EmbeddedLabelGroup(List<Label> labels, IfThenElse ite) {
 		super(ite);
 		this.labels = labels;
@@ -59,11 +64,10 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 
 	public EmbeddedLabelGroup(Set<Label> disjunct, IfThenElse ite) {
 		super(ite);
-		this.labels=new ArrayList<Label>();
-		for(Label l:disjunct)
+		this.labels = new ArrayList<Label>();
+		for (Label l : disjunct)
 			this.labels.add(l);
-		
-		
+
 	}
 
 	/**
@@ -116,12 +120,28 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 
 			if (!l.check(node)) {
 				partialResetMetas(uninstantiatedBeforeCheck);
-				//System.out.println("Label "+l+"failed"+"on"+node);
+				// System.out.println("Label "+l+"failed"+"on"+node);
 				return false;
 			}
 		}
 		logger.debug("success");
 		return true;
+	}
+
+	protected <E extends DAGEdge, U extends DAGTuple> boolean checkLabelsConj(Tree tree, Context<U, E> context) {
+		ArrayList<Meta<?>> uninstantiatedBeforeCheck = getUninstantiatedMetas();
+
+		for (Label l : labels) {
+
+			if (!l.check(tree, context)) {
+				partialResetMetas(uninstantiatedBeforeCheck);
+				// System.out.println("Label "+l+"failed"+"on"+node);
+				return false;
+			}
+		}
+		logger.debug("success");
+		return true;
+
 	}
 
 	/**
@@ -192,13 +212,11 @@ public abstract class EmbeddedLabelGroup extends Label implements Serializable {
 		result = result.substring(0, result.length() - 2) + ")";
 		return result;
 	}
-	
-	
-	public static void main(String[] args)
-	{
-		Label l=LabelFactory.create("</\\0\\/1>(ty(e>t) || ?ty(e>t))");
+
+	public static void main(String[] args) {
+		Label l = LabelFactory.create("</\\0\\/1>(ty(e>t) || ?ty(e>t))");
 		System.out.println(l);
-		
+
 	}
 
 }

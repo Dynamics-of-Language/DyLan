@@ -51,6 +51,7 @@ public class SubsumesLabel extends Label implements Serializable {
 		this(s, null);
 	}
 
+
 	public boolean check(Node n) {
 
 		
@@ -69,6 +70,9 @@ public class SubsumesLabel extends Label implements Serializable {
 	}
 
 	public ArrayList<Meta<?>> getMetas() {
+		//TODO: this is a hack. To deal with it after TTRRecordType as a meta element is 
+		//fully integrated in IfThenElse
+		
 		ArrayList<Meta<?>> result = new ArrayList<Meta<?>>();
 		if (left instanceof MetaFormula)
 			result.addAll(((MetaFormula) left).getMetas());
@@ -76,6 +80,12 @@ public class SubsumesLabel extends Label implements Serializable {
 			result.addAll(((MetaFormula) right).getMetas());
 
 		return result;
+	}
+	
+	public void resetMetas()
+	{
+		left.resetMetas();
+		right.resetMetas();
 	}
 
 	public ArrayList<Meta<?>> getBoundMetas() {
@@ -99,9 +109,17 @@ public class SubsumesLabel extends Label implements Serializable {
 		System.out.println(rt1);
 		System.out.println(rt1.subsumes(rt));
 		System.out.println(rt1);
-		
-		
-		
+				
 	}
+
+	public Formula getRightArgument() {
+		return this.right;
+	}
+
+	public Formula getLeftArgument() {
+		return this.left;
+	}
+	
+	
 
 }

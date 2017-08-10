@@ -8,8 +8,10 @@
  *******************************************************************************/
 package qmul.ds.action.atomic;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
@@ -17,8 +19,10 @@ import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.formula.Formula;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
+import qmul.ds.tree.label.Label;
+import qmul.ds.tree.label.SpeechActLabel;
 
 /**
  * Atomic action for speech act inference according to rules specified (optionally) in speech-act-inference-grammar.txt
@@ -36,6 +40,7 @@ public class InferSpeechAct extends Effect {
 	private static final long serialVersionUID = 1L;
 
 	public static final String FUNCTOR = "infer-sa";
+	protected static Logger logger=Logger.getLogger(InferSpeechAct.class);
 
 	
 
@@ -79,16 +84,49 @@ public class InferSpeechAct extends Effect {
 		
 		Tree clone=tree.clone();
 		
-		for(ComputationalAction action: sag.values())
+		removeSAAnnotations(clone);
+		for(ComputationalAction action: sag)
 		{
+			logger.debug("trying speech act rule:"+action.getName());
+			logger.debug("on tree:"+clone);
+			
 			Tree result=action.exec(clone, context);
+			
+			
 			if (result!=null)
-				clone=result;
+			{
+				logger.debug("success: "+result);
+				
+				return (T)result;
+			}
+			else
+				logger.debug("failed");
 			
 		}
 		
-		return (T)clone;
+		
+		return (T)tree.clone();
 	}
+	
+	
+
+	private void removeSAAnnotations(Tree tree) {
+		
+		Node pointed=tree.getPointedNode();
+		Set<Label> resultLabels=new HashSet<Label>();
+		for(Label l: pointed)
+		{
+			if (!(l instanceof SpeechActLabel))
+				resultLabels.add(l);
+				
+				
+		}
+		
+		pointed.clear();
+		pointed.addAll(resultLabels);
+	}
+
+
 
 	/*
 	 * (non-Javadoc)
