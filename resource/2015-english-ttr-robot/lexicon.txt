@@ -49,6 +49,7 @@ first						  adj							first
 second			              adj                           second
 third                         adj                           third
 last                          adj                           third
+crisps						  count							crisps							p3                          obj
 ball						  count							ball							s3                          obj
 object	                      count							piece							s3                          obj
 box			 				  count							box  							s3                          obj
@@ -100,6 +101,7 @@ horizontally				  adv							horizontal
 once						  adv							once				  
 twice   					  adv							twice
 again    					  adv							again
+to						      prep_mod_location_goal		to
 into						  prep_mod_location_goal		into
 over						  prep_mod_location_goal		over
 in							  prep_mod_location_goal		in

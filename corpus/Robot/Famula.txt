@@ -6,6 +6,11 @@ the other block (5)
 the other one (6)
 the yellow ball and the big banana (7)
 the green banana near the other yellow block (8)
+take the green apple (40)
+take the small ball (41)
+take the red apple (42)
+take another apple (43)
+take the apple near the banana (44)
 put the apple into the basket (9)
 put the green apple into the big basket (10)
 put the small ball into the other box (11)
@@ -14,36 +19,34 @@ put another apple into the other basket (13)
 put the apple near the banana in the basket (14)
 put the yellow ball and the big banana in the basket (15)
 put the yellow ball in the basket and put the big banana in the box (16)
-
-put the yellow ball in the basket and the big banana in the box (17)
-put the yellow ball near the mobile in the basket and the big banana near the crisps in the box (18)
 put the apple into the basket (19)
 give me the green apple (20)
 give me the small ball (21)
 give me the red apple (22)
 give me another apple (23)
 give me the apple near the banana (24)
-give me the yellow ball and the big banana (25)
-give me the yellow ball in the corner and give me the big banana in the box (26)
-give me the yellow ball in the right corner and the big banana in the other corner (27)
-give me the yellow ball near the mobile and the big banana near the crisps (28)
-give the green apple to me (30)
-give the small ball to me (31)
-give the red apple to me (32)
-give another apple to me (33)
-give the apple near the banana to me(34)
-give the yellow ball and the big banana to me (35)
-give the yellow ball in the corner and give me the big banana in the box to me (36)
-give the yellow ball in the right corner and the big banana in the other corner to me (37)
-give the yellow ball near the mobile and the big banana near the crisps to me (38)
-take the green apple (40)
-take the small ball (41)
-take the red apple (42)
-take another apple (43)
-take the apple near the banana (44)
-take the yellow ball and the big banana (45)
 take the yellow ball in the corner and give me the big banana in the box (46)
-take the yellow ball in the right corner and the big banana in the other corner (47)
-take the yellow ball near the mobile and the big banana near the crisps (48)
+
+give the green apple to me (30) NO
+give the small ball to me (31) NO
+give the red apple to me (32) NO
+give another apple to me (33) NO
+give the apple near the banana to me(34) NO
+give the yellow ball and the big banana to me (35) NO
+give the yellow ball in the corner and give me the big banana in the box to me (36) NO
+give the yellow ball in the right corner and the big banana in the other corner to me (37) NO
+give the yellow ball near the mobile and the big banana near the crisps to me (38) NO
+
+put the yellow ball in the basket and the big banana in the box (17) NO
+put the yellow ball near the mobile in the basket and the big banana near the crisps in the box (18) NO
+
+give me the yellow ball and the big banana (25) NO Breadth-first rank 7
+give me the yellow ball in the corner and give me the big banana in the box (26) NO Breadth-first non-terminating
+give me the yellow ball in the right corner and the big banana in the other corner (27) NO Breadth-first non-terminating
+give me the yellow ball near the mobile and the big banana near the crisps (28) NO Breadth-first non-terminating
+
+take the yellow ball and the big banana (45) NO Breadth-first 4 but with extra yellow ball outside restrictors
+take the yellow ball in the right corner and the big banana in the other corner (47) NO Breadth-first 3 but with extra yellow ball outside restrictors
+take the yellow ball near the mobile and the big banana near the crisps (48) NO Breadth-first 2 but with extra yellow ball near the mobile outside restrictors AND no extra take action
 
 
