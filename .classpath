@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="src" path="log"/>
 	<classpathentry kind="lib" path="dist/jar/ds.jar"/>
 	<classpathentry kind="lib" path="dist/jar/log4j-1.2.16.jar"/>
