@@ -34,15 +34,28 @@ it							  pron_acc                      s3                            neuter
 me							  pron_dative                   speaker
 big                           adj                           big
 small                         adj                           small
+biggest                       adj                           biggest
+smallest                      adj                           smallest
+large                         adj                           big
+largest                       adj                           biggest
+short                         adj                           short
+long                          adj                           long
+shortest                      adj                           shortest
+longest                       adj                           longest
 red                           adj                           red
 yellow                        adj                           yellow
 green                         adj                           green
 other                         adj                           other
 blue                          adj                           blue
-gray                          adj                           gray
+gray                          adj                           grey
+grey                          adj                           grey
+orange                        adj                           orange
+black                         adj                           black
+purple						  adj							purple
 left 						  adj							left
 right						  adj							right
 middle   					  adj							middle
+centre   					  adj							middle
 upper 						  adj						    upper
 bottom						  adj						    bottom
 first						  adj							first
@@ -63,6 +76,7 @@ row 						  count							row  							s3                          obj
 column						  count							column							s3                          obj
 position					  count							column							s3                          obj
 side						  count							column							s3                          obj
+potato			 			  count							potato  						s3                          obj
 clockwise					  adj							clockwise_direction
 y							  count							crutch							s3                          obj
 crutch						  count							crutch							s3                          obj
