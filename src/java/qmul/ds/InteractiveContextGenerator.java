@@ -89,10 +89,8 @@ public class InteractiveContextGenerator extends
 				if (res != null) {
 					GroundableEdge wordEdge;
 					UtteredWord w = new UtteredWord(word, myName);
-					if (parser.getIndexOfTRP(res.first) >= 0)
-						wordEdge = parser.getState().getNewNewClauseEdge(res.first, w);
-					else
-						wordEdge = parser.getState().getNewEdge(res.first, w);
+					
+					wordEdge = parser.getState().getNewEdge(res.first, w);
 
 					logger.debug("created word edge with word:" + w);
 					logger.debug("edge before adding:" + wordEdge);

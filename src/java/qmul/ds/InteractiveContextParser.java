@@ -308,12 +308,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					newActs.add(la.instantiate());
 					//
 					int indexOfTRP=getIndexOfTRP(newActs);
-					if (indexOfTRP == 0)
-					{
-						logger.debug("TRP at the beginning");
-						wordEdge = getState().getNewNewClauseEdge(newActs, word);
-					}
-					else if (indexOfTRP>0)
+					if (indexOfTRP>0)
 					{
 						
 						
@@ -346,7 +341,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 						logger.debug("going forward along it");
 						getState().setCurrentTuple(getState().getDest(completionEdge));
 						
-						wordEdge = getState().getNewNewClauseEdge(newActs.subList(indexOfTRP, newActs.size()), word);
+						wordEdge = getState().getNewEdge(newActs.subList(indexOfTRP, newActs.size()), word);
 						if (non_repairing_action_types.contains(la.getLexicalActionType()))
 							wordEdge.setRepairable(false);
 
@@ -702,7 +697,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			if (non_repairing_action_types.contains(la.getLexicalActionType()))
 				return;
 
-			logger.debug("trying :"+la+":"+la.getLexicalActionType());
+			logger.debug("trying: "+la+":"+la.getLexicalActionType());
 			DAGTuple current = getState().getCurrentTuple();
 			if (getState().isClauseRoot(current))
 				return;

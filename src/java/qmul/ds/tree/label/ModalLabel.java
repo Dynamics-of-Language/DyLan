@@ -24,7 +24,6 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaModality;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.NewClauseEdge;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Modality;
 import qmul.ds.tree.Node;
@@ -211,7 +210,7 @@ public class ModalLabel extends EmbeddedLabelGroup {
 				if (index==depth)
 					break;
 				logger.debug("Checking tuple: "+previous);
-				if (context.getDAG().getParentEdge(previous) instanceof NewClauseEdge)
+				if (context.getDAG().getParentEdge(previous)!=null && context.getDAG().getParentEdge(previous).initiatesNewClause())
 				{
 					logger.debug("found new clause edge");
 					previous=context.getParent(previous);

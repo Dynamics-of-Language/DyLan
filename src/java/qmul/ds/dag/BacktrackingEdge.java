@@ -144,4 +144,9 @@ public class BacktrackingEdge extends GroundableEdge {
 	{
 		return overarchingRepairingEdge.inContext();
 	}
+	
+	public boolean initiatesNewClause()
+	{
+		return false;
+	}
 }

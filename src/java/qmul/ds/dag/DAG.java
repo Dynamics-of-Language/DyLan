@@ -84,7 +84,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	public abstract BacktrackingEdge getNewBacktrackingEdge(List<GroundableEdge> backtrackedOver, String speaker);
 
-	public abstract RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word);
+	
 	
 	public DAG(Tree start, List<UtteredWord> words) {
 
@@ -159,13 +159,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return getNewEdge(l);
 	}
 
-	public NewClauseEdge getNewNewClauseEdge(List<Action> actions, UtteredWord word) {
-		long newID = idPoolEdges.size() + 1;
-		NewClauseEdge cl = new NewClauseEdge(actions, word, newID);
-		idPoolEdges.add(newID);
-		return cl;
 
-	}
 	
 	public CompletionEdge getNewCompletionEdge(ArrayList<Action> arrayList)
 	{
@@ -801,11 +795,11 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return true;
 	}
 
-	protected NewClauseEdge getClauseRoot()
+	protected E getClauseRoot()
 	{
 		for (E edge : getOutEdges()) {
-			if ((edge instanceof NewClauseEdge) && edge.hasBeenSeen())
-				return (NewClauseEdge)edge;
+			if ((edge.initiatesNewClause()) && edge.hasBeenSeen())
+				return edge;
 
 		}
 		return null;
@@ -1025,7 +1019,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			return true;
 
 		for (E edge : getOutEdges(current)) {
-			if ((edge instanceof NewClauseEdge))
+			if ((edge.initiatesNewClause()))
 				return true;
 
 		}
@@ -1037,10 +1031,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		if (atRoot())
 			return true;
 		for (E edge : getOutEdges()) {
-			if ((edge instanceof NewClauseEdge) && edge.hasBeenSeen())
+			if ((edge.initiatesNewClause()) && edge.hasBeenSeen())
 			{
 				
-				return ((NewClauseEdge)edge).isGrounded();
+				return edge.isGrounded();
 			}
 
 		}
@@ -1052,7 +1046,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			return true;
 
 		for (E edge : getOutEdges()) {
-			if ((edge instanceof NewClauseEdge) && edge.hasBeenSeen())
+			if ((edge.initiatesNewClause()) && edge.hasBeenSeen())
 				return true;
 
 		}
@@ -1258,7 +1252,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			
 			E parentEdge=getParentEdge(tuple);
 			
-			if (parentEdge==null||parentEdge instanceof NewClauseEdge)
+			if (parentEdge==null||parentEdge.initiatesNewClause())
 			{
 				allContents.add(cur);
 				if (parentEdge!=null)

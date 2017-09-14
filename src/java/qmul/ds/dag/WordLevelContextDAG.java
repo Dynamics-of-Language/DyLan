@@ -32,8 +32,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	 * 
 	 * 
 	 */
-	protected static Logger logger = Logger
-			.getLogger(WordLevelContextDAG.class);
+	protected static Logger logger = Logger.getLogger(WordLevelContextDAG.class);
 	private static final long serialVersionUID = -8765365147853341079L;
 
 	// protected Map<String, Set<DAGTuple>> acceptance_pointers = new
@@ -48,16 +47,14 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	public boolean removeChild(DAGTuple child) {
-		if (!containsVertex(child))
-		{
-			logger.warn("asked to remove child, but graph doesn't contain it:"+child);
+		if (!containsVertex(child)) {
+			logger.warn("asked to remove child, but graph doesn't contain it:" + child);
 			return false;
 		}
-		logger.trace("removing child recursively:"+child);
-		logger.trace("Depth:"+child.getDepth());
-		if (getOutEdgesForTraversal(child).size() == 0)
-		{
-			logger.trace("removing single vertex: "+child);
+		logger.trace("removing child recursively:" + child);
+		logger.trace("Depth:" + child.getDepth());
+		if (getOutEdgesForTraversal(child).size() == 0) {
+			logger.trace("removing single vertex: " + child);
 			return removeVertex(child);
 		}
 
@@ -70,14 +67,14 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			} else
 				this.removeChild(getDest(outEdge));
 		}
-		
-		logger.trace("removing single vertex: "+child);
+
+		logger.trace("removing single vertex: " + child);
 		return removeVertex(child);
 	}
 
 	public void removeChildren(DAGTuple current) {
 		logger.trace("removing children of:" + current);
-		
+
 		logger.trace("depth:" + getDepth());
 		for (GroundableEdge outEdge : getOutEdgesForTraversal(current)) {
 
@@ -95,21 +92,20 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	 * 
 	 */
 	public void resetToFirstTupleAfterLastWord() {
-//		if (!this.isExhausted()) {
-//			logger.error("can only reset to last word when the state is exhausted, and wants to get ready for repairing");
-//			return;
-//		}
+		// if (!this.isExhausted()) {
+		// logger.error("can only reset to last word when the state is exhausted, and
+		// wants to get ready for repairing");
+		// return;
+		// }
 
 		this.setCurrentTuple(firstTupleAfterLastWord);
 		this.wordStack.clear();
 		removeChildren();
-		if (atGroundedClauseRoot())
-		{
+		if (atGroundedClauseRoot()) {
 			setExhausted(false);
 			return;
-			
+
 		}
-			
 
 		GroundableEdge parentEdge = getUniqueParentEdge();
 
@@ -152,12 +148,10 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	@Override
-	public BacktrackingEdge getNewBacktrackingEdge(
-			List<GroundableEdge> backtrackedOver, String speaker) {
+	public BacktrackingEdge getNewBacktrackingEdge(List<GroundableEdge> backtrackedOver, String speaker) {
 
 		long newID = idPoolEdges.size() + 1;
-		BacktrackingEdge result = new BacktrackingEdge(backtrackedOver,
-				speaker, newID);
+		BacktrackingEdge result = new BacktrackingEdge(backtrackedOver, speaker, newID);
 		idPoolEdges.add(newID);
 		return result;
 
@@ -170,11 +164,11 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	protected SortedSet<GroundableEdge> getOutEdgesForTraversal(DAGTuple cur) {
 		TreeSet<GroundableEdge> result = new TreeSet<GroundableEdge>(this.edgeComparator);
 		for (GroundableEdge edge : super.getOutEdges(cur)) {
-			logger.trace("out edges:"+edge);
+			logger.trace("out edges:" + edge);
 			if (edge instanceof BacktrackingEdge)
 				result.add(((BacktrackingEdge) edge).overarchingRepairingEdge);
 			else if (edge instanceof RepairingWordEdge) {
-				logger.error("out edge is a reparing word edge. This shouldn't happen. Edge:"+edge);
+				logger.error("out edge is a reparing word edge. This shouldn't happen. Edge:" + edge);
 			} else
 				result.add(edge);
 		}
@@ -219,39 +213,30 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			logger.debug("out degree of cur is 0");
 			return null;
 		}
-		
-		
+
 		SortedSet<GroundableEdge> edges = getOutEdgesForTraversal();
-		
 
 		for (GroundableEdge e : edges) {
-			
-			if (e.hasBeenSeen())
-			{
-				
+
+			if (e.hasBeenSeen()) {
+
 				continue;
 			}
 			logger.info("Going forward first along: " + e.toDebugString());
 			logger.debug("Going forward first along: " + e.toDebugString());
-			if (e instanceof CompletionEdge)
-			{
-				
-			}
-			else if (e.word().speaker().equals(DAGGenerator.myName))
+			if (e instanceof CompletionEdge) {
+
+			} else if (e.word().speaker().equals(DAGGenerator.myName))
 				wordStack.push(e.word());
 
-			else if (!wordStack.isEmpty()&&wordStack.peek().equals(e.word()))
+			else if (!wordStack.isEmpty() && wordStack.peek().equals(e.word()))
 				wordStack().pop();
-			else if (e instanceof VirtualRepairingEdge)
-			{
-				VirtualRepairingEdge vr=(VirtualRepairingEdge)e;
-				
-			}
-			else if (!wordStack.isEmpty()){
-				logger.error("Trying to pop word " + wordStack.peek()
-						+ " off the stack when going along " + e);
-				throw new IllegalStateException(
-						"top of stack is not the same as word on this edge, or stack is empty");
+			else if (e instanceof VirtualRepairingEdge) {
+				VirtualRepairingEdge vr = (VirtualRepairingEdge) e;
+
+			} else if (!wordStack.isEmpty()) {
+				logger.error("Trying to pop word " + wordStack.peek() + " off the stack when going along " + e);
+				throw new IllegalStateException("top of stack is not the same as word on this edge, or stack is empty");
 			}
 
 			e.traverse(this);
@@ -260,8 +245,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			return e;
 
 		}
-		
-		
+
 		return null;
 	}
 
@@ -289,7 +273,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		}
 
 	}
-	
+
 	public void markAllEdgesBelowAsNotInContext(GroundableEdge seenEdge) {
 
 		boolean done = false;
@@ -308,8 +292,8 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	/**
-	 * the difference from overridden method is that this operates for the word
-	 * at the top of the stack.
+	 * the difference from overridden method is that this operates for the word at
+	 * the top of the stack.
 	 */
 	public boolean moreUnseenEdges() {
 		logger.debug("looking for unseen edge at:" + cur);
@@ -328,7 +312,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	public String getTupleLabel(DAGTuple t) {
 		Set<String> pointers = getAcceptancePointers(t);
-		
+
 		String result = "";
 		if (pointers.isEmpty())
 			return result;
@@ -342,30 +326,30 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	public void groundToClauseRootFor(String speaker, DAGTuple cur) {
 		GroundableEdge parent = getParentEdge(cur);
-		while (parent != null && !(parent instanceof NewClauseEdge)) {
+		while (parent != null && !parent.initiatesNewClause()) {
 			logger.debug("grounding" + parent + " for " + speaker);
 			parent.groundFor(speaker);
 			DAGTuple parentNode = getSource(parent);
 			parent = getParentEdge(parentNode);
 		}
-		if (parent != null && parent instanceof NewClauseEdge) {
-			((NewClauseEdge) parent).ground();
+		if (parent != null && parent.initiatesNewClause()) {
+			logger.debug("grounding clause root:"+parent);
+			parent.ground();
 			parent.groundFor(speaker);
 		}
 
 	}
-	
 
 	public void ungroundToClauseRootFor(String speaker, DAGTuple cur) {
 		GroundableEdge parent = getParentEdge(cur);
-		while (parent != null && !(parent instanceof NewClauseEdge)) {
+		while (parent != null && !parent.initiatesNewClause()) {
 			// logger.debug("ungrounding"+ parent + " for "+speaker);
 			parent.ungroundFor(speaker);
 			DAGTuple parentNode = getSource(parent);
 			parent = getParentEdge(parentNode);
 		}
 
-		if (parent != null && parent instanceof NewClauseEdge) {
+		if (parent != null && parent.initiatesNewClause()) {
 			parent.ungroundFor(speaker);
 
 		}
@@ -374,7 +358,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	public DAGTuple addAxiom(List<Action> actions, UtteredWord word) {
 		DAGTuple axiom = this.getNewTuple(new Tree());
-		NewClauseEdge edge = this.getNewNewClauseEdge(actions, word);
+		GroundableEdge edge = this.getNewEdge(actions, word);
 		this.addChild(axiom, edge);
 		return axiom;
 
@@ -387,8 +371,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		VirtualRepairingEdge redge = (VirtualRepairingEdge) edge;
 
 		if (!this.containsVertex(from))
-			throw new IllegalArgumentException(
-					"Cannot add child. The parent doesn't exist");
+			throw new IllegalArgumentException("Cannot add child. The parent doesn't exist");
 
 		if (this.containsVertex(to))
 			throw new IllegalArgumentException("Adding already existing child");
@@ -409,8 +392,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			return null;
 
 		if (parent instanceof VirtualRepairingEdge) {
-			return getSource(((VirtualRepairingEdge) parent)
-					.getBacktrackingEdge());
+			return getSource(((VirtualRepairingEdge) parent).getBacktrackingEdge());
 		}
 
 		return getSource(parent);
@@ -422,8 +404,8 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	/**
-	 * like getActiveParentEdge, except it is irrespective of whether the parent
-	 * is seen or not.
+	 * like getActiveParentEdge, except it is irrespective of whether the parent is
+	 * seen or not.
 	 * 
 	 * @param cur
 	 * @return
@@ -433,8 +415,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		for (GroundableEdge edge : getInEdges(cur)) {
 
 			if (edge instanceof RepairingWordEdge) {
-				logger.info("returning overarching edge"
-						+ ((RepairingWordEdge) edge).overarchingRepairingEdge);
+				logger.info("returning overarching edge" + ((RepairingWordEdge) edge).overarchingRepairingEdge);
 				return ((RepairingWordEdge) edge).overarchingRepairingEdge;
 			} else if (edge instanceof BacktrackingEdge) {
 				logger.error("This shouldn't really happen");
@@ -456,8 +437,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			}
 
 			if (edge instanceof RepairingWordEdge) {
-				logger.info("returning overarching edge: "
-						+ ((RepairingWordEdge) edge).overarchingRepairingEdge);
+				logger.info("returning overarching edge: " + ((RepairingWordEdge) edge).overarchingRepairingEdge);
 				return ((RepairingWordEdge) edge).overarchingRepairingEdge;
 			} else if (edge instanceof BacktrackingEdge) {
 				logger.error("This shouldn't really happen");
@@ -475,35 +455,30 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	}
 
-	
 	public boolean canBacktrack() {
-		GroundableEdge parent=getActiveParentEdge();
+		GroundableEdge parent = getActiveParentEdge();
 		if (parent == null) {
 			logger.debug("no active parent");
 			logger.debug("in edges:" + getInEdges(cur));
 
 			return false;
 		}
-		
+
 		if (this.wordStack().isEmpty())
 			return true;
-		
-		//if (parent.isGroundeFor(this.wordStack().peek().speaker()))
-		//	return false;
-		if (parent.isGroundedFor(this.context.getParticipants()))
-		{
-				return false;
+
+		// if (parent.isGroundeFor(this.wordStack().peek().speaker()))
+		// return false;
+		if (parent.isGroundedFor(this.context.getParticipants())) {
+			return false;
+		} else {
+			logger.trace("can backtrack over:" + parent);
+			logger.trace("participants:" + this.context.getParticipants());
+			logger.trace("grounded for:" + parent.grounded_for);
 		}
-		else
-		{
-			logger.trace("can backtrack over:"+parent);
-			logger.trace("participants:"+this.context.getParticipants());
-			logger.trace("grounded for:"+parent.grounded_for);
-		}
-		
-		if (atGroundedClauseRoot())
-		{
-			logger.debug("Cannot backtrack. At grounded clause root."); 
+
+		if (atGroundedClauseRoot()) {
+			logger.debug("Cannot backtrack. At grounded clause root.");
 			return false;
 
 		}
@@ -516,8 +491,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			return null;
 
 		if (activeParent instanceof VirtualRepairingEdge) {
-			return getSource(((VirtualRepairingEdge) activeParent)
-					.getBacktrackingEdge());
+			return getSource(((VirtualRepairingEdge) activeParent).getBacktrackingEdge());
 		}
 
 		return getSource(activeParent);
@@ -545,18 +519,16 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			if (backover.word() != null) {
 				if (backover.word().speaker().equals(DAGGenerator.myName)) {
 					if (!wordStack.peek().equals(backover.word()))
-						throw new IllegalStateException("top of stack is "
-								+ wordStack.peek() + " but edge is " + backover);
+						throw new IllegalStateException(
+								"top of stack is " + wordStack.peek() + " but edge is " + backover);
 
 					UtteredWord word = wordStack.pop();
 					logger.info("Backtrack: popped word off stack:" + word);
 					logger.debug("Backtrack: stack now:" + wordStack);
 				} else {
 					wordStack.push(backover.word());
-					logger.info("Backtrack: adding word to stack, now:"
-							+ backover.word());
-					logger.debug("Backtracked over:+ "+backover
-							+ "|stack now:" + wordStack);
+					logger.info("Backtrack: adding word to stack, now:" + backover.word());
+					logger.debug("Backtracked over:+ " + backover + "|stack now:" + wordStack);
 				}
 
 			}
@@ -568,36 +540,18 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		return true;
 	}
 
-	public VirtualRepairingEdge getNewRepairingEdge(
-			List<GroundableEdge> backtrackedOver,
-			List<Action> repairingActions, DAGTuple midTuple,
-			UtteredWord repairingWord) {
-		BacktrackingEdge newBackEdge = getNewBacktrackingEdge(backtrackedOver,
-				repairingWord.speaker());
+	public VirtualRepairingEdge getNewRepairingEdge(List<GroundableEdge> backtrackedOver, List<Action> repairingActions,
+			DAGTuple midTuple, UtteredWord repairingWord) {
+		BacktrackingEdge newBackEdge = getNewBacktrackingEdge(backtrackedOver, repairingWord.speaker());
 		GroundableEdge repairingWordEdge;
 		VirtualRepairingEdge repairingEdge;
 		long newID = idPoolEdges.size() + 1;
-		if (repairingActions.get(0).getName().equals("trp"))
-		{
-			repairingWordEdge=getNewRepairingNewClauseEdge(repairingActions, repairingWord);
-			repairingEdge = new VirtualRepairingEdge(
-					newBackEdge, repairingWordEdge, midTuple, newID, backtrackedOver.size());
-			newBackEdge.overarchingRepairingEdge = repairingEdge;
-			((RepairingNewClauseEdge)repairingWordEdge).overarchingRepairingEdge = repairingEdge;
-		
-		}
-		else
-		{
-			repairingWordEdge = getNewRepairingWordEdge(
-					repairingActions, repairingWord);
-			repairingEdge = new VirtualRepairingEdge(
-					newBackEdge, repairingWordEdge, midTuple, newID, backtrackedOver.size());
-			newBackEdge.overarchingRepairingEdge = repairingEdge;
-			((RepairingWordEdge)repairingWordEdge).overarchingRepairingEdge = repairingEdge;
-		}
-		
-		
-		
+
+		repairingWordEdge = getNewRepairingWordEdge(repairingActions, repairingWord);
+		repairingEdge = new VirtualRepairingEdge(newBackEdge, repairingWordEdge, midTuple, newID,
+				backtrackedOver.size());
+		newBackEdge.overarchingRepairingEdge = repairingEdge;
+		((RepairingWordEdge) repairingWordEdge).overarchingRepairingEdge = repairingEdge;
 
 		return repairingEdge;
 
@@ -616,8 +570,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	}
 
 	@Override
-	public RepairingWordEdge getNewRepairingWordEdge(List<Action> actions,
-			UtteredWord word) {
+	public RepairingWordEdge getNewRepairingWordEdge(List<Action> actions, UtteredWord word) {
 
 		long newID = idPoolEdges.size() + 1;
 		RepairingWordEdge result = new RepairingWordEdge(actions, word, newID);
@@ -636,27 +589,17 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		return parent.word.speaker();
 
 	}
-	
-	public DAGTuple getDest(GroundableEdge e)
-	{
-		
-		if (e instanceof VirtualRepairingEdge)
-		{
-			VirtualRepairingEdge vr=(VirtualRepairingEdge)e;
+
+	public DAGTuple getDest(GroundableEdge e) {
+
+		if (e instanceof VirtualRepairingEdge) {
+			VirtualRepairingEdge vr = (VirtualRepairingEdge) e;
 			return super.getDest(vr.getWordEdge());
 		}
-		
+
 		return super.getDest(e);
 	}
 
-	@Override
-	public RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word) {
-		long newID = idPoolEdges.size() + 1;
-		RepairingNewClauseEdge cl = new RepairingNewClauseEdge(actions, word, newID);
-		idPoolEdges.add(newID);
-		return cl;
-	}
-	
 	
 
 }

@@ -15,6 +15,7 @@ public class GroundableEdge extends DAGEdge {
 	protected Logger logger=Logger.getLogger(GroundableEdge.class);
 	protected Set<String> grounded_for = new HashSet<String>();
 	boolean repairable = true;
+	boolean grounded=false;//currently only used when this edge initiates a new clause.
 
 	public GroundableEdge() {
 
@@ -61,7 +62,7 @@ public class GroundableEdge extends DAGEdge {
 	}
 
 	public String toString() {
-		return this.id+ ":"+ (grounded_for + ":" + word.word());
+		return this.id+ (initiatesNewClause()?"(NC"+(isGrounded()?"-g":"-u")+")":"")+ ":"+ (grounded_for + ":" + word.word());
 	}
 	public String toDebugString()
 	{
@@ -108,11 +109,7 @@ public class GroundableEdge extends DAGEdge {
 		logger.debug("Going forward along: " + this);
 		setInContext(true);
 		
-//		GroundableEdge prevPrevEdge = dag.getActiveParentEdge(source);
-//		if (prevPrevEdge != null
-//				&& !word().speaker().equals(prevPrevEdge.word().speaker())) {
-//			dag.groundToClauseRootFor(word().speaker(), dag.getSource(this));
-//		}
+
 		
 		
 		dag.setCurrentTuple(dest);
@@ -154,5 +151,9 @@ public class GroundableEdge extends DAGEdge {
 	{
 		return ((LexicalAction)actions.get(actions.size()-1)).getLexicalActionType();
 	}
-
+	
+	
+	
+	
+	
 }

@@ -150,7 +150,7 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 	@Override
 	public DAGInductionTuple addAxiom(List<Action> list, UtteredWord word) {
 		DAGInductionTuple axiom=this.getNewTuple(new Tree());
-		NewClauseEdge edge=this.getNewNewClauseEdge(list, word);
+		DAGEdge edge=this.getNewEdge(list, word);
 		this.addChild(axiom, edge);
 		return axiom;
 		
@@ -182,11 +182,6 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	
 }

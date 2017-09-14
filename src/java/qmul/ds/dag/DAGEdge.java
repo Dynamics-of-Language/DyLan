@@ -28,6 +28,7 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	public static final int SEEN = 1;
 	public static final int REPAIRED = 2;
 	public static final int IN_CONTEXT = 3;
+	public static final int GROUNDED = 4;
 
 	/**
 	 * The edge's unique id. Hashcode just returns id. Equals method works based on this.
@@ -140,7 +141,18 @@ public class DAGEdge implements Comparable<DAGEdge> {
 			edge_properties.remove(IN_CONTEXT);
 
 	}
+	
+	public void ground() {
+		edge_properties.add(GROUNDED);
+		
+	}
 
+	public void unground() {
+		if (edge_properties.contains(GROUNDED))
+			edge_properties.remove(GROUNDED);
+		
+		
+	}
 	public boolean inContext() {
 		return edge_properties.contains(IN_CONTEXT);
 	}
@@ -158,6 +170,11 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	 * }
 	 */
 
+	public boolean isGrounded()
+	{
+		return edge_properties.contains(GROUNDED);
+	}
+	
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
@@ -229,7 +246,11 @@ public class DAGEdge implements Comparable<DAGEdge> {
 
 	
 
-	
+	public boolean initiatesNewClause()
+	{
+		System.out.println("Checking initiates new clause:"+this.getActions().get(0));
+		return getActions().get(0).getName().equals("trp");//WARNING: this is sensitive to the name of the new clause initiating computational action
+	}
 	
 
 }

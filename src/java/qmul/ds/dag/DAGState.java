@@ -150,7 +150,7 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 	{
 		
 			DAGTuple axiom=this.getNewTuple(new Tree());
-			NewClauseEdge edge=this.getNewNewClauseEdge(actions, word);
+			DAGEdge edge=this.getNewEdge(actions, word);
 			this.addChild(axiom, edge);
 			return axiom;
 			
@@ -172,11 +172,6 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 		throw new UnsupportedOperationException("Repairing Word Edge not supported in this DAG class");
 	}
 
-	@Override
-	public RepairingNewClauseEdge getNewRepairingNewClauseEdge(List<Action> actions, UtteredWord word) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 	
