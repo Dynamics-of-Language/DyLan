@@ -1561,5 +1561,17 @@ public class ParserPanel extends JPanel {
 	private javax.swing.JButton exhaustButton;
 	private javax.swing.JCheckBox repairingOption;
 	// End of variables declaration//GEN-END:variables
+	
+	public DSParser getParser() {
+		return this.parser;
+	}
+
+	public javax.swing.JLabel getStatusLabel() {
+		return this.statusLabel;
+	}
+
+	public javax.swing.JTextPane getpTextPane() {
+		return pTextPane;
+	}
 
 }

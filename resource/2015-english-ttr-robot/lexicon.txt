@@ -34,21 +34,35 @@ it							  pron_acc                      s3                            neuter
 me							  pron_dative                   speaker
 big                           adj                           big
 small                         adj                           small
+biggest                       adj                           biggest
+smallest                      adj                           smallest
+large                         adj                           big
+largest                       adj                           biggest
+short                         adj                           short
+long                          adj                           long
+shortest                      adj                           shortest
+longest                       adj                           longest
 red                           adj                           red
 yellow                        adj                           yellow
 green                         adj                           green
 other                         adj                           other
 blue                          adj                           blue
-gray                          adj                           gray
+gray                          adj                           grey
+grey                          adj                           grey
+orange                        adj                           orange
+black                         adj                           black
+purple						  adj							purple
 left 						  adj							left
 right						  adj							right
 middle   					  adj							middle
+centre   					  adj							middle
 upper 						  adj						    upper
 bottom						  adj						    bottom
 first						  adj							first
 second			              adj                           second
 third                         adj                           third
 last                          adj                           third
+crisps						  count							crisps							p3                          obj
 ball						  count							ball							s3                          obj
 object	                      count							piece							s3                          obj
 box			 				  count							box  							s3                          obj
@@ -62,6 +76,7 @@ row 						  count							row  							s3                          obj
 column						  count							column							s3                          obj
 position					  count							column							s3                          obj
 side						  count							column							s3                          obj
+potato			 			  count							potato  						s3                          obj
 clockwise					  adj							clockwise_direction
 y							  count							crutch							s3                          obj
 crutch						  count							crutch							s3                          obj
@@ -100,9 +115,11 @@ horizontally				  adv							horizontal
 once						  adv							once				  
 twice   					  adv							twice
 again    					  adv							again
+to						      prep_mod_location_goal		to
 into						  prep_mod_location_goal		into
 over						  prep_mod_location_goal		over
 in							  prep_mod_location_goal		in
+on							  prep_mod_location_goal		on
 above						  prep_mod_location_goal		above
 under						  prep_mod_location_goal		under
 underneath					  prep_mod_location_goal		under
@@ -111,10 +128,13 @@ between 					  prep_mod_location_goal		between
 next						  prep_mod_location_goal		beside
 over						  prep_mod_location				over
 in							  prep_mod_location				in
+on							  prep_mod_location				on
 above						  prep_mod_location				above
 under						  prep_mod_location				under
 underneath					  prep_mod_location				under
 near						  prep_mod_location				near
 between 					  prep_mod_location				between
 next						  prep_mod_location				beside
-and							  conj_entity					and
+and 						  conj_entity					and
+and							  conj_prop						and
+andy						  conj_prop_ellipsis			and
