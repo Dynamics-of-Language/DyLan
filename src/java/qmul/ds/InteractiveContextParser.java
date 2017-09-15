@@ -67,7 +67,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	String[] repairand = { "uhh", "errm", "err", "er", "uh", "erm", "uhm", "um", "oh"};
 	String[] restarter = { "yeah" };
 	List<String> repairanda = Arrays.asList(repairand);
-	String[] forceRepairand = { "sorry", "oops"};
+	String[] forceRepairand = { "sorry", "oops", "wait"};
 	List<String> forcedRepairanda = Arrays.asList(forceRepairand);
 
 	List<String> restarters = Arrays.asList(restarter);
