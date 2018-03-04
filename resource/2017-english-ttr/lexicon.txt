@@ -1,0 +1,211 @@
+is                            v_be                  	pres                          s3
+'s							  v_be                  	pres                          s3
+am                            v_be                  	pres                          nons3
+'m							  v_be                  	pres                          nons3
+was							  v_be                  	past                          s3
+square                          count                       square                        s3                            shape
+circle                          count                       circle                        s3                            shape
+idea							    count					   idea							s3                            cn
+triangle						count						triangle					  s3							shape
+square                          concept_name	                       	square					s3			shape		
+circle							concept_name							circle					s3			shape
+triangle						concept_name							triangle				s3			shape
+name							count						name						  s3							name
+job							count						job						  s3							job
+shape							count						shape						  s3							attr
+color							count						color						  s3							attr
+time							count						time						  s3							cn
+color							mass						color						  s3							attr
+shape							mass						shape						  s3							attr
+object							object						s3							object
+one								object						s3							object
+one								det_num						one							s3
+item								object						s3							object
+blue                            color_adj	                       	blue
+red							    color_adj							red
+green							color_adj							green
+purple							color_adj							purple
+yellow							color_adj							yellow
+orange							color_adj							orange
+black							color_adj							black
+blue                            concept_name	                       	blue			s3			color
+red							    concept_name							red				s3			color
+green							concept_name							green				s3			color	
+purple							concept_name							purple				s3			color
+yellow							concept_name							yellow				s3			color
+orange							concept_name							orange					s3			color
+black							concept_name							black				s3			color
+new								adj								new
+same                            adj                             same
+correct							adj								correct
+incorrect							adj							incorrect
+wrong							adj								wrong
+good								adj								good
+great								adj								great
+right						  	adj						right
+sure								adj						sure
+more								adj						more
+excellent							adj				    excellent
+called							naming_adj						called
+named							naming_adj						named
+known							naming_adj						known					
+this						  det_demonst					here						  s3
+that						  det_demonst					there					      s3
+this						  demonst  						this						  s3							obj
+that						  demonst						that						  s3							obj
+see							  v_tran_fin					see							  pres                          nons3
+see							  v_tran_inf					see							  inf							per
+see							  v_intran_fin					see							  pres                          nons3
+see							  v_intran_inf					see							  inf							per
+sees						  v_tran_fin					see							  pres							s3
+can 						  v_aux_inf                     can                           modal
+ca 						  	  v_aux_inf                     can                            modal
+do						      v_aux_inf                     do                            pres
+do							  v_aux_subj_drop			   do							pres
+can							  v_aux_subj_drop			   can							pres
+ca							  v_aux_subj_drop			   can							pres
+would						  v_aux_inf						would						  pres
+it							  demonst						this						  s3							obj
+its							  its							its
+//it							  pron_nom						s3							  obj
+//it							  pron_acc						s3							  obj
+a                             det_indef                     eps
+an                            det_indef                     eps
+a                             det_indef_postcop				eps
+an                            det_indef_postcop				eps
+another						  det_another					eps
+no						  	det_no					no
+the							  det_def						iota
+how                          pron_whq                      obj
+what                          pron_whq                      obj
+what						  pron_whq_det					obj
+what						  pron_what_rel					obj
+what						  pron_what_det_rel				obj
+which						  pron_whq					obj
+.							  assert						A
+?							  question					Q
+?							  question_meta				Q
+//uhu						  accept					uhu
+yes							  accept						yes
+ok							  accept						ok
+yes							  yes							yes
+yes							  accept						yes
+yep 						  yes							yep
+yep							  accept						yep
+yeah 						  yes							yeah
+yeah					      accept						yeah
+yay 						  yes							yay
+yay					      	  accept						yay
+good						  yes						good
+good						  accept						good
+great						  yes						great
+great						  accept						great
+okay						  yes						okay
+okay						  accept						okay
+right						  yes						right
+right						  accept						right
+correct						  yes						correct	
+correct						  accept						correct	
+correct						  yes							yes
+bingo						  accept						bingo
+bingo						  yes							bingo
+cool						  accept						cool
+cool						  yes							cool
+awesome						  yes						    awesome	
+awesome						  accept						awesome	
+perfect						  yes						    perfect	
+perfect						  accept						perfect	
+//wow						  accept						wow
+excellent						  yes						excellent
+excellent						  accept						excellent
+no							  reject						not
+no.							  reject						not
+close						  reject						close
+nope						  reject						nope
+not							  not_np							not
+n't							  not_np							not
+not							  not_aux							not
+n't							  not_aux							not
+i                             i		                        nons3                            spkr
+you							  you							nons3							per
+we							  we							nons3							spkr
+<rt>				  		  release_turn					null
+and							  and							null
+but							  and							null
+of							  prep_e						of
+for						      prep_e						for
+about						  prep_e						about
+with							  prep_es					with
+try							  v_tran_fin_imperative			try							imper					s2
+try							  v_intran_fin_imperative			try							imper					s2
+put							  v_tran_fin_imperative			put							imper					s2
+repeat							  v_tran_fin_imperative			repeat							imper					s2
+repeat							  v_tran_inf					repeat							inf						nons3
+repeat							  v_tran_fin					repeat							pres						nons3
+got							  v_tran_fin					get							past					nons3
+get							  v_tran_inf					get							inf						nons3
+get							  v_tran_fin					get							pres						nons3
+try							  v_tran_inf					try							inf						nons3
+try							  v_tran_fin					try							pres						nons3
+try							  v_intran_fin					try							pres						nons3
+try							  v_intran_inf					try							inf						nons3
+got							  v_tran_subj_drop			get							past						nons3
+forgot							  v_tran_subj_drop			forget							past						nons3
+forgot							  v_tran_fin			forget							past						nons3
+get							  v_tran_subj_drop			get							pres						nons3	
+have						  v_tran_inf					have						inf						nons3
+have						  v_tran_fin					have						pres					nons3
+here						  manner_adv					here	
+well						  manner_adv					well	
+done						  past_participle_lone		done		
+together						  manner_adv					together
+recognise					  v_tran_fin					recognise					pres					nons3
+recognise					  v_tran_inf					recognise					pres					nons3
+recognize					  v_tran_fin					recognise					pres					nons3
+recognize					  v_tran_inf					recognise					pres					nons3
+describe					  v_tran_fin					describe					pres					nons3
+describe					  v_tran_inf					describe					pres					nons3
+describes					  v_tran_fin					describe					pres					s3
+know					  v_tran_fin						know					pres					nons3
+know					  v_tran_inf						know					pres					nons3
+know					  v_intran_inf						know					pres					nons3
+know					  v_intran_fin						know					pres					nons3
+know					  v_tran_obj_prop_inf				know					pres					nons3
+know					  v_tran_obj_prop_fin				know					pres					nons3		
+remember				  v_tran_fin						remember					pres					nons3
+remember				  v_tran_inf						remember					pres					nons3
+remember				  v_intran_inf						remember					pres					nons3
+remember				  v_intran_fin						remember					pres					nons3
+remember				  v_tran_obj_prop_inf				remember					pres					nons3
+remember				  v_tran_obj_prop_fin				remember					pres					nons3		
+think					  v_tran_obj_prop_fin				think					pres					nons3
+think					  v_tran_obj_prop_inf				think					pres					nons3
+guess					  v_tran_fin					guess					pres					nons3
+guess					  v_tran_inf					guess					pres					nons3
+want                          v_subjcon_fin                 want                          pres                          nons3
+wants                         v_subjcon_fin                 want                          pres                          s3
+want                          v_subjcon_inf                 want                          inf                          nons3
+to							  to_subjcon					to
+again						  manner_adv					again
+again						  manner_adv_complete		again
+sorry						  manner_adv_complete		sorry
+now						  	  manner_adv					now
+back						      manner_adv					back
+say							  v_tran_fin					say							  pres                          nons3
+say							   v_tran_inf				say					pres					nons3
+say							  v_tran_fin_imperative		say							imper
+so							  null						so
+still						  null						still
+also							  null						also
+as							  null						also
+too							  null						too
+//ok							  null                      ok
+then                          null                      then
+lets							 null					   lets
+oops							 null					   oops
+opps							 null					   opps
+now						     null					   now
+please						 null					   please
+nothing						nothing						s3
+indeed						null							indeed
+very							null							very
