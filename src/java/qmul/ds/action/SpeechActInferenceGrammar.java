@@ -63,13 +63,21 @@ public class SpeechActInferenceGrammar extends SortedListPartialOrder<Computatio
 		logger.info("Reading Speech Act Grammar from:" + dir);
 		System.out.println("Reading Speech Act Grammar from:" + dir);
 		File file = new File(dir, FILE_NAME);
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			initActions(reader);
-		} catch (FileNotFoundException e) {
-
+		if (file.exists())
+		{
+			try {
+				BufferedReader reader = new BufferedReader(new FileReader(file));
+				initActions(reader);
+			} catch (FileNotFoundException e) {
+	
+				logger.warn("No speech act inference file " + file.getAbsolutePath());
+				e.printStackTrace();
+			}
+		}
+		else
+		{
 			logger.warn("No speech act inference file " + file.getAbsolutePath());
-
+			logger.info("loading empty speech act grammar.");
 		}
 	}
 	
@@ -90,7 +98,14 @@ public class SpeechActInferenceGrammar extends SortedListPartialOrder<Computatio
 						new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/") + FILE_NAME).openStream()));
 			} else {
 				File file = new File(dirNameOrURL, FILE_NAME);
-				reader = new BufferedReader(new FileReader(file));
+				if (file.exists())
+					reader = new BufferedReader(new FileReader(file));
+				else
+				{
+					logger.warn("No speech act inference file " + file.getAbsolutePath());
+					logger.info("loading empty speech act grammar.");
+					return;
+				}
 			}
 
 			initActions(reader);
@@ -116,7 +131,14 @@ public class SpeechActInferenceGrammar extends SortedListPartialOrder<Computatio
 						new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/") + filename).openStream()));
 			} else {
 				File file = new File(dirNameOrURL, filename);
-				reader = new BufferedReader(new FileReader(file));
+				if (file.exists())
+					reader = new BufferedReader(new FileReader(file));
+				else
+				{
+					logger.warn("No speech act inference file " + file.getAbsolutePath());
+					logger.info("loading empty speech act grammar.");
+					return;
+				}
 			}
 
 			initActions(reader);
