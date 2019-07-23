@@ -46,9 +46,14 @@ public class ParserTupleViewer extends JTabbedPane {
 	
 	public void setTuple(ParserTuple tuple)
 	{
+		
 		Tree tree = (tuple == null ? null : tuple.getTree().toStanfordTree());
 		
 		treePanel.setTree(tree);
+		
+		if (tree==null)
+			return;
+		
 		if (tuple.getSemantics(parserContext) != null)
 			semPanel.setFormula(tuple.getSemantics(parserContext));
 		else

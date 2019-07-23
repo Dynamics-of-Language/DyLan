@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
 
 /**
@@ -31,19 +32,23 @@ public class Dialogue extends ArrayList<Utterance> {
 	
 	
 	
+	
 	public Dialogue(String... participants)
 	{
-		this.participants=Arrays.asList(participants);
+		super();
+		this.participants.addAll(Arrays.asList(participants));
 		
 	}
 	
 	public Dialogue(List<String> lines) {
+		super();
 		// first extract particpants and add utterances
 		for (String line : lines) {
 			logger.debug("Reading line:"+line);
 			Utterance cur = new Utterance(line);
 			if (!participants.contains(cur.speaker))
 				this.participants.add(cur.speaker);
+			
 			
 			add(cur);
 		}
@@ -116,21 +121,22 @@ public class Dialogue extends ArrayList<Utterance> {
 		
 	}
 	
+	public boolean add(Utterance u)
+	{
+		if (!participants.contains(u.getSpeaker()))
+			participants.add(u.getSpeaker());
+		
+		return super.add(u);
+	}
+	
 	public static void main(String a[])
 	{
-		try
-		{
-			List<Dialogue> dialogues=Dialogue.loadDialoguesFromFile("../babble/data/Domain-Dialogues/shopping-mall-artificial");
-	
-			for(Dialogue d: dialogues)
-			{
-				System.out.println(d.toDebugString());
-			}
-			
-		}catch(Exception e)
-		{
-			System.out.println(e);
-		}
+		Utterance u=new Utterance("A: bill");
+		Dialogue d=new Dialogue();
+		d.add(u);
+		System.out.println(d.getParticiapnts());
+		d.append(new UtteredWord("is","A"));
+		System.out.println(d);
 	}
 
 	public List<String> getParticiapnts() {
@@ -156,11 +162,48 @@ public class Dialogue extends ArrayList<Utterance> {
 		{
 			Utterance utt=new Utterance(w.speaker(), w.word());
 			add(utt);
+			
 		}
-		else	
+		else
+		{
 			lastUtterance().append(w);
+			
+		}
+		
+		if (!this.participants.contains(w.speaker()))
+			this.participants.add(w.speaker());
 
 		
 		
 	}
+	
+	public boolean rollBack(int n)
+	{
+		Utterance lastUtt=lastUtterance();
+		if (lastUtt.getLength()<n)
+		{
+			logger.warn("Cannot rollback into a previous utterance... for now.");
+			return false;
+		}
+		
+		int i=lastUtt.words.size()-1;
+		int rev=0;
+		while(rev<n)
+		{
+			
+			UtteredWord revoked=lastUtt.words.get(i);
+			if (revoked instanceof RevokedWord)
+			{	System.out.println("Found revoked:"+revoked);
+				i--;
+				continue;
+			}
+			System.out.println("Revoking:"+lastUtt.words.get(i));
+			lastUtt.words.set(i, new RevokedWord(lastUtt.words.get(i)));
+			rev++;
+			i--;
+		}
+		return true;
+	}
+	
+	
 }

@@ -1,7 +1,8 @@
 package qmul.ds.dag;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -88,6 +89,104 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 	}
 
+	/**
+	 * Helper method. Recursively (best-first) traverses the N first edges (ordered) forward.
+	 * @param N
+	 * @return
+	 */
+	private DAGTuple goFirstN(DAGTuple cur,int N)
+	{
+		
+		if (N==0)
+			return cur;
+		
+		SortedSet<GroundableEdge> edges = getOutEdgesForTraversal(cur);
+		logger.info("edges:" + edges);
+
+		for (GroundableEdge e : edges) {
+
+			
+			DAGTuple dest=this.getDest(e);
+			
+			logger.info("now on" + cur);
+			
+			//logger.info("Depth is now:" + getDepth());
+			DAGTuple target=goFirstN(dest,N-1);
+			if (target!=null)
+				return target;
+				
+			
+
+		}
+		
+		return null;	
+	}
+	
+	public boolean rollBack(int n)
+	{
+		logger.debug("Rolling Back "+n);
+		if (n<0)
+		{
+			logger.error("n<0");
+			return false;
+		}
+		
+		if (isExhausted())
+			resetToFirstTupleAfterLastWord();
+		
+		
+		
+		
+		List<UtteredWord> result=new ArrayList<UtteredWord>();
+		DAGTuple clauseRoot=getCurrentClauseRoot(result);
+		
+		int clauseLength = result.size();
+		logger.debug("Rolling back:"+result);
+		if (n>clauseLength)
+		{
+			logger.error("Cannot roll back "+ n + "steps. Reached clause root");
+			return false;
+		}
+		
+		DAGTuple nth=goFirstN(clauseRoot,clauseLength-n);
+		
+		
+		this.firstTupleAfterLastWord=nth;
+		this.resetToFirstTupleAfterLastWord();
+		logger.debug("Rolled back dag");
+		return true;
+		
+		
+	}
+
+	/**
+	 * Moves DAG pointer to the root node of the current clause.
+	 * @return the clause root
+	 */
+	protected DAGTuple getCurrentClauseRoot(List<UtteredWord> rolledBack)
+	{
+		if (this.atClauseRoot())
+			return cur;
+		
+		
+		GroundableEdge parentEdge = getUniqueParentEdge(cur);
+		DAGTuple curSource=this.getSource(parentEdge);
+		rolledBack.add(0, new UtteredWord(parentEdge.word()));
+		
+		while (!this.isClauseRoot(curSource)) {
+			
+			logger.debug("going over:" + parentEdge);
+
+			parentEdge = getUniqueParentEdge(curSource);
+			curSource=this.getSource(parentEdge);
+			rolledBack.add(0, new UtteredWord(parentEdge.word()));
+
+		}
+		return curSource;
+		
+		
+	}
+	
 	/**
 	 * 
 	 */
@@ -379,6 +478,19 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		super.addChild(from, redge.getMidTuple(), redge.getBacktrackingEdge());
 		super.addChild(redge.getMidTuple(), to, redge.getWordEdge());
 		return to;
+
+	}
+	
+	@Override
+	public Collection<DAGTuple> getChildren(DAGTuple t) {
+		Collection<DAGTuple> out = new TreeSet<DAGTuple>();
+		for (GroundableEdge edge : getOutEdges(t)) {
+			if (!(edge instanceof BacktrackingEdge)) {
+				out.add(getDest(edge));
+
+			}
+		}
+		return out;
 
 	}
 

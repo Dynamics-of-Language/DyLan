@@ -25,6 +25,7 @@ import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.formula.TTRFormula;
@@ -66,17 +67,23 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	
 	protected SpeechActInferenceGrammar sa_grammar;
 
+	protected boolean ready=false;
 	
 	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa)
 	{
 		this.lexicon=lexicon;
 		separateGrammars(grammar);
 		this.sa_grammar=sa;
+		ready=true;
+		
 	}
 	
 	public DAGParser(Lexicon lexicon, Grammar grammar) {
 		this(lexicon,grammar,new SpeechActInferenceGrammar());
+		
 	}
+	
+	
 	/** This method divides the set of computational actions into optional and non-optional ones.
 	 * 
 	 * @param grammar
@@ -101,6 +108,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	{
 		return context;
 	}
+	
 	/**
 	 * @param resourceDir
 	 *            the dir containing computational-actions.txt,
@@ -110,6 +118,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		this(new Lexicon(resourceDir), new Grammar(resourceDir), new SpeechActInferenceGrammar(resourceDir));
 		
 	}
+	
+	
 	
 	
 
@@ -419,6 +429,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public Grammar getOptionalGrammar() {
 		return optionalGrammar;
 	}
+	
 
 	/**
 	 * @return the non-optional grammar
@@ -437,7 +448,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	/**
 	 * Reset the parse state to the initial (axiom) state
 	 */
-	public void init() {
+	public synchronized void init() {
 		FormulaMetavariable.resetPool();
 		context.init();
 
@@ -449,19 +460,19 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 * 
 	 * @see init()
 	 */
-	public void newSentence() {
+	public synchronized void newSentence() {
 		context.getDAG().init();
 
 	}
 
-	public void setState(DAG<T, E> state) {
+	public synchronized void setState(DAG<T, E> state) {
 		this.context.setDAG(state);
 	}
 
 	/**
 	 * @return a shallow copy of the current state
 	 */
-	public DAG<T, E> getState() {
+	public synchronized DAG<T, E> getState() {
 		if (context == null) {
 			return null;
 		}
@@ -469,7 +480,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	}
 
 	@Override
-	public TreeSet<DAGTuple> getStateWithNBestTuples(int N) {
+	public synchronized TreeSet<DAGTuple> getStateWithNBestTuples(int N) {
 		getState().resetToFirstTupleAfterLastWord();
 		TreeSet<DAGTuple> result = new TreeSet<DAGTuple>();
 		result.add(context.getDAG().getCurrentTuple());
@@ -484,7 +495,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	}
 	
 	
-	public List<TTRRecordType> getNBestFinalSemantics(int n)
+	public synchronized List<TTRRecordType> getNBestFinalSemantics(int n)
 	{
 		TreeSet<DAGTuple> set=getStateWithNBestTuples(n);
 		
@@ -496,7 +507,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	}
 
 	@Override
-	public ParserTuple getBestTuple() {
+	public synchronized ParserTuple getBestTuple() {
 
 		return context.getDAG().getCurrentTuple();
 	}
@@ -514,16 +525,18 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 
 	public abstract boolean parse();
 
-	// public abstract DAG<T, E> parseWord(String word, String speaker);
+	
 
 	public abstract DAG<T, E> parseWord(UtteredWord word);
 
+
 	
 
 	
 	
-	public boolean parseUtterance(Utterance utt)
+	public synchronized boolean parseUtterance(Utterance utt)
 	{
+		ready=false;
 		logger.info("Parsing Utterance \""+utt+"\"");
 		//add speaker to conversation if not already there
 //		if (!context.getParticipants().contains(utt.speaker))
@@ -540,27 +553,36 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		}
 		boolean success=true;
 		for (int i = 0; i < utt.words.size(); i++) {
+			UtteredWord word=utt.words.get(i);
+			
 			DAG<T,E> result = parseWord(
-					utt.words.get(i));
+					word);
+			
 			if (result == null)
 			{
 				logger.error("Failed to parse "+utt.words.get(i));
 				logger.error("Skipping it");
 				success=false;
+				context.appendWord(new RevokedWord(word));
 			}
+			else
+				context.appendWord(new UtteredWord(word));
 
 		}
-
+		ready=true;
 		return success;
 	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see edu.stanford.nlp.parser.Parser#parse(java.util.List)
 	 */
 	@Override
-	public boolean parse(List<? extends HasWord> words)
+	public synchronized boolean parse(List<? extends HasWord> words)
 	{
+		ready=false;
 		for (int i = 0; i < words.size(); i++) {
 			DAG<T,E> result = parseWord(new UtteredWord(
 					words.get(i).word()));
@@ -568,10 +590,13 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 				return false;
 
 		}
+		ready=true;
 
 		return true;
 	}
 
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -600,6 +625,11 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		this.context.getDAG().setRepairProcessing(b);
 	}
 	
+	
+	public boolean isReady()
+	{
+		return this.ready;
+	}
 	
 
 }

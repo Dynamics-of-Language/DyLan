@@ -17,12 +17,12 @@ import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.RevokedWord;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
-import qmul.ds.tree.label.Label;
-import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.ttrlattice.AustinianProp;
 import qmul.ds.type.DSType;
 
@@ -88,6 +88,8 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	protected String whoHasFloor=null;
 	
 	protected SpeechActInferenceGrammar sa_inf_grammar;
+	
+	protected Dialogue dialogueHistory=new Dialogue();
 	
 	public void initParticipantContents(Set<String> participants)
 	{
@@ -274,6 +276,11 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		return asserted_contents.keySet();
 	}
 	
+	public void appendWord(UtteredWord w)
+	{
+		this.dialogueHistory.append(w);
+	}
+	
 	
 	
 	
@@ -363,6 +370,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		dag.setContext(this);
 		resetVariablePools();
 		initParticipantContents(getParticipants());
+		this.dialogueHistory.clear();
 		//TODO: shouldn't be setting this like this.
 		dag.setRepairProcessing(false);
 	}
@@ -372,6 +380,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		//dag.init();
 		dag=(DAG<T, E>) new WordLevelContextDAG();
 		dag.setContext(this);
+		this.dialogueHistory.clear();
 		resetVariablePools();
 		initParticipantContents(new HashSet<String>(participants));
 	}
@@ -461,6 +470,47 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	public SpeechActInferenceGrammar getSAGrammar() {
 		return this.sa_inf_grammar;
 	}
+
+
+	public boolean rollBack(int n) {
+		Utterance lastUtt=this.dialogueHistory.lastUtterance();
+		if (lastUtt.getLength()<n)
+		{
+			logger.warn("Cannot rollback into a previous utterance... for now.");
+			return false;
+		}
+		
+		if (!this.dag.rollBack(n))
+			return false;
+		
+		if (!this.dialogueHistory.rollBack(n))
+			return false;
+		
+		return true;
+			
+		
+	}
+
+
+	public Dialogue getDialogueHistory() {
+		return this.dialogueHistory;
+	}
+	
+	public static void main(String[] s)
+	{
+		Dialogue d=new Dialogue();
+		d.add(new Utterance("A: this is"));
+		
+		System.out.println(d);
+		d.rollBack(1);
+		System.out.println(d);
+		d.rollBack(1);
+		System.out.println(d);
+		
+		
+	}
+	
+	
 	
 	
 	

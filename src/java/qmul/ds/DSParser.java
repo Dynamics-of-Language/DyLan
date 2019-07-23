@@ -1,12 +1,11 @@
 package qmul.ds;
 
+import java.util.List;
 import java.util.TreeSet;
 
-import qmul.ds.dag.DAG;
-import qmul.ds.dag.DAGEdge;
-import qmul.ds.dag.DAGTuple;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.parser.Parser;
+import qmul.ds.dag.UtteredWord;
 
 /**
  * Interface containing all methods that should be available for a Dynamic
@@ -65,6 +64,25 @@ public interface DSParser extends edu.stanford.nlp.parser.Parser {
 	 * 
 	 */
 	public void setRepairProcessing(boolean repairing);
+	
+	/**
+	 * 
+	 * @return if the parser is ready, i.e. is not in the middle of performing any updates, e.g. parsing, resettting the state, etc.
+	 */
+	public boolean isReady();
+	
+	/**
+	 * removes the last n words from the context DAG. Used when a past ASR hypothesis is rolled back.
+	 * @param n
+	 * @return whether operation was successful
+	 */
+	public boolean rollBack(int n);
+	
+	
+	public Dialogue getDialogueHistory();
+	
+	
+	public boolean isExhausted();
 	
 	
 	

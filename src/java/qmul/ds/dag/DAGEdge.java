@@ -248,7 +248,7 @@ public class DAGEdge implements Comparable<DAGEdge> {
 
 	public boolean initiatesNewClause()
 	{
-		System.out.println("Checking initiates new clause:"+this.getActions().get(0));
+		
 		return getActions().get(0).getName().equals("trp");//WARNING: this is sensitive to the name of the new clause initiating computational action
 	}
 	

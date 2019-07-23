@@ -913,10 +913,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	public Collection<T> getChildren(T t) {
 		Collection<T> out = new TreeSet<T>();
 		for (E edge : getOutEdges(t)) {
-			if (!(edge instanceof BacktrackingEdge)) {
-				out.add(getDest(edge));
-
-			}
+			out.add(getDest(edge));
 		}
 		return out;
 
@@ -1269,7 +1266,17 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return allContents;
 		
 	}
-
+	
+	/**
+	 * Resets the DAG to the FIRST state reached after n words back. This isn't necessarily the result of going back up
+	 * n steps as one might be on a different part of the graph.
+	 * @param n
+	 * @return the list of words that were rolled back.
+	 */
+	public abstract boolean rollBack(int n);
+	
+	
+	
 	
 	
 

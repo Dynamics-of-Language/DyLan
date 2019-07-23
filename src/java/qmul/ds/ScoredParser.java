@@ -17,6 +17,10 @@ import org.apache.log4j.Logger;
 import qmul.ds.action.Action;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.Lexicon;
+import qmul.ds.dag.DAG;
+import qmul.ds.dag.DAGEdge;
+import qmul.ds.dag.DAGTuple;
+import qmul.ds.dag.UtteredWord;
 
 /**
  * An example of how a {@link Parser} can use {@link ScoredParserTuple}s to implement conditional action probabilities
@@ -139,4 +143,15 @@ public class ScoredParser extends Parser<ScoredParserTuple> {
 		
 	}
 
+	@Override
+	public boolean rollBack(int n) {
+		throw new UnsupportedOperationException("Operation not yet supported for breadthfirst parsers");
+	}
+
+	@Override
+	public Dialogue getDialogueHistory() {
+		throw new UnsupportedOperationException("Operation not yet supported for breadthfirst parsers");
+	}
+
+	
 }

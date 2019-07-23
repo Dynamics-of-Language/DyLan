@@ -181,6 +181,11 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 			UtteredWord word) {
 		throw new UnsupportedOperationException();
 	}
+	
+	@Override
+	public boolean rollBack(int n) {
+		throw new UnsupportedOperationException();
+	}
 
 	
 	

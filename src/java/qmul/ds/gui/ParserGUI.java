@@ -6,36 +6,15 @@
  * redistribution of this file, and for a DISCLAIMER OF ALL
  * WARRANTIES.
  *******************************************************************************/
-// StanfordLexicalizedParser -- a probabilistic lexicalized NL CFG parser
-// Copyright (c) 2002, 2003, 2004, 2005 The Board of Trustees of
-// The Leland Stanford Junior University. All Rights Reserved.
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// For more information, bug reports, fixes, contact:
-//    Christopher Manning
-//    Dept of Computer Science, Gates 4A
-//    Stanford CA 94305-9040
-//    USA
-//    parser-support@lists.stanford.edu
-//    http://nlp.stanford.edu/downloads/lex-parser.shtml
+
 package qmul.ds.gui;
 
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
+
+import qmul.ds.DSParser;
+import qmul.ds.dag.UtteredWord;
 /**
  * 
  * @author Matt, Arash
@@ -48,12 +27,15 @@ public class ParserGUI extends JFrame {
 	private static Logger logger = Logger.getLogger(ParserGUI.class);
 
 	private ParserPanel parserPanel;
+	
+	boolean ready=false;
 
 	/**
 	 * Creates a new Parser Frame using {@link #Parser(String, String)} with both arguments being <code>null</code>.
 	 */
 	public ParserGUI() {
 		this(null, null);
+		ready=true;
 	}
 
 	/**
@@ -66,6 +48,7 @@ public class ParserGUI extends JFrame {
 	 */
 	public ParserGUI(String parserFilename, String dataFilename) {
 		this(parserFilename, dataFilename, false);
+		
 	}
 
 	/**
@@ -91,6 +74,12 @@ public class ParserGUI extends JFrame {
 		}
 
 		pack();
+		ready=parserPanel.isReady();
+	}
+	
+	public boolean isReady()
+	{
+		return parserPanel.isReady();
 	}
 
 	/**
@@ -99,6 +88,13 @@ public class ParserGUI extends JFrame {
 	public ParserPanel getParserPanel() {
 		return parserPanel;
 	}
+	
+	public DSParser getParser() {
+		
+		return parserPanel.getParser();
+	}
+	
+	
 
 	/**
 	 * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The
@@ -119,7 +115,7 @@ public class ParserGUI extends JFrame {
 		eng2009Item = new javax.swing.JCheckBoxMenuItem();
 		engTTRItem = new javax.swing.JCheckBoxMenuItem();
 
-		setTitle("Parser");
+		setTitle("Dylan");
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -289,6 +285,7 @@ public class ParserGUI extends JFrame {
 	 * Exit the Application
 	 */
 	private void exitForm(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_exitForm
+		this.parserPanel.onClose();
 		System.exit(0);
 	}// GEN-LAST:event_exitForm
 
@@ -313,6 +310,21 @@ public class ParserGUI extends JFrame {
 
 		ParserGUI parser = new ParserGUI(parserFilename, dataFilename);
 		parser.setVisible(true);
+		
+//		UtteredWord word=new UtteredWord("this", "A");
+//		
+//		while(!parser.isReady())
+//		{
+//			try {
+//				Thread.sleep(1000);
+//			}catch(InterruptedException e)
+//			{
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		parser.getParserPanel().parseWord(word);
+//		System.out.println("sssssss");
 	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables

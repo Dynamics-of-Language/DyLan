@@ -33,6 +33,12 @@ public class UtteredWord implements HasWord{
 	}
 	
 
+	public UtteredWord(UtteredWord w) {
+		this.word=new String(w.word);
+		this.speaker=new String(w.speaker);
+		this.addressee=new String(w.addressee);
+	}
+
 	@Override
 	public void setWord(String arg0) {
 		word=arg0;

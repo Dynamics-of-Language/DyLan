@@ -28,6 +28,7 @@ import qmul.ds.dag.VirtualRepairingEdge;
 import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
+import qmul.ds.gui.ParserPanel;
 import qmul.ds.tree.Tree;
 
 /**
@@ -67,7 +68,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	String[] repairand = { "uhh", "errm", "err", "er", "uh", "erm", "uhm", "um", "oh"};
 	String[] restarter = { "yeah" };
 	List<String> repairanda = Arrays.asList(repairand);
-	String[] forceRepairand = { "sorry", "oops", "wait"};
+	String[] forceRepairand = { "sorry", "oops", "wait", "erm"};
 	List<String> forcedRepairanda = Arrays.asList(forceRepairand);
 
 	List<String> restarters = Arrays.asList(restarter);
@@ -87,6 +88,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public static final int max_repair_depth = 1;
 
+	
+	
+	
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir);
 
@@ -109,16 +113,32 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		context.setRepairProcessing(repairing);
 
 	}
+	
+	
+	
+	
 
 	public InteractiveContextParser(String resourceDirOrURL, String... participants) {
 		this(resourceDirOrURL, false, participants);
 	}
+	
+	
 
 	public InteractiveContextParser(String resourceDirOrURL) {
 		this(resourceDirOrURL, false);
 	}
+	
+	
+	
 
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
+		super(lexicon, grammar);
+
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+
+	}
+	
+	public InteractiveContextParser(Lexicon lexicon, Grammar grammar, ParserPanel p) {
 		super(lexicon, grammar);
 
 		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
@@ -129,7 +149,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return context.getName();
 	}
 
-	protected boolean repairInitiated() {
+	protected synchronized boolean repairInitiated() {
 		return context.repairInitiated();
 	}
 
@@ -169,7 +189,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
-	public boolean parse() {
+	public synchronized boolean parse() {
 		if (getState().isExhausted()) {
 			logger.debug("state exhausted");
 			return false;
@@ -381,7 +401,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	}
 
 	/**
-	 * Action repaly not working... TODO
+	 * Action reply not working... TODO
 	 * TODO
 	 * commenting it out in applyAllPermutaions.
 	 * 
@@ -419,13 +439,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	}
 
 	@Override
-	public void newSentence() {
+	public synchronized void newSentence() {
 
 		getState().addAxiom();
 
 	}
 
-	public void init() {
+	public synchronized void init() {
 		this.forcedRepair=false;
 		this.forcedRestart=false;
 		
@@ -433,11 +453,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
-	public void init(List<String> participants) {
+	public synchronized void init(List<String> participants) {
 		context.init(participants);
 	}
 
-	public List<TTRRecordType> getTopNPending(int i) {
+	public synchronized List<TTRRecordType> getTopNPending(int i) {
 		List<TTRRecordType> result = new ArrayList<TTRRecordType>();
 
 		qmul.ds.tree.Tree current = context.getCurrentTuple().getTree();
@@ -486,7 +506,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 *         if the word is not parsable
 	 * 
 	 */
-	public DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord w) {
+	public synchronized DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord w) {
 		UtteredWord word = new UtteredWord(w.word().toLowerCase(), w.speaker());
 		logger.info("Parsing word " + word);
 		// set addressee of utterance if inferrable (in the dyadic case):
@@ -601,7 +621,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return context;
 	}
 
-	public DAG<DAGTuple, GroundableEdge> generateWord(String word) {
+	public synchronized DAG<DAGTuple, GroundableEdge> generateWord(String word) {
 		parseWord(new UtteredWord(word, "self"));
 		return getState();
 	}
@@ -786,25 +806,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
-	public boolean parseUtteranceGetParsableWords(Utterance utt) {
-
-		System.out.println("Parsing Utterance \"" + utt + "\"");
-		for (int i = 0; i < utt.words.size(); i++) {
-			// System.out.println("Before parsing: " + utt.words.get(i));
-
-			DAG<DAGTuple, GroundableEdge> result = parseWord(utt.words.get(i));
-			System.out.println(
-					"parsable words after parsing " + utt.words.get(i) + " :" + this.getLocalGenerationOptions());
-			if (result == null) {
-				logger.warn("Failed to parse " + utt.words.get(i));
-				return false;
-			}
-
-		}
-
-		return true;
-
-	}
+	
 
 	/**
 	 * 
@@ -944,5 +946,25 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		return result;
 
 	}
+
+	@Override
+	public boolean rollBack(int n) {
+		
+		return this.context.rollBack(n);
+	}
+
+	@Override
+	public Dialogue getDialogueHistory() {
+		return context.getDialogueHistory();
+	}
+
+	@Override
+	public boolean isExhausted() {
+		return context.dag.isExhausted();
+	}
+
+
+	
+	
 
 }

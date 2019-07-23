@@ -15,17 +15,18 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Word;
 import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.Word;
 
 /**
  * A generic parser
@@ -41,11 +42,14 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 	protected Grammar grammar;
 
 	private boolean allowSpeedUps = true;
+	
+	protected boolean ready=false;
 
 	public Parser(Lexicon lexicon, Grammar grammar) {
 		state = new ParseState<T>();
 		this.lexicon = lexicon;
 		this.grammar = grammar;
+		ready=true;
 	}
 
 	/**
@@ -175,7 +179,7 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 		this.allowSpeedUps = allowSpeedUps;
 	}
 
-	public boolean parse() {
+	public synchronized boolean parse() {
 		return false;
 	}
 
@@ -351,7 +355,7 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 	 *         current state with all possible lexical actions corresponding to
 	 *         the given word; or null if the state was already empty
 	 */
-	public ParseState<T> parseWord(HasWord word) {
+	public synchronized ParseState<T> parseWord(HasWord word) {
 		return parseWord(state, word.word());
 	}
 
@@ -362,7 +366,7 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 	 *         state with all possible lexical actions corresponding to the
 	 *         given word; or null if the state was already empty
 	 */
-	public ParseState<T> parseWord(ParseState<T> state, String word) {
+	public synchronized ParseState<T> parseWord(ParseState<T> state, String word) {
 		if (state.isEmpty()) {
 		logger.debug("State empty at " + word);
 			return null;
@@ -463,6 +467,10 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 		return ((state != null) && !state.isEmpty());
 	}
 
+	public boolean isExhausted()
+	{
+		return state.isEmpty();
+	}
 	/**
 	 * @return the "best" tuple in the current state (where "best" is defined by
 	 *         the natural ordering of the {@link ParserTuple} implementation
@@ -519,15 +527,34 @@ public abstract class Parser<T extends ParserTuple> implements DSParser {
 		return f;
 	}
 
+
 	public ParseState<T> parseWord(String word) {
 		HasWord w = new Word(word);
 		return parseWord(w);
 	}
 	
-	public boolean parseUtterance(Utterance utt)
+	public synchronized boolean parseUtterance(Utterance utt)
 	{
+		this.ready=false;
 		logger.info("disregarding speaker of utterance.");
-		return parse(utt.words);
+		boolean success=parse(utt.words);
+		ready=true;
+		return success;
+	}
+	
+	public boolean isReady()
+	{
+		return ready;
+	}
+	
+	@Override
+	public boolean rollBack(int n) {
+		throw new UnsupportedOperationException("Operation not supported for non-DAG-based, breadth-first parsers");
+	}
+
+	public Dialogue getDialogueHistory()
+	{
+		throw new UnsupportedOperationException("Not yet supported");
 	}
 	
 	public static void main(String a[])

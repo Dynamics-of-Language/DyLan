@@ -9,11 +9,12 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.dag.UtteredWord;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.process.Tokenizer;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
+import qmul.ds.dag.RevokedWord;
+import qmul.ds.dag.UtteredWord;
 
 public class Utterance {
 
@@ -127,6 +128,13 @@ public class Utterance {
 		this.speaker=null;
 		this.words=new ArrayList<UtteredWord>();
 	}
+	
+	public Utterance(UtteredWord w)
+	{
+		this.speaker=w.speaker();
+		this.words=new ArrayList<UtteredWord>();
+		this.words.add(w);
+	}
 
 	public static void main(String a[]) {
 		Utterance utt = new Utterance("A: no. it is");
@@ -172,18 +180,27 @@ public class Utterance {
 	{
 		return this.speaker;
 	}
-	
+	/**
+	 * 
+	 * @return the text of the utterance, not containng revoked words
+	 */
 	public String getText()
 	{
 		if (words.isEmpty())
 			return "";
 		
 		if (this.words.size()<2)
-			return this.words.get(0).word();
-		
+		{
+			if (!(this.words.get(0) instanceof RevokedWord))
+				return this.words.get(0).word();
+			else
+				return "";
+		}
 		String result="";
 		for(UtteredWord w:this.words)
 		{
+			if (w instanceof RevokedWord)
+				continue;
 			if (SENTENCE_DELIMITERS.contains(w.word())&&!result.isEmpty())
 			{
 				result=result.substring(0,result.length()-1)+w.word()+" ";
@@ -192,6 +209,8 @@ public class Utterance {
 			else
 				result+=w.word()+" ";
 		}
+		if (result.isEmpty())
+			return result;
 		
 		return result.substring(0,result.length()-1);
 		
@@ -269,10 +288,19 @@ public class Utterance {
 		
 		return this.speaker.equals(other.speaker)&&this.words.equals(other.words);
 	}
-	
+	/**
+	 * 
+	 * @return length of utterance, without revoked words.
+	 */
 	public int getLength()
 	{
-		return this.words.size();
+		int count=0;
+		for(UtteredWord w: words)
+		{
+			if(!(w instanceof RevokedWord))
+				count++;
+		}
+		return count;
 	}
 	
 	public int getTotalNumberOfSegments() {

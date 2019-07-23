@@ -172,9 +172,10 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 		throw new UnsupportedOperationException("Repairing Word Edge not supported in this DAG class");
 	}
 
-
-
-	
+	@Override
+	public boolean rollBack(int n) {
+		throw new UnsupportedOperationException("Operation not yet supported");
+	}
 
 
 
