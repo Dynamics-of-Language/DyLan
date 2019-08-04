@@ -16,7 +16,7 @@ https://bitbucket.org/dylandialoguesystem/dylan_util.git
 
 THE INTERACTIVE PARSER
 
-Load this by selecting the Interactive (Best-First) mode. To parse normally, just type words into the big box, press enter or press parse. You will see the words you parse appear in the lower left box incrementally as you parse them, but you’ll notice that the words you parse will have a default speaker, “S”. 
+Load this by selecting the Interactive (Best-First) mode. To parse normally, just type words into the big box, press enter or press parse. You will see the words you parse appear in the lower left box incrementally as you parse them, but you’ll notice that the words you parse will have a default speaker, “D”. 
 
 To parse dialogue turns, prefix the words in the turn by the speaker followed by a colon, e.g. “A: john snores”. If you don’t provide the speaker, the parser will assume words are coming from the previously provided speaker.
 

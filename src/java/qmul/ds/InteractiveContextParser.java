@@ -32,25 +32,23 @@ import qmul.ds.gui.ParserPanel;
 import qmul.ds.tree.Tree;
 
 /**
- * An interactive parser with a DAG context as per Eshghi et. al (2015).
+ * This is the Dynamic Syntax dialogue parser as per 
+ * <a href="https://drive.google.com/open?id=1iG1aD2_42UE9TWyT7_hACPg-OQH0hrkg">Eshghi et. al (2015)</a>.
  * 
- * Self-repair processing. CR processing. Acknowledgements. Question/Answer
- * pairs....
+ * The parser is best-first and constructs an explicit Directed Asyclic Graph (implemented as {@link qmul.ds.dag.WordLevelContextDAG}) 
+ * which acts both as the current parse state, as well as the dialogue context.
  * 
- * TODO: (2) Fix how tree completion works. Currently it is right-edge tokens
- * like . or ? that take care of it. ?? TODO: (3) Add generation: Given current
- * context, i.e. the DAG constructed so far, and a goal concept, generate
- * turn/string such that the maximal semantics of the right-most node on the DAG
- * equals the goal. Generally, there will be two options: (a) local extension
- * including repair/correction; and (b) starting a new clause. At this point, we
- * can force (a) to be preferred and (b) only tried if (a) fails.
- * 
+ * The parser currently supports Self-Repair processing, Restarts, Communicative Grounding, Question Answer Pairs.
  * 
  * @author Arash
  *
  */
+
 public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge> {
 
+	
+	
+	
 	public static final String DEFAULT_NAME = Utterance.defaultSpeaker;
 
 	public static final String repair_init_prefix = qmul.ds.dag.BacktrackingEdge.repair_init_prefix;

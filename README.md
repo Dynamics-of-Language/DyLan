@@ -1,14 +1,17 @@
-DyLan Dynamic Syntax Parser
+DyLan: Parser for Dynamic Syntax
 Copyright (c) 2001-2010 Matthew Purver,
 All Rights Reserved.
 
+Copyright (c) 2011-2019 Arash Eshghi,
+All Rights Reserved.
+
 Original parser author: Matthew Purver
-Code contributions: Matthew Purver, Arash Eshghi, Yo Sato
+Later Code Contributions: Arash Eshghi, Julian Hough, Yo Sato
 Current release prepared by: Arash Eshghi
 
 This package contains a Java implementation of a NL-parser in the Dynamic Syntax framework, 
-including prototype grammatical rules and lexicons for the English language. The lexicon
-is very small but the implementation covers a broad range of structures including relative
+including prototype grammatical rules and lexicons for the English language. The lexicons are 
+small but easy to extend as the implementation covers a broad range of structures including relative
 clauses and tense.
 
 
@@ -19,7 +22,7 @@ From the command prompt:
 
 java -jar dylan.jar
 
-or simply run the ds.jar file directly.
+or simply run the dylan.jar file directly.
 
 CONTENTS
 -----------------------------------------------
@@ -38,7 +41,7 @@ dylan.jar
 
 src
 
-  A directory containing the Java 1.6 source code for the distribution.
+  A directory containing the Java 1.8 source code for the distribution.
 
 
 resources
@@ -102,20 +105,22 @@ All Rights Reserved.
 CONTACT
 -----------------------------------------------
 
-For more information, bug reports, fixes, contact:
-	
-	Matthew Purver
-	School of Engineering and Computer Science
-    	Queen Mary University of London
-    	London E1 4NS
-	
-	mpurver@eecs.qmul.ac.uk
-
-	Or
+For more information, bug reports & fixes, contact:
 
 	Arash Eshghi
-	School of Engineering and Computer Science
-    	Queen Mary University of London
-    	London E1 4NS
+	School of Mathematical and Computer Sciences
+	Heriot-Watt University
+    	Edinburgh E14 4AS
 
-    	arash@eecs.qmul.ac.uk
+    Email: a.eshghi@hw.ac.uk
+    
+    Or
+    
+    Julian Hough
+    School of Electronic Engineering and Computer Science
+    Queen Mary University of London
+    London E1 4NS
+    
+    Email: j.hough@qmul.ac.uk
+    
+    
