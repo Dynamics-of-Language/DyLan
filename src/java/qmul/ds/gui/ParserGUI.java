@@ -17,6 +17,7 @@ import qmul.ds.DSParser;
 import qmul.ds.dag.UtteredWord;
 /**
  * 
+ * This is the Graphical User Interface for the DyLan parser/generator. 
  * 
  * @author Matt, Arash
  *
