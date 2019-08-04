@@ -1,4 +1,5 @@
-DyLan: Parser for Dynamic Syntax
+# DyLan: Parser for Dynamic Syntax
+
 Copyright (c) 2001-2010 Matthew Purver,
 All Rights Reserved.
 
@@ -15,14 +16,10 @@ small but easy to extend as the implementation covers a broad range of structure
 clauses and tense.
 
 
-QUICKSTART
+# QUICKSTART
 -----------------------------------------------
 
-From the command prompt:
-
-java -jar dylan.jar
-
-or simply run the dylan.jar file directly.
+See the [QUICKSTART Wiki Page](https://bitbucket.org/dylandialoguesystem/dsttr/wiki/Dylan%20Quick%20Setup%20Guide)
 
 CONTENTS
 -----------------------------------------------
