@@ -6,31 +6,7 @@
  * redistribution of this file, and for a DISCLAIMER OF ALL
  * WARRANTIES.
  *******************************************************************************/
-// StanfordLexicalizedParser -- a probabilistic lexicalized NL CFG parser
-// Copyright (c) 2002, 2003, 2004, 2005 The Board of Trustees of
-// The Leland Stanford Junior University. All Rights Reserved.
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-// For more information, bug reports, fixes, contact:
-//    Christopher Manning
-//    Dept of Computer Science, Gates 4A
-//    Stanford CA 94305-9040
-//    USA
-//    parser-support@lists.stanford.edu
-//    http://nlp.stanford.edu/downloads/lex-parser.shtml
+
 package qmul.ds.gui;
 
 import java.awt.Color;
@@ -539,12 +515,10 @@ public class ParserPanel extends JPanel {
 	/**
 	 * Re-initialises the current parser
 	 */
-	public void initParser() {
+	public synchronized void initParser() {
 		if (parser != null) {
 			tuples.clear();
 			parser.init();
-			parsedTextPane.setText("");
-			//parsedTextPane.setContentType("text/html");
 			
 
 			if (parser instanceof InteractiveContextParser) {
@@ -557,21 +531,21 @@ public class ParserPanel extends JPanel {
 					conPanel.setDAG(p.getState());
 					this.tabbedTuplePanel.setEnabledAt(1, true);
 				}
-				tuples.add(p.getState().getCurrentTuple());
+				
 			} else if (conPanel != null) {
 
 				this.tabbedTuplePanel.setEnabledAt(1, false);
 				this.tabbedTuplePanel.setSelectedIndex(0);
 			}
 
-			displayBestParse();
+			
 		}
 	}
 
 	/**
 	 * Tells the current parser to prepare for a new sentence
 	 */
-	public void turnParser() {
+	public synchronized void turnParser() {
 		if (parser != null) {
 			parser.newSentence();
 			displayBestParse();
@@ -579,7 +553,7 @@ public class ParserPanel extends JPanel {
 		nextButton.setEnabled(false);
 	}
 
-	private void displayTuple(ParserTuple tuple) {
+	private synchronized void displayTuple(ParserTuple tuple) {
 		Tree tree = (tuple == null ? null : tuple.getTree().toStanfordTree());
 		// tree.pennPrint();
 		treeNumberLabel.setText("Tree: " + (tupleNumber + 1) + " of " + tuples.size());
@@ -603,7 +577,7 @@ public class ParserPanel extends JPanel {
 	/**
 	 * Display the best parse if available
 	 */
-	private void displayBestParse() {
+	private synchronized void displayBestParse() {
 		// tuples = new ArrayList<ParserTuple>(parser.getState());
 		// ArrayList<ParserTuple> ttrtuples
 		// TODO this is TTR specific, it shouldn't be in the gui
@@ -614,7 +588,10 @@ public class ParserPanel extends JPanel {
 			tuples.clear();
 			tuples.addAll(((qmul.ds.Parser) parser).getState());
 		}
+		else
+			tuples.add(parser.getBestTuple());
 		
+		logger.debug("Displaying "+tuples.size()+" tuples");
 		tupleNumber = tuples.size() - 1;
 		displayTuple(tuples.get(tupleNumber));
 
@@ -633,10 +610,8 @@ public class ParserPanel extends JPanel {
 	private synchronized void adjustOnce(ActionEvent evt) {
 		if (parser instanceof InteractiveContextParser) {
 			InteractiveContextParser dagParser = (InteractiveContextParser) parser;
-			if (dagParser.parse()) {
-				tuples.add(dagParser.getState().getCurrentTuple());
-			}
-
+			dagParser.parse();
+				
 		}
 
 	}
@@ -949,7 +924,7 @@ public class ParserPanel extends JPanel {
 			stopProgressMonitor();
 			setStatus("Done");
 			tuples.clear();
-			tuples.add(parser.getBestTuple());
+			
 		}
 
 	}
@@ -1220,8 +1195,6 @@ public class ParserPanel extends JPanel {
 
 					p.getState().resetToFirstTupleAfterLastWord();
 					tuples.clear();
-
-					tuples.add(p.getState().getCurrentTuple());
 
 				}
 			}

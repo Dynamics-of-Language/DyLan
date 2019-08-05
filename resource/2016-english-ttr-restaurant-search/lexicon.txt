@@ -57,7 +57,7 @@ want                          v_subjcon_fin                 want                
 wants                         v_subjcon_fin                 want                          pres                          s3
 want                          v_subjcon_inf                 want                          inf                          nons3
 //like                          v_tran_inf                    like                          inf                           per
-//like                          v_tran_fin                    like                          pres                          nons3
+like                          v_tran_fin                    like                          pres                          nons3
 //make						  v_tran_inf                    make                          inf                          per
 //likes                         v_tran_fin                    like                          pres                          s3
 like                          v_subjcon_fin                 like                          pres                          nons3
