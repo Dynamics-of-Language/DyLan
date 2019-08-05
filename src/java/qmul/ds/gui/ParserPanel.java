@@ -403,9 +403,11 @@ public class ParserPanel extends JPanel {
 			// List<? extends HasWord> wordList = toke.tokenize();
 
 			Utterance utt = new Utterance(text);
+			
+			Utterance prev=parser.getDialogueHistory().lastUtterance();
 
-			if (prevUtterance != null && utt.getSpeaker().equals(Utterance.defaultSpeaker)) {
-				utt.setSpeaker(prevUtterance.getSpeaker());
+			if ( prev != null && utt.getSpeaker().equals(Utterance.defaultSpeaker)) {
+				utt.setSpeaker(prev.getSpeaker());
 
 			}
 			parseThread = new ParseThread(utt);
@@ -543,7 +545,7 @@ public class ParserPanel extends JPanel {
 			parser.init();
 			parsedTextPane.setText("");
 			//parsedTextPane.setContentType("text/html");
-			prevUtterance = null;
+			
 
 			if (parser instanceof InteractiveContextParser) {
 				InteractiveContextParser p = (InteractiveContextParser) parser;
@@ -1468,13 +1470,13 @@ public class ParserPanel extends JPanel {
 
 	}// GEN-END:initComponents
 
-	Utterance prevUtterance = null;
+	//Utterance prevUtterance = null;
 	UtteredWord prevWord;
 
 	private void insertUtterance(Utterance u) throws BadLocationException
 	{
 		
-		int length=parsedTextPane.getText().length();
+		
 		StyledDocument doc = parsedTextPane.getStyledDocument();
 		SimpleAttributeSet simple = new SimpleAttributeSet();
 		
@@ -1485,7 +1487,10 @@ public class ParserPanel extends JPanel {
 		{
 			
 			if (w instanceof RevokedWord)
+			{
+				
 				simple.addAttribute(StyleConstants.StrikeThrough, true);
+			}
 			else simple.addAttribute(StyleConstants.StrikeThrough, false);
 			
 			doc.insertString(doc.getLength(), w.word() + " ", simple);
@@ -1500,8 +1505,10 @@ public class ParserPanel extends JPanel {
 		parsedTextPane.setText("");
 		try {
 			for(Utterance u: d)
-				insertUtterance(u);
+			{
 				
+				insertUtterance(u);
+			}	
 			
 		} catch (BadLocationException e) {
 			e.printStackTrace();

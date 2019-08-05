@@ -160,7 +160,7 @@ public class Dialogue extends ArrayList<Utterance> {
 		logger.debug("Appending:"+w);
 		if (isEmpty()||!w.speaker().equals(lastUtterance().getSpeaker()))
 		{
-			Utterance utt=new Utterance(w.speaker(), w.word());
+			Utterance utt=new Utterance(w);
 			add(utt);
 			
 		}

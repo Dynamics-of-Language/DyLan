@@ -189,13 +189,13 @@ public class Utterance {
 		if (words.isEmpty())
 			return "";
 		
-		if (this.words.size()<2)
-		{
-			if (!(this.words.get(0) instanceof RevokedWord))
-				return this.words.get(0).word();
-			else
-				return "";
-		}
+//		if (this.words.size()<2)
+//		{
+//			if (!(this.words.get(0) instanceof RevokedWord))
+//				return this.words.get(0).word();
+//			else
+//				return "";
+//		}
 		String result="";
 		for(UtteredWord w:this.words)
 		{

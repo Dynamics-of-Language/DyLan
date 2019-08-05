@@ -19,13 +19,13 @@ import qmul.ds.dag.UtteredWord;
  */
 public interface DSParser extends edu.stanford.nlp.parser.Parser {
 	/**
-	 * Reset the parse state to the initial (axiom) state
+	 * Reset the parse state to the initial (axiom) state.
 	 */
 	public void init();
 
 	/**
 	 * Tell the parser we're beginning a new sentence. By default, this just
-	 * resets to the initial (axiom) state
+	 * resets to the initial (axiom) state. Other parsers may implement different behavior.
 	 * 
 	 * @see init()
 	 */
@@ -78,10 +78,16 @@ public interface DSParser extends edu.stanford.nlp.parser.Parser {
 	 */
 	public boolean rollBack(int n);
 	
-	
+	/**
+	 * 
+	 * @return a Dialogue object containing the dialogue history so far parsed or generated
+	 */
 	public Dialogue getDialogueHistory();
 	
-	
+	/**
+	 * 
+	 * @return if the current parse state is exhausted (with all possibilities tried)
+	 */
 	public boolean isExhausted();
 	
 	
