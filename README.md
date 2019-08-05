@@ -10,10 +10,11 @@ Original parser author: Matthew Purver
 Later Code Contributions: Arash Eshghi, Julian Hough, Yo Sato
 Current release prepared by: Arash Eshghi
 
-This package contains a Java implementation of a NL-parser in the Dynamic Syntax framework, 
-including prototype grammatical rules and lexicons for the English language. The lexicons are 
+This package contains a Java implementation of a word by word incremental NL-parser & generator in the Dynamic Syntax (DS)
+framework, including prototype grammatical rules and a few lexicons for the English language. The lexicons are
 small but easy to extend as the implementation covers a broad range of structures including relative
-clauses and tense.
+clauses and tense. It also includes code for learning DS grammars from data.
+
 
 
 # QUICKSTART
@@ -21,7 +22,7 @@ clauses and tense.
 
 See the [QUICKSTART Wiki Page](https://bitbucket.org/dylandialoguesystem/dsttr/wiki/Dylan%20Quick%20Setup%20Guide)
 
-CONTENTS
+# CONTENTS
 -----------------------------------------------
 README.txt
 
@@ -30,11 +31,6 @@ README.txt
 LICENSE.txt
 
   DyLan Dynamic Syntax Parser is licensed under the GNU LESSER GENERAL PUBLIC LICENSE (version 3+)
-
-dylan.jar
-
-  This is a JAR file containing all the classes necessary to
-  run the DyLan parser.
 
 src
 
@@ -58,7 +54,7 @@ as specified in the lexicon (3 below).
 later resources include also:
 
 lexical-macros.txt: a set of procedures/macros used by lexical rule specifications in lexical-actions.txt.
-
+speech-act-inference-grammar.txt: a set of procedures used to map semantics to speech act specification within a particular domain.
 
 javadoc
 
@@ -69,7 +65,7 @@ log
 (for tracing or debugging) found in various places in the code, in addition to the gui.out file which contains all
 standard outputs (e.g. System.err or System.out as well as logger statements).
 
-THANKS
+# THANKS
 -----------------------------------------------
 
 Thanks to the members of the Dynamics of Conversational Dialogue (DynDial) project
@@ -77,11 +73,14 @@ for great collaborative work on what is here implemented.
 
   http://www.kcl.ac.uk/research/groups/ds/projects.html
 
-LICENSE
+# LICENSE
 -----------------------------------------------
 
 DyLan Dynamic Syntax Parser
 Copyright (c) 2001-2010 Matthew Purver,
+All Rights Reserved.
+
+Copyright (c) 2011-2019 Arash Eshghi,
 All Rights Reserved.
 
  This program is free software; you can redistribute it and/or
@@ -100,7 +99,7 @@ All Rights Reserved.
 
 	
 
-CONTACT
+# CONTACT
 -----------------------------------------------
 
 For more information, bug reports & fixes, contact:
@@ -120,5 +119,14 @@ For more information, bug reports & fixes, contact:
     London E1 4NS
     
     Email: j.hough@qmul.ac.uk
+    
+    Or 
+    
+    Matthew Purver
+    School of Electronic Engineering and Computer Science
+    Queen Mary University of London
+    London E1 4NS
+    
+    Email: m.purver@qmul.ac.uk
     
     
