@@ -43,18 +43,19 @@ resources
 at the different developmental stages of the Dynamic Syntax framework. All resources 
 include at least the following files:
 
-1) computational-actions.txt: contains the grammar of the language. This is a specification
+* _computational-actions.txt_: contains the grammar of the language. This is a specification
 of a set of procedural grammatical rules, in the (meta-)language of Dynamic Syntax.
 
-2) lexical-actions.txt: contains the lexical actions corresponding to the words of the language 
+* _lexical-actions.txt_: contains the lexical actions corresponding to the words of the language 
 as specified in the lexicon (3 below). 
 
-3) lexicon.txt: this is a list of words, mapped onto syntactic categories (verb, noun, determiner etc.).
+* _lexicon.txt_: this is a list of words, mapped onto syntactic categories (verb, noun, determiner etc.).
 
 later resources include also:
 
-lexical-macros.txt: a set of procedures/macros used by lexical rule specifications in lexical-actions.txt.
-speech-act-inference-grammar.txt: a set of procedures used to map semantics to speech act specification within a particular domain.
+* _lexical-macros.txt_: a set of procedures/macros used by lexical rule specifications in lexical-actions.txt.
+
+* _speech-act-inference-grammar.txt_: a set of procedures used to map semantics to speech act specification within a particular domain.
 
 javadoc
 
