@@ -59,12 +59,16 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 * The optional set of computational actions
 	 */
 	protected Grammar optionalGrammar;
+	
+
 	/**
 	 * The computational actions used for completing a tree: completion, beta-reduction, thinning (anticipation?)
 	 */
-
 	protected Grammar completionGrammar;
 	
+	/**
+	 * The Speech/Dialogue Act Inference Grammar. This is optional.
+	 */
 	protected SpeechActInferenceGrammar sa_grammar;
 
 	protected boolean ready=false;

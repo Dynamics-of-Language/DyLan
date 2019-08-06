@@ -38,7 +38,10 @@ import qmul.ds.tree.Tree;
  * The parser is best-first and constructs an explicit Directed Asyclic Graph (implemented as {@link qmul.ds.dag.WordLevelContextDAG}) 
  * which acts both as the current parse state, as well as the dialogue context.
  * 
- * The parser currently supports Self-Repair processing, Restarts, Communicative Grounding, Question Answer Pairs.
+ * The parser currently supports Self-Repair processing, Restarts, Communicative Grounding, Short-Answers and other forms of 
+ * ellipsis.
+ * 
+ * 
  * 
  * @author Arash
  *
@@ -53,6 +56,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	public static final String repair_init_prefix = qmul.ds.dag.BacktrackingEdge.repair_init_prefix;
 
+	/**
+	 * List of action types that cannot be repaired, e.g. cannot do: John like Mary . sorry ?
+	 * 
+	 */
 	static String[] non_repairing = { "accept", "reject", "assert", "question" };
 	public static final List<String> non_repairing_action_types = Arrays.asList(non_repairing);
 	private static Logger logger = Logger.getLogger(InteractiveContextParser.class);
@@ -80,9 +87,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public static final String WAIT = Utterance.WAIT;
 
 	/**
-	 * currently determines the maximum number previous positions we add repairing edges through....
+	 * Determines the maximum number of previous positions that the parser backtracks to for repair;
 	 * so in e.g. I like john um mary, mary can only repair john with a max depth of 1. If this were 2
-	 * it could also repair 'I'
+	 * it could also repair 'I'. With this set to 1, the repair is always local.
 	 */
 	public static final int max_repair_depth = 1;
 
@@ -96,10 +103,11 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
-	/**
-	 * @param resourceDirNameOrURL
-	 *            the dir containing computational-actions.txt,
-	 *            lexical-actions.txt, lexicon.txt
+	/** A new InteractiveContext Parser.
+	 * 
+	 * @param resourceDirNameOrURL name of folder containing the grammar
+	 * @param repairing whether repair processing is enabled
+	 * @param participants the participants in the conversation to be processed by the parser.
 	 */
 	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing, String... participants) {
 		super(resourceDirNameOrURL);
@@ -399,8 +407,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	}
 
 	/**
-	 * Action reply not working... TODO
+	 * Action replqy not working... TODO
 	 * TODO
+	 * 
 	 * commenting it out in applyAllPermutaions.
 	 * 
 	 * 
@@ -647,7 +656,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 				// if the repairable is grounded for the repairing speaker we
 				// can't repair it.
-				if (repairableEdge.isGroundeFor(word.speaker()))
+				if (repairableEdge.isGroundedFor(word.speaker()))
 					break;
 
 				logger.debug("back over:" + repairableEdge);
@@ -730,7 +739,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 				// if the repairable is grounded for the repairing speaker we
 				// can't repair it.
-				if (repairableEdge.isGroundeFor(word.speaker()))
+				if (repairableEdge.isGroundedFor(word.speaker()))
 					break;
 
 				logger.debug("back over:" + repairableEdge);

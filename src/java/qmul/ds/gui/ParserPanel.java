@@ -1287,33 +1287,6 @@ public class ParserPanel extends JPanel {
 			}
 		});
 
-		// pTextPane.addKeyListener(new KeyListener() {
-		//
-		// @Override
-		// public void keyTyped(KeyEvent e) {
-		// System.out.println(e);
-		// System.out.println(e.getModifiers());
-		// System.out.println("Enter:"+KeyEvent.VK_ENTER);
-		// System.out.println("keycode:"+e.getKeyCode());
-		//
-		// if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers()==1)
-		// {
-		// //highlightEditedSentence();
-		// parse(false);
-		// pTextPane.setText("");
-		//
-		// }
-		// }
-		//
-		// @Override
-		// public void keyReleased(KeyEvent e) {
-		// }
-		//
-		// @Override
-		// public void keyPressed(KeyEvent e) {
-		// }
-		// });
-
 		pTextScrollPane.setViewportView(pTextPane);
 
 		topPanel.add(pTextScrollPane, java.awt.BorderLayout.CENTER);
@@ -1331,11 +1304,7 @@ public class ParserPanel extends JPanel {
 
 		this.tabbedTuplePanel.addTab("Tuple", tupleViewer);
 
-		// semPanel = new FormulaPanel();
-		// JScrollPane fs = new JScrollPane(semPanel);
-		// semPanel.setContainer(fs);
-		// this.tabbedTuplePanel.addTab("Semantics", fs);
-
+		
 		treeContainer.add("Center", this.tabbedTuplePanel);
 		tupleViewer.setBackground(Color.white);
 		parserFilePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
@@ -1473,7 +1442,7 @@ public class ParserPanel extends JPanel {
 		
 	}
 	
-	public void displayDialogue(Dialogue d) {
+	public synchronized void displayDialogue(Dialogue d) {
 	
 		parsedTextPane.setText("");
 		try {

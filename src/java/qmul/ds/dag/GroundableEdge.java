@@ -26,8 +26,7 @@ public class GroundableEdge extends DAGEdge {
 		super(a, w);
 		if (w.word().equals(InteractiveContextParser.RELEASE_TURN))
 			this.grounded_for.add(w.speaker());
-		//if (w != null)
-		//	this.grounded_for.add(w.speaker());
+		
 	}
 
 	public GroundableEdge(Action a, UtteredWord w, long id) {
@@ -73,7 +72,7 @@ public class GroundableEdge extends DAGEdge {
 		return toString();
 	}
 
-	public boolean isGroundeFor(String speaker) {
+	public boolean isGroundedFor(String speaker) {
 		return grounded_for.contains(speaker);
 	}
 	
