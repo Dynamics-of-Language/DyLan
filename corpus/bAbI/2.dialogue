@@ -1,0 +1,12 @@
+usr:	goodmorning <rt>
+sys:	hello what can i help you with today <rt>
+usr:	i'd like to make a restaurant reservation <rt>
+sys:	sure any preference on a type of cuisine? <rt>
+usr:	with spanish food please <rt>
+sys:	where should it be <rt>
+usr:	madrid please <rt>
+sys:	howmany people would be in your party <rt>
+usr:	for two people please <rt>
+sys:	which price range are you looking for <rt>
+usr:	in a expensive price range please <rt>
+sys:	ok let me look into some options for you <rt>
