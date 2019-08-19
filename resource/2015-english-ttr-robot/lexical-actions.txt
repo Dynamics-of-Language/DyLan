@@ -6,6 +6,19 @@
 // Bottom requirement: !
 
 
+
+
+dummy_rel_goal(PRED)
+IF		+goal
+		?ty(es)
+THEN	do_nothing
+ELSE	abort
+
+dummy_prep(PRED)
+IF      (?ty(e)||ty(e))
+THEN	do_nothing
+ELSE	abort
+
 //*
 Nouns and pronouns
 *//
@@ -34,21 +47,21 @@ IF      ?ty(cn)
 THEN 	delete(Fo(X))
 		make(\/1)
         go(\/1)
-        ttrput(R^(R ++ [p3==PRED(R.head):t]))
+        ttrput(R^(R ++ [p4==PERSON(R.head):t|p3==PRED(R.head):t]))
         put(ty(e>cn))      
         go(/\1)
         make(\/0)
         go(\/0)
-        ttrput([head==x:e])
+        ttrput([x:e|head==x:e])
         put(ty(e))
 ELSE    abort
 
-count_def(PRED,PERSON,CLASS)
+count_indef(PRED,PERSON,CLASS)
 IF      ?ty(e)
 THEN    put(person(s3))	
 		make(\/1)
         go(\/1)
-        ttrput(R^[r:R | x1==(iota, r.head, r):e | head==x1:e])
+        ttrput(R^[r:R | x1==(eps, r.head, r):e | head==x1:e])
         put(ty(cn>e))
         put(!)
         go(/\1)
@@ -63,7 +76,7 @@ THEN    put(person(s3))
         go(/\1)
         make(\/0)
         go(\/0)
-        ttrput([head==x:e])
+        ttrput([x :e|head==x:e])
         put(ty(e))
         put(!)
 ELSE	abort
@@ -103,6 +116,7 @@ ELSE    abort
 
 pron_dative(PERSON,CLASS)
 IF      ?ty(e)
+		?+dat
 THEN	put(+dat)
 		put(ty(e))
         ttrput([x==PERSON:e|head==x:e])
@@ -155,7 +169,7 @@ THEN    put(person(s3))
         make(\/0)
         go(\/0)
         put(?ty(cn))
-        ttrput([x:e|head:x])
+        ttrput([x:e|head==x:e])
 ELSE    abort
 
 
@@ -167,14 +181,14 @@ IF      (?ty(cn)||?ty(e))
 THEN    IF		?ty(e)
 		THEN	make(\/1)
         		go(\/1)
-        		ttrput(R^[r:R | x1==(iota, r.head, r):e | head==x1:e])
+        		ttrput(R^[r:R | x1==(eps, r.head, r):e | head==x1:e])
         		put(ty(cn>e))
         		put(!)
         		go(/\1)
         		make(\/0)
         		go(\/0)
         		put(?ty(cn))
-        		ttrput([x:e|head:x])
+        		ttrput([x:e|head==x:e])
 		ELSE	do_nothing
 		IF      ?ty(cn)
 				Fo(X)
@@ -200,6 +214,49 @@ THEN    IF		?ty(e)
 		        ttrput([x:e|head==x:e])
 		        put(?ty(cn))
 ELSE    abort
+
+//*
+ Number quantifiers- if no def article, assume indef, i.e. any 3
+*//
+adj_quant(PRED)
+IF      (?ty(cn)||?ty(e))
+THEN    IF		?ty(e)
+		THEN	make(\/1)
+        		go(\/1)
+        		ttrput(R^[r:R | x1==(eps, r.head, r):e | head==x1:e])
+        		put(ty(cn>e))
+        		put(!)
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(?ty(cn))
+        		ttrput([x:e|head==x:e])
+		ELSE	do_nothing
+		IF      ?ty(cn)
+				Fo(X)
+		THEN    delete(Fo(X))
+				make(\/1)
+		        go(\/1)
+		        ttrput(R^(R ++ [p3==PRED(R.head):t]))
+		        put(ty(cn>cn))
+		        put(!)
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        ttrput([x:e|head==x:e])
+		        put(?ty(cn))
+	 	ELSE	make(\/1)
+		        go(\/1)
+		        ttrput(R^(R ++ [p3==PRED(R.head):t]))
+		        put(ty(cn>cn))
+		        put(!)
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        ttrput([x:e|head==x:e])
+		        put(?ty(cn))
+ELSE    abort
+
 
 
 //*
@@ -247,7 +304,7 @@ THEN	put(ty(e))
 		make(\/L)
 		go(\/L)
 		put(ty(t))
-		ttrput([head:es|p1==imperative(head):t])
+		ttrput([head==e:es|p1==imperative(e):t])
 		go(/\L)
 		go(/\L)
 		v_intran_content(PRED)
@@ -308,7 +365,7 @@ THEN	put(ty(e))
 		ttrput([x==addressee:e|head==x:e])
 		go(/\0)
 		go(\/1)
-		v_ditran_content(PRED)
+		v_ditran_goal_content(PRED)
 ELSE	abort
 
 //*
@@ -319,7 +376,7 @@ make(\/L)
 		make(\/L)
 		go(\/L)
 		put(ty(t))
-		ttrput([head:es|p1==imperative(head):t])
+		ttrput([e:es|head==e:es|p1==imperative(head):t])
 		go(/\L)
 		go(/\L)
 
@@ -342,11 +399,15 @@ THEN	put(ty(e))
 		make(\/L)
 		go(\/L)
 		put(ty(t))
-		ttrput([head:es|p1==imperative(head):t])
+		ttrput([e:es|head==e:es|p1==imperative(head):t])
 		go(/\L)
 		go(/\L)
 		v_ditran_content(PRED)
+		go(/\0)
+		go(/\1)
+		go(\/0)
 		put(?+dat)
+		go(/\0)
 ELSE	abort
 
 v_aux_inf(PRED,TENSE,PERSON)
@@ -383,12 +444,12 @@ THEN	IF		?ty(e)
 				make(\/L)
 				go(\/L)
 				put(ty(t))
-				ttrput([head:es|p==PRED(head):t])
+				ttrput([e:es|head==e:es|p==PRED(head):t])
 		ELSE	put(?+eval)
 				make(\/L)
 				go(\/L)
 				put(ty(t))
-				ttrput([head:es|p==PRED(head):t])
+				ttrput([e:es|head==e:es|p==PRED(head):t])
 ELSE	abort
 
 prep_adv(PRED)
@@ -401,7 +462,7 @@ THEN	put(?+eval)
 		make(\/1)
 		go(\/1)
 		put(ty(e>t))
-		ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+		ttrput(R1^(R1 ++ [e:es|head==e:es|p==PRED(head,R1.head):t]))
 		go(/\1)
 		make(\/0)
 		go(\/0)
@@ -418,7 +479,7 @@ THEN	put(?+eval)
 		make(\/1)
 		go(\/1)
 		put(ty(e>t))
-		ttrput(R1^(R1 ++ [head:es|p==PRED(head,R1.head):t]))
+		ttrput(R1^(R1 ++ [e:es|head==e:es|p==PRED(head,R1.head):t]))
 		go(/\1)
 		make(\/0)
 		go(\/0)
@@ -432,16 +493,16 @@ THEN	put(?+eval)
         make(\/0)
         go(\/0)
         put(?ty(cn))
-        ttrput([x:e|head:x])
+        ttrput([x:e|head==e:x])
 ELSE	abort
 
 prep_mod_location_goal(PRED)
 IF		+goal
-		?ty(e)
+		?ty(es)
 THEN	make(\/1)
 		go(\/1)
-		put(ty(e>e))
-		ttrput(R1^(R1 ++ [e1==PRED:es|head:e1|p==obj(head,R1.head):t]))
+		put(ty(e>es))
+		ttrput(R1^(R1 ++ [e1==PRED:es|head==e1:es|p==obj(head,R1.head):t]))
 		put(!)
 		go(/\1)
 		make(\/0)
@@ -480,6 +541,27 @@ THEN	put(?+eval)
 		go(\/0)
 ELSE	abort
 
+noun_mod_location(PRED)
+IF		ty(e)
+		fo(X)
+		</\0>?ty(cn)
+THEN	put(?+eval)
+		make(\/L)
+		go(\/L)
+		make(\/0)
+		go(\/0)
+		put(ty(e))
+		put(fo(X))
+		go(/\0)
+		make(\/1)
+		go(\/1)
+		put(ty(e>e))
+		ttrput(R1^(R1 ++ [p==PRED(R1.head):t|head==R1.head:e]))
+		put(!)
+		go(/\1)
+		beta-reduce
+ELSE	abort
+
 //*
 put(?ty(e))
 		make(\/0)
@@ -516,7 +598,7 @@ THEN	put(?+eval)
 		make(\/1)
 		go(\/1)
 		put(ty(e>t))
-		ttrput(R1^(R1 ++ [head:e|p==PRED(head,R1.head):t]))
+		ttrput(R1^(R1 ++ [e:es|head==e:es|p==PRED(head,R1.head):t]))
 		go(/\1)
 		make(\/0)
 		go(\/0)
@@ -530,7 +612,7 @@ THEN	put(?+eval)
         make(\/0)
         go(\/0)
         put(?ty(cn))
-        ttrput([x:e|head:x])
+        ttrput([x:e|head==x:e])
 ELSE	abort
 
 adjunct_loc_time(PRED)
@@ -540,7 +622,7 @@ THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
 		put(ty(t))
-		ttrput([head:es|p==PRED(head):t])
+		ttrput([e:es|head==e:es|p==PRED(head):t])
 ELSE	abort
 
 //*
