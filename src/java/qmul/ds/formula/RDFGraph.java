@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 /**
  * 
  * @author Arash, Angus
@@ -18,11 +19,13 @@ public class RDFGraph extends RDFFormula {
 	
 	private static final long serialVersionUID = 1L;
 	protected Model rdfModel;
+	protected Resource HEAD;
 	
 	
-	public RDFGraph(Model rdfm)
+	public RDFGraph(Model rdfm, Resource h)
 	{
 		this.rdfModel = rdfm;
+		this.HEAD = h;
 	}
 	
 	public RDFGraph(String turtle)
@@ -93,6 +96,14 @@ public class RDFGraph extends RDFFormula {
 	@Override
 	public RDFFormula clone() {
 		return new RDFGraph(this);
+	}
+	
+	public static void main(String args[])
+	{
+		RDFGraph g = RDFGraph.parse("TURTLE String .... ");
+
+		
+		
 	}
 	
 	

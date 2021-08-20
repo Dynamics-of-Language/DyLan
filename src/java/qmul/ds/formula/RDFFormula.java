@@ -12,7 +12,7 @@ package qmul.ds.formula;
 public abstract class RDFFormula extends Formula {
 
 	/**
-	 * 
+	 *  TODO: not finished ... 
 	 */
 	private static final long serialVersionUID = -2738227532139543921L;
 

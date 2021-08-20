@@ -24,6 +24,7 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	public static final String RDF_VARIABLE_PATTERN = "G\\d*";//e.g. G1, G2, etc
 	
 	
+	//RECURSIVE definition
 	
 	protected Variable var;
 	protected RDFFormula body;																
@@ -35,8 +36,12 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		//TODO
 	}
 
-	
-	public RDFLambdaAbstract(String group, String group2) {
+	/**
+	 * 
+	 * @param variable
+	 * @param body
+	 */
+	public RDFLambdaAbstract(String variable, String body) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -49,10 +54,23 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 
 	@Override
 	public RDFLambdaAbstract substitute(Formula f1, Formula f2) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
+	
+//	public static void main(String a[])
+//	{
+//		RDFLambdaAbstract rla = "run";
+//		Variable x = new Variable("x");
+//		
+//		RDFGraph john = new RDFGraph("equivalant of 'john' in RDF");
+//		
+//		RDFGraph result = rla.substitute(x, john);
+//		
+//		
+//	}
+	
 	@Override
 	public RDFFormula clone() {
 		// TODO Auto-generated method stub
