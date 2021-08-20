@@ -52,5 +52,6 @@
 	<classpathentry kind="lib" path="lib/jena-4.1.0/log4j-api-2.14.1.jar"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/log4j-core-2.14.1.jar"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/log4j-slf4j-impl-2.14.1.jar"/>
+	<classpathentry kind="lib" path="dist/jar/log4j-1.2.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
