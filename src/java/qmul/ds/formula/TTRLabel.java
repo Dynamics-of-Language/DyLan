@@ -56,11 +56,6 @@ public class TTRLabel extends Variable {
 		return new TTRLabel(this);
 	}
 
-	public static void main(String a[]) {
-		Matcher m = LABEL_PATTERN.matcher("p=run(x)");
-		if (m.matches())
-			System.out.println("group 1:" + m.group(1) + "\ngroup 2:" + m.group(2));
-	}
 	
 	public TTRLabel instantiate()
 	{

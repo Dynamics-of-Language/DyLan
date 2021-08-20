@@ -30,7 +30,8 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 	protected static final String LAMBDA_FUNCTOR = "^";
 	private static final String UNICODE_LAMBDA_FUNCTOR = "\u03BB"; // lambda;
 																	// also
-																	// 1D6CC
+	protected Variable variable;
+	protected TTRFormula formula;																
 
 	/**
 	 * @return the high-level (DS) type of the final field of the body
@@ -52,8 +53,7 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 		return this.replaceCore(getCore().freshenVars(c));
 	}
 
-	protected Variable variable;
-	protected TTRFormula formula;
+
 
 	public TTRLambdaAbstract(String variable, String formula) {
 		this(new Variable(variable), (TTRFormula) Formula.create(formula));

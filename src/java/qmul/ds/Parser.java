@@ -22,7 +22,6 @@ import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
-import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.tree.Node;
