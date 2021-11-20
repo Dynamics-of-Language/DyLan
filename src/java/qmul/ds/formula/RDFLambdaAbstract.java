@@ -1,5 +1,15 @@
 package qmul.ds.formula;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Selector;
+import org.apache.jena.rdf.model.SimpleSelector;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.log4j.Logger;
 
 /**
@@ -26,14 +36,18 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	
 	//RECURSIVE definition
 	
-	protected Variable var;
+	protected RDFVariable var; // this is the ID of the node which is supposed to collapse onto the argument
 	protected RDFFormula body;																
 
 	
 	
 	public RDFLambdaAbstract(RDFLambdaAbstract la)
 	{
-		//TODO
+		if (la.body instanceof RDFGraph) {
+			new RDFLambdaAbstract(la.var, new RDFGraph((RDFGraph) la.body));
+		} else {
+			new RDFLambdaAbstract(la.var, new RDFLambdaAbstract((RDFLambdaAbstract) la.body));
+		}
 	}
 
 	/**
@@ -41,44 +55,66 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	 * @param variable
 	 * @param body
 	 */
-	public RDFLambdaAbstract(String variable, String body) {
-		// TODO Auto-generated constructor stub
+	
+	public RDFLambdaAbstract(String variable, String formula)
+	{
+		this(new RDFVariable(variable), (RDFFormula) Formula.create(formula));
+	}
+
+	public RDFLambdaAbstract(RDFVariable variable, RDFFormula formula)
+	{
+		this.var = variable;
+		getVariables().add(variable);
+		this.body = formula;
+		getVariables().addAll(formula.getVariables());
 	}
 
 
 	@Override
-	public Formula betaReduce(Formula argument) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RDFLambdaAbstract substitute(Formula f1, Formula f2) {
+	public Formula betaReduce(Formula argument)
+	{
+		// Step 1: extract head id from argument = argHead
+		RDFGraph argGraph = (RDFGraph) argument;
+		String argHeadID = argGraph.getHeadID();
+		RDFVariable argHead = new RDFVariable(argHeadID);
 		
-		return null;
+		// Step 2: change the ID of node @var to be argHead
+		RDFLambdaAbstract substituted = (RDFLambdaAbstract) substitute(this.var, argHead);
+		
+		// Step 3: return this.union(argument)
+		return substituted.body.union(argGraph);
+	}
+	
+	public RDFGraph extractBody()
+	{
+		if (body instanceof RDFGraph) {
+			return (RDFGraph) body;
+		}
+		return ((RDFLambdaAbstract) body).extractBody();
 	}
 
-	
-//	public static void main(String a[])
-//	{
-//		RDFLambdaAbstract rla = "run";
-//		Variable x = new Variable("x");
-//		
-//		RDFGraph john = new RDFGraph("equivalant of 'john' in RDF");
-//		
-//		RDFGraph result = rla.substitute(x, john);
-//		
-//		
-//	}
+	@Override
+	public RDFFormula substitute(Formula f1, Formula f2)
+	{
+		return new RDFLambdaAbstract(this.var, this.body.substitute(f1, f2));
+	}
 	
 	@Override
-	public RDFFormula clone() {
+	public RDFFormula clone()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public RDFFormula union(RDFGraph g)
+	{
+		return new RDFLambdaAbstract(this.var, this.body.union(g));
+	}
 
 	@Override
-	public int toUniqueInt() {
+	public int toUniqueInt()
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -86,8 +122,12 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	
 	public String toString()
 	{
-		// TODO
-		return null;
+		// G1^G2^[rdf model of the body]
+		if (this.body instanceof RDFGraph) {
+			return this.var + "^[" + this.body.toString() + "]";
+		} else {
+			return this.var + "^" + this.body.toString();
+		}
 	}
 	
 	public boolean equals(Object other)
@@ -102,6 +142,21 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		//TODO
 		return super.hashCode();
 		
+	}
+	
+	public static void main (String array[])
+	{
+		RDFGraph jane = new RDFGraph(RDFDataMgr.loadModel("/home/angus/projects/DS-RDF/ds-examples/data/ex2-j.ttl"));
+		RDFLambdaAbstract run = new RDFLambdaAbstract("G1", "{dsrdf:run\n"
+				+ "a schema:Action ;\n"
+				+ "a dsrdf:Head ;\n"
+				+ "rdfs:label \"run\"@en ;\n"
+				+ "schema:agent <G1> .}");
+		
+		RDFDataMgr.write(System.out, jane.rdfModel, Lang.TURTLE);
+		System.out.print(run.body);
+		RDFGraph reduced = (RDFGraph) run.betaReduce(jane);
+		RDFDataMgr.write(System.out, reduced.getModel(), Lang.TURTLE);
 	}
 	
 

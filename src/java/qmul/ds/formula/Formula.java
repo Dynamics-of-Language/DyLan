@@ -105,7 +105,7 @@ public abstract class Formula implements Serializable {
 	public static String ATOMIC_FORMULA_PATTERN = "[a-z]+[a-z_0-9]*";
 
 	// DS-RDF Formula patterns
-	public static final String RDFGRAPH_TURTLE_PATTERN = "";// TODO DS-RDF: to read RDFFormulae in from strings read
+	public static final String RDFGRAPH_TURTLE_PATTERN = "{(.+)}";// TODO DS-RDF: to read RDFFormulae in from strings read
 															// from lexical action template files. Currently not used
 
 	// -----------------

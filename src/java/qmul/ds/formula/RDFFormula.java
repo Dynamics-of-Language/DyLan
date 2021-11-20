@@ -23,7 +23,15 @@ public abstract class RDFFormula extends Formula {
 
 	@Override
 	public abstract RDFFormula clone();
+	
+	@Override
+	public String toString()
+	{
+		// TODO
+		return this.toString();
+	}
 
+	public abstract RDFFormula union(RDFGraph g);
 
 
 }
