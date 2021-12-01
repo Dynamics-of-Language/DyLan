@@ -1,28 +1,22 @@
 package qmul.ds.formula;
 
 import java.io.ByteArrayInputStream;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.UUID;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.sparql.vocabulary.FOAF;
-import org.apache.jena.util.ResourceUtils;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Selector;
 import org.apache.jena.rdf.model.SimpleSelector;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.vocabulary.RDFS;
+
+import qmul.ds.tree.Tree;
 /**
  * 
  * @author Arash, Angus
@@ -35,6 +29,9 @@ public class RDFGraph extends RDFFormula {
 	protected Model rdfModel;
 //	protected Resource HEAD;
 	
+	 
+	
+	
 	
 	public RDFGraph(Model rdfm)
 	{
@@ -43,13 +40,21 @@ public class RDFGraph extends RDFFormula {
 		storeVariables(rdfm);
 	}
 	
-	public RDFGraph(String turtle)
+	public RDFGraph(String turtle, String prefixes)
 	{
 		// THIS IS TURTLE SPECIFIC
 		Model turtleModel = ModelFactory.createDefaultModel();
-		this.rdfModel = turtleModel.read(new ByteArrayInputStream(turtle.getBytes()), null, "TTL");
+		String combined = prefixes==null?turtle:prefixes+"\n"+turtle;
+		this.rdfModel = turtleModel.read(new ByteArrayInputStream(combined.getBytes()), null, "TTL");
 		
 		storeVariables(turtleModel);
+		
+	
+	}
+	
+	public RDFGraph(String turtle)
+	{
+		this(turtle,null);
 	}
 	
 	public RDFGraph(RDFGraph rdf)
@@ -79,11 +84,36 @@ public class RDFGraph extends RDFFormula {
 		StmtIterator mIter = m.listStatements();
 		while (mIter.hasNext()) {
 			Statement stmt = mIter.nextStatement();
-			getVariables().add(new RDFVariable(stmt.getSubject().toString()));
-			getVariables().add(new RDFVariable(stmt.getObject().toString()));
+			Resource subj = stmt.getSubject();
+			RDFNode obj = stmt.getObject();
+			
+			Resource objR = obj.isResource()?obj.asResource():null;
+			
+			String subjS = subj.toString();
+			
+			if (subjS.startsWith(RDFVariable.VAR_NAME_SPACE))
+			{
+				getVariables().add(new RDFVariable(subjS));
+				
+				
+			}
+			
+			if (objR!=null && objR.toString().startsWith(RDFVariable.VAR_NAME_SPACE))
+			{
+				getVariables().add(new RDFVariable(objR.toString()));
+			}
+			
+			//System.out.println("subj is: "+subj);
+			//System.out.println("obj is: "+objR);
+			
+			
+			//getVariables().add(new RDFVariable(stmt.getSubject().toString()));
+			//getVariables().add(new RDFVariable(stmt.getObject().toString()));
 		}
 	}
 
+	
+	
 	/**
 	 * 
 	 * @param graph
@@ -164,16 +194,51 @@ public class RDFGraph extends RDFFormula {
 		return new RDFGraph(this);
 	}
 	
+	
+	public RDFGraph freshenVars(Tree t)
+	{
+		
+		//TODO: Arash
+		
+		return null;
+		
+	}
+	
+	
 	public static void main(String args[])
 	{
 		// one triple stating that a URI (in this case a UUID) is a person.
-		String testString = "@prefix schema: <http://schema.org/> . <urn:uuid:51da23d8-68ed-4be7-b55a-221534dc142b> a schema:Person .";
+		String prefix = "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+				+ "@prefix schema: <http://schema.org/> .\n"
+				+ "@prefix dsrdf: <http://wallscope.co.uk/ontology/dsrdf/> .\n"
+				+ "@prefix var: <http://wallscope.co.uk/ontology/var/> .";
 		
-		RDFGraph testGraph = new RDFGraph(testString);
+		String janeTurtle = 
+				  "var:x\n"
+				+ "a schema:Person;\n"
+				+ "rdfs:label \"Jane\"@en .\n"
+				+ "\n"
+				+ "var:y\n"
+				+ "a schema:Person;\n"
+				+ "rdfs:label \"John\"@en .\n"
+				+ "\n"
+				+ "var:e\n"
+				+ "a schema:Action;\n"
+				+ "rdfs:label \"run\"@en;\n"
+				+ "a dsrdf:Head;\n"
+				+ "schema:agent var:x;\n"
+				+ "schema:object var:y .";
 		
-		RDFDataMgr.write(System.out, testGraph.getModel(), Lang.TURTLE);
+		RDFGraph janeGraph = new RDFGraph(janeTurtle, prefix);
+		
+		RDFDataMgr.write(System.out, janeGraph.getModel(), Lang.TURTLE);
+		
+		System.out.println("Variables are:");
+		System.out.println(janeGraph.getVariables());
 		
 	}
+	
+	
 	
 	
 }

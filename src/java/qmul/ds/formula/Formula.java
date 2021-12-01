@@ -109,7 +109,7 @@ public abstract class Formula implements Serializable {
 															// from lexical action template files. Currently not used
 
 	// -----------------
-	private HashSet<Variable> variables = new HashSet<Variable>();
+	protected HashSet<Variable> variables = new HashSet<Variable>();
 	protected TTRRecordType parentRecType = null; // the record type in one of
 													// whose fields this formula
 													// is directly
