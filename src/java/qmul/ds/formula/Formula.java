@@ -74,7 +74,7 @@ public abstract class Formula implements Serializable {
 	public static final String OVERLAP_OPERATOR = "overlap";
 	public static final String SUBSET_OPERATOR = "subset";
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
-	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free
+	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zRG&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free
 																													// Formula
 	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN; // meta ttr label
 	public static final Pattern TTR_LABEL_PATTERN = TTRLabel.LABEL_PATTERN; // ttr label
@@ -231,14 +231,23 @@ public abstract class Formula implements Serializable {
 			Formula la;
 			if (m.group(1).trim().matches(TTRPath.REC_TYPE_NAME_PATTERN))
 				la = new TTRLambdaAbstract(m.group(1), m.group(2));
-			else if (m.group(1).trim().matches(RDFLambdaAbstract.RDF_VARIABLE_PATTERN))
+			else if (m.group(1).trim().matches(RDFLambdaAbstract.RDF_ABSTRACT_VARIABLE_PATTERN))
 				la = new RDFLambdaAbstract(m.group(1), m.group(2));
 			else
 				la = new FOLLambdaAbstract(m.group(1), m.group(2));
 
 			return la;
 		}
+		//rdf graph
+		
+		m = Pattern.compile(RDFGraph.RDFGraphPattern).matcher(string);
 
+		if (m.matches())
+		{
+			RDFGraph g = new RDFGraph(string);
+			return g;
+		}
+		
 		// epsilon term
 		m = EPSILON_TERM_PATTERN.matcher(string);
 		if (m.matches()) {
