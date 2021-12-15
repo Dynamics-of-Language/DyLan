@@ -32,6 +32,9 @@ public abstract class RDFFormula extends Formula {
 	}
 
 	public abstract RDFFormula union(RDFGraph g);
+	
+	
+	public abstract RDFFormula conjoin(Formula g);
 
 
 }

@@ -116,7 +116,6 @@ public class RDFGraph extends RDFFormula {
 		
 		
 		
-		
 		newGraph.variables.remove(v1);
 		
 		
@@ -180,6 +179,23 @@ public class RDFGraph extends RDFFormula {
 	{
 		return new RDFGraph(this.rdfModel.union(graph.getModel()));
 	}
+	
+	
+	public RDFGraph conjoin(Formula g)
+	{
+		if (g instanceof RDFGraph)
+		{
+			return this.union((RDFGraph) g);
+		}
+		else
+		{
+			throw new UnsupportedOperationException("Can only conjoin with RDFGraph");
+			
+		}
+		
+	}
+	
+	
 	
 	
 	public RDFVariable getHead()

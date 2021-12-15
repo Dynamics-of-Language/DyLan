@@ -5,10 +5,10 @@
 // Formula metavariables: A,B,C
 // Bottom requirement: !
 
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix schema: <http://schema.org/> .
-@prefix dsrdf: <http://wallscope.co.uk/ontology/dsrdf/> .
-@prefix var: <http://wallscope.co.uk/ontology/var/> .
+//@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+//@prefix schema: <http://schema.org/> .
+//@prefix dsrdf: <http://wallscope.co.uk/ontology/dsrdf/> .
+//@prefix var: <http://wallscope.co.uk/ontology/var/> .
 
 
 
@@ -22,35 +22,6 @@ THEN    put(person(PERSON))
         rdfput({var:x a schema:Person; rdfs:label "NAME"@en.})
 ELSE    abort
 
-[
-e : like
-x = john : person
-p : subj(e, x)
-y = mary : person
-p1 : obj(e, y)
-head : e
-]
-
-is the equivalent of the following
-
-{
-var:x
-a schema:Person;
-rdfs:label "Jane"@en.
-
-var:y
-a schema:Person;
-rdfs:label "John"@en.
-
-var:e
-a schema:Action;
-rdfs:label "run"@en
-a dsrdf:Head;
-schema:agent var:x;
-schema:object var:y.
-}
-
-<dsrdf:e, rdfs:label, "run":@en>
 
 det_indef(QUANT)
 IF      ?ty(e)
@@ -254,9 +225,64 @@ count(PRED,PERSON,CLASS)
 IF      ?ty(e>cn)
 THEN    ttrput(R^(R ++ [p==PRED(R.head):t]))
         put(ty(e>cn))
-        delete(?ty(e>cn))      
+        delete(?ty(e>cn))   
         put(!)
 ELSE    abort
+
+
+
+RDF for "A brown cat jumps":
+
+{
+var:e   a              schema:Action , dsrdf:Head ;
+        rdfs:label     "jump"@en ;
+        schema:agent   var:x ;
+
+var:x   a           schema:Cat ;
+        rdfs:label  "Jane"@en ;
+        dsrdf:modifier dsrdf:brown.
+
+}
+
+RDF for "The cat jumps":
+
+{
+var:e   a              schema:Action , dsrdf:Head ;
+        rdfs:label     "jump"@en ;
+        schema:agent   var:x ;
+
+var:x   SELECT ?the FROM C(ontext) {?the a dsrdf:cat; dsrdf:modifier dsrdf:brown .}
+}
+
+
+Restrictor: {
+var: y  
+a           schema:Cat ;
+dsrdf:modifier dsrdf:brown ;
+}
+
+
+[
+ r : [x : e| p : cat(x)]
+ 
+ x1 = iota(x, r.x) : e
+
+]
+
+iota: Context -> Content (e.g. a reference that satisfies its restrictor)
+
+A: a cat jumped. Then the cat sat down
+
+A: (point to TV) oh look at the cute cat
+
+
+
+
+
+
+
+
+
 
 //*
 adj(PRED)

@@ -87,6 +87,8 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 			throw new IllegalArgumentException("Illegal RDFLambdaAbstract Specification: "+spec);
 		
 	}
+	
+	
 	@Override
 	public RDFFormula betaReduce(Formula argument)
 	{
@@ -95,11 +97,11 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	
 		RDFVariable argHead = argGraph.getHead();
 		
-		System.out.println("Arg head is:"+argHead);
+		//System.out.println("Arg head is:"+argHead);
 		// Step 2: change the ID of node @var to be argHead
 		RDFLambdaAbstract substituted = (RDFLambdaAbstract) substitute(this.var, argHead);
 		
-		System.out.println("After local head substitution:"+substituted);
+		//System.out.println("After local head substitution:"+substituted);
 		
 		// Step 3: return this.union(argument)
 		return substituted.body.union(argGraph.removeHead());
@@ -127,7 +129,7 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	}
 	
 	@Override
-	public RDFFormula union(RDFGraph g)
+	public RDFLambdaAbstract union(RDFGraph g)
 	{
 		return new RDFLambdaAbstract(this.var, this.body.union(g));
 	}
@@ -159,6 +161,21 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		return super.hashCode();
 		
 	}
+	
+	public RDFLambdaAbstract conjoin(Formula g)
+	{
+		if (g instanceof RDFGraph)
+		{
+			return this.union((RDFGraph) g);
+		}
+		else
+		{
+			throw new UnsupportedOperationException("Can only conjoin with RDFGraph");
+			
+		}
+		
+	}
+	
 	
 	public static void main (String array[])
 	{
