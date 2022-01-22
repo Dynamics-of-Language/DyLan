@@ -158,6 +158,7 @@ public class Variable extends AtomicFormula {
 		return this;
 	}
 	
+	
 	@Override
 	public int toUniqueInt() {
 		

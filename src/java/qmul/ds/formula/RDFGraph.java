@@ -1,5 +1,7 @@
 package qmul.ds.formula;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -185,7 +187,10 @@ public class RDFGraph extends RDFFormula {
 	{
 		if (g instanceof RDFGraph)
 		{
-			return this.union((RDFGraph) g);
+			RDFGraph rdf=(RDFGraph)g;
+			RDFGraph headRemoved = rdf.removeHead();
+			return this.union(headRemoved);
+//			return this.union(rdf);
 		}
 		else
 		{
@@ -319,6 +324,13 @@ public class RDFGraph extends RDFFormula {
 	}
 	
 	
+	public Dimension draw(Graphics2D g2, float x, float y)
+	{
+		//TODO: currently draws the string representation on g2 - we would ideally like the 
+		//graph to be drawn on g2
+		return super.draw(g2, x, y);
+	}
+	
 	public static void main(String args[])
 	{
 		
@@ -339,10 +351,10 @@ public class RDFGraph extends RDFFormula {
 		//String jane = "{var:x a schema:Person;rdfs:label \"Jane\"@en.}";
 		
 		//RDFGraph janeGraph = new RDFGraph(janeTurtle, prefix);
-		RDFGraph janeGraph = (RDFGraph) Formula.create(jLikesJ);
+		//RDFGraph janeGraph = (RDFGraph) Formula.create(jLikesJ);
 		
 		
-		System.out.println(janeGraph.removeHead());
+		//System.out.println(janeGraph.removeHead());
 		
 //		System.out.println("Head is: "+janeGraph.getHead());
 //		

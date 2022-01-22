@@ -2378,13 +2378,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public TTRFormula conjoin(Formula other) {
-		// System.out.println("Trying to conjoin:"+this);
-		// System.out.println("with:"+other);
+
 		if (other == null)
 			return this;
 
 		if (!(other instanceof TTRFormula))
 			throw new UnsupportedOperationException();
+		
 
 		TTRFormula o = (TTRFormula) other;
 
@@ -2395,17 +2395,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		if (this.isEmpty())
 			return ttr;
+		
 		if (ttr.isEmpty())
 			return this;
 
-		// if (this.getHeadField() == null || ttr.getHeadField() == null)
-		// throw new UnsupportedOperationException(
-		// "Cannot conjoin rec types with no head field");
-		//
-		// DSType thisDSType = getHeadField().getDSType();
-		// DSType otherDSType = ttr.getHeadField().getDSType();
-		// if (thisDSType.equals(DSType.e) && thisDSType.equals(otherDSType))
-		// return asymmetricMergeSameType(ttr);
 
 		return ttr.asymmetricMerge(this);
 	}

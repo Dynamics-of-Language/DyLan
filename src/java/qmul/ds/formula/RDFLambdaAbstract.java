@@ -104,7 +104,7 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		//System.out.println("After local head substitution:"+substituted);
 		
 		// Step 3: return this.union(argument)
-		return substituted.body.union(argGraph.removeHead());
+		return substituted.conjoin(argGraph);
 	}
 	
 	public RDFGraph extractBody()
@@ -179,34 +179,79 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	
 	public static void main (String array[])
 	{
+		
+		//TTRRecordType r1 = TTRRecordType.parse("[x == john:e| head == x:e | p == run(x):t]");
+		
+		
+		//System.out.println(r1.evaluate());
+		
+		
+		//System.out.println(t);
+		//System.out.println(t.instantiate());
+		
 		RDFLambdaAbstract like = new RDFLambdaAbstract("G1^G2^{var:e "
-				+ "a schema:Action;"
-				+ "a dsrdf:Head;"
+				+ "a schema:Action, dsrdf:Head;"
 				+ "rdfs:label \"like\"@en;"
 				+ "schema:agent var:G2;"
 				+ "schema:object var:G1.}");
 		
 		
+	
+		
+				
+//		
+//		
+		
 		String jane = "{var:x "
+				+ "a schema:Person, dsrdf:Head;"
+				+ "rdfs:label \"Jane\"@en.}";
+		
+		String janeSmokes = "{var:x "
 				+ "a schema:Person;"
-				+ "rdfs:label \"Jane\"@en;"
+				+ "rdfs:label \"Jane\"@en. "
+				+ "var:e "
+				+ "rdfs:label \"smoke\"@en;"
+				+ "schema:agent var:x;"
 				+ "a dsrdf:Head.}";
 		
-		String john = "{var:y "
-				+ "a schema:Person;"
-				+ "rdfs:label \"John\"@en;"
-				+ "a dsrdf:Head.}";
+		RDFGraph janeG = new RDFGraph(jane);
+		RDFGraph janeSG = new RDFGraph(janeSmokes);
+		
+		RDFGraph conj = janeG.conjoin(janeSG);
+		
+		System.out.println(conj);
 		
 		
-		RDFGraph janeGraph = new RDFGraph(jane);
-		RDFGraph johnGraph = new RDFGraph(john);
+//		
+//		String rest = "{var:head "
+//				+ "dsrdf:tense dsrdf:past.}";
+//		
+//		RDFGraph restrict = new RDFGraph(rest);
+//		
+//		RDFLambdaAbstract liked = like.conjoin(restrict);
+//		
+//		System.out.println(liked);
+		
+//		String john = "{var:y "
+//				+ "a schema:Person;"
+//				+ "rdfs:label \"John\"@en."
+//				+ "var:head "
+//				+ "dsrdf:is var:y.}";
 		
 		
-		RDFLambdaAbstract reduced = (RDFLambdaAbstract)like.betaReduce(janeGraph);
 		
-		RDFFormula reduced2 = reduced.betaReduce(johnGraph);
 		
-		System.out.println("reduced is: \n"+reduced2);
+		//System.out.println(like);
+		//RDFGraph johnGraph = new RDFGraph(john);
+		
+		
+		//System.out.println(janeGraph);
+		
+		//RDFLambdaAbstract reduced = (RDFLambdaAbstract)like.betaReduce(janeGraph);
+		
+		//RDFFormula reduced2 = reduced.betaReduce(johnGraph);
+		
+		//System.out.println("reduced is: \n"+reduced2);
 		
 		//RDFDataMgr.write(System.out, jane.rdfModel, Lang.TURTLE);
 		//System.out.print(run.body);
