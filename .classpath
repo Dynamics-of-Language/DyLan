@@ -34,7 +34,7 @@
 	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-arq-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-base-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-cmds-4.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-core-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-core-4.1.0.jar" sourcepath="lib/jena-4.1.0/jena-core"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-dboe-base-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-dboe-index-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jena-4.1.0/jena-dboe-storage-4.1.0.jar"/>
