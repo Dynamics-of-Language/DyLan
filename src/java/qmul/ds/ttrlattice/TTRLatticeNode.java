@@ -3,7 +3,7 @@ package qmul.ds.ttrlattice;
 import java.util.HashSet;
 import java.util.Set;
 
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 public class TTRLatticeNode {
 

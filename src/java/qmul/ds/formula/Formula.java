@@ -30,6 +30,13 @@ import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.action.meta.MetaTTRRecordType;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.rdf.RDFGraph;
+import qmul.ds.formula.rdf.RDFLambdaAbstract;
+import qmul.ds.formula.ttr.TTRInfixExpression;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRLambdaAbstract;
+import qmul.ds.formula.ttr.TTRPath;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.ExistentialLabelConjunction;
 import qmul.ds.tree.label.FormulaLabel;
@@ -329,7 +336,7 @@ public abstract class Formula implements Serializable {
 	/**
 	 * @return the set of variables (free or bound) involved
 	 */
-	protected Set<Variable> getVariables() {
+	public Set<Variable> getVariables() {
 		return variables;
 	}
 

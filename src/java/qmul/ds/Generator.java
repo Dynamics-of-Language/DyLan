@@ -31,6 +31,7 @@ import qmul.ds.gui.ParserPanel;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.formula.*;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * A generic generator (surface realiser)

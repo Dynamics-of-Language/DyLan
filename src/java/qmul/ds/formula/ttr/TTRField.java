@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaType;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 import qmul.ds.type.DSType;
 
 /**
@@ -205,7 +207,7 @@ public class TTRField extends Formula{
 
 	public TTRField(TTRField ttrField) {
 
-		this(new TTRLabel(ttrField.getLabel().name),
+		this(new TTRLabel(ttrField.getLabel().getName()),
 				ttrField.dsType == null ? null : ttrField.dsType.clone(),
 				ttrField.type == null ? null : ttrField.type.clone());
 

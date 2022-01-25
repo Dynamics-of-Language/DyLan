@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.formula.TTRLabel;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 public class TypeLatticeIncrement {
 

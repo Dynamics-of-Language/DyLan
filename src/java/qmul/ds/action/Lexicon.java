@@ -36,7 +36,7 @@ import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.FreshPut;
 import qmul.ds.action.atomic.IfThenElse;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * A map from words to {@link LexicalAction}s

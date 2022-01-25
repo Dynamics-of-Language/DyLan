@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.action.Grammar;
 import qmul.ds.action.Lexicon;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * A simple {@link Generator} with plain vanilla {@link ParserTuple}s

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import qmul.ds.formula.PredicateArgumentFormula;
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRLabel;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 

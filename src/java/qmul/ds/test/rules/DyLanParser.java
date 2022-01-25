@@ -18,10 +18,10 @@ import qmul.ds.Utterance;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRLabel;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 /**

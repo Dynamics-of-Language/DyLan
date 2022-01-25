@@ -8,11 +8,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRLabel;
-import qmul.ds.formula.TTRRecordType;
-import qmul.ds.formula.TTRRelativePath;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRelativePath;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 import qmul.ds.type.DSType;

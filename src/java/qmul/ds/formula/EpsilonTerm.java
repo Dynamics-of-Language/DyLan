@@ -8,6 +8,9 @@
  *******************************************************************************/
 package qmul.ds.formula;
 
+import qmul.ds.formula.ttr.TTRLambdaAbstract;
+import qmul.ds.formula.ttr.TTRRecordType;
+
 /**
  * A {@link PredicateArgumentFormula} with a suitable (eps/tau/iota) functor, and a {@link CNOrderedPair} as the single
  * argument (although it could be a {@link Variable} of course ...)

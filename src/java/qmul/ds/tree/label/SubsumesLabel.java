@@ -18,7 +18,7 @@ import qmul.ds.action.boundvariable.BoundFormulaVariable;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Node;
 
 public class SubsumesLabel extends Label implements Serializable {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.print.attribute.standard.MediaSize.Other;
 
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * Simple record class like Cooper et al 2014 with just a ttr record type

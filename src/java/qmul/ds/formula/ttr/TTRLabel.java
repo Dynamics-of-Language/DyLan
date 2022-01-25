@@ -1,8 +1,11 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 
 /**
  * A label in a TTR record type, as implemented in {@link TTRRecordType}

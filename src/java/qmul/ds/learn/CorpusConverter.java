@@ -11,9 +11,8 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.PredicateArgumentFormula;
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRRecordType;
-//using the TTRclasses for checking, though could be done independently too..
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 public class CorpusConverter {
 

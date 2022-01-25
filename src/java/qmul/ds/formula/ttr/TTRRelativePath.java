@@ -1,9 +1,12 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 
 public class TTRRelativePath extends TTRPath {
 

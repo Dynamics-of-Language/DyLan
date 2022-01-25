@@ -13,8 +13,8 @@ import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {

@@ -11,10 +11,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.formula.TTRRecordType;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * 

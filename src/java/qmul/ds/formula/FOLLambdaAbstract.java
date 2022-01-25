@@ -15,8 +15,8 @@ public class FOLLambdaAbstract extends Formula implements LambdaAbstract {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static final String LAMBDA_FUNCTOR = "^";
-	private static final String UNICODE_LAMBDA_FUNCTOR = "\u03BB"; // lambda; also 1D6CC
+	public static final String LAMBDA_FUNCTOR = "^";
+	public static final String UNICODE_LAMBDA_FUNCTOR = "\u03BB"; // lambda; also 1D6CC
 
 	protected Variable variable;
 	protected Formula formula;

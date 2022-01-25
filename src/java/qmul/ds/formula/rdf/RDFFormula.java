@@ -1,7 +1,10 @@
 /**
  * 
  */
-package qmul.ds.formula;
+package qmul.ds.formula.rdf;
+
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.IncrementalFormula;
 
 /**
  * @author ae187
@@ -9,7 +12,7 @@ package qmul.ds.formula;
  * Abstract superclass of RDF formulae, namely RDFGraph and RDFLambdaAbstract
  *
  */
-public abstract class RDFFormula extends Formula {
+public abstract class RDFFormula extends IncrementalFormula {
 
 	/**
 	 *  TODO: not finished ... 
@@ -25,11 +28,7 @@ public abstract class RDFFormula extends Formula {
 	public abstract RDFFormula clone();
 	
 	@Override
-	public String toString()
-	{
-		// TODO
-		return this.toString();
-	}
+	public abstract String toString();
 
 	public abstract RDFFormula union(RDFGraph g);
 	

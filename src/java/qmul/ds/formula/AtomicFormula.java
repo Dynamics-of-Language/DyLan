@@ -11,6 +11,7 @@ package qmul.ds.formula;
 import java.util.HashMap;
 
 import qmul.ds.action.meta.MetaModality;
+import qmul.ds.formula.ttr.MetaTTRLabel;
 
 /**
  * An atomic (no pred-arg structure) formula, e.g. a functor or variable. Just a string really

@@ -9,10 +9,10 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.formula.TTRRecordType;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * Objects of this front-end class learn unknown words from a corpus of parsed sentences. The class provides methods for

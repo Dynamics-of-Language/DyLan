@@ -15,8 +15,8 @@ import java.util.HashMap;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.MetaPredicate;
 import qmul.ds.formula.Predicate;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.label.Label;
 
 /**

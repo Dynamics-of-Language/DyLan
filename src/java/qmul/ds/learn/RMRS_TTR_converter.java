@@ -1,8 +1,8 @@
 package qmul.ds.learn;
 
-import qmul.ds.formula.TTRRecordType;
-
 import org.apache.log4j.Logger;
+
+import qmul.ds.formula.ttr.TTRRecordType;
 
 public class RMRS_TTR_converter {
 

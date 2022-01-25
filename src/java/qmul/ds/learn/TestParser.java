@@ -15,7 +15,7 @@ import qmul.ds.ContextParserTuple;
 import qmul.ds.ParseState;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.Lexicon;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.learn.Evaluation.EvaluationResult;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Sentence;

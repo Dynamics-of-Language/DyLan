@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -28,6 +28,14 @@ import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.UtteredWord;
+import qmul.ds.formula.DisjunctiveType;
+import qmul.ds.formula.EpsilonTerm;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.FormulaMetavariable;
+import qmul.ds.formula.MetaPredicate;
+import qmul.ds.formula.Predicate;
+import qmul.ds.formula.PredicateArgumentFormula;
+import qmul.ds.formula.Variable;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -473,7 +481,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				//System.out.println("mapping label to target.");
 			} else if (map.containsValue(curLabel)) {
 
-				Variable newVar = this.getFreshVariable(map.values(), curLabel.name.substring(0, 1));
+				Variable newVar = this.getFreshVariable(map.values(), curLabel.getName().substring(0, 1));
 				map.put(curLabel, newVar);
 				newLabel = new TTRLabel(newVar);
 				//System.out.println("mapping label to fresh label");

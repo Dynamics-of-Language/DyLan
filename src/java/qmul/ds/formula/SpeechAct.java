@@ -6,6 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import qmul.ds.action.meta.Meta;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRRecordType;
 /**
  * A Speech Act Specification. Consists of speech act force, and (optional) arguments.
  * 

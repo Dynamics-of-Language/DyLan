@@ -12,9 +12,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRInfixExpression;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRInfixExpression;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * A {@link TTRRecordType} metavariable as used in rule specs e.g. R1, R2, etc.

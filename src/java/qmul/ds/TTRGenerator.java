@@ -12,8 +12,8 @@ import org.apache.log4j.Logger;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * @author arash

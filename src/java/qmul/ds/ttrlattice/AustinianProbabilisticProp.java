@@ -1,6 +1,6 @@
 package qmul.ds.ttrlattice;
 
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 /**
  * Simple record class like Cooper et al 2014 with just a ttr record type and probability of that type
  * @author Julian

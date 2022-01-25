@@ -11,6 +11,8 @@ package qmul.ds.formula;
 
 import java.util.regex.Matcher;
 
+import qmul.ds.formula.ttr.TTRPath;
+
 /**
  * A {@link PredicateArgumentFormula} with a null functor, and two arguments: a {@link Variable} and a {@link Formula}
  * (presumably involving that variable)

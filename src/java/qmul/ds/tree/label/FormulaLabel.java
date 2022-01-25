@@ -20,7 +20,7 @@ import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.FormulaMetavariable;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 

@@ -13,6 +13,10 @@ import java.util.HashMap;
 
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.action.meta.MetaModality;
+import qmul.ds.formula.ttr.MetaTTRLabel;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * A (possibly bound) variable within a {@link Formula}

@@ -28,8 +28,8 @@ import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.FormulaMetavariable;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 /**

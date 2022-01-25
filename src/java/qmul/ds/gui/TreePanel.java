@@ -24,11 +24,11 @@ import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.formula.TTRRecordType;
 import edu.stanford.nlp.ling.StringLabelFactory;
 import edu.stanford.nlp.trees.LabeledScoredTreeFactory;
 import edu.stanford.nlp.trees.PennTreeReader;
 import edu.stanford.nlp.trees.Tree;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * Class for displaying a Tree.

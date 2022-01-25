@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 /**
  * Graph-based agenda for converting CHILDES formulae to TTR record types

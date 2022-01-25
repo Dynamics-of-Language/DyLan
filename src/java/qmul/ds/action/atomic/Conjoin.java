@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 import qmul.ds.ParserTuple;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;

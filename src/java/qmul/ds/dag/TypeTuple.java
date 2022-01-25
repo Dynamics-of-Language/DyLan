@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import qmul.ds.ParserTuple;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 public class TypeTuple {

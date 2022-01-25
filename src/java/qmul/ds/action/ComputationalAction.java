@@ -22,7 +22,7 @@ import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.learn.Hypothesiser;
 import qmul.ds.learn.LexicalHypothesis;
 import qmul.ds.tree.Node;

@@ -1,10 +1,13 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 
 /**
  * An absolute path of labels, e.g. R.x.y, mean

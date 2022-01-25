@@ -22,7 +22,7 @@ import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.WordLevelContextDAG;
-import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.tree.Tree;
 
 /**

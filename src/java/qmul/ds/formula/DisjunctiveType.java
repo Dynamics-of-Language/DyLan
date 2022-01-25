@@ -1,6 +1,10 @@
 package qmul.ds.formula;
 
 import java.util.HashMap;
+
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRInfixExpression;
+import qmul.ds.formula.ttr.TTRRecordType;
 /**
  * A disjunctive type: R1 \/ R2. In general, R1 and R2 can either be TTRRecordTypes or TTRInfixExpressions.
  * But currently only TTRRecordTypes are implemented/allowed as disjuncts.

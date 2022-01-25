@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import qmul.ds.action.meta.Meta;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRPath;
+import qmul.ds.formula.ttr.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRelativePath;
 
 /**
  * An epsilon calculus {@link Formula}

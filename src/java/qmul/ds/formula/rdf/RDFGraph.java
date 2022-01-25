@@ -1,10 +1,12 @@
-package qmul.ds.formula;
+package qmul.ds.formula.rdf;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,10 +23,28 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.RDF;
 
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 import qmul.ds.tree.Tree;
 /**
  * 
  * @author Arash, Angus
+ * 
+ * RDFGraphs are specified in turtle.
+ * 
+ * Variables are designated using the prefix 'var', e.g. var:x, var:e, etc
+ * 
+ * Variables don't have DS types, therefore the following conventions should be followed, otherwise some 
+ * funcionality might not work:
+ * 
+ * Variables of type e: x1, x2, x3, ...
+ * Variables of type es: e1, e2, e3, ....
+ * 
+ * 
+ * DS-RDF specific predicates, labels etc. use the prefix 'dsrdf', e.g. dsrdf:Head
+ * 
+ * Best practice is to use available properties, predicates, etc. from an existing ontology, e.g. schema.org
+ * 
  *
  */
 public class RDFGraph extends RDFFormula {
@@ -103,7 +123,7 @@ public class RDFGraph extends RDFFormula {
 	
 	
 	@Override
-	public RDFFormula substitute(Formula f1, Formula f2)
+	public RDFGraph substitute(Formula f1, Formula f2)
 	{
 		RDFGraph newGraph = new RDFGraph(this);
 		
@@ -290,14 +310,17 @@ public class RDFGraph extends RDFFormula {
 	public int hashCode()
 	{
 		//TODO	Currently just toString().hashCode()
-		return super.hashCode();
+		return rdfModel.hashCode();
 		
 	}
 	
 	public boolean equals(Object other)
 	{
-		//TODO
-		return super.equals(other);
+		if (!(other instanceof RDFGraph))
+			return false;
+		
+		RDFGraph o = (RDFGraph)other;
+		return this.rdfModel.equals(o.rdfModel);
 		
 	}
 
@@ -314,12 +337,65 @@ public class RDFGraph extends RDFFormula {
 	}
 	
 	
+	public boolean hasVariable(RDFVariable v)
+	{
+		return variables.contains(v);
+	}
+	
+	
+	
+	
 	public RDFGraph freshenVars(Tree t)
 	{
+		Set<RDFVariable> done=new HashSet<RDFVariable>();
+		RDFGraph fresh = new RDFGraph(this);
+		StmtIterator iter = fresh.rdfModel.listStatements();
 		
-		//TODO: Problem (maybe not serious): RDF statements don't have DS types .... 
+		while (iter.hasNext())
+		{
+			Statement stmt = iter.next();
+			Resource subj = stmt.getSubject();
+			
+			
+			//Assuming every variable is the subject of some statement
+			//might turn out to be a bad assumption
+			//String subjS = subj.toString();
+			
+			
+			if (RDFVariable.isRDFVariable(subj))
+			{
+				RDFVariable var = new RDFVariable(subj);
+				if (done.contains(var))
+					continue;
+				
+				if (var.getName().startsWith(Tree.ENTITY_VARIABLE_ROOT))
+				{
+					RDFVariable newVar = new RDFVariable(t.getFreshEntityVariable());
+					while (hasVariable(newVar))
+						newVar = new RDFVariable(t.getFreshEntityVariable());
+					
+					fresh = fresh.substitute(var, newVar);
+					
+					
+				}
+				else if (var.getName().startsWith(Tree.EVENT_VARIABLE_ROOT))
+				{
+					RDFVariable newVar = new RDFVariable(t.getFreshEventVariable());
+					while (hasVariable(newVar))
+						newVar = new RDFVariable(t.getFreshEventVariable());
+					
+					fresh = fresh.substitute(var, newVar);
+					
+				}
+				else 
+					throw new IllegalStateException("Found illegal RDF variable:"+var.getName());
+				
+				done.add(var);
+				
+			}
+		}
 		
-		return null;
+		return fresh;
 		
 	}
 	

@@ -22,10 +22,10 @@ import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
 import qmul.ds.formula.DisjunctiveType;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRLambdaAbstract;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.ttr.TTRLambdaAbstract;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.label.AssertionLabel;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Label;
@@ -681,8 +681,37 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	}
 
+	public static Map<DSType, Formula> typeMapRDF;
+	static{
+		Map<DSType, Formula> map=new HashMap<DSType, Formula>();
+		map.put(DSType.e, Formula.create("{var:x a dsrdf:Head, a schema:Thing.}"));
+
+		map.put(DSType.cn, Formula.create("{var:x a dsrdf:Head, a schema:Thing.}"));
+		map.put(DSType.t, Formula.create("{var:e a dsrdf:Head.}"));
+		// for underspec VP
+		
+		map.put(DSType.parse("e>cn"), Formula.create("{var:G1 a dsrdf:Head.}"));
+		map.put(DSType.parse("e>t"), Formula.create("G1^{var:e "
+				+ "a schema:Action, dsrdf:Head;"
+				+ "schema:agent var:G1."));
+		
+		//---------------------------TODO:
+		//STOPPED HERE HERE
+		map.put(DSType.parse("e>(e>t)"), Formula.create(""));
+		// map.put(DSType.parse("e>(e>(e>t))"), Formula
+		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		
+		map.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		// for underspec adjunct e>t, see below, special case
+
+		map.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
+		map.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+		typeMapRDF=Collections.unmodifiableMap(map);
+		
+	}
 	
-	public static Map<DSType, Formula> typeMap;
+	
+	public static Map<DSType, Formula> typeMapTTR;
 	
 	static{
 		Map<DSType, Formula> map=new HashMap<DSType, Formula>();
@@ -707,7 +736,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 		map.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
 		map.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
-		typeMap=Collections.unmodifiableMap(map);
+		typeMapTTR=Collections.unmodifiableMap(map);
 		
 	}
 	
@@ -732,9 +761,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			DSType dsType = n.getRequiredType() != null ? n.getRequiredType() : n.getType();
 			Formula f = n.getFormula();
 			if (dsType != null && f == null) {
-				if (typeMap.containsKey(dsType)) {
+				if (typeMapTTR.containsKey(dsType)) {
 					
-					n.addLabel(new FormulaLabel(typeMap.get(dsType).freshenVars(c)));
+					n.addLabel(new FormulaLabel(typeMapTTR.get(dsType).freshenVars(c)));
 
 				} else if (!dsType.equals(DSType.t))
 					logger.warn(

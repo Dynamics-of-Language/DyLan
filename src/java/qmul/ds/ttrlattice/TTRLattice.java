@@ -19,9 +19,9 @@ import edu.stanford.nlp.util.Pair;
 import ptolemy.graph.DirectedAcyclicGraph;
 import ptolemy.graph.Edge;
 import ptolemy.graph.Node;
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.learn.RecordTypeCorpus;
 
 

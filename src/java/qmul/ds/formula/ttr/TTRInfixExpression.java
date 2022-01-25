@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,10 @@ import org.apache.log4j.Logger;
 import qmul.ds.Context;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.DisjunctiveType;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Predicate;
+import qmul.ds.formula.Variable;
 import qmul.ds.tree.Tree;
 import qmul.ds.type.BasicType;
 import edu.stanford.nlp.util.Pair;
@@ -185,7 +189,7 @@ public class TTRInfixExpression extends TTRFormula {
 
 		//System.out.println("setting parent rectype of " + this + " to " + r);
 		this.parentRecType = r;
-		predicate.parentRecType = r;
+		predicate.setParentRecType(r);
 
 		arg1.setParentRecType(r);
 		arg2.setParentRecType(r);

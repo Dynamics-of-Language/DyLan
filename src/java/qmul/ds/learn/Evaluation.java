@@ -15,12 +15,12 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.PredicateArgumentFormula;
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRLabel;
-import qmul.ds.formula.TTRPath;
-import qmul.ds.formula.TTRRecordType;
-import qmul.ds.formula.TTRRelativePath;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRLabel;
+import qmul.ds.formula.ttr.TTRPath;
+import qmul.ds.formula.ttr.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRelativePath;
 
 /**
  * A class to evaluate the performance of a ttr parser in terms of precision and recall of test corpus

@@ -12,9 +12,9 @@ import org.apache.log4j.Logger;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
-import qmul.ds.formula.TTRField;
-import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRField;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.type.DSType;
 
 public class GenericTypeLattice extends DirectedSparseMultigraph<TypeTuple, GenericLatticeEdge> {

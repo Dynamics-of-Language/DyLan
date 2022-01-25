@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,9 @@ import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.IncrementalFormula;
+import qmul.ds.formula.Variable;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
@@ -21,12 +24,12 @@ import qmul.ds.type.BasicType;
 import qmul.ds.type.DSType;
 
 /**
- * an interface where TTR specific methods could go
+ * an abstract class where TTR specific methods could go
  * 
  * @author arash
  * 
  */
-public abstract class TTRFormula extends Formula {
+public abstract class TTRFormula extends IncrementalFormula {
 
 	/**
 	 * 
@@ -164,10 +167,14 @@ public abstract class TTRFormula extends Formula {
 	{
 		throw new UnsupportedOperationException("Operation unsupported for the TTRFormula class:"+this.getClass());
 	}
+	
+	
 	public TTRFormula instantiate()
 	{
 		return this.clone();
 	}
+	
+	
 
 	public TTRFormula removeHeadIfManifest() {
 		throw new UnsupportedOperationException("Operation unsupported for the TTRFormula class:"+this.getClass());

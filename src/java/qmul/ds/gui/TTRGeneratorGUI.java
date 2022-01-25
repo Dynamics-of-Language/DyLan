@@ -26,7 +26,7 @@ import qmul.ds.Generator;
 import qmul.ds.ParserTuple;
 import qmul.ds.TTRGenerator;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.ttr.TTRRecordType;
 
 public class TTRGeneratorGUI implements ActionListener, MouseListener {
 

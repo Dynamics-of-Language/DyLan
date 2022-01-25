@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import qmul.ds.action.meta.MetaTTRRecordType;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 
 /**
  * A TTRPath, such as a.arg, in [a=[arg=john:e]:RecType;p=run(a.arg):t] Two subclasses: {@link TTRAbsolutePath} and

@@ -17,7 +17,7 @@ import edu.stanford.nlp.util.Pair;
 import qmul.ds.action.Action;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.formula.TTRFormula;
+import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.tree.Tree;
 
 /**

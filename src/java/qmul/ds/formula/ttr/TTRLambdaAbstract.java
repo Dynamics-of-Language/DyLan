@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,10 @@ import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.FOLLambdaAbstract;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.LambdaAbstract;
+import qmul.ds.formula.Variable;
 import qmul.ds.tree.Tree;
 import qmul.ds.type.BasicType;
 import qmul.ds.type.ConstructedType;
@@ -340,7 +344,7 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 			
 			Map<Variable,Variable> map=new HashMap<Variable,Variable>();
 			//no higher types allowded here. the argument has to be a TTRRecordType
-			TTRRecordType curUnderSpec=(TTRRecordType)Tree.typeMap.get(from);
+			TTRRecordType curUnderSpec=(TTRRecordType)Tree.typeMapTTR.get(from);
 			reduced=reduced.freshenVars(curUnderSpec,map);
 			reduced=((TTRLambdaAbstract)reduced).betaReduce(curUnderSpec);
 			curType=to;

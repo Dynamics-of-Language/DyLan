@@ -6,13 +6,15 @@
  * redistribution of this file, and for a DISCLAIMER OF ALL
  * WARRANTIES.
  *******************************************************************************/
-package qmul.ds.formula;
+package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import qmul.ds.action.meta.Meta;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.Variable;
 
 /**
  * A Meta-TTR Label, as in e.g. [L:e|p==phone(L):t] - these are instantiated through subsumption (subtype) checks.

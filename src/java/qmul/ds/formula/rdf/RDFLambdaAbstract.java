@@ -1,4 +1,4 @@
-package qmul.ds.formula;
+package qmul.ds.formula.rdf;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -6,6 +6,11 @@ import java.util.regex.Pattern;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.log4j.Logger;
+
+import qmul.ds.formula.FOLLambdaAbstract;
+import qmul.ds.formula.Formula;
+import qmul.ds.formula.LambdaAbstract;
+import qmul.ds.formula.Variable;
 
 /**
  * 
