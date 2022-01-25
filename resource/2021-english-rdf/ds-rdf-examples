@@ -1,0 +1,58 @@
+
+RDF for "A brown cat jumps":
+
+{
+var:e   a              schema:Action , dsrdf:Head ;
+        rdfs:label     "jump"@en ;
+        schema:agent   var:x ;
+
+var:x   a           schema:Cat ;
+        rdfs:label  "Jane"@en ;
+        dsrdf:modifier dsrdf:brown.
+
+}
+
+
+----------------------
+RDF for "The cat jumps":
+
+{
+var:e   a              schema:Action , dsrdf:Head ;
+        rdfs:label     "jump"@en ;
+        schema:agent   var:x ;
+
+var:x   SELECT ?the FROM C(ontext) {?the a dsrdf:cat; dsrdf:mod dsrdf:brown .}
+}
+
+
+-----------
+RDF for Jane likes John:
+
+{
+var:x 
+a schema:Person;
+rdfs:label \"Jane\"@en .
+
+var:y 
+a schema:Person;
+rdfs:label \"John\"@en .
+
+var:e 
+a schema:Action;
+rdfs:label \"like\"@en;
+a dsrdf:Head;
+schema:agent var:x;
+schema:object var:y.
+}
+
+------------
+
+Restrictor: {
+var: y  
+a           schema:Cat ;
+dsrdf:mod dsrdf:brown ;
+}
+
+
+
+

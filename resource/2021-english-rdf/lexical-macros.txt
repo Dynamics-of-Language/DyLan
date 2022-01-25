@@ -3,22 +3,23 @@
 
 	
 event_restrictor(past)
-	ttrput([head:es|p1==past(head):t])
+	rdfput({var:head dsrdf:tense dsrdf:past.})
+
 
 event_restrictor(pres)
-	ttrput([head:es|p1==pres(head):t])
+	rdfput({var:head dsrdf:tense dsrdf:pres.})
 
 event_restrictor(future)
-	ttrput([head:es|p1==future(head):t])
+	rdfput({var:head dsrdf:tense dsrdf:future.})
 
 v_intran_content(PRED)
-	ttrput(R1^(R1 ++ [e1==PRED:es|head==e1:es|p2==subj(e1, R1.head):t]))
+	rdfput(G1^{var:e a schema:Action; rdfs:label "PRED"@en; schema:agent var:G1. var:head dsrdf:is var:e.})
 	put(!)
 
 v_tran_content(PRED)
 	make(\/1)
 	go(\/1)
-	ttrput(R1^R2^(R1 ++ (R2 ++ [e1==PRED:es|head==e1:es|p2==subj(e1, R2.head):t|p3==obj(e1, R1.head):t])))
+	rdfput(G1^G2^{var:e a schema:Action; rdfs:label "PRED"@en; schema:agent var:G2; schema:object var:G1. var:head dsrdf:is var:e.})
 	put(ty(e>(e>t)))
 	put(!)
 	go(/\1)
