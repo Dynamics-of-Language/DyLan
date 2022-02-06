@@ -36,28 +36,32 @@ public abstract class RDFFormula extends Formula {
 	
 	public abstract RDFFormula union(RDFGraph g);
 	
+	public RDFFormula instantiate()
+	{
+		return this;
+	}
 	
-	
+	public abstract RDFFormula conjoin(Formula f);
 	
 	public static Map<DSType, RDFFormula> typeMap;
 	static{
 		Map<DSType, RDFFormula> map=new HashMap<DSType, RDFFormula>();
-		map.put(DSType.e, (RDFFormula)Formula.create("{var:x a dsrdf:Head, a schema:Thing.}"));
+		map.put(DSType.e, (RDFFormula)Formula.create("{var:x a dsrdf:Head, schema:Thing.}"));
 
-		map.put(DSType.cn, (RDFFormula) Formula.create("{var:x a dsrdf:Head, a schema:Thing.}"));
+		map.put(DSType.cn, (RDFFormula) Formula.create("{var:x a dsrdf:Head, schema:Thing.}"));
 		map.put(DSType.t, (RDFFormula) Formula.create("{var:e a dsrdf:Head.}"));
 		// for underspec VP
 		
 		map.put(DSType.parse("e>cn"), (RDFFormula) Formula.create("G1^{var:G1 a dsrdf:Head.}"));
 		map.put(DSType.parse("e>t"), (RDFFormula) Formula.create("G1^{var:e "
 				+ "a schema:Action, dsrdf:Head;"
-				+ "schema:agent var:G1."));
+				+ "schema:agent var:G1.}"));
 				
 		
 		map.put(DSType.parse("e>(e>t)"), (RDFFormula) Formula.create("G1^G2^{var:e "
 				+ "a schema:Action, dsrdf:Head;"
 				+ "schema:agent var:G2;"
-				+ "schema:object var:G1."));
+				+ "schema:object var:G1.}"));
 		
 		
 		//We won't need the following, for now ... needed for "I gave john the book"

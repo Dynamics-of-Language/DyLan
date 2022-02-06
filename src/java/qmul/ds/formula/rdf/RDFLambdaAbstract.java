@@ -101,6 +101,8 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		RDFGraph argGraph = (RDFGraph) argument;
 	
 		RDFVariable argHead = argGraph.getHead();
+		if (argHead == null)
+			throw new IllegalStateException("Beta-reduce: argument has no head:"+argument);
 		
 		//System.out.println("Arg head is:"+argHead);
 		// Step 2: change the ID of node @var to be argHead
@@ -109,7 +111,7 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		//System.out.println("After local head substitution:"+substituted);
 		
 		// Step 3: return this.union(argument)
-		return substituted.conjoin(argGraph);
+		return substituted.body.union(argGraph);
 	}
 	
 	public RDFGraph extractBody()
@@ -171,7 +173,7 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 	{
 		if (g instanceof RDFGraph)
 		{
-			return this.union((RDFGraph) g);
+			return new RDFLambdaAbstract(this.var, this.body.conjoin(g));
 		}
 		else
 		{

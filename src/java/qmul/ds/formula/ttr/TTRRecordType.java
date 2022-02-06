@@ -1936,7 +1936,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * 
 	 * @see qmul.ds.formula.Formula#toUnicodeString()
 	 */
-
 	@Override
 	public String toUnicodeString() {
 		String s = TTR_OPEN;

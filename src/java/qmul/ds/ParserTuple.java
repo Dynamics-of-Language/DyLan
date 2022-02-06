@@ -35,6 +35,11 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 
 	protected Formula semantics;
 
+	/**
+	 * Computer maximal semantics with fresh variables wrt to tree rather than context
+	 * 
+	 * @return maximal semantics
+	 */
 	public Formula getSemantics() {
 		if (this.semantics != null)
 			return semantics;

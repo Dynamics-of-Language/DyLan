@@ -289,9 +289,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	//END OF methods for rerunning actions-------------------------------------------------------
 	
 
-	public TTRRecordType getFinalSemantics()
+	public Formula getFinalSemantics()
 	{
-		return (TTRRecordType)context.getCurrentTuple().getSemantics(context).evaluate();
+		return context.getCurrentTuple().getSemantics(context).evaluate();
 	}
 	
 	//BEGIN methods for completing a tree --------------------------------------------------------

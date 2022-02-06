@@ -4,8 +4,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +23,6 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.ResourceUtils;
-import org.apache.jena.vocabulary.RDF;
 
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.Variable;
@@ -78,6 +79,10 @@ public class RDFGraph extends RDFFormula {
 		storeVariables(rdfm);
 	}
 	
+	public RDFGraph()
+	{
+		this.rdfModel = ModelFactory.createDefaultModel();
+	}
 	/**
 	 * Create an RDFGraph object from Turtle specification. Assumes that the Turtle specification
 	 * is enclosed in {...} 
@@ -202,15 +207,28 @@ public class RDFGraph extends RDFFormula {
 		return new RDFGraph(this.rdfModel.union(graph.getModel()));
 	}
 	
-	
+	/**
+	 *  Returns conjunction of this, with g. This is the union of the two graphs, with the head node coming
+	 *  from the left hand side argument, i.e. this RDFGraph.
+	 *  
+	 *  Assumes that the heads of the two graphs are OF THE SAME DS TYPE. This is true in DS
+	 *  Link-Evaluation action that uses this method.
+	 */
 	public RDFGraph conjoin(Formula g)
 	{
 		if (g instanceof RDFGraph)
 		{
 			RDFGraph rdf=(RDFGraph)g;
-			RDFGraph headRemoved = rdf.removeHead();
-			return this.union(headRemoved);
-//			return this.union(rdf);
+			
+			RDFVariable argHead=rdf.getHead();
+			RDFVariable headThis=this.getHead();
+			
+			//Heads of the same DS type should collapse, so:
+			//first substitute head of g, with head of this
+			
+			RDFGraph argHeadSubst = (headThis!=null && argHead!=null)?rdf.substitute(argHead, headThis):rdf;
+			
+			return this.union(argHeadSubst);
 		}
 		else
 		{
@@ -221,7 +239,21 @@ public class RDFGraph extends RDFFormula {
 	}
 	
 	
-	
+	public List<RDFVariable> getHeads()
+	{
+		List<RDFVariable> heads= new ArrayList<RDFVariable>();
+		Resource mainHead;
+		Resource mainHeadType = this.rdfModel.getResource(DSRDF_NAMESPACE + "Head");
+		Selector headSelector = new SimpleSelector(null, org.apache.jena.vocabulary.RDF.type, mainHeadType);
+		StmtIterator headIter = this.rdfModel.listStatements(headSelector);
+		while(headIter.hasNext()) {
+			
+			Statement headStmt = headIter.nextStatement();
+			mainHead = headStmt.getSubject();
+			heads.add(new RDFVariable(mainHead));
+		}
+		return heads;
+	}
 	
 	public RDFVariable getHead()
 	{
@@ -301,6 +333,11 @@ public class RDFGraph extends RDFFormula {
 		return "{"+removePrefix(writer.toString())+"}";
 	}
 	
+	public String toUnicodeString()
+	{
+		return toString();
+	}
+	
 	public Model getModel()
 	{
 		// TODO
@@ -341,8 +378,26 @@ public class RDFGraph extends RDFFormula {
 	{
 		return variables.contains(v);
 	}
-	
-	
+	/**
+	 * Collapses heads if there are more than one - this has the important function in conjoining
+	 * RDFGraphs where each conjunct has a head.
+	 */
+	public RDFGraph collapseHeads()
+	{
+		List<RDFVariable> heads = getHeads();
+		if (heads.size()<2)
+			return this;
+		
+		RDFVariable firstHead = heads.get(0);
+		RDFGraph result=this.substitute(heads.get(1), firstHead);
+		for(int i=2;i<heads.size();i++)
+		{
+			result = result.substitute(heads.get(i), firstHead);
+		}
+		
+		return result;
+		
+	}
 	
 	
 	public RDFGraph freshenVars(Tree t)
@@ -424,10 +479,34 @@ public class RDFGraph extends RDFFormula {
 				+ "schema:agent var:x;"
 				+ "schema:object var:y.}";
 		
-		//String jane = "{var:x a schema:Person;rdfs:label \"Jane\"@en.}";
 		
-		//RDFGraph janeGraph = new RDFGraph(janeTurtle, prefix);
-		//RDFGraph janeGraph = (RDFGraph) Formula.create(jLikesJ);
+		
+		
+		String jane = "{var:x a schema:Person, dsrdf:Head; "
+				+ "rdfs:label \"Jane\"@en .}";
+		
+		RDFGraph janeGraph = new RDFGraph(jane);
+		
+		String run = "G1^{var:e a schema:Action, dsrdf:Head; rdfs:label \"PRED\"@en; schema:agent var:G1.}";
+		
+		RDFLambdaAbstract runG = (RDFLambdaAbstract)Formula.create(run);
+		
+		String pres = "{var:e5 a dsrdf:Head; dsrdf:tense dsrdf:pres .}";
+		
+		RDFGraph presentTense = new RDFGraph(pres);
+		
+		RDFGraph graph = new RDFGraph(ModelFactory.createDefaultModel());
+		
+		System.out.println(graph.conjoin(janeGraph));
+		
+		System.out.println(runG.conjoin(presentTense));
+		
+		System.out.println(runG.betaReduce(janeGraph));
+		//System.out.println("before collapse:\n"+ janeGraph);
+		
+		//RDFGraph janeFuture = janeGraph.substitute(new RDFVariable("y"), new RDFVariable("x"));
+		
+		//System.out.println("after collapse:\n"+ janeGraph.collapseHeads());
 		
 		
 		//System.out.println(janeGraph.removeHead());

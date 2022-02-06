@@ -19,7 +19,7 @@ IF      ?ty(e)
 THEN    put(person(PERSON))
         put(ty(e))
         delete(?ty(e))
-        rdfput({var:x a schema:Person; rdfs:label "NAME"@en.})
+        rdfput({var:x a schema:Person, dsrdf:Head; rdfs:label "NAME"@en.})
 ELSE    abort
 
 
@@ -31,7 +31,7 @@ IF		ty(e>t)
         ¬<\/0>Ex.x
         ¬<\/1>Ex.x
 THEN	delete(?Ex.fo(x))
-		v_intran_content(PRED)
+		v_inran_content(PRED)
 ELSE	abort
 
 v_intran_ing(PRED,TENSE,PERSON)
@@ -149,5 +149,36 @@ ELSE	IF		?ty(t)
 						put(?ty(e))
 		ELSE	abort
 
+manner_adv(PRED)
+IF		(?ty(t) || ty(t) || ty(e>t))
+		¬<\/L>Ex.x		
+THEN	put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		rdfput({var:e1 a dsrdf:head; dsrdf:modifier dsrdf:PRED.})
+ELSE	abort
 
+
+prep_es(PRED)
+IF		ty(t)
+		¬<\/L>Ex.x		
+THEN	put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(?ty(t))
+		make(\/1)
+		go(\/1)
+		put(ty(e>t))
+		rdfput(G1^{var:e1 a dsrdf:head; dsrdf:PRED var:G1.})
+		go(/\1)
+		make(\/0)
+		go(\/0)
+		put(?ty(e))
+		IF		</\0/\L\/*>?Ex.tn(x)
+				</\0/\L\/*>ty(e)
+		THEN	merge(</\0/\L\/*>)
+				delete(?ty(e))
+		ELSE	do_nothing
+ELSE	abort
 		
