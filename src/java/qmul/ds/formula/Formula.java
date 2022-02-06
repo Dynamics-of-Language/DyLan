@@ -24,14 +24,17 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
+import qmul.ds.DAGParser;
 import qmul.ds.action.boundvariable.BoundFormulaVariable;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.action.meta.MetaTTRRecordType;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.rdf.RDFFormula;
 import qmul.ds.formula.rdf.RDFGraph;
 import qmul.ds.formula.rdf.RDFLambdaAbstract;
+import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.formula.ttr.TTRInfixExpression;
 import qmul.ds.formula.ttr.TTRLabel;
 import qmul.ds.formula.ttr.TTRLambdaAbstract;
@@ -42,6 +45,7 @@ import qmul.ds.tree.label.ExistentialLabelConjunction;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
+import qmul.ds.type.DSType;
 
 /**
  * An abstract class for semantic formulae as used in {@link FormulaLabel}s
@@ -53,6 +57,10 @@ public abstract class Formula implements Serializable {
 	protected static Logger logger = Logger.getLogger(Formula.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String TTR = "ttr";
+	
+	public static final String RDF = "rdf";
 
 	public static final String EPSILON_FUNCTOR = "eps";
 	public static final String UNICODE_EPSILON_FUNCTOR = "\u03B5"; // epsilon;
@@ -583,5 +591,40 @@ public abstract class Formula implements Serializable {
 	public void partialResetMetas() {
 		for (Meta<?> meta : getMetas())
 			meta.partialReset();
+	}
+	
+	public Formula removeHead()
+	{
+		return this;
+	}
+	
+	/*
+	static Map<DSType, ? extends Formula> getUnderspecifiedMap(String sem_form) {
+		if (sem_form.equals(DAGParser.TTR))
+			return TTRFormula.typeMap;
+		else if (sem_form.equals(DAGParser.RDF))
+			return RDFFormula.typeMap;
+		else
+			throw new UnsupportedOperationException("Unknown semantic formalism:" + sem_form);
+
+	}*/
+
+	/**
+	 * Given a DS type this method returns an underspecified semantic representation within the formalism
+	 * specified by sem_form
+	 * @param sem_form
+	 * @return underspecified formula
+	 */
+	
+	
+	public static Formula getUnderspecifiedFormula(DSType type, String sem_form) {
+
+		if (sem_form.equals(TTR))
+			return TTRFormula.typeMap.get(type);
+		else if (sem_form.equals(RDF))
+			return RDFFormula.typeMap.get(type);
+		else
+			throw new UnsupportedOperationException("Underspecification not supported in:" + sem_form);
+
 	}
 }

@@ -27,6 +27,7 @@ import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.formula.ttr.TTRRecordType;
@@ -40,6 +41,11 @@ import qmul.ds.tree.Tree;
 public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		implements DSParser {
 
+	
+	
+	public String sem_form = Formula.TTR;  
+	
+	
 	private static Logger logger = Logger.getLogger(DAGParser.class);
 	
 	//protected DAG<T, E> state;
@@ -82,8 +88,15 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		
 	}
 	
+	
+	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa, String sem_form)
+	{
+		this(lexicon, grammar, sa);
+		this.sem_form=sem_form;
+	}
+	
 	public DAGParser(Lexicon lexicon, Grammar grammar) {
-		this(lexicon,grammar,new SpeechActInferenceGrammar());
+		this(lexicon,grammar, new SpeechActInferenceGrammar());
 		
 	}
 	
@@ -121,6 +134,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public DAGParser(File resourceDir) {
 		this(new Lexicon(resourceDir), new Grammar(resourceDir), new SpeechActInferenceGrammar(resourceDir));
 		
+		if (resourceDir.getName().contains("rdf"))
+			this.sem_form = Formula.RDF;
+		
 	}
 	
 	
@@ -135,6 +151,11 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public DAGParser(String resourceDirNameOrURL) {
 		this(new Lexicon(resourceDirNameOrURL), new Grammar(
 				resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL));
+		
+		if (resourceDirNameOrURL.contains("rdf"))
+			this.sem_form = Formula.RDF;
+		
+		
 	}
 	
 	
@@ -454,7 +475,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public synchronized void init() {
 		FormulaMetavariable.resetPool();
-		context.init();
+		context.init(this.sem_form);
 
 	}
 

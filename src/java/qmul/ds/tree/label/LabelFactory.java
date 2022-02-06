@@ -315,7 +315,7 @@ public class LabelFactory {
 
 	public static void main(String a[]) {
 
-		Label l = LabelFactory.create("ty(cnev>e)");
+		Label l = LabelFactory.create("+indef");
 		System.out.println(l + " " + l.getClass());
 
 	}

@@ -161,6 +161,7 @@ public class DAGViewer<T extends DAGTuple, E extends DAGEdge> implements GraphMo
 		this.dag=dag;
 		update(dag.getInContextSubgraph());
 	}
+	
 	public void update(Forest<T,E> dag) {
 //		System.out.println("updating VV");
 //		System.out.println("nodes:"+dag.getVertexCount());

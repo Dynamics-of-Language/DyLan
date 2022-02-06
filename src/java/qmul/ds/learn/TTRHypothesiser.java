@@ -416,7 +416,7 @@ public class TTRHypothesiser extends Hypothesiser {
 
 	protected boolean hypothesiseOnce() {
 
-		TTRFormula maxSem = state.getCurrentTuple().getSemantics();
+		TTRFormula maxSem = (TTRFormula)state.getCurrentTuple().getSemantics();
 		boolean doneWithBranch = false;
 		if (maxSem.subsumes(targetType) && targetType.subsumes(maxSem)) {
 			logger.info("GOT TO THE SEMANTICS and ...");
@@ -688,7 +688,7 @@ public class TTRHypothesiser extends Hypothesiser {
 									new UtteredWord(this.curUnknownSubstring));
 						continue;
 					}
-					TTRFormula maxSem = pair.second().getMaximalSemantics();
+					TTRFormula maxSem = (TTRFormula)pair.second().getMaximalSemantics();
 					if (!maxSem.subsumes(targetType)) {
 
 						logger.debug("failed subsumption, resulting tree: "

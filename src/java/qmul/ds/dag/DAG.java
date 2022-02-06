@@ -18,6 +18,7 @@ import edu.uci.ics.jung.graph.Forest;
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
@@ -102,8 +103,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	}
 
-	public DAG() {
-		this(new Tree(), new ArrayList<UtteredWord>());
+	public DAG(String sem_form) {
+		this(new Tree(sem_form), new ArrayList<UtteredWord>());
 	}
 
 	public DAG(Tree start) {
@@ -125,7 +126,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 //
 //	}
 
-	public TTRFormula getSemantics(T tuple) {
+	public Formula getSemantics(T tuple) {
 		if (context == null)
 			return tuple.getSemantics();
 
@@ -1118,7 +1119,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return result;
 		
 	}
-	public TTRFormula getGroundedContent(Set<String> participants) {
+	public Formula getGroundedContent(Set<String> participants) {
 		if (participants == null||participants.isEmpty()) {
 			throw new IllegalArgumentException(
 					"cannot get grounded content without a set of participants which is null or empty here. returning null formula");
@@ -1132,7 +1133,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 			
 		
 		
-		TTRFormula result = new TTRRecordType();
+		Formula result = new TTRRecordType();
 		
 		
 		Set<T> accepted_by_all = new HashSet<T>();
@@ -1208,10 +1209,10 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 
 	}
 	
-	public TTRFormula conjoinAllTurnContent() {
+	public Formula conjoinAllTurnContent() {
 		
 		T tuple=getCurrentTuple();
-		TTRFormula result = tuple.getSemantics(context);	
+		Formula result = tuple.getSemantics(context);	
 		E parentEdge=this.getParentEdge(tuple);
 		
 		while(parentEdge!=null)

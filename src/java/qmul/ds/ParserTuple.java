@@ -17,6 +17,7 @@ import edu.stanford.nlp.util.Pair;
 import qmul.ds.action.Action;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.tree.Tree;
 
@@ -32,9 +33,9 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	Logger logger = Logger.getLogger(ParserTuple.class);
 	protected Tree tree;
 
-	protected TTRFormula semantics;
+	protected Formula semantics;
 
-	public TTRFormula getSemantics() {
+	public Formula getSemantics() {
 		if (this.semantics != null)
 			return semantics;
 
@@ -42,7 +43,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 		return semantics;
 	}
 	
-	public <T extends DAGTuple, E extends DAGEdge> TTRFormula getSemantics(Context<T,E> c) {
+	public <T extends DAGTuple, E extends DAGEdge> Formula getSemantics(Context<T,E> c) {
 		if (c==null)
 		{
 			logger.error("ERROR: null context when computing maximal semantics of :"+this);
@@ -61,7 +62,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 		this.semantics = maximalSemantics;
 	}
 
-	public ParserTuple(Tree t, TTRFormula f) {
+	public ParserTuple(Tree t, Formula f) {
 		this.tree = t;
 		this.semantics = f;
 	}
@@ -93,8 +94,8 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 				.clone();
 	}
 
-	public ParserTuple(TTRFormula ttrRecordType) {
-		this.semantics = ttrRecordType;
+	public ParserTuple(Formula f) {
+		this.semantics = f;
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 			if (t.getSemantics() == null)
 				return false;
 			
-			TTRFormula headLess=getSemantics().removeHead();
+			Formula headLess=getSemantics().removeHead();
 			return headLess.subsumes(t.getSemantics().removeHead());
 //			return getSemantics().subsumes(t.getSemantics());
 		}

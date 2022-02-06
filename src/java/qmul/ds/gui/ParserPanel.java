@@ -67,7 +67,7 @@ import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
-import qmul.ds.formula.ttr.TTRFormula;
+import qmul.ds.formula.Formula;
 
 /**
  * Provides a simple GUI Panel for Parsing. Allows a user to load a parser
@@ -940,7 +940,7 @@ public class ParserPanel extends JPanel {
 			this.tuple = new ParserTuple(tree);
 		}
 
-		public GenerateThread(TTRFormula semantics) {
+		public GenerateThread(Formula semantics) {
 			this.tuple = new ParserTuple(semantics);
 		}
 

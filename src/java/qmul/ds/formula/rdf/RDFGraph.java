@@ -228,7 +228,7 @@ public class RDFGraph extends RDFFormula {
 		
 		Resource mainHead;
 		Resource mainHeadType = this.rdfModel.getResource(DSRDF_NAMESPACE + "Head");
-		Selector headSelector = new SimpleSelector(null, RDF.type, mainHeadType);
+		Selector headSelector = new SimpleSelector(null, org.apache.jena.vocabulary.RDF.type, mainHeadType);
 		StmtIterator headIter = this.rdfModel.listStatements(headSelector);
 		if (!headIter.hasNext()) {
 			return null;
@@ -246,7 +246,7 @@ public class RDFGraph extends RDFFormula {
 		RDFGraph g = new RDFGraph(this);
 		
 		Resource mainHeadType = g.rdfModel.getResource(DSRDF_NAMESPACE + "Head");
-		Selector headSelector = new SimpleSelector(null, RDF.type, mainHeadType);
+		Selector headSelector = new SimpleSelector(null, org.apache.jena.vocabulary.RDF.type, mainHeadType);
 		StmtIterator headIter = g.rdfModel.listStatements(headSelector);
 		Statement headStmt;
 		if (!headIter.hasNext()) {
