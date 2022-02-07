@@ -233,13 +233,7 @@ public abstract class Formula implements Serializable {
 			return rt;
 		}
 
-		// TODO DS-RDF - check the following works, and doesn't clash with the others
-		RDFGraph rdf = RDFGraph.parse(string);
-		if (rdf != null) {
-			logger.debug("created RDF graph, " + rdf + ", from: " + string);
-			return rdf;
-		}
-
+		
 		Matcher m = LAMBDA_ABSTRACT_PATTERN.matcher(string);
 		if (m.matches()) {
 

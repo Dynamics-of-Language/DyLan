@@ -111,7 +111,7 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		//System.out.println("After local head substitution:"+substituted);
 		
 		// Step 3: return this.union(argument)
-		return substituted.body.union(argGraph);
+		return substituted.body.union(argGraph.removeHead());
 	}
 	
 	public RDFGraph extractBody()
