@@ -207,7 +207,7 @@ public class LabelFactory {
 			if (ld != null)
 				return ld;
 
-			throw new IllegalArgumentException("Unrecognised label specification " + string);
+			throw new IllegalArgumentException("Unrecognised label specification:" + string);
 		}
 	}
 

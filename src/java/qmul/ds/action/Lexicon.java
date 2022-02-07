@@ -377,7 +377,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 					} catch (IllegalArgumentException e) {
 						// logger.warn(e);
-						logger.warn("Macros used in lexical template could not be instatiated. Template:" + template
+						logger.warn("Macros used in lexical template could not be instantiated. Template:" + template
 								+ "; Word:" + word + " Skipping this");
 						e.printStackTrace();
 

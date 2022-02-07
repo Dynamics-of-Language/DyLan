@@ -148,11 +148,18 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		return 0;
 	}
 	
-	
+	@Override
 	public String toString()
 	{
 		return this.var + "^" + this.body.toString();
 		
+	}
+	
+	@Override
+	public String toUnicodeString() {
+	
+		return UNICODE_LAMBDA_FUNCTOR + this.var.toString() + "."
+				+ body.toUnicodeString();
 	}
 	
 	public boolean equals(Object other)

@@ -2,6 +2,7 @@ bill                          proper                        bill                
 john                          proper                        john                          s3                            male
 ruth						  proper						ruth						  s3							male
 arash						  proper						arash						  s3							male
+mary						  proper						mary						  s3							male
 like                          v_tran_inf                    like                          inf                           per
 like                          v_tran_fin                    like                          pres
 likes                         v_tran_fin                    like                          pres                          s3
@@ -11,4 +12,5 @@ liked                         v_tran_pas                    like                
 will                          v_aux_inf                     will                          inf                          	per
 runs						  v_intran_fin					run							  pres                          s3
 ran						      v_intran_fin					run							  past                          per
-
+dearly						  manner_adv					dearly
+<rt>				  		  release_turn					null

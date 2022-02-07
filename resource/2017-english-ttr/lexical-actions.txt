@@ -1636,35 +1636,35 @@ ELSE		abort
 //+eoc marks end of clause
 release_turn(PRED)	
 IF		ty(Y>Z)
-THEN		abort
-ELSE		IF		complete
+THEN	abort
+ELSE	IF		complete
 				Speaker(W)
-		THEN		IF		<Z>+Q
-				THEN		ground
+		THEN	IF		<Z>+Q
+				THEN	ground
 						put(+eoc)
 						infer-sa
-				ELSE		IF		Assert(W)
-						THEN		ground
+				ELSE	IF		Assert(W)
+						THEN	ground
 								put(+eoc)
 								infer-sa
-						ELSE		put(Assert(W))
+						ELSE	put(Assert(W))
 								ground
 								put(+eoc)
 								infer-sa
 		ELSE    IF		ty(e)
 						tn(0*)
 						Speaker(W)
-				THEN		IF		<Z>+Q
-						THEN		ground
+				THEN	IF		<Z>+Q
+						THEN	ground
 								delete(?Ex.tn(x))
 								put(+eoc)
 								infer-sa
-						ELSE		IF		Assert(W)
-								THEN		ground
+						ELSE	IF		Assert(W)
+								THEN	ground
 										delete(?Ex.tn(x))
 										put(+eoc)
 										infer-sa
-								ELSE		put(Assert(W))
+								ELSE	put(Assert(W))
 										ground
 										delete(?Ex.tn(x))
 										put(+eoc)
@@ -1680,25 +1680,25 @@ ELSE		IF		complete
 assert(PRED)
 IF		ty(Y>Z)
 THEN		abort
-ELSE		IF		complete
+ELSE	IF		complete
 				Speaker(V)
 		THEN  	IF		Assert(V)
-				THEN		ground
+				THEN	ground
 						put(+eoc)
 						infer-sa
-			 	ELSE		put(Assert(V))
+			 	ELSE	put(Assert(V))
 						ground
 						put(+eoc)
 						infer-sa
 		ELSE  	IF		ty(e)
 						tn(0*)
 						Speaker(V)
-				THEN		IF		Assert(V)
-						THEN		ground
+				THEN	IF		Assert(V)
+						THEN	ground
 								delete(?Ex.tn(x))
 								put(+eoc)
 								infer-sa
-					 	ELSE		put(Assert(V))
+					 	ELSE	put(Assert(V))
 								ground
 								delete(?Ex.tn(x))
 								put(+eoc)

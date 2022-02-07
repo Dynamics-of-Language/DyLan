@@ -156,7 +156,7 @@ THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
 		put(ty(t))
-		rdfput({var:e1 a dsrdf:head; dsrdf:modifier dsrdf:PRED.})
+		rdfput({var:e1 a dsrdf:Head; dsrdf:mod dsrdf:PRED.})
 ELSE	abort
 
 
@@ -181,4 +181,30 @@ THEN	put(?+eval)
 				delete(?ty(e))
 		ELSE	do_nothing
 ELSE	abort
+
+
+release_turn(PRED)
+IF		ty(Y>Z)
+THEN	abort
+ELSE	IF		</\0\/1>Ex.x
+				¬</\0\/1>Ex.?x
+				¬Ex.?x
+		THEN	abort
+		ELSE	IF	  	ty(X)
+					  	Speaker(W)
+				THEN	IF		ty(t)
+								+Q
+						THEN	delete(+Q)
+								put(Assert(W))
+								ground
+						ELSE	IF		<Z>+Q
+								THEN	ground
+								ELSE    IF		Assert(W)
+										THEN	ground
+										ELSE	put(Assert(W))
+												ground	
+				ELSE    abort
+				
+
+
 		

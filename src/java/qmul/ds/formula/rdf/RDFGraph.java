@@ -28,6 +28,7 @@ import org.apache.jena.util.ResourceUtils;
 import qmul.ds.Context;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 /**
@@ -294,7 +295,18 @@ public class RDFGraph extends RDFFormula {
 	}
 
 	public String toUnicodeString() {
-		return toString();
+		String plain=toString();
+		String[] lines = plain.split("\n");
+		String result ="{";
+		for(int i=1; i<lines.length-1; i++)
+		{
+			result+=lines[i];
+			result+=TTRRecordType.TTR_FIELD_SEPARATOR;
+			result+=TTRRecordType.TTR_LINE_BREAK;
+		}
+			
+		result+="}";
+		return result;
 	}
 
 	public Model getModel() {
@@ -326,24 +338,7 @@ public class RDFGraph extends RDFFormula {
 		return variables.contains(v);
 	}
 
-	/**
-	 * Collapses heads if there are more than one - this has the important function
-	 * in conjoining RDFGraphs where each conjunct has a head.
-	 */
-	public RDFGraph collapseHeads() {
-		List<RDFVariable> heads = getHeads();
-		if (heads.size() < 2)
-			return this;
 
-		RDFVariable firstHead = heads.get(0);
-		RDFGraph result = this.substitute(heads.get(1), firstHead);
-		for (int i = 2; i < heads.size(); i++) {
-			result = result.substitute(heads.get(i), firstHead);
-		}
-
-		return result;
-
-	}
 	
 	public RDFGraph freshenVars(Context c)
 	{
@@ -439,7 +434,7 @@ public class RDFGraph extends RDFFormula {
 	{
 		FontMetrics metrics = g2.getFontMetrics();
 		
-		String text = toUnicodeString();
+		String text = toString();
 		int lineD = 1;
 		int height = g2.getFontMetrics().getHeight();
 		int maxW = 0;
@@ -460,7 +455,7 @@ public class RDFGraph extends RDFFormula {
 	{
 		FontMetrics metrics = g2.getFontMetrics();
 	
-		String text = toUnicodeString();
+		String text = toString();
 		int lineD = 1;
 		int height = g2.getFontMetrics().getHeight();
 		int maxW = 0;
@@ -480,10 +475,14 @@ public class RDFGraph extends RDFFormula {
 		String jLikesJ = "{var:x " + "a schema:Person;" + "rdfs:label \"Jane\"@en ." + "var:y " + "a schema:Person;"
 				+ "rdfs:label \"John\"@en ." + "var:e " + "a schema:Action;" + "rdfs:label \"like\"@en;"
 				+ "a dsrdf:Head;" + "schema:agent var:x;" + "schema:object var:y.}";
+		
+		
 
 		String jane = "{var:x a schema:Person, dsrdf:Head; " + "rdfs:label \"Jane\"@en .}";
 
 		RDFGraph janeGraph = new RDFGraph(jane);
+		
+		System.out.println(janeGraph.toUnicodeString());
 
 		String run = "G1^{var:e a schema:Action, dsrdf:Head; rdfs:label \"PRED\"@en; schema:agent var:G1.}";
 
