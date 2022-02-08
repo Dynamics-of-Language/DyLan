@@ -482,7 +482,7 @@ public class RDFGraph extends RDFFormula {
 
 		RDFGraph janeGraph = new RDFGraph(jane);
 		
-		System.out.println(janeGraph.toUnicodeString());
+		
 
 		String run = "G1^{var:e a schema:Action, dsrdf:Head; rdfs:label \"PRED\"@en; schema:agent var:G1.}";
 
@@ -493,10 +493,21 @@ public class RDFGraph extends RDFFormula {
 		RDFGraph presentTense = new RDFGraph(pres);
 
 		
+		String cat = "G1^{var:G1 a dsrdf:Head, dsrdf:cat.}";
+		String entity = "{var:x a dsrdf:Head, schema:Thing.}";
+		String a = "G1^{var:G1 a dsrdf:Head.}";
+		
+		RDFGraph entG = new RDFGraph(entity);
+		RDFLambdaAbstract catfunctor = (RDFLambdaAbstract)Formula.create(cat);
+		RDFLambdaAbstract aFunctor = (RDFLambdaAbstract)Formula.create(a);
+		
+		System.out.println(aFunctor.betaReduce(catfunctor.betaReduce(entG)));
+		
+		
+		
+		//System.out.println(runG.conjoin(presentTense));
 
-		System.out.println(runG.conjoin(presentTense));
-
-		System.out.println(runG.betaReduce(janeGraph));
+		//System.out.println(runG.betaReduce(janeGraph));
 		// System.out.println("before collapse:\n"+ janeGraph);
 
 		// RDFGraph janeFuture = janeGraph.substitute(new RDFVariable("y"), new

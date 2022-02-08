@@ -183,6 +183,44 @@ THEN	put(?+eval)
 ELSE	abort
 
 
+det_indef(QUANT)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    put(person(s3))
+		put(class(obj))
+		make(\/1)
+        go(\/1)
+        rdfput(G1^{var:G1 a dsrdf:Head.})
+        put(ty(cn>e))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+        make(\/0)
+        go(\/0)
+        put(ty(e))
+        rdfput({var:x a schema:Thing, dsrdf:Head.})
+        go(/\0)
+        make(\/1)
+        go(\/1)
+        put(?ty(e>cn))
+ELSE    abort
+
+
+count(PRED,PERSON,CLASS)
+IF      ?ty(e>cn)
+THEN    rdfput(G1^{var:G1 a dsrdf:Head, dsrdf:PRED.})
+        put(ty(e>cn))
+        delete(?ty(e>cn))      
+        put(!)
+ELSE    abort
+
+
+
+//----------Contextual Actions
+
 release_turn(PRED)
 IF		ty(Y>Z)
 THEN	abort
