@@ -408,7 +408,7 @@ public class IfThenElse extends Effect implements Serializable {
 				if (label.check(tree, context)) {
 					logger.debug("pass lab check " + label + " at " + tree);
 				} else {
-					logger.debug("fail lab check " + label + " at " + tree);
+					logger.info("fail lab check " + label + " at " + tree);
 					success = false;
 					break;
 				}

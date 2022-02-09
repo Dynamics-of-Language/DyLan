@@ -369,6 +369,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					try {
 						LexicalAction action = actionTemplates.get(template).create(word,
 								fields.subList(2, fields.size()));
+						
 						if (!containsKey(word)) {
 							put(word, new HashSet<LexicalAction>());
 						}

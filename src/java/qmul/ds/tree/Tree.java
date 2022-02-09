@@ -17,6 +17,8 @@ import edu.stanford.nlp.trees.TreeFactory;
 import qmul.ds.Context;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
+import qmul.ds.action.atomic.Effect;
+import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.formula.DisjunctiveType;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.LambdaAbstract;
@@ -688,25 +690,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	public static void main(String args[]) {
 
-		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance utt = new Utterance("usr: can you book a table for four people");
-
-		parser.parseUtterance(utt);
-
-		Tree cur = parser.getContext().getCurrentTuple().getTree();
-
-		System.out.println("Tree: " + cur);
-		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
-		parser.parse();
-		cur = parser.getContext().getCurrentTuple().getTree();
-
-		System.out.println("Tree: " + cur);
-		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
-		parser.parse();
-		cur = parser.getContext().getCurrentTuple().getTree();
-
-		System.out.println("Tree: " + cur);
-		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
+		Effect e = EffectFactory.create("do_nothing");
+		
+		System.out.println(e +" "+ e.getClass().toString());
 
 	}
 
@@ -1173,5 +1159,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		float num_requirements = (float) countIncompleteNodes();
 		return num_requirements / values().size();
 	}
+	
+	
 
 }

@@ -159,10 +159,11 @@ THEN	put(?+eval)
 		rdfput({var:e1 a dsrdf:Head; dsrdf:mod dsrdf:PRED.})
 ELSE	abort
 
+//this does not work with: "who did john walk with?" - needs merging across link.
 
 prep_es(PRED)
 IF		ty(t)
-		¬<\/L>Ex.x		
+		¬<\/L>Ex.x	
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -170,16 +171,11 @@ THEN	put(?+eval)
 		make(\/1)
 		go(\/1)
 		put(ty(e>t))
-		rdfput(G1^{var:e1 a dsrdf:head; dsrdf:PRED var:G1.})
+		rdfput(G1^{var:e1 a dsrdf:Head; dsrdf:PRED var:G1.})
 		go(/\1)
 		make(\/0)
 		go(\/0)
 		put(?ty(e))
-		IF		</\0/\L\/*>?Ex.tn(x)
-				</\0/\L\/*>ty(e)
-		THEN	merge(</\0/\L\/*>)
-				delete(?ty(e))
-		ELSE	do_nothing
 ELSE	abort
 
 

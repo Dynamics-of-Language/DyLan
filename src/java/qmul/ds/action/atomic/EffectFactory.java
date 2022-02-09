@@ -261,5 +261,8 @@ class MacroTemplate {
 		return new LexicalMacro(name, lines);
 	}
 	
+	
+	
+	
 
 }
