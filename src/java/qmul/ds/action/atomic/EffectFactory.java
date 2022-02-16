@@ -116,6 +116,8 @@ public class EffectFactory {
 			return new SaturateScopeDep(line);
 		} else if (line.toLowerCase().startsWith(TTRFreshPut.FUNCTOR.toLowerCase())) {
 			return new TTRFreshPut(line);
+		} else if (line.toLowerCase().startsWith(RDFFreshPut.FUNCTOR.toLowerCase())) {
+			return new RDFFreshPut(line);
 		} else {
 			//System.out.println("line didn't match:" + line);
 			return createLexicalMacro(line);
@@ -258,6 +260,9 @@ class MacroTemplate {
 		}
 		return new LexicalMacro(name, lines);
 	}
+	
+	
+	
 	
 
 }

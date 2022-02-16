@@ -151,7 +151,7 @@ public class DyLanParser {
 		ParserTuple tuple = tuples.get(tupleNumber);
 		tuple.getTree();
 		Tree tree = (tuple == null ? null : tuple.getTree());
-		TTRFormula sem = (tuple == null ? null : tuple.getSemantics());
+		TTRFormula sem = (tuple == null ? null : (TTRFormula)tuple.getSemantics());
 		return new ParseForm(utt, sem, tree, context);
 	}
 

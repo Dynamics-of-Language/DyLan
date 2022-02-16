@@ -17,9 +17,9 @@ import qmul.ds.action.SpeechActInferenceGrammar;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.WordLevelContextDAG;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.Variable;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.formula.ttr.TTRRecordType;
@@ -124,10 +124,10 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 * (requires explicit acceptance from other). Contrast {@link getCautiouslyOptimisticGroundedContent}
 	 * @return 
 	 */
-	public TTRFormula getGroundedContent()
+	public Formula getGroundedContent()
 	{
 	
-		TTRFormula accepted=dag.getGroundedContent(asserted_contents.keySet()).removeHead();
+		Formula accepted=dag.getGroundedContent(asserted_contents.keySet()).removeHead();
 		if (!(accepted instanceof TTRRecordType))
 			throw new UnsupportedOperationException("accepted content not a record type");
 		
@@ -362,11 +362,11 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 
 	
 	
-	public void init()
+	public void init(String sem_form)
 	{
 		//dag.init();Need to fix the init method... not working with repair and backtracking edges etc.
 		
-		dag=(DAG<T, E>) new WordLevelContextDAG();
+		dag=(DAG<T, E>) new WordLevelContextDAG(sem_form);
 		dag.setContext(this);
 		resetVariablePools();
 		initParticipantContents(getParticipants());
@@ -375,10 +375,10 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 		dag.setRepairProcessing(false);
 	}
 	
-	public void init(List<String> participants)
+	public void init(List<String> participants, String sem_form)
 	{
 		//dag.init();
-		dag=(DAG<T, E>) new WordLevelContextDAG();
+		dag=(DAG<T, E>) new WordLevelContextDAG(sem_form);
 		dag.setContext(this);
 		this.dialogueHistory.clear();
 		resetVariablePools();
@@ -435,8 +435,8 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	}
 
 
-	public TTRFormula conjoinAllTurnContent() {
-		TTRFormula allContent=dag.conjoinAllTurnContent().removeHead();
+	public Formula conjoinAllTurnContent() {
+		Formula allContent=dag.conjoinAllTurnContent().removeHead();
 		
 		if (!(allContent instanceof TTRRecordType))
 			throw new UnsupportedOperationException("accepted content not a record type");
@@ -455,7 +455,7 @@ public class Context<T extends DAGTuple, E extends DAGEdge> {
 	 * the current tuple.
 	 * @return the PENDING content.
 	 */
-	public TTRFormula getPendingContent()
+	public Formula getPendingContent()
 	{
 		qmul.ds.tree.Tree current=getCurrentTuple().getTree();
 		

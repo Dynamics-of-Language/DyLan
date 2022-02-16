@@ -594,37 +594,37 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		
 		TTRRecordType syn = TTRRecordType.parse("[e1:es|p2==book(e1):t|x:e|p==table(x):cn|p1==obj(e1,x):t]");
 
-		
+		System.out.println(st.toUnicodeString());
 
 		//TTRRecordType st = TTRRecordType.parse("[e10:es|p4==make(e10):t|x4:e|x:e|p1==obj(e10,x):t|p3==subj(e10,x4):t]");
 		
 		//TTRRecordType syn = TTRRecordType.parse("[e1:es|x:e|x1:e|p1==make(e1,x,x1):t]");
 
 		
-		
-		
-		Map<Variable,Variable> map=new HashMap<Variable,Variable>();
-		map.put(new Variable("e1"), new Variable("e1"));
-//		map.put(new Variable("e10"), new Variable("e1"));
-//		map.put(new Variable("x4"), new Variable("x"));
-//		map.put(new Variable("x"), new Variable("x1"));
 //		
-		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance utt=new Utterance("usr: I want to make a restaurant reservation in london.");
-		parser.parseUtterance(utt);
-		
-		TTRRecordType sem=TTRRecordType.parse("[x1 : e|e4==make : es|head==e4 : es|p8==subj(e4, x1) : t]");
-		//TTRRecordType.parse("[x1: e|p25==usr(x1):t|e4 : es|p21==want(e4):t|e6 : es|p22==make(e6):t|x7 : e|x6 : e|x9 : e|p23==london(x9):t|p6==pres(e4) : t|head==e4 : es|pred2==reservation(x7) : cn|p14==restaurant(x6) : t|p20==loc(x9) : t|"
-//				+ "p7==obj(e4, e6) : t|p8==subj(e4, x1) : t|p10==obj(e6, x7) : t|p11==subj(e6, x1) : t|p15==of(x7, x6) : t|p19==in(e4, x9) : t]");
-				//parser.getFinalSemantics();
-		
-		List<TTRRecordType> components=sem.decompose();
-		
-		for(TTRRecordType component:components)
-		{
-			System.out.println(component);
-		}
-		
+//		
+//		Map<Variable,Variable> map=new HashMap<Variable,Variable>();
+//		map.put(new Variable("e1"), new Variable("e1"));
+////		map.put(new Variable("e10"), new Variable("e1"));
+////		map.put(new Variable("x4"), new Variable("x"));
+////		map.put(new Variable("x"), new Variable("x1"));
+////		
+//		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
+//		Utterance utt=new Utterance("usr: I want to make a restaurant reservation in london.");
+//		parser.parseUtterance(utt);
+//		
+//		TTRRecordType sem=TTRRecordType.parse("[x1 : e|e4==make : es|head==e4 : es|p8==subj(e4, x1) : t]");
+//		//TTRRecordType.parse("[x1: e|p25==usr(x1):t|e4 : es|p21==want(e4):t|e6 : es|p22==make(e6):t|x7 : e|x6 : e|x9 : e|p23==london(x9):t|p6==pres(e4) : t|head==e4 : es|pred2==reservation(x7) : cn|p14==restaurant(x6) : t|p20==loc(x9) : t|"
+////				+ "p7==obj(e4, e6) : t|p8==subj(e4, x1) : t|p10==obj(e6, x7) : t|p11==subj(e6, x1) : t|p15==of(x7, x6) : t|p19==in(e4, x9) : t]");
+//				//parser.getFinalSemantics();
+//		
+//		List<TTRRecordType> components=sem.decompose();
+//		
+//		for(TTRRecordType component:components)
+//		{
+//			System.out.println(component);
+//		}
+//		
 //		
 //		System.out.println("sem:"+sem);
 //		System.out.println("st:"+st);
@@ -1936,7 +1936,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * 
 	 * @see qmul.ds.formula.Formula#toUnicodeString()
 	 */
-
 	@Override
 	public String toUnicodeString() {
 		String s = TTR_OPEN;

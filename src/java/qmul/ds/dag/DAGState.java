@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.DAGParser;
 import qmul.ds.action.Action;
+import qmul.ds.formula.Formula;
 import qmul.ds.tree.Tree;
 /**
  * 
@@ -20,7 +20,7 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 	
 	public DAGState()
 	{
-		super();
+		super(Formula.TTR);
 	}
 
 	public DAGState(List<UtteredWord> words) {

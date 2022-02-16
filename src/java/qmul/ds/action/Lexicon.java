@@ -369,6 +369,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					try {
 						LexicalAction action = actionTemplates.get(template).create(word,
 								fields.subList(2, fields.size()));
+						
 						if (!containsKey(word)) {
 							put(word, new HashSet<LexicalAction>());
 						}
@@ -377,9 +378,9 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 					} catch (IllegalArgumentException e) {
 						// logger.warn(e);
-						logger.warn("Macros used in lexical template could not be instatiated. Template:" + template
+						logger.warn("Macros used in lexical template could not be instantiated. Template:" + template
 								+ "; Word:" + word + " Skipping this");
-						//e.printStackTrace();
+						e.printStackTrace();
 
 						continue;
 					}

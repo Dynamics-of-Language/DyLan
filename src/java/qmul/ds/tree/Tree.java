@@ -3,11 +3,8 @@ package qmul.ds.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -20,19 +17,23 @@ import edu.stanford.nlp.trees.TreeFactory;
 import qmul.ds.Context;
 import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
+import qmul.ds.action.atomic.Effect;
+import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.formula.DisjunctiveType;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.LambdaAbstract;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.rdf.RDFGraph;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.formula.ttr.TTRLambdaAbstract;
 import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.label.AssertionLabel;
+import qmul.ds.tree.label.FeatureLabel;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Label;
 import qmul.ds.tree.label.LabelFactory;
 import qmul.ds.tree.label.Requirement;
 import qmul.ds.tree.label.TypeLabel;
-import qmul.ds.type.BasicType;
 import qmul.ds.type.DSType;
 
 /**
@@ -64,16 +65,26 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	// isComplete() for reliable check
 
 	/**
-	 * A new AXIOM tree
+	 * A new AXIOM tree, given the semantic formalism which will appear as a simple .
 	 */
-	public Tree() {
+	public Tree(String formalism) {
 		super();
 		pointer = new NodeAddress();
 		Node node = new Node(pointer);
 		node.addLabel(new Requirement(TypeLabel.t, null));
+		if (formalism!=null)
+			node.addLabel(LabelFactory.create("+"+formalism));
+		//adding semantic formalism (ttr or rdf) as a FeatureLabel to the root of a new tree
 		put(pointer, node);
 		root = pointer;
 	}
+	/**
+	 * A new AXIOM tree, given the semantic formalism which will appear as a simple .
+	 */
+	public Tree() {
+		this((String)null);
+	}
+	
 
 	public Tree(NodeAddress root) {
 		super();
@@ -441,6 +452,26 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		}
 		return true;
 	}
+	/**
+	 * Assumes a FeatureLabel at the root of the tree that specifies the formalism. Currently either +ttr or +rdf
+	 * will return either "rdf" or "ttr"
+	 */
+	public String getSemanticFormalism()
+	{
+		Node root = this.getRootNode();
+		
+		if (root.contains(new FeatureLabel(Formula.TTR)))
+		{
+			return Formula.TTR;
+		}
+		else if (root.contains(new FeatureLabel(Formula.RDF)))
+		{
+			return Formula.RDF;
+		}
+		else
+			return null;
+			
+	}
 
 	/**
 	 * @return true if this tree has a linked tree on it
@@ -659,86 +690,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	public static void main(String args[]) {
 
-		InteractiveContextParser parser = new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance utt = new Utterance("usr: can you book a table for four people");
-
-		parser.parseUtterance(utt);
-
-		Tree cur = parser.getContext().getCurrentTuple().getTree();
-
-		System.out.println("Tree: " + cur);
-		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
-		parser.parse();
-		cur = parser.getContext().getCurrentTuple().getTree();
-
-		System.out.println("Tree: " + cur);
-		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
-		parser.parse();
-		cur = parser.getContext().getCurrentTuple().getTree();
-
-		System.out.println("Tree: " + cur);
-		System.out.println("Incompleteness: " + cur.getIncompletenessMeasure());
+		Effect e = EffectFactory.create("do_nothing");
+		
+		System.out.println(e +" "+ e.getClass().toString());
 
 	}
 
-	public static Map<DSType, Formula> typeMapRDF;
-	static{
-		Map<DSType, Formula> map=new HashMap<DSType, Formula>();
-		map.put(DSType.e, Formula.create("{var:x a dsrdf:Head, a schema:Thing.}"));
-
-		map.put(DSType.cn, Formula.create("{var:x a dsrdf:Head, a schema:Thing.}"));
-		map.put(DSType.t, Formula.create("{var:e a dsrdf:Head.}"));
-		// for underspec VP
-		
-		map.put(DSType.parse("e>cn"), Formula.create("{var:G1 a dsrdf:Head.}"));
-		map.put(DSType.parse("e>t"), Formula.create("G1^{var:e "
-				+ "a schema:Action, dsrdf:Head;"
-				+ "schema:agent var:G1."));
-		
-		//---------------------------TODO:
-		//STOPPED HERE HERE
-		map.put(DSType.parse("e>(e>t)"), Formula.create(""));
-		// map.put(DSType.parse("e>(e>(e>t))"), Formula
-		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		
-		map.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		// for underspec adjunct e>t, see below, special case
-
-		map.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
-		map.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
-		typeMapRDF=Collections.unmodifiableMap(map);
-		
-	}
 	
 	
-	public static Map<DSType, Formula> typeMapTTR;
-	
-	static{
-		Map<DSType, Formula> map=new HashMap<DSType, Formula>();
-		map.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
-		map.put(DSType.e, Formula.create("[x:e|head==x:e]"));
-		map.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
-		// map.put(DSType.cn,
-		// Formula.create("[x:e|head==x:e]").freshenVars(this));
-		map.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
-		map.put(DSType.t, Formula.create("[e1:es|head==e1:es]"));
-		// for underspec VP
-		map.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		map.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
-		map.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e])"));
-		map.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
-		map.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
-		// map.put(DSType.parse("e>(e>(e>t))"), Formula
-		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		map.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		map.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		// for underspec adjunct e>t, see below, special case
-
-		map.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
-		map.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
-		typeMapTTR=Collections.unmodifiableMap(map);
-		
-	}
 	
 	/**
 	 * 
@@ -753,7 +712,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 */
 	private void addUnderspecifiedFormulae(Context c) {
 
-
+		String sem_form = this.getSemanticFormalism();
+		
 		Label formReq = LabelFactory.create("?Ex.fo(x)");
 		for (Node n : values()) {
 			if (!getDaughters(n, "01").isEmpty())
@@ -761,14 +721,20 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			DSType dsType = n.getRequiredType() != null ? n.getRequiredType() : n.getType();
 			Formula f = n.getFormula();
 			if (dsType != null && f == null) {
-				if (typeMapTTR.containsKey(dsType)) {
-					
-					n.addLabel(new FormulaLabel(typeMapTTR.get(dsType).freshenVars(c)));
-
-				} else if (!dsType.equals(DSType.t))
-					logger.warn(
+				
+				Formula underspecified = Formula.getUnderspecifiedFormula(dsType, sem_form);
+				
+				if (underspecified==null && !dsType.equals(DSType.t)) {
+					logger.error(
 							"could not add underspecified formula to node; ds type is not listed as underspecifiable:"
 									+ n);
+					continue;
+					
+				}
+				if (c==null)
+					n.addLabel(new FormulaLabel(underspecified.freshenVars(this)));
+				else
+					n.addLabel(new FormulaLabel(underspecified.freshenVars(c)));
 			}
 		}
 		logger.debug("After adding underspec formulae:"+this);
@@ -787,67 +753,76 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * @return
 	 */
 	private void addUnderspecifiedFormulae() {
-		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
-		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
-		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
-		// typeMap.put(DSType.cn,
-		// Formula.create("[x:e|head==x:e]").freshenVars(this));
-		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
-		// typeMap.put(DSType.t, Formula.create("[p:t]"));
-		// for underspec VP
-		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
-		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
-		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
-		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
-		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
-		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
-		// for underspec adjunct e>t, see below, special case
-
-		typeMap.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
-		typeMap.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
-
-		// Label copula=LabelFactory.create("+BE");
-
-		Label formReq = LabelFactory.create("?Ex.fo(x)");
-		for (Node n : values()) {
-			if (!getDaughters(n, "01").isEmpty())
-				continue;
-			DSType dsType = n.getRequiredType() != null ? n.getRequiredType() : n.getType();
-			Formula f = n.getFormula();
-			if (dsType != null && f == null) {
-				if (typeMap.containsKey(dsType)) {
-					Node mother = this.get(n.getAddress().go(Modality.parse("/\\")));
-
-					// TODO: this is a hack. Checking for type of mother to
-					// determine the underspecified formula to be put on a ?cn
-					// node.
-					// I don't like this. ..... later.....
-					// another exception: if an e>t node is decorated with
-					// Copula (having parsed 'to be'), then we want a differnet
-					// underspecification for this node, not involving event
-					// type
-
-					DSType motherType = mother.getType() == null ? mother.getRequiredType() : mother.getType();
-					if (dsType.equals(BasicType.cn)
-							&& (motherType.equals(DSType.parse("e>t")) || motherType.equals(DSType.cn)))
-						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
-					else if (dsType.equals(DSType.parse("e>t")) && n.contains(formReq))
-						n.addLabel(new FormulaLabel(Formula
-								.create("R1^(R1 ++ [e1:es|head==e1:es|p==subj(e1,R1.head):t])").freshenVars(this)));
-					else
-						n.addLabel(new FormulaLabel(typeMap.get(dsType).freshenVars(this)));
-
-				} else if (!dsType.equals(DSType.t))
-					logger.warn(
-							"could not add underspecified formula to node; ds type is not listed as underspecifiable:"
-									+ n);
-			}
-		}
-
+		addUnderspecifiedFormulae(null);
 	}
+	
+	
+	/**
+	 * Commenting out older version of addingUnderspecifiedFormulae. Hacky exceptions included for 
+	 * Yanchao's grammar are not going to work.
+	 * 
+	 */
+//		HashMap<DSType, Formula> typeMap = new HashMap<DSType, Formula>();
+//		typeMap.put(DSType.e, Formula.create("[x:e|head==x:e]"));
+//		typeMap.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
+//		// typeMap.put(DSType.cn,
+//		// Formula.create("[x:e|head==x:e]").freshenVars(this));
+//		typeMap.put(DSType.cn, Formula.create("[x:e|head==x:e]"));
+//		// typeMap.put(DSType.t, Formula.create("[p:t]"));
+//		// for underspec VP
+//		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
+//		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+//		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
+//		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
+//		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
+//		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
+//		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		// for underspec adjunct e>t, see below, special case
+//
+//		typeMap.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
+//		typeMap.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+//
+//		// Label copula=LabelFactory.create("+BE");
+//
+//		Label formReq = LabelFactory.create("?Ex.fo(x)");
+//		for (Node n : values()) {
+//			if (!getDaughters(n, "01").isEmpty())
+//				continue;
+//			DSType dsType = n.getRequiredType() != null ? n.getRequiredType() : n.getType();
+//			Formula f = n.getFormula();
+//			if (dsType != null && f == null) {
+//				if (typeMap.containsKey(dsType)) {
+//					Node mother = this.get(n.getAddress().go(Modality.parse("/\\")));
+//
+//					// TODO: this is a hack. Checking for type of mother to
+//					// determine the underspecified formula to be put on a ?cn
+//					// node.
+//					// I don't like this. ..... later.....
+//					// another exception: if an e>t node is decorated with
+//					// Copula (having parsed 'to be'), then we want a differnet
+//					// underspecification for this node, not involving event
+//					// type
+//
+//					DSType motherType = mother.getType() == null ? mother.getRequiredType() : mother.getType();
+//					if (dsType.equals(BasicType.cn)
+//							&& (motherType.equals(DSType.parse("e>t")) || motherType.equals(DSType.cn)))
+//						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
+//					else if (dsType.equals(DSType.parse("e>t")) && n.contains(formReq))
+//						n.addLabel(new FormulaLabel(Formula
+//								.create("R1^(R1 ++ [e1:es|head==e1:es|p==subj(e1,R1.head):t])").freshenVars(this)));
+//					else
+//						n.addLabel(new FormulaLabel(typeMap.get(dsType).freshenVars(this)));
+//
+//				} else if (!dsType.equals(DSType.t))
+//					logger.warn(
+//							"could not add underspecified formula to node; ds type is not listed as underspecifiable:"
+//									+ n);
+//			}
+//		}
+
+	
 
 	public Set<Node> getUnfixedNodes() {
 		Set<Node> result = new HashSet<Node>();
@@ -942,7 +917,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * 
 	 * @return the maximal semantics of this tree
 	 */
-	public TTRFormula getMaximalSemantics(Context c) {
+	public Formula getMaximalSemantics(Context c) {
 
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:" + this);
@@ -957,7 +932,13 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), c);
 		}
-
+		//we don't support disjunctions for RDF right now:
+		if (this.getSemanticFormalism().equals(Formula.RDF))
+		{
+			logger.warn("Don't support disjunctions for RDF graphs yet. Returning semantics of the first disjunct");
+			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), c);
+		}
+		
 		merged.get(1).addUnderspecifiedFormulae(c);
 
 		TTRFormula sem = new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), c),
@@ -970,26 +951,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		//
 	}
 
-	public TTRFormula getMaximalSemantics() {
-		System.out.println("Running max sem without context");
-		logger.debug("Merging unfixed if possible,");
-		logger.debug("before merge:" + this);
-		List<Tree> merged = mergeUnfixed();
-		logger.debug("after merge:" + merged);
-
-		if (merged.size() > 2)
-			throw new UnsupportedOperationException("Can't have more than two results after merging unfixed node");
-
-		merged.get(0).addUnderspecifiedFormulae();
-		if (merged.size() == 1) {
-
-			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), null);
-		}
-
-		merged.get(1).addUnderspecifiedFormulae();
-
-		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), null),
-				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode(), null));
+	public Formula getMaximalSemantics() {
+		return getMaximalSemantics(null);
 
 	}
 
@@ -1001,17 +964,18 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * 
 	 * @return a record type expressing the maximal semantics of this tree
 	 */
-	public TTRFormula getMaximalSemantics(Node root, Context c) {
+	public Formula getMaximalSemantics(Node root, Context c) {
 		// ignore unfixed.
 		if (getDaughters(root, "01").size() == 1) {
 			logger.error("node with only one fixed daughter.." + root);
 			return null;
 		}
+		String sem_form = this.getSemanticFormalism();
 		logger.debug("getting semantics of tree rooted at:" + root);
 		Node unfixed = get(root.getAddress().downStar());
 		Node localUnfixed = get(root.getAddress().downLocalUnfixed());
 		boolean unfixedFunctor = false;
-		TTRFormula unfixedReduced = null;
+		Formula unfixedReduced = null;
 		if (unfixed != null) {
 			unfixedReduced = getMaximalSemantics(unfixed, c);
 			// we now have unfixed nodes of type e->t. To get the maxSem we can
@@ -1019,11 +983,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			// e>t function to get the maxSem
 			// WARNING: currently not supporting unfixed nodes of any other type
 			// (e.g. e>e>t, etc.)
-			if (unfixedReduced instanceof TTRLambdaAbstract) {
+			if (unfixedReduced instanceof LambdaAbstract) {
 				// maxSem is a function. Now create an underspecified rectype of
 				// type e to reduce
-				TTRRecordType imaginaryTypeESem = TTRRecordType.parse("[x:e|head==x:e]");
-				TTRLambdaAbstract unfixedFunct = (TTRLambdaAbstract) unfixedReduced;
+				Formula imaginaryTypeESem = Formula.getUnderspecifiedFormula(DSType.e, sem_form);
+				LambdaAbstract unfixedFunct = (TTRLambdaAbstract) unfixedReduced;
 				// now reduce
 				unfixedReduced = unfixedFunct.betaReduce(imaginaryTypeESem);
 				unfixedFunctor = true;
@@ -1031,7 +995,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			}
 
 		}
-		TTRFormula localUnfixedReduced = null;
+		Formula localUnfixedReduced = null;
 		if (localUnfixed != null) {
 			// we now have unfixed nodes of type e->t. To get the maxSem we can
 			// just assume there is an argument node of type e, and reduce the
@@ -1039,11 +1003,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			// WARNING: currently not supporting unfixed nodes of any other type
 			// (e.g. e>e>t, etc.)
 			localUnfixedReduced = getMaximalSemantics(localUnfixed, c);
-			if (localUnfixedReduced instanceof TTRLambdaAbstract) {
+			if (localUnfixedReduced instanceof LambdaAbstract) {
 				// maxSem is a function. Now create an underspecified rectype of
 				// type e to reduce
-				TTRRecordType imaginaryTypeESem = TTRRecordType.parse("[x:e|head==x:e]");
-				TTRLambdaAbstract unfixedFunct = (TTRLambdaAbstract) localUnfixedReduced;
+				Formula imaginaryTypeESem = Formula.getUnderspecifiedFormula(DSType.e, sem_form);
+				LambdaAbstract unfixedFunct = (LambdaAbstract) localUnfixedReduced;
 				// now reduce
 				localUnfixedReduced = unfixedFunct.betaReduce(imaginaryTypeESem);
 				unfixedFunctor = true;
@@ -1051,15 +1015,22 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			}
 
 		}
-		TTRFormula rootReduced = null;
+		
+		Formula rootReduced = null;
 		// if (getDaughters(root).isEmpty())
-		rootReduced = root.getFormula() == null ? new TTRRecordType() : (TTRFormula) root.getFormula();
+		if (this.getSemanticFormalism().equals(Formula.TTR))
+			rootReduced = root.getFormula() == null ? new TTRRecordType() : root.getFormula();
+		else if  (this.getSemanticFormalism().equals(Formula.RDF))
+			rootReduced = root.getFormula() == null ? new RDFGraph() : root.getFormula();
+		else
+			throw new IllegalStateException("Unrecognised Semantic Formalism");
+		
 
 		if (getDaughters(root, "01").size() == 2) {
 			// at local root
 
-			TTRFormula argMax = getMaximalSemantics(get(root.getAddress().down0()), c);
-			TTRLambdaAbstract functMax = (TTRLambdaAbstract) getMaximalSemantics(get(root.getAddress().down1()), c);
+			Formula argMax = getMaximalSemantics(get(root.getAddress().down0()), c);
+			LambdaAbstract functMax = (LambdaAbstract)getMaximalSemantics(get(root.getAddress().down1()), c);
 			logger.debug("beta-reducing. Funct:" + functMax);
 			logger.debug("beta-reducing. Arg:" + argMax);
 			rootReduced = functMax.betaReduce(argMax);
@@ -1098,8 +1069,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		logger.debug("result: " + rootReduced );
 
 		if (root.contains(questionLabel)) {
-
-			rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
+			if (c!=null)
+				rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
+			else
+				rootReduced = questionRec.freshenVars(this).conjoin(rootReduced);
 		}
 
 //		if (root.contains(negatedLabel))
@@ -1186,5 +1159,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		float num_requirements = (float) countIncompleteNodes();
 		return num_requirements / values().size();
 	}
+	
+	
 
 }

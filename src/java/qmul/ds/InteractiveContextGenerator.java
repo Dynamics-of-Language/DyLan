@@ -17,11 +17,11 @@ import qmul.ds.action.Grammar;
 import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
 import qmul.ds.dag.DAG;
-import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.WordLevelContextDAG;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.tree.Tree;
 
@@ -34,17 +34,23 @@ public class InteractiveContextGenerator extends
 
 	protected static Logger logger=Logger.getLogger(InteractiveContextGenerator.class);
 	
-	public InteractiveContextGenerator(DAGParser<DAGTuple, GroundableEdge> parser, TTRFormula goal)
+	public InteractiveContextGenerator(DAGParser<DAGTuple, GroundableEdge> parser, Formula goal)
 	{
 		super(parser);
 		setGoal(goal);
 		
 	}
-	public InteractiveContextGenerator(TTRFormula goal, String resourceDir)
+	public InteractiveContextGenerator(Formula goal, String resourceDir)
 	{
 		super(resourceDir);
 		setGoal(goal);
 		
+	}
+	
+	public InteractiveContextGenerator(Formula goal, String resourceDir, String sem_form)
+	{
+		super(resourceDir, sem_form);
+		setGoal(goal);
 	}
 	
 	
@@ -61,9 +67,11 @@ public class InteractiveContextGenerator extends
 
 	@Override
 	public DAGParser<DAGTuple, GroundableEdge> getParser(Lexicon lexicon,
-			Grammar grammar) {
-		return new InteractiveContextParser(lexicon, grammar);
+			Grammar grammar, String sem_form) {
+		return new InteractiveContextParser(lexicon, grammar, sem_form);
 	}
+	
+	
 
 	
 	
@@ -176,7 +184,7 @@ public class InteractiveContextGenerator extends
 				logger.debug("Failed");
 				continue;
 			}
-			TTRFormula maxSem = res.getMaximalSemantics(parser.getContext());
+			Formula maxSem = res.getMaximalSemantics(parser.getContext());
 			// ------------------- successful parse
 
 			logger.debug("success");
@@ -209,7 +217,7 @@ public class InteractiveContextGenerator extends
 		InteractiveContextParser parser = new InteractiveContextParser(
 				"resource/2016-english-ttr-attribute-learning");
 		Utterance utt = new Utterance("A: this is a yellow square.");
-		TTRFormula goal;
+		Formula goal;
 		if (parser.parseUtterance(utt))
 		{
 			
@@ -227,7 +235,7 @@ public class InteractiveContextGenerator extends
 		
 
 		
-		InteractiveContextGenerator generator=new InteractiveContextGenerator(goal, "resource/2016-english-ttr-attribute-learning");
+		InteractiveContextGenerator generator=new InteractiveContextGenerator(goal, "resource/2016-english-ttr-attribute-learning", Formula.TTR);
 		
 		if (generator.generate())
 		{

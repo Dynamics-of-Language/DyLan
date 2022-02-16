@@ -39,8 +39,8 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 	// protected Map<String, Set<DAGTuple>> acceptance_pointers = new
 	// HashMap<String, Set<DAGTuple>>();
 
-	public WordLevelContextDAG() {
-		super();
+	public WordLevelContextDAG(String sem_form) {
+		super(sem_form);
 	}
 
 	public WordLevelContextDAG(Tree start) {

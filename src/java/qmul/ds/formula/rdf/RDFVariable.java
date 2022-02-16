@@ -23,7 +23,7 @@ public class RDFVariable extends Variable {
 	
 	public RDFVariable(Variable v)
 	{
-		super(v);
+		super(VAR_NAMESPACE + v.getName());
 	}
 	
 	public RDFVariable(String var) {		

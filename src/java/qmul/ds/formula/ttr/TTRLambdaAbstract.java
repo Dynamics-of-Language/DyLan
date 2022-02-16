@@ -344,7 +344,7 @@ public class TTRLambdaAbstract extends TTRFormula implements LambdaAbstract {
 			
 			Map<Variable,Variable> map=new HashMap<Variable,Variable>();
 			//no higher types allowded here. the argument has to be a TTRRecordType
-			TTRRecordType curUnderSpec=(TTRRecordType)Tree.typeMapTTR.get(from);
+			TTRRecordType curUnderSpec=(TTRRecordType)Formula.getUnderspecifiedFormula(from,TTR);
 			reduced=reduced.freshenVars(curUnderSpec,map);
 			reduced=((TTRLambdaAbstract)reduced).betaReduce(curUnderSpec);
 			curType=to;

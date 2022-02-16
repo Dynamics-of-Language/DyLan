@@ -1,6 +1,7 @@
 package qmul.ds.formula.ttr;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import qmul.ds.Context;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.IncrementalFormula;
 import qmul.ds.formula.Variable;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.NodeAddress;
@@ -29,7 +29,7 @@ import qmul.ds.type.DSType;
  * @author arash
  * 
  */
-public abstract class TTRFormula extends IncrementalFormula {
+public abstract class TTRFormula extends Formula {
 
 	/**
 	 * 
@@ -187,4 +187,38 @@ public abstract class TTRFormula extends IncrementalFormula {
 	public TTRFormula sortFieldsBySpecificity() {
 		throw new IllegalArgumentException("Cannot do this for: "+this.getClass());
 	}
+	
+	public static Map<DSType, TTRFormula> typeMap;
+	static{
+		Map<DSType, TTRFormula> map=new HashMap<DSType, TTRFormula>();
+		map.put(DSType.cnev, (TTRFormula)Formula.create("[e1:es|head==e1:es]"));
+		map.put(DSType.e, (TTRFormula)Formula.create("[x:e|head==x:e]"));
+		map.put(DSType.es, (TTRFormula)Formula.create("[e1:es|head==e1:es]"));
+		// map.put(DSType.cn,
+		// Formula.create("[x:e|head==x:e]").freshenVars(this));
+		map.put(DSType.cn, (TTRFormula)Formula.create("[x:e|head==x:e]"));
+		map.put(DSType.t, (TTRFormula)Formula.create("[e1:es|head==e1:es]"));
+		// for underspec VP
+		map.put(DSType.parse("e>(es>cn)"), (TTRFormula)Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
+		map.put(DSType.parse("es>cnev"), (TTRFormula)Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		map.put(DSType.parse("e>cn"), (TTRFormula)Formula.create("R1^(R1 ++ [head==R1.head:e])"));
+		map.put(DSType.parse("e>t"), (TTRFormula)Formula.create("R1^(R1 ++ [e1:es|p==subj(e1,R1.head):t|head==e1:es])"));
+		map.put(DSType.parse("e>(e>t)"), (TTRFormula)Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
+		// map.put(DSType.parse("e>(e>(e>t))"), Formula
+		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		map.put(DSType.parse("es>(e>(e>t))"), (TTRFormula)Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		map.put(DSType.parse("e>(e>(e>t))"),(TTRFormula) Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+		// for underspec adjunct e>t, see below, special case
+
+		map.put(DSType.parse("cn>e"), (TTRFormula)Formula.create("R1^[r:R1|x:e|head==x:e]"));
+		map.put(DSType.parse("cn>es"), (TTRFormula)Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+		typeMap=Collections.unmodifiableMap(map);
+		
+	}
+	
+	
+	
+	
+
+	
 }

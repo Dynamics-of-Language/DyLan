@@ -99,7 +99,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir);
 
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, DEFAULT_NAME);
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(sem_form), this.sa_grammar, DEFAULT_NAME);
 
 	}
 
@@ -112,9 +112,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing, String... participants) {
 		super(resourceDirNameOrURL);
 		if (participants.length > 0)
-			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, participants);
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(sem_form), this.sa_grammar, participants);
 		else
-			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, DEFAULT_NAME);
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(sem_form), this.sa_grammar, DEFAULT_NAME);
 
 		context.setRepairProcessing(repairing);
 
@@ -140,14 +140,22 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
 		super(lexicon, grammar);
 
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(sem_form), DEFAULT_NAME);
 
+	}
+	
+	public InteractiveContextParser(Lexicon lexicon, Grammar g, String sem_form)
+	{
+		this(lexicon, g);
+		
+		this.sem_form = sem_form;
+		
 	}
 	
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar, ParserPanel p) {
 		super(lexicon, grammar);
 
-		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
+		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(sem_form), DEFAULT_NAME);
 
 	}
 
@@ -456,12 +464,12 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		this.forcedRepair=false;
 		this.forcedRestart=false;
 		
-		context.init();
+		context.init(sem_form);
 
 	}
 
 	public synchronized void init(List<String> participants) {
-		context.init(participants);
+		context.init(participants, sem_form);
 	}
 
 	public synchronized List<TTRRecordType> getTopNPending(int i) {
@@ -843,7 +851,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 * @return the resulting context
 	 */
 	public Context<DAGTuple, GroundableEdge> parseDialogue(Dialogue d) {
-		context.init(d.getParticiapnts());
+		context.init(d.getParticiapnts(), sem_form);
 		for (Utterance utt : d) {
 			if (!parseUtterance(utt)) {
 				logger.warn("couldn't parse utterance" + utt);

@@ -6,15 +6,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import edu.stanford.nlp.util.Pair;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.Lexicon;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.ttr.TTRFormula;
-import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.tree.Tree;
 
 public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
@@ -25,7 +23,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 
 		protected DAGParser<T,E> parser;
 		
-		protected TTRFormula goal;
+		protected Formula goal;
 		
 		
 		
@@ -39,16 +37,25 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		public String[] interregna = { "uh", "I mean", "sorry", "rather" };
 
 		
-		public DAGGenerator(Lexicon lexicon, Grammar grammar) {
+		public DAGGenerator(Lexicon lexicon, Grammar grammar, String sem_form) {
 			
-			parser = getParser(lexicon, grammar);
+			parser = getParser(lexicon, grammar, sem_form);
 			
 			
 		}
+		
+		public DAGGenerator(Lexicon lexicon, Grammar grammar) {
+			
+			parser = getParser(lexicon, grammar, Formula.TTR);
+			
+			
+		}
+		
+		
 
 		public abstract DAG<T, E> getNewState(Tree start);
 		
-		public void setGoal(TTRFormula goal) {
+		public void setGoal(Formula goal) {
 			this.goal=goal;
 		}
 		
@@ -63,7 +70,17 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		 * @param grammar
 		 * @return a {@link Parser} suitable for this implementation
 		 */
-		public abstract DAGParser<T,E> getParser(Lexicon lexicon, Grammar grammar);
+		public DAGParser<T,E> getParser(Lexicon lexicon, Grammar grammar)
+		{
+			return getParser(lexicon, grammar, Formula.TTR);
+		}
+		
+		/**
+		 * @param lexicon
+		 * @param grammar
+		 * @return a {@link Parser} suitable for this implementation
+		 */
+		public abstract DAGParser<T,E> getParser(Lexicon lexicon, Grammar grammar, String sem_form);
 		
 		/**
 		 * @param resourceDir
@@ -72,7 +89,8 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		public DAGGenerator(File resourceDir) {
 			this(new Lexicon(resourceDir), new Grammar(resourceDir));
 		}
-
+		
+		
 		/**
 		 * @param resourceDirNameOrURL
 		 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
@@ -81,6 +99,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 			this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL));
 			
 		}
+		
+		public DAGGenerator(String resourceDirNameOrURL, String sem_form) {
+			this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL), sem_form);
+			
+		}
+		
+		
 
 		
 		
