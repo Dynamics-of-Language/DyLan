@@ -30,10 +30,10 @@ public class RDFJungNode {
 	
 	public RDFJungNode(RDFNode n) {
 		if (n.isLiteral()) {
-			new RDFJungNode(n.asLiteral());
+			this.l=n.asLiteral();
 		}
 		else {
-			new RDFJungNode(n.asResource());
+			this.r=n.asResource();
 		}
 	}
 
@@ -51,6 +51,18 @@ public class RDFJungNode {
 
 	public void setLiteral(Literal l) {
 		this.l = l;
+	}
+	
+	public String toString() {
+		if (this.l != null) {
+			return this.l.toString();
+		}
+		else if (this.r != null) {
+			return this.r.toString();
+		}
+		else {
+			return null;
+		}
 	}
 	
 

@@ -15,6 +15,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
+//import edu.uci.ics.jung.graph.Vertex;
 
 /**
  * @author angus
@@ -35,11 +36,18 @@ public class RDFJungGraph <T extends RDFJungNode, E extends RDFJungEdge> extends
 			RDFJungEdge prop = new RDFJungEdge(stmt.getPredicate());
 			RDFJungNode obj = new RDFJungNode(stmt.getObject());
 			
-			Pair p = new Pair(subj, obj);
+//			System.out.println(subj + " AND " + prop + " AND " + obj);
 			
+			dsm.addVertex(subj);
+			dsm.addVertex(obj);
+			Pair p = new Pair(subj, obj);
 			dsm.addEdge(prop, p, EdgeType.DIRECTED);
 			}
 		this.dsm=dsm;
+	}
+	
+	public String getNodeLabel(T node) {
+		return node.toString();
 	}
 	
 	public static void main(String[] args) {

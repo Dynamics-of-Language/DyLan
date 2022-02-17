@@ -3,6 +3,9 @@
  */
 package qmul.ds.formula.rdf;
 
+import java.awt.BasicStroke;
+import java.awt.Stroke;
+
 import org.apache.jena.rdf.model.Property;
 
 /**
@@ -26,6 +29,19 @@ public class RDFJungEdge {
 
 	public void setProperty(Property p) {
 		this.p = p;
+	}
+	
+	public String toString() {
+		return p.toString();
+	}
+	
+	public String getEdgeLabel() {
+		return p.toString();
+	}
+
+	public Stroke getEdgeStroke() {
+		return new BasicStroke();
+
 	}
 
 }
