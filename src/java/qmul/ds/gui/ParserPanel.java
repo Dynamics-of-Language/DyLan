@@ -68,6 +68,7 @@ import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.rdf.DSMViewer;
 
 /**
  * Provides a simple GUI Panel for Parsing. Allows a user to load a parser
@@ -125,6 +126,7 @@ public class ParserPanel extends JPanel {
 
 	// private FormulaPanel semPanel;
 	private DAGViewer<DAGTuple, GroundableEdge> conPanel;
+	private DSMViewer rdfPanel;
 	private DSParser parser;
 	private Generator<?> generator;
 
