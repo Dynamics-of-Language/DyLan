@@ -19,6 +19,7 @@ import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.HorizontalTreeLayout;
+import edu.uci.ics.jung.algorithms.layout.DAGLayout;
 import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.Context;
@@ -49,7 +50,7 @@ public class DSMViewer<T extends RDFJungNode, E extends RDFJungEdge> implements 
 	public DSMViewer(final RDFJungGraph<T,E> dsm)
 	{
 		this.dsm=dsm;
-		vv=new VisualizationViewer<T,E>(new HorizontalTreeLayout<T,E>(this.dsm.getInContextSubgraph()));
+		vv=new VisualizationViewer<T,E>(new DAGLayout<T,E>(dsm));
 		
 		vv.getRenderContext().setEdgeLabelTransformer(
 				new Transformer<E, String>() {
@@ -150,7 +151,7 @@ public class DSMViewer<T extends RDFJungNode, E extends RDFJungEdge> implements 
 	{
 		
 		this.dsm=dsm;
-		update(dsm.getInContextSubgraph());
+		update(dsm);
 	}
 	
 	public void update(Forest<T,E> dsm) {
