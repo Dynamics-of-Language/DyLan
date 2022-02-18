@@ -19,7 +19,7 @@ public class RDFVariable extends Variable {
 	private static final long serialVersionUID = -3542878573997978134L;
 	//Name Space for RDF Variables
 	
-	protected static final String VAR_NAMESPACE = "http://wallscope.co.uk/ontology/var/";
+	protected static final String VAR_NAMESPACE = "http://dsrdf.com/ontology/var/";
 	
 	public RDFVariable(Variable v)
 	{

@@ -7,8 +7,8 @@
 
 //@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 //@prefix schema: <http://schema.org/> .
-//@prefix dsrdf: <http://wallscope.co.uk/ontology/dsrdf/> .
-//@prefix var: <http://wallscope.co.uk/ontology/var/> .
+//@prefix dsrdf: <http://dsrdf.com/ontology/> .
+//@prefix var: <http://dsrdf.com/ontology/var/> .
 
 
 

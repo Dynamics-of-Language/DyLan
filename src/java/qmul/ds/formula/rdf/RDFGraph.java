@@ -66,7 +66,7 @@ public class RDFGraph extends RDFFormula {
 	 */
 	public static final String RDFGraphPattern = "\\{((.|\\R)+)\\}";
 
-	public static final String DSRDF_NAMESPACE = "http://wallscope.co.uk/ontology/dsrdf/";
+	public static final String DSRDF_NAMESPACE = "http://dsrdf.com/ontology/";
 	public static final String DSRDF_PREFIX = "@prefix dsrdf: <" + DSRDF_NAMESPACE + ">";
 	public static final String VAR_PREFIX = "@prefix var: <" + RDFVariable.VAR_NAMESPACE + ">";
 
