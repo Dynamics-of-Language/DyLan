@@ -36,7 +36,7 @@ public class RDFJungEdge {
 	}
 	
 	public String getEdgeLabel() {
-		return p.toString();
+		return p.getLocalName();
 	}
 
 	public Stroke getEdgeStroke() {

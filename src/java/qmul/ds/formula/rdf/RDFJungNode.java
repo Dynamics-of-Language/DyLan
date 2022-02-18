@@ -58,11 +58,35 @@ public class RDFJungNode {
 			return this.l.toString();
 		}
 		else if (this.r != null) {
-			return this.r.toString();
+			return this.r.getLocalName();
 		}
 		else {
 			return null;
 		}
+	}
+	
+	public boolean equals(Object o) {
+		if (!(o instanceof RDFJungNode)) {
+			return false;
+		}
+		RDFJungNode other = (RDFJungNode) o;
+		if (l!= null) {
+			return l.equals(other.l);
+		}
+		if (r!=null) {
+			return r.equals(other.r);
+		}
+		return false;
+	}
+	
+	public int hashCode() {
+		if (l!=null) {
+			return l.hashCode();
+		}
+		if (r!=null) {
+			return r.hashCode();
+		}
+		return 0;
 	}
 	
 
