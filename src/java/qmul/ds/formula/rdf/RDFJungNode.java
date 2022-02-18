@@ -70,9 +70,9 @@ public class RDFJungNode {
 			return false;
 		}
 		RDFJungNode other = (RDFJungNode) o;
-		if (l!= null) {
-			return l.equals(other.l);
-		}
+//		if (l!= null) {
+//			return l.equals(other.l);
+//		}
 		if (r!=null) {
 			return r.equals(other.r);
 		}
@@ -80,9 +80,9 @@ public class RDFJungNode {
 	}
 	
 	public int hashCode() {
-		if (l!=null) {
-			return l.hashCode();
-		}
+//		if (l!=null) {
+//			return l.hashCode();
+//		}
 		if (r!=null) {
 			return r.hashCode();
 		}
