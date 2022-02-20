@@ -68,7 +68,7 @@ import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.Formula;
-import qmul.ds.formula.rdf.DSMViewer;
+import qmul.ds.formula.rdf.RDFGraph;
 
 /**
  * Provides a simple GUI Panel for Parsing. Allows a user to load a parser
@@ -126,7 +126,7 @@ public class ParserPanel extends JPanel {
 
 	// private FormulaPanel semPanel;
 	private DAGViewer<DAGTuple, GroundableEdge> conPanel;
-	private DSMViewer rdfPanel;
+	private RDFViewer rdfPanel;
 	private DSParser parser;
 	private Generator<?> generator;
 
@@ -507,11 +507,7 @@ public class ParserPanel extends JPanel {
 		lpThread = new LoadParserThread(filename, pType);
 		lpThread.start();
 		startProgressMonitor("Loading Parser", PARSER_LOAD_TIME);
-		// } else {
-		// JOptionPane.showMessageDialog(this, "Could not find file " +
-		// filename, null, JOptionPane.ERROR_MESSAGE);
-		// setStatus("Error loading parser");
-		// }
+		
 	}
 
 	/**
@@ -533,6 +529,10 @@ public class ParserPanel extends JPanel {
 					conPanel.setDAG(p.getState());
 					this.tabbedTuplePanel.setEnabledAt(1, true);
 				}
+				
+			
+					
+				
 				
 			} else if (conPanel != null) {
 
@@ -556,8 +556,9 @@ public class ParserPanel extends JPanel {
 	}
 
 	private synchronized void displayTuple(ParserTuple tuple) {
+		
 		Tree tree = (tuple == null ? null : tuple.getTree().toStanfordTree());
-		// tree.pennPrint();
+
 		treeNumberLabel.setText("Tree: " + (tupleNumber + 1) + " of " + tuples.size());
 		tupleViewer.setTuple(tuple);
 
@@ -725,6 +726,7 @@ public class ParserPanel extends JPanel {
 			
 			InteractiveContextParser p = (InteractiveContextParser) parser;
 			conPanel.update(p.getState());
+			
 		}
 
 		displayDialogue(parser.getDialogueHistory());
@@ -748,6 +750,7 @@ public class ParserPanel extends JPanel {
 		{
 			while(!done)
 			{
+				
 				while(parser==null)
 				{
 					try {
@@ -760,7 +763,7 @@ public class ParserPanel extends JPanel {
 					
 				
 				ParserTuple curPointedTuple=parser.getBestTuple();
-				
+			
 				
 				try {
 					Thread.sleep(500);

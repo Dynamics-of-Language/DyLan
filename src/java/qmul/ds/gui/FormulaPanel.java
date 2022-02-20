@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 
 import qmul.ds.formula.Formula;
 
+@SuppressWarnings("serial")
 public class FormulaPanel extends JPanel {
 
 	Formula f;

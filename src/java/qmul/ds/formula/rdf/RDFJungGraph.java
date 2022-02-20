@@ -22,15 +22,13 @@ import edu.uci.ics.jung.graph.util.Pair;
  *
  */
 
-//<T extends RDFJungNode, E extends RDFJungEdge> extends DirectedSparseMultigraph<T, E> {
+
 public class RDFJungGraph extends DirectedSparseMultigraph<RDFJungNode, RDFJungEdge> {
+
 	
-//	private DirectedSparseMultigraph dsm=null;
-	
-	public RDFJungGraph(Model m) {
+	public RDFJungGraph(RDFGraph g) {
 		super();
-		
-//		DirectedSparseMultigraph dsm = new DirectedSparseMultigraph();
+		Model m = g.rdfModel;
 		
 		StmtIterator iter = m.listStatements();
 		while (iter.hasNext()) {
@@ -39,14 +37,14 @@ public class RDFJungGraph extends DirectedSparseMultigraph<RDFJungNode, RDFJungE
 			RDFJungEdge prop = new RDFJungEdge(stmt.getPredicate());
 			RDFJungNode obj = new RDFJungNode(stmt.getObject());
 			
-//			System.out.println(subj + " AND " + prop + " AND " + obj);
+
 			
 			addVertex(subj);
 			addVertex(obj);
 			Pair p = new Pair(subj, obj);
 			addEdge(prop, p, EdgeType.DIRECTED);
 			}
-//		this.dsm=dsm;
+
 	}
 	
 	public String getNodeLabel(RDFJungNode node) {
@@ -69,7 +67,7 @@ public class RDFJungGraph extends DirectedSparseMultigraph<RDFJungNode, RDFJungE
 				+ "schema:object var:y.}";
 		
 		RDFGraph jGraph = new RDFGraph(jLikesJ);
-		RDFJungGraph rjg = new RDFJungGraph(jGraph.getModel());
+		RDFJungGraph rjg = new RDFJungGraph(jGraph);
 		
 //		RDFDataMgr.write(System.out, jGraph.getModel(), Lang.TURTLE);
 		System.out.println(rjg);

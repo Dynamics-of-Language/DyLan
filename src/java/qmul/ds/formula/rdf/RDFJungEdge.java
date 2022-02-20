@@ -32,7 +32,7 @@ public class RDFJungEdge {
 	}
 	
 	public String toString() {
-		return p.toString();
+		return p.getLocalName();
 	}
 	
 	public String getEdgeLabel() {

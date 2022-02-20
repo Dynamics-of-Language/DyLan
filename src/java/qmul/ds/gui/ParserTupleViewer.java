@@ -11,8 +11,7 @@ import org.apache.log4j.Logger;
 import edu.stanford.nlp.trees.Tree;
 import qmul.ds.Context;
 import qmul.ds.ParserTuple;
-import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
+import qmul.ds.formula.rdf.RDFGraph;
 
 @SuppressWarnings("serial")
 public class ParserTupleViewer extends JTabbedPane {
@@ -20,6 +19,7 @@ public class ParserTupleViewer extends JTabbedPane {
 	protected static Logger logger=Logger.getLogger(ParserTupleViewer.class);
 	TreePanel treePanel=new TreePanel();
 	FormulaPanel semPanel=new FormulaPanel();
+	RDFGraphPanel graphPanel;
 	Context parserContext=null;//this is for the computation of maximal semantics only that is now relative to a context, rather than a tree
 	public ParserTupleViewer(ParserTuple tuple, Context c)
 	{
@@ -39,7 +39,10 @@ public class ParserTupleViewer extends JTabbedPane {
 		JScrollPane fs = new JScrollPane(semPanel);
 		semPanel.setContainer(fs);
 		addTab("Semantics", fs);
+		
+		
 		this.parserContext=c;
+		
 		
 	}
 	
@@ -55,9 +58,27 @@ public class ParserTupleViewer extends JTabbedPane {
 			return;
 		
 		if (tuple.getSemantics(parserContext) != null)
+		{
 			semPanel.setFormula(tuple.getSemantics(parserContext));
+			
+		}
 		else
+		{
 			logger.warn("setting null semantics");
+			return;
+		}
+		
+		if (tuple.getTree().getSemanticFormalism().equals("rdf"))
+		{
+			if (graphPanel == null)
+			{
+					this.graphPanel = new RDFGraphPanel();
+					addTab("Graph", new JScrollPane(graphPanel));
+				
+			}
+			
+			graphPanel.setGraph((RDFGraph)tuple.getSemantics());
+		}
 
 	}
 	
@@ -83,6 +104,12 @@ public class ParserTupleViewer extends JTabbedPane {
 
 	public void setContext(Context context2) {
 		this.parserContext=context2;
+		if (graphPanel == null && context2.getDAG().getFirstTupleAfterLastWord().getTree().getSemanticFormalism().equals("rdf"))
+		{
+				this.graphPanel = new RDFGraphPanel();
+				addTab("Graph", new JScrollPane(graphPanel));
+			
+		}
 		
 	}
 	
