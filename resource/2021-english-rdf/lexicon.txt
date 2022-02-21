@@ -19,6 +19,7 @@ walk                          v_intran_inf                    walk              
 walked                         v_intran_fin                   walk                          past                          per
 will                          v_aux_inf                     will                          inf                          	per
 runs						  v_intran_fin					run							  pres                          s3
+run                          v_intran_inf                    run                          inf                           per
 ran						      v_intran_fin					run							  past                          per
 dearly						  manner_adv					dear
 quickly						  manner_adv					quick
