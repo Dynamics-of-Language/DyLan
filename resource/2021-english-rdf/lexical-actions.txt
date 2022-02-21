@@ -32,7 +32,7 @@ IF		ty(e>t)
         ¬<\/0>Ex.x
         ¬<\/1>Ex.x
 THEN	delete(?Ex.fo(x))
-		v_inran_content(PRED)
+		v_intran_content(PRED)
 ELSE	abort
 
 v_intran_ing(PRED,TENSE,PERSON)
@@ -278,6 +278,18 @@ THEN    rdfput(G1^{var:G1 a dsrdf:Head, dsrdf:PRED.})
 ELSE    abort
 *//
 
+count_plur(PRED,PERSON,CLASS)
+IF      ?ty(e)
+THEN    put(ty(e))
+        rdfput({var:x a dsrdf:Head, dsrdf:PRED; dsrdf:number dsrdf:plur.})
+        put(person(PERSON))
+        put(class(CLASS))
+        put(!)
+ELSE    IF		?ty(cn)
+		THEN	put(ty(cn))
+				delete(?ty(cn))
+				rdfput({var:x a dsrdf:Head, dsrdf:PRED; dsrdf:number dsrdf:plur.})
+		ELSE	abort
 
 count(PRED,PERSON,CLASS)
 IF      ?ty(cn)

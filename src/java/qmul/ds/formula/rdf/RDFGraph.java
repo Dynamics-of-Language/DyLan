@@ -379,8 +379,13 @@ public class RDFGraph extends RDFFormula {
 
 					fresh = fresh.substitute(var, newVar);
 
+				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
+				{
+					
 				} else
-					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
+				{
+					throw new IllegalArgumentException("Illegal Variable:"+var);
+				}
 
 				done.add(var);
 
@@ -423,7 +428,10 @@ public class RDFGraph extends RDFFormula {
 
 					fresh = fresh.substitute(var, newVar);
 
-				} else
+				}else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
+				{
+					
+				}  else
 					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
 
 				done.add(var);

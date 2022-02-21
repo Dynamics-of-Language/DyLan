@@ -89,14 +89,16 @@ public abstract class Formula implements Serializable {
 	public static final String OVERLAP_OPERATOR = "overlap";
 	public static final String SUBSET_OPERATOR = "subset";
 	public static final String BINARY_FOL_OPERATOR = "(" + CONJUNCTION_OPERATOR + "|" + DISJUNCTION_OPERATOR + ")";
-	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zRG&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free
+	
 																													// Formula
 	public static final Pattern META_LABEL_PATTERN = TTRLabel.META_LABEL_PATTERN; // meta ttr label
 	public static final Pattern TTR_LABEL_PATTERN = TTRLabel.LABEL_PATTERN; // ttr label
 	public static final String FORMULA_METAVARIABLE_ROOT = "U";
 	public static final Pattern FORMULA_METAVARIABLE_PATTERN = Pattern.compile(FORMULA_METAVARIABLE_ROOT + "[1-9]*"); // Formula
-																														// meta-variable
-
+	public static final String RDF_LAMBDA_VARIABLE_ROOT = "G";		
+	// meta-variable
+	public static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zR"+RDF_LAMBDA_VARIABLE_ROOT+"G&&[^i^o]][0-9]*|reftime|head|pred[0-9]*"); // bound/free
+	
 	public static final Pattern REC_METAVARIABLE_PATTERN = Pattern.compile("REC\\d*");
 	public static final Pattern LAMBDA_ABSTRACT_PATTERN = Pattern
 			.compile("(" + VARIABLE_PATTERN + ")" + Pattern.quote(FOLLambdaAbstract.LAMBDA_FUNCTOR) + "(.*)");
