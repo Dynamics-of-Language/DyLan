@@ -320,7 +320,7 @@ ELSE    IF		?ty(cn)
 
 adj(PRED)
 IF      ?ty(cn)
-		</\0>?ty(e)
+//		</\0>?ty(e)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
 		¬<\/L>Ex.x
