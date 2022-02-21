@@ -16,6 +16,7 @@ import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.apache.log4j.Logger;
 
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.Context;
@@ -41,18 +42,21 @@ public class RDFViewer {
 
 	RDFJungGraph dsm=null;
 	VisualizationViewer<RDFJungNode,RDFJungEdge> vv;
+	
+	int width = 1000;
+	int height = 400;
 
 	protected Logger logger=Logger.getLogger(RDFViewer.class);
 	
 	public RDFViewer()
 	{
-		this(new RDFGraph((RDFGraph)new Tree("rdf").getMaximalSemantics()));	
+		this(new RDFGraph((RDFGraph)new Tree("rdf").getMaximalSemantics()));
 	}
 	
 	public RDFViewer(final RDFGraph g)
 	{
 		this.dsm=new RDFJungGraph(g);
-		vv=new VisualizationViewer<RDFJungNode,RDFJungEdge>(new ISOMLayout<RDFJungNode,RDFJungEdge>(dsm));
+		vv=new VisualizationViewer<RDFJungNode,RDFJungEdge>(new FRLayout<RDFJungNode,RDFJungEdge>(dsm, new Dimension(this.width, this.height)));
 		
 		vv.getRenderContext().setEdgeLabelTransformer(
 				new Transformer<RDFJungEdge, String>() {
@@ -142,7 +146,7 @@ public class RDFViewer {
 	}
 	
 	public void update(RDFJungGraph g) {
-		vv.setGraphLayout(new ISOMLayout<RDFJungNode,RDFJungEdge>(g));
+		vv.setGraphLayout(new FRLayout<RDFJungNode,RDFJungEdge>(g, new Dimension(this.width,this.height)));
 	}
 	
 

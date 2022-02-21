@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import qmul.ds.formula.Formula;
+import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.type.DSType;
 
 /**
@@ -43,13 +44,15 @@ public abstract class RDFFormula extends Formula {
 	
 	public abstract RDFFormula conjoin(Formula f);
 	
+	
+	public static RDFGraph question = (RDFGraph) new RDFGraph("{var:e a dsrdf:Head, dsrdf:Question.}");
 	public static Map<DSType, RDFFormula> typeMap;
 	static{
 		Map<DSType, RDFFormula> map=new HashMap<DSType, RDFFormula>();
 		map.put(DSType.e, (RDFFormula)Formula.create("{var:x a dsrdf:Head, schema:Thing.}"));
 
 		map.put(DSType.cn, (RDFFormula) Formula.create("{var:x a dsrdf:Head, schema:Thing.}"));
-		map.put(DSType.t, (RDFFormula) Formula.create("{var:e a dsrdf:Head.}"));
+		map.put(DSType.t, (RDFFormula) Formula.create("{var:e a dsrdf:Head, schema:Action.}"));
 		// for underspec VP
 		
 		map.put(DSType.parse("e>cn"), (RDFFormula) Formula.create("G1^{var:G1 a dsrdf:Head.}"));

@@ -190,6 +190,8 @@ public class RDFGraph extends RDFFormula {
 	 * true in DS Link-Evaluation action that uses this method.
 	 */
 	public RDFGraph conjoin(Formula g) {
+		System.out.println("conjoining :" + this);
+		System.out.println("with :" + g);
 		if (g instanceof RDFGraph) {
 			RDFGraph rdf = (RDFGraph) g;
 
@@ -197,9 +199,15 @@ public class RDFGraph extends RDFFormula {
 			RDFVariable headThis = this.getHead();
 
 			// Heads of the same DS type should collapse, so:
-			// first substitute head of g, with head of this
+			// 		first substitute head of g, with head of this
+			// If not of same DS type, then remove head of the argument (g) - head comes
+			// from left hand side conjunct (this RDFGraph)
 
-			RDFGraph argHeadSubst = (headThis != null && argHead != null) ? rdf.substitute(argHead, headThis) : rdf;
+			RDFGraph argHeadSubst;
+
+			argHeadSubst = (headThis != null && argHead != null && argHead.getDSType().equals(headThis.getDSType()))
+					? rdf.substitute(argHead, headThis)
+					: rdf.removeHead();
 
 			return this.union(argHeadSubst);
 		} else {
@@ -240,6 +248,7 @@ public class RDFGraph extends RDFFormula {
 	}
 
 	public RDFGraph removeHead() {
+		System.out.println("Removing head of:" + this);
 
 		RDFGraph g = new RDFGraph(this);
 
@@ -248,7 +257,8 @@ public class RDFGraph extends RDFFormula {
 		StmtIterator headIter = g.rdfModel.listStatements(headSelector);
 		Statement headStmt;
 		if (!headIter.hasNext()) {
-			throw new IllegalStateException("No head in this graph:" + this);
+			// No head. Returning this intact.
+			return g;
 		} else {
 			headStmt = headIter.nextStatement();
 			// mainHead = headStmt.getSubject();
@@ -295,17 +305,16 @@ public class RDFGraph extends RDFFormula {
 	}
 
 	public String toUnicodeString() {
-		String plain=toString();
+		String plain = toString();
 		String[] lines = plain.split("\n");
-		String result ="{";
-		for(int i=1; i<lines.length-1; i++)
-		{
-			result+=lines[i];
-			result+=TTRRecordType.TTR_FIELD_SEPARATOR;
-			result+=TTRRecordType.TTR_LINE_BREAK;
+		String result = "{";
+		for (int i = 1; i < lines.length - 1; i++) {
+			result += lines[i];
+			result += TTRRecordType.TTR_FIELD_SEPARATOR;
+			result += TTRRecordType.TTR_LINE_BREAK;
 		}
-			
-		result+="}";
+
+		result += "}";
 		return result;
 	}
 
@@ -338,10 +347,7 @@ public class RDFGraph extends RDFFormula {
 		return variables.contains(v);
 	}
 
-
-	
-	public RDFGraph freshenVars(Context c)
-	{
+	public RDFGraph freshenVars(Context c) {
 		Set<RDFVariable> done = new HashSet<RDFVariable>();
 		RDFGraph fresh = new RDFGraph(this);
 		StmtIterator iter = fresh.rdfModel.listStatements();
@@ -382,8 +388,7 @@ public class RDFGraph extends RDFFormula {
 		}
 
 		return fresh;
-		
-		
+
 	}
 
 	public RDFGraph freshenVars(Tree t) {
@@ -430,44 +435,42 @@ public class RDFGraph extends RDFFormula {
 
 	}
 
-	public Dimension getDimensionsWhenDrawn(Graphics2D g2)
-	{
+	public Dimension getDimensionsWhenDrawn(Graphics2D g2) {
 		FontMetrics metrics = g2.getFontMetrics();
-		
+
 		String text = toString();
 		int lineD = 1;
 		int height = g2.getFontMetrics().getHeight();
 		int maxW = 0;
 		String[] lines = text.split("\n");
-		for (String line : lines ) {
-			
-			if (metrics.stringWidth(line)>maxW)
-				maxW=metrics.stringWidth(line);
-			
+		for (String line : lines) {
+
+			if (metrics.stringWidth(line) > maxW)
+				maxW = metrics.stringWidth(line);
+
 			height += g2.getFontMetrics().getHeight() + lineD;
 		}
-		
-		return new Dimension(maxW,height);
-		
+
+		return new Dimension(maxW, height);
+
 	}
-	
-	public Dimension draw(Graphics2D g2, float x, float y)
-	{
+
+	public Dimension draw(Graphics2D g2, float x, float y) {
 		FontMetrics metrics = g2.getFontMetrics();
-	
+
 		String text = toString();
 		int lineD = 1;
 		int height = g2.getFontMetrics().getHeight();
 		int maxW = 0;
 		String[] lines = text.split("\n");
-		for (String line : lines ) {
-			g2.drawString(line, x + 2, y + height + 2 );
+		for (String line : lines) {
+			g2.drawString(line, x + 2, y + height + 2);
 			height += g2.getFontMetrics().getHeight() + lineD;
-			if (metrics.stringWidth(line)>maxW)
-				maxW=metrics.stringWidth(line);
+			if (metrics.stringWidth(line) > maxW)
+				maxW = metrics.stringWidth(line);
 		}
-		
-		return new Dimension(maxW,height);
+
+		return new Dimension(maxW, height);
 	}
 
 	public static void main(String args[]) {
@@ -475,14 +478,10 @@ public class RDFGraph extends RDFFormula {
 		String jLikesJ = "{var:x " + "a schema:Person;" + "rdfs:label \"Jane\"@en ." + "var:y " + "a schema:Person;"
 				+ "rdfs:label \"John\"@en ." + "var:e " + "a schema:Action;" + "rdfs:label \"like\"@en;"
 				+ "a dsrdf:Head;" + "schema:agent var:x;" + "schema:object var:y.}";
-		
-		
 
 		String jane = "{var:x a schema:Person, dsrdf:Head; " + "rdfs:label \"Jane\"@en .}";
 
 		RDFGraph janeGraph = new RDFGraph(jane);
-		
-		
 
 		String run = "G1^{var:e a schema:Action, dsrdf:Head; rdfs:label \"PRED\"@en; schema:agent var:G1.}";
 
@@ -492,22 +491,19 @@ public class RDFGraph extends RDFFormula {
 
 		RDFGraph presentTense = new RDFGraph(pres);
 
-		
 		String cat = "G1^{var:G1 a dsrdf:Head, dsrdf:cat.}";
 		String entity = "{var:x a dsrdf:Head, schema:Thing.}";
 		String a = "G1^{var:G1 a dsrdf:Head.}";
-		
-		RDFGraph entG = new RDFGraph(entity);
-		RDFLambdaAbstract catfunctor = (RDFLambdaAbstract)Formula.create(cat);
-		RDFLambdaAbstract aFunctor = (RDFLambdaAbstract)Formula.create(a);
-		
-		System.out.println(aFunctor.betaReduce(catfunctor.betaReduce(entG)));
-		
-		
-		
-		//System.out.println(runG.conjoin(presentTense));
 
-		//System.out.println(runG.betaReduce(janeGraph));
+		RDFGraph entG = new RDFGraph(entity);
+		RDFLambdaAbstract catfunctor = (RDFLambdaAbstract) Formula.create(cat);
+		RDFLambdaAbstract aFunctor = (RDFLambdaAbstract) Formula.create(a);
+
+		System.out.println(aFunctor.betaReduce(catfunctor.betaReduce(entG)));
+
+		System.out.println(runG.conjoin(presentTense));
+
+		// System.out.println(runG.betaReduce(janeGraph));
 		// System.out.println("before collapse:\n"+ janeGraph);
 
 		// RDFGraph janeFuture = janeGraph.substitute(new RDFVariable("y"), new

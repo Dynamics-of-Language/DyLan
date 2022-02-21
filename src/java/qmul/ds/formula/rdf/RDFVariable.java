@@ -6,6 +6,8 @@ package qmul.ds.formula.rdf;
 import org.apache.jena.rdf.model.Resource;
 
 import qmul.ds.formula.Variable;
+import qmul.ds.tree.Tree;
+import qmul.ds.type.DSType;
 
 /**
  * @author angus, arash
@@ -60,6 +62,21 @@ public class RDFVariable extends Variable {
 	public static boolean isRDFVariable(Resource r)
 	{
 		return r.toString().startsWith(VAR_NAMESPACE);
+		
+	}
+	
+	/**
+	 * 
+	 * @return the DSType of this variable based on its name - currently only entity & event variables allowed
+	 */
+	public DSType getDSType() {
+		
+		if (getName().startsWith(Tree.ENTITY_VARIABLE_ROOT))
+			return DSType.e;
+		else if (getName().startsWith(Tree.EVENT_VARIABLE_ROOT))
+			return DSType.es;
+		else
+			throw new IllegalStateException("RDFVariable must have either DS Type e or es.");
 		
 	}
 	

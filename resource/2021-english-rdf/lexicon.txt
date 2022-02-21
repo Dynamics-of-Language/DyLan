@@ -2,6 +2,7 @@ bill                          proper                        bill                
 john                          proper                        john                          s3                            male
 ruth						  proper						ruth						  s3							male
 arash						  proper						arash						  s3							male
+angus						  proper						angus						  s3							male
 mary						  proper						mary						  s3							male
 like                          v_tran_inf                    like                          inf                           per
 like                          v_tran_fin                    like                          pres							per
@@ -19,8 +20,29 @@ ran						      v_intran_fin					run							  past                          per
 dearly						  manner_adv					dear
 quickly						  manner_adv					quick
 gracefully					  manner_adv					graceful
+slowly						  manner_adv					slow
 cat						      count							cat					       s3						obj
 dog						      count							dog					       s3						obj
 a                             det_indef                     eps
 <rt>				  		  release_turn					null
 with						  prep_es						with
+in							  prep_es						in
+by							  prep_es						by
+do                            v_aux_inf_per                     do                            pres                          nons3
+does                          v_aux_inf_per                     do                            pres                          s3
+did                           v_aux_inf               did                           past
+would                         v_aux_inf                would                         pres
+'d							  v_aux_inf                     would                       pres
+should						  v_aux_inf						should						should
+can                           v_aux_inf                    	can                         modal
+may                           v_aux_inf                    	can                         modal
+will						  v_aux_inf						will						future
+funny						  adj							funny
+big							  adj							big
+small						  adj							small
+scary						  adj							scary
+good						  adj							good
+bad							  adj							bad
+//who                           pron_whq                      per
+who                           pron_whrel                    per
+

@@ -188,6 +188,8 @@ public abstract class TTRFormula extends Formula {
 		throw new IllegalArgumentException("Cannot do this for: "+this.getClass());
 	}
 	
+	public static TTRRecordType question = (TTRRecordType) Formula.create("[p==question(head):t]");
+	
 	public static Map<DSType, TTRFormula> typeMap;
 	static{
 		Map<DSType, TTRFormula> map=new HashMap<DSType, TTRFormula>();

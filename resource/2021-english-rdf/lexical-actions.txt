@@ -23,6 +23,7 @@ THEN    put(person(PERSON))
 ELSE    abort
 
 
+//---------Verbs - no syntactic check for Person
 //----- intransitive verbs
 
 v_intran_inf(PRED,TENSE,PERSON)
@@ -49,7 +50,6 @@ v_intran_fin(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-		</\1\/0>person(PERSON)	
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -68,7 +68,7 @@ THEN	delete(?Ex.fo(x))
 		v_intran_content(PRED)
 ELSE	abort
 
-//---------Transitive Verbs
+
 
 v_tran_inf(PRED,TENSE,PERSON)
 IF		ty(e>t)
@@ -93,11 +93,11 @@ THEN	delete(?Ex.fo(x))
 	    v_tran_content(PRED)
 ELSE    abort
 
+
 v_tran_fin(PRED,TENSE,PERSON)
 IF		?ty(e>t)
 		¬<\/1>Ex.x
         ¬<\/0>Ex.x
-		</\1\/0>person(PERSON)
 THEN	put(?+eval)
 		make(\/L)
 		go(\/L)
@@ -117,6 +117,45 @@ THEN	delete(?Ex.fo(x))
 		put(?ty(e>t))		
 		v_tran_content(PRED)
 ELSE    abort
+
+
+//--auxiliaries: no syntactic check for Person (3rd, etc.)
+
+v_aux_inf_per(PRED,TENSE,PERSON)
+IF		?ty(e>t)
+		¬<\/1>Ex.x
+	 	¬<\/0>Ex.x
+	 	¬</\1/\0>Ex.x
+		</\1\/0>ty(e)
+THEN 	aux_content(PRED)
+ELSE	IF		?ty(t)
+				¬!
+				¬<\/1>Ex.x
+	 			¬<\/0>Ex.x
+	 			¬</\0>Ex.x				
+		THEN	IF 		<\/*>+Q
+				THEN    make(\/1)
+						go(\/1)
+						put(person(PERSON))
+						put(?ty(e>t))
+						aux_content(PRED)
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(e))
+				ELSE	put(+Q)
+						make(\/1)
+						go(\/1)
+						put(person(PERSON))
+						put(?ty(e>t))
+						aux_content(PRED)
+						go(/\1)
+						make(\/0)
+						go(\/0)
+						put(?ty(e))
+		ELSE	abort
+
+
 
 v_aux_inf(PRED,TENSE,PERSON)
 IF		?ty(e>t)
@@ -148,6 +187,8 @@ ELSE	IF		?ty(t)
 						go(\/0)
 						put(?ty(e))
 		ELSE	abort
+		
+
 
 manner_adv(PRED)
 IF		(?ty(t) || ty(t) || ty(e>t))
@@ -178,7 +219,7 @@ THEN	put(?+eval)
 		put(?ty(e))
 ELSE	abort
 
-
+//*
 det_indef(QUANT)
 IF      ?ty(e)
 		¬<\/1>Ex.x
@@ -203,8 +244,31 @@ THEN    put(person(s3))
         go(\/1)
         put(?ty(e>cn))
 ELSE    abort
+*//
 
+det_indef(QUANT)
+IF      ?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+THEN    IF		</\0\/1>Ex.x
+				</\0\/1>?Ex.fo(x)
+				</\0\/1>ty(e>t)
+				¬</\0\/1>person(s3)
+				</\0\/1>person(X)
+		THEN	abort
+		ELSE	put(person(s3))
+				make(\/1)
+        		go(\/1)
+        		rdfput(G1^{var:G1 a dsrdf:Head.})
+        		put(ty(cn>e))
+        		put(!)
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(?ty(cn))
+ELSE    abort
 
+//*
 count(PRED,PERSON,CLASS)
 IF      ?ty(e>cn)
 THEN    rdfput(G1^{var:G1 a dsrdf:Head, dsrdf:PRED.})
@@ -212,6 +276,98 @@ THEN    rdfput(G1^{var:G1 a dsrdf:Head, dsrdf:PRED.})
         delete(?ty(e>cn))      
         put(!)
 ELSE    abort
+*//
+
+
+count(PRED,PERSON,CLASS)
+IF      ?ty(cn)
+		</\*\/1>(ty(cn>e) & +whdet)
+THEN    make(\/1)
+		go(\/1)
+		put(ty(e>cn))
+        rdfput(G1^{var:G1 a dsrdf:Head, dsrdf:PRED.})
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(ty(e))
+        rdfput({var:x a schema:Thing, dsrdf:Head.})
+        put(+Q)
+		put(+meta)
+ELSE    IF		?ty(cn)
+		THEN    make(\/1)
+				go(\/1)
+				put(ty(e>cn))
+		        rdfput(G1^{var:G1 a dsrdf:Head, dsrdf:PRED.})
+		        go(/\1)
+		        make(\/0)
+		        go(\/0)
+		        put(ty(e))
+		        rdfput({var:x a schema:Thing, dsrdf:Head.})
+		ELSE	abort
+
+
+adj(PRED)
+IF      ?ty(cn)
+		</\0>?ty(e)
+		¬<\/1>Ex.x
+        ¬<\/0>Ex.x
+		¬<\/L>Ex.x
+THEN    make(\/1)
+        go(\/1)
+        rdfput(G1^{var:G1 a dsrdf:Head; dsrdf:mod dsrdf:PRED.})
+        put(ty(cn>cn))
+        put(!)
+        go(/\1)
+        make(\/0)
+        go(\/0)
+        put(?ty(cn))
+ELSE    IF		?ty(e)
+				¬<\/1>Ex.x
+        		¬<\/0>Ex.x
+        THEN	put(person(s3))
+        		make(\/1)
+        		go(\/1)
+  		        rdfput(G1^{var:G1 a dsrdf:Head.})
+ 		        put(ty(cn>e))
+    	        put(!)
+    		    go(/\1)
+  		        make(\/0)
+  		        go(\/0)
+		        put(?ty(cn))
+   		        make(\/1)
+       			go(\/1)
+       			rdfput(G1^{var:G1 a dsrdf:Head; dsrdf:mod dsrdf:PRED.})
+      		    put(ty(cn>cn))
+        		put(!)
+        		go(/\1)
+        		make(\/0)
+        		go(\/0)
+        		put(?ty(cn))
+      	 ELSE	abort
+
+pron_whrel(CLASS)
+IF		ty(e)
+        fo(X)
+        ¬<\/L>Ex.x
+THEN	put(?+eval)
+		make(\/L)
+        go(\/L)
+        put(?ty(t))
+        make(\/*)
+        go(\/*)
+        put(ty(e))
+        put(fo(X))
+        put(?Ex.tn(x))
+       	go(/\*)
+       	make(\/1)
+       	go(\/1)
+       	put(?ty(e>t))
+       	go(/\1)
+       	make(\/0)
+       	go(\/0)
+       	put(?ty(e))
+ELSE	abort
+
 
 
 

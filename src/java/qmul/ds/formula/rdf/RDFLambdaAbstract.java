@@ -3,14 +3,14 @@ package qmul.ds.formula.rdf;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.log4j.Logger;
 
+import qmul.ds.Context;
 import qmul.ds.formula.FOLLambdaAbstract;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.LambdaAbstract;
 import qmul.ds.formula.Variable;
+import qmul.ds.tree.Tree;
 
 /**
  * 
@@ -189,6 +189,19 @@ public class RDFLambdaAbstract extends RDFFormula implements LambdaAbstract {
 		}
 		
 	}
+	
+	
+	public RDFLambdaAbstract freshenVars(Tree t)
+	{
+		return new RDFLambdaAbstract(new RDFVariable(this.var), (RDFFormula)body.freshenVars(t));
+	}
+	
+	
+	public RDFLambdaAbstract freshenVars(Context c)
+	{
+		return new RDFLambdaAbstract(new RDFVariable(this.var), (RDFFormula)body.freshenVars(c));
+	}
+	
 	
 	
 	public static void main (String array[])

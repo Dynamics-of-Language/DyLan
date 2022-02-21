@@ -15,14 +15,13 @@ import org.apache.log4j.Logger;
 import edu.stanford.nlp.trees.LabeledScoredTreeFactory;
 import edu.stanford.nlp.trees.TreeFactory;
 import qmul.ds.Context;
-import qmul.ds.InteractiveContextParser;
-import qmul.ds.Utterance;
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.formula.DisjunctiveType;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.LambdaAbstract;
 import qmul.ds.formula.Variable;
+import qmul.ds.formula.rdf.RDFFormula;
 import qmul.ds.formula.rdf.RDFGraph;
 import qmul.ds.formula.ttr.TTRFormula;
 import qmul.ds.formula.ttr.TTRLambdaAbstract;
@@ -956,8 +955,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	}
 
-	TTRFormula questionRec = (TTRRecordType) Formula.create("[p==question(head):t]");
-	TTRFormula negatedRec = (TTRRecordType) Formula.create("[p==not(head):t]");
+	
+	
 
 	/**
 	 * Preconditions: all mergeable unfixed nodes are merged already
@@ -1067,16 +1066,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		}
 		logger.debug("done with: " + root );
 		logger.debug("result: " + rootReduced );
+		
+		Formula question = getSemanticFormalism().equals("ttr")?TTRFormula.question:RDFFormula.question;
+		
+		if (root.contains(questionLabel))
+				rootReduced = (c!=null)?question.freshenVars(c).conjoin(rootReduced):question.freshenVars(this).conjoin(rootReduced);
+			
 
-		if (root.contains(questionLabel)) {
-			if (c!=null)
-				rootReduced = questionRec.freshenVars(c).conjoin(rootReduced);
-			else
-				rootReduced = questionRec.freshenVars(this).conjoin(rootReduced);
-		}
 
-//		if (root.contains(negatedLabel))
-//			rootReduced = negatedRec.freshenVars(c).conjoin(rootReduced);
 
 		return rootReduced;
 
