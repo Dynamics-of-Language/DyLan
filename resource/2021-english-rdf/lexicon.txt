@@ -53,4 +53,7 @@ good						  adj							good
 bad							  adj							bad
 //who                           pron_whq                      per
 who                           pron_whrel                    per
-
+which						  pron_whrel					per
+that						  pron_whrel					per
+//is                            copula                    	pres                          s3
+//are						      copula						past						  plur
