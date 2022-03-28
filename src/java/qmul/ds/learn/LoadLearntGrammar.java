@@ -16,7 +16,7 @@ import qmul.ds.action.Grammar;
 // load childes corpus
 // parse it with the grammar 
 
-public class LoadLearntGrammar { 
+public class LoadLearntGrammar {
 
 	public static void main(String[] args) {
 
