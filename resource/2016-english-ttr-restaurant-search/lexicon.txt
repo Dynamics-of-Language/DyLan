@@ -50,8 +50,8 @@ table							count						table						  s3							obj
 city							count						city						  s3							obj
 price							noun_mod				    price						  of
 restaurant							noun_mod				    restaurant				      of
-//want                          v_tran_inf                    want                          inf                           per
-//want                          v_tran_fin                    want                          pres                          nons3
+want                          v_tran_inf                    want                          inf                           per
+want                          v_tran_fin                    want                          pres                          nons3
 //wants                         v_tran_fin                    want                          pres                          s3
 want                          v_subjcon_fin                 want                          pres                          nons3
 wants                         v_subjcon_fin                 want                          pres                          s3
@@ -135,19 +135,19 @@ today					      manner_adv					today
 //good						  adj_be						good
 italian						  adj					        italian
 italian						  adj_be						italian
-//italian						  mass							italian						s3					cuisine
+italian						  mass							italian						s3					cuisine
 spanish						  adj							spanish
 spanish						  adj_be						spanish
-//spanish						  mass							spanish						s3					cuisine
+spanish						  mass							spanish						s3					cuisine
 british						  adj							british
 british						  adj_be						british
-//british						  mass							british						s3					cuisine
+british						  mass							british						s3					cuisine
 japanese					  adj							japanese
 japanese					  adj_be						japanese
-//japanese					  mass							japanese						s3					cuisine
+japanese					  mass							japanese						s3					cuisine
 indian						  adj							indian
 indian						  adj_be						indian
-//indian						  mass							indian						s3					cuisine
+indian						  mass							indian						s3					cuisine
 cantonese					  adj						cantonese
 cantonese					  adj_be					cantonese
 //cantonese					  mass							cantonese						s3					cuisine
@@ -185,6 +185,8 @@ beijing                         proper                       beijing            
 <rt>				  		  release_turn					null
 //the name of the release turn token must be the same as in Utterance.RELEASE_TURN_TOKEN
 //have                      	  v_tran_fin_imperative         have                          imper                          s2
+.							  assert						A
+?							  question						Q
 let							  v_tran_causative_imperative		let							  imper							 s2
 hello						  greet							hello
 hi							  greet							hello
