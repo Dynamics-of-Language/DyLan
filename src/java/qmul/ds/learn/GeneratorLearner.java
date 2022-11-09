@@ -35,15 +35,7 @@ import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 
 /**
- * @author Ashzz
- *
- *         Plan: - read (sentence, TTR semantics) pairs from:
- *         "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt" (There's
- *         also 3200. what should I do?) - decompose the RTs - create data table
- *         (rows: X, columns: features) - populate the table by counting the
- *         number of conditional occurrences of features after words are uttered
- * 
- *         - getr - subsumesGoal() -
+ * @author Ash      
  */
 
 // TODO: save the hashmap as a csv file so it's human readable, or do it using Properties like this:
