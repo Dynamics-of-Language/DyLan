@@ -104,32 +104,37 @@ public class GeneratorLearner {
 	}
 
 /**
- * returns "goldSem-curSem", minus operator being defined over RTs
+ * Computes "goldSem-curSem"; minus operator had been defined over RTs.
  * 
  * @param curSem   the semantics of what we have generated so far.
  * @param goldSem  the complete semantics of the sentence we want to generate to.
- * @return rInc    the semantics to be generated, calculated as `goldSem-curSem`
+ * @return rInc    (Incremental RT) the semantics to be generated, calculated as `goldSem-curSem`
  */
 	public static TTRRecordType computeRInc(TTRRecordType curSem, TTRRecordType goldSem) {
 		TTRRecordType rInc = goldSem.minus(curSem).first(); // there's first() and second() which second kind of means `curSem-goldSem`.
 		return rInc;
 	}
 
-
-	public HashMap<String, HashMap<TTRRecordType, Double>> normaliseCountTable(
-			HashMap<String, HashMap<TTRRecordType, Integer>> table)
+	/**
+	 * Normalises a table by dividing elements in a column by their sum.
+	 * 
+	 * @param table				     the table to be normalised
+	 * @return conditionalProbTable  the normalised table
+	 */
+	public HashMap<String, HashMap<TTRRecordType, Double>> normaliseCountTable(HashMap<String, HashMap<TTRRecordType, Integer>> table)
 	{
 		HashMap<TTRRecordType, Double> total = new HashMap<TTRRecordType, Double>(); // Don't have to init to zero since I'm using getOrDefault method.
-
-		for (HashMap<TTRRecordType, Integer> row : table.values()) // To find total of each column
+		// First find total of each column in this loop
+		for (HashMap<TTRRecordType, Integer> row : table.values())
 		{
 			for (TTRRecordType feature : row.keySet()) {
 				Integer count = row.get(feature);
-				total.put(feature, total.getOrDefault(feature, 0.0) + count);
+				total.put(feature, total.getOrDefault(feature, 0.0) + count); // If `feature` was already in `total`, add `count` to the previous value.
+													 // If not, add `count` to 0, which means just put `count`. Used because key might not be available.
 			}
 		}
 
-		for (String word : table.keySet())// normalise columns to get probabilities and save them in
+		for (String word : table.keySet()) // Divide columns by the corresponding `total` to get probabilities and save them in `conditionalProbTable`.
 		{
 			HashMap<TTRRecordType, Integer> row = table.get(word);
 			for (TTRRecordType rt : row.keySet()) {
@@ -143,7 +148,7 @@ public class GeneratorLearner {
 	public static void saveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> model)
 			throws FileNotFoundException, IOException // eclipse recommended it so I said yes.
 	{
-		String modelPath = "resource/2022-DSProbNLG/model.properties".replaceAll("/",
+		String modelPath = "resource/2022-DSProbNLG/model.properties".replaceAll("/", // ?
 				Matcher.quoteReplacement(File.separator));
 
 		FileOutputStream file = new FileOutputStream("model.txt");
