@@ -35,7 +35,7 @@ import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 
 /**
- * @author Ashz
+ * @author Ashzz
  *
  *         Plan: - read (sentence, TTR semantics) pairs from:
  *         "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt" (There's
