@@ -109,6 +109,21 @@ public class GeneratorLearner {
 		TTRRecordType rInc = goldSem.minus(curSem).first(); // there's first() and second() which second kind of means `curSem-goldSem`.
 		return rInc;
 	}
+	
+	/**
+	 * Loads the learnt grammar by Eshghi et al. 2013 from a text file.
+	 * 
+	 * @return generatorParser  an InterActiveContextParser instantiated from previously learnt model.
+	 */
+	public InteractiveContextParser loadParser()
+	{
+		// TODO which grammar is it loading? Top N-wise? 1,2,3?
+		String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",
+				Matcher.quoteReplacement(File.separator));
+		InteractiveContextParser generatorParser = new InteractiveContextParser(grammarPath);
+		return generatorParser;
+	}
+
 
 	/**
 	 * Normalises a table by dividing elements in a column by their sum.
