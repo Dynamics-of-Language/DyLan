@@ -13,7 +13,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.Arrays;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
@@ -136,17 +139,36 @@ public class GeneratorLearner {
 		}
 		return conditionalProbTable;
 	}
-
+	
 	public static void saveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> model)
 			throws FileNotFoundException, IOException // eclipse recommended it so I said yes.
 	{
-		String modelPath = "resource/2022-DSProbNLG/model.properties".replaceAll("/", // ?
+		String modelPath = "resource/2022-DSProbNLG/model_properties".replaceAll("/", // ?
 				Matcher.quoteReplacement(File.separator));
-
-		FileOutputStream file = new FileOutputStream("model.txt");
-		ObjectOutputStream oos = new ObjectOutputStream(file);
-		oos.writeObject(model);
-		oos.close();
+		// TODO create file if it wasn't there
+		// TODO write features: WORDS, feature1, feature2, ...
+		// TODO Make more efficient
+		for (HashMap<TTRRecordType, Double> row : model.values())
+		{
+			ArrayList<Double> probs = new ArrayList<>(row.values());
+			ArrayList<String> probsStr = new ArrayList<String>();
+			for (Double prob: probs) {probsStr.add(Double.toString(prob));} // make this more efficient
+			
+			// convert the list to a string joined by comma
+			String strRow = String.join(",", probsStr); //REF: https://mkyong.com/java/java-how-to-join-list-string-with-commas/
+			// write to file
+			try {
+			      FileWriter writer = new FileWriter("model.csv");
+			      writer.write(strRow);
+			      writer.write(System.lineSeparator()); // REF: https://stackoverflow.com/questions/18549704/create-a-new-line-in-javas-filewriter
+			      writer.close();
+			      System.out.println("Successfully wrote row the file."); // add logs + add what row!
+			    } catch (IOException e) {
+			      System.out.println("An error occurred.");
+			      e.printStackTrace();
+			    }
+		}
+		
 	}
 
 	/**
@@ -191,18 +213,12 @@ public class GeneratorLearner {
 	
 	
 	/**
+	 * `main` is only used to test the methods here. This is not a runnable class.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",
-				Matcher.quoteReplacement(File.separator));
-
-		Integer topN = 2; // why we don't need this!? what does it do anyway?
-
-		InteractiveContextParser parser = new InteractiveContextParser(grammarPath); // LoadLearntGrammar.testFromText(grammarPath,
-																						// corpusPath, 2);//new
-																						// TestParser(grammarPath,
-																						// corpusPath, topN);
+		
 //		learn();
 //		Boolean parsedCorpus = parse(); // WHATTTTTTTTT AM I SUPPOSED OT DO?
 
