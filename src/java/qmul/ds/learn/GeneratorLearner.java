@@ -155,6 +155,13 @@ public class GeneratorLearner {
 		return conditionalProbTable;
 	}
 	
+	/**
+	 * Saves the `conditionalProbTable` to a csv file.
+	 * 
+	 * @param model					  Same as `conditionalProbTable`.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public static void saveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> model)
 			throws FileNotFoundException, IOException // eclipse recommended it so I said yes.
 	{
