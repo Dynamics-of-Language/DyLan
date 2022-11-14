@@ -194,7 +194,16 @@ public class GeneratorLearner {
 	}
 
 	/**
-	 * TODO: 
+	 * Learn to generate by:
+	 * - Loading the CHILDES corpus.
+	 * - Parsing <sentence, TTR-RT> pairs.
+	 * - Matching the parse with the gold TTR-RT semantics.
+	 * - Compute `rInc`.
+	 * - Decompose `rInc`.
+	 * - Populate `conditionalCountTable`.
+	 * - Create `conditionalProbTable` by normalising `conditionalCountTable`.
+	 * - Save `conditionalProbTable` to a csv file.
+	 * 
 	 */
 	public void learn()
 	{
@@ -229,6 +238,7 @@ public class GeneratorLearner {
 					for (TTRRecordType r_i : decomposedRInc) // this is definitely wrong
 						conditionalCountTable.get(word.toString()).put(r_i, 1);
 				}
+				
 			}
 		}
 	}
