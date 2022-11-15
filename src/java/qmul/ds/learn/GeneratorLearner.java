@@ -61,7 +61,8 @@ public class GeneratorLearner {
 	protected HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>();
 // what was this doing?
 	static final String corpusPath = "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/", Matcher.quoteReplacement(File.separator));
-	 
+	static final String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",Matcher.quoteReplacement(File.separator));
+	
 	 // --------------------------------------------------------------------------------------------------------------
 	 
 	 /**
@@ -91,11 +92,13 @@ public class GeneratorLearner {
 		}
 		
 		// TODO: load parser from learnt files / resources.
-		Lexicon l = new Lexicon();
-		l.loadLearntLexiconTxt(corpusPath, 3);
-		Grammar g = new Grammar(parserPath);
-		InteractiveContextParser p = new InteractiveContextParser(l, g);
-		this.parser = p;
+//		Lexicon l = new Lexicon();
+//		l.loadLearntLexiconTxt(corpusPath, 3);
+//		Grammar g = new Grammar(parserPath);
+//		InteractiveContextParser p = new InteractiveContextParser(l, g);
+//		this.parser = p;
+//		InteractiveContextParser generatorParser = 
+		this.parser = new InteractiveContextParser(grammarPath);
 	}
 
 /**
@@ -105,7 +108,7 @@ public class GeneratorLearner {
  * @param goldSem  the complete semantics of the sentence we want to generate to.
  * @return rInc    (Incremental RT) the semantics to be generated, calculated as `goldSem-curSem`
  */
-	public static TTRRecordType computeRInc(TTRRecordType curSem, TTRRecordType goldSem) {
+	public TTRRecordType computeRInc(TTRRecordType curSem, TTRRecordType goldSem) {
 		TTRRecordType rInc = goldSem.minus(curSem).first(); // there's first() and second() which second kind of means `curSem-goldSem`.
 		return rInc;
 	}
@@ -115,14 +118,36 @@ public class GeneratorLearner {
 	 * 
 	 * @return generatorParser  an InterActiveContextParser instantiated from previously learnt model.
 	 */
-	public InteractiveContextParser loadParser()
-	{
-		// TODO which grammar is it loading? Top N-wise? 1,2,3?
-		String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",
-				Matcher.quoteReplacement(File.separator));
-		InteractiveContextParser generatorParser = new InteractiveContextParser(grammarPath);
-		return generatorParser;
-	}
+//	public InteractiveContextParser loadParser(String grammarPath)
+//	{
+//		// TODO which grammar is it loading? Top N-wise? 1,2,3?
+////		String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",
+////				Matcher.quoteReplacement(File.separator));
+//		InteractiveContextParser generatorParser = new InteractiveContextParser(grammarPath);
+//		return generatorParser;
+//	}
+	
+	/**
+	 * Loads the CHILDES corpus used in Eshghi et al. 2013.
+	 * 
+	 * @return
+	 */
+//	public RecordTypeCorpus loadCorpus(String path)
+//	{
+////		String corpusPath = "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/",
+////				Matcher.quoteReplacement(File.separator));
+////		File corpusFile = new File();
+//		RecordTypeCorpus rtcorpus = new RecordTypeCorpus();
+//		try {
+//			rtcorpus.loadCorpus(new File(path));
+//			return rtcorpus;
+//		
+//		}
+//		catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 
 	/**
@@ -207,6 +232,8 @@ public class GeneratorLearner {
 	 */
 	public void learn()
 	{
+		
+//		RecordTypeCorpus corpus = loadCorpus(corpusPath);
 		// parsing
 		for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
 			Sentence<Word> sentence = pair.first();
@@ -251,19 +278,22 @@ public class GeneratorLearner {
 	 */
 	public static void main(String[] args) {
 		
-//		learn();
 //		Boolean parsedCorpus = parse(); // WHATTTTTTTTT AM I SUPPOSED OT DO?
-
-		conditionalProbTable = normaliseCountTable(conditionalCountTable);
-		try {
-			saveModelToFile(conditionalProbTable);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // what?
+		
+		// Testing `normaliseCountTable`
+		// REF: https://stackoverflow.com/questions/11491750/cannot-make-a-static-reference-to-the-non-static-method-fxnint-from-the-type-t?noredirect=1&lq=1
+//		GeneratorLearner g = new GeneratorLearner(corpusPath, grammarPath);
+//		HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = g.normaliseCountTable(g.conditionalCountTable);
+		
+//		try {
+//			saveModelToFile(conditionalProbTable);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} // what?
 
 		// how am I supposed to generate now?
 		// for state in generator_state:
