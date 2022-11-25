@@ -140,7 +140,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			BufferedReader reader2 = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			readWords(reader2);
 
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Error reading lexical actions file " + file.getAbsolutePath());
 		}

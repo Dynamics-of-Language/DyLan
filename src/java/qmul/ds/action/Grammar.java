@@ -52,7 +52,7 @@ public class Grammar extends HashMap<String, ComputationalAction> implements Ser
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			initActions(reader);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Error reading computational actions file " + file.getAbsolutePath());
 		}
