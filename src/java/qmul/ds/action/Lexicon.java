@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -126,17 +127,17 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 				logger.debug("no lexical-macro file. expecting no macro calls in lexical action file");
 
 			} else {
-				reader1 = new BufferedReader(new FileReader(file));
+				reader1 = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			}
 
 			initMacroTemplates(reader1);
 			file = new File(dir, ACTION_FILE_NAME);
 
-			BufferedReader macroReader = new BufferedReader(new FileReader(file));
+			BufferedReader macroReader = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			initMacroTemplates(macroReader);
 			//Matt change: initLexicalTemplates(macroReader);
 			file = new File(dir, WORD_FILE_NAME);
-			BufferedReader reader2 = new BufferedReader(new FileReader(file));
+			BufferedReader reader2 = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			readWords(reader2);
 
 		} catch (FileNotFoundException e) {
@@ -163,14 +164,14 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					logger.debug("no lexical-macro file. expecting no macro calls in lexical action file");
 					reader = null;
 				} else
-					reader = new BufferedReader(new FileReader(macroFile));
+					reader = new BufferedReader(new FileReader(macroFile, Charset.forName("utf-8")));
 			}
 			initMacroTemplates(reader);
 			if (dirNameOrURL.matches("(https?|file):.*")) {
 				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
 						+ ACTION_FILE_NAME).openStream()));
 			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME)));
+				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME), Charset.forName("utf-8")));
 			}
 			initLexicalTemplates(reader);
 
@@ -178,7 +179,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
 						+ WORD_FILE_NAME).openStream()));
 			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME)));
+				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
 			}
 			readWords(reader);
 		} catch (Exception e) {
@@ -211,14 +212,14 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					logger.debug("no lexical-macro file. expecting no macro calls in lexical action file");
 					reader = null;
 				} else
-					reader = new BufferedReader(new FileReader(macroFile));
+					reader = new BufferedReader(new FileReader(macroFile, Charset.forName("utf-8")));
 			}
 			initMacroTemplates(reader);
 			if (dirNameOrURL.matches("(https?|file):.*")) {
 				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
 						+ ACTION_FILE_NAME).openStream()));
 			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME)));
+				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME), Charset.forName("utf-8")));
 			}
 			initLexicalTemplates(reader);
 
@@ -226,14 +227,14 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
 						+ WORD_FILE_NAME).openStream()));
 			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME)));
+				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
 			}
 
 			if (dirNameOrURL.matches("(https?|file):.*")) {
 				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
 						+ "lexicon_Complete.txt").openStream()));
 			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, "lexicon_Complete.txt")));
+				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, "lexicon_Complete.txt"), Charset.forName("utf-8")));
 			}
 			readWordsDistribution(reader, POStypes, targetDistribution, lexiconSize);
 		} catch (Exception e) {
