@@ -13,12 +13,13 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 
 import qmul.ds.formula.TTRRecordType;
-import qmul.ds.learn.GeneratorLearner;
+//import qmul.ds.learn.GeneratorLearner;
 
 public class GeneratorTester
 {
-    static final String corpusPath = "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static final String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
+    //TODO make the appropriate changes here so that I don't have to have the same path here and in the GeneratorLearner class.
+    static final String corpusPath = "dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt";//.replaceAll("/", Matcher.quoteReplacement(File.separator));
+    static final String grammarPath = "dsttr/resource/2013-ttr-learner-output/";//.replaceAll("/", Matcher.quoteReplacement(File.separator));
     static GeneratorLearner g = new GeneratorLearner(corpusPath, grammarPath); // is this ok that I'm instansiating here?
 
 
@@ -31,8 +32,38 @@ public class GeneratorTester
 
         TTRRecordType rInc = g.computeRInc(rG, rCurr);
         System.out.println(rInc.toString());
+    }
+
+
+    public void testNormaliseCountTable()
+    {
+        HashMap<String, HashMap<TTRRecordType, Integer>> myCountTable = null; // remaining
+        HashMap<String, HashMap<TTRRecordType, Double>> myProbTable = g.normaliseCountTable(myCountTable);
+
+        // how tf should I print this? with for loops?
+        // print table
+        for (String k: myProbTable.keySet())
+        {
+            System.out.println(" word: " + k + " | ");
+            HashMap<TTRRecordType, Double> row = myProbTable.get(k);
+            for (TTRRecordType rt: row.keySet())
+                System.out.println(Double.toString(row.get(rt)) + ",  ");
+
+            System.out.println("\n");
+        }
+    }
+
+
+    public void testSaveModelToFile()
+    {
 
     }
+
+    public void testLearn()
+    {
+
+    }
+
 
     public static void main(String[] args)
     {
