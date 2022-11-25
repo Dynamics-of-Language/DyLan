@@ -68,7 +68,7 @@ public class LoadLearntGrammar extends Lexicon { // why extend lexicon?
 
 			// Initializing TestParser object
 			
-			TestParser tp = new TestParser(lex.loadLearntLexiconTxt(grammarPath, corpusPath, topN), compActions);
+			TestParser tp = new TestParser(lex.loadLearntLexiconTxt(grammarPath, topN), compActions);
 			return tp;
 
 			}
@@ -76,9 +76,9 @@ public class LoadLearntGrammar extends Lexicon { // why extend lexicon?
 	
 	public static void main(String[] args) {
 
-		String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",
+		String grammarPath = "/dsttr/resource/2013-ttr-learner-output/".replaceAll("/",
 				Matcher.quoteReplacement(File.separator));
-		String corpusPath = "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/",
+		String corpusPath = "/dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/",
 				Matcher.quoteReplacement(File.separator));
 		Integer topN = 2;
 		

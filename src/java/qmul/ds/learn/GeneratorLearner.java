@@ -60,8 +60,8 @@ public class GeneratorLearner {
 	protected HashMap<String, HashMap<TTRRecordType, Integer>> conditionalCountTable = new HashMap<String, HashMap<TTRRecordType, Integer>>();
 	protected HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>();
 // what was this doing?
-	static final String corpusPath = "corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/", Matcher.quoteReplacement(File.separator));
-	static final String grammarPath = "resource/2013-ttr-learner-output/".replaceAll("/",Matcher.quoteReplacement(File.separator));
+	static final String corpusPath = "dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/", Matcher.quoteReplacement(File.separator));
+	static final String grammarPath = "dsttr/resource/2013-ttr-learner-output/".replaceAll("/",Matcher.quoteReplacement(File.separator));
 	
 	 // --------------------------------------------------------------------------------------------------------------
 	 
