@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.nio.charset.Charset;
+
 
 import org.apache.log4j.Logger;
 
@@ -48,9 +50,9 @@ public class Grammar extends HashMap<String, ComputationalAction> implements Ser
 	public Grammar(File dir) {
 		File file = new File(dir, FILE_NAME);
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			initActions(reader);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Error reading computational actions file " + file.getAbsolutePath());
 		}
@@ -70,7 +72,7 @@ public class Grammar extends HashMap<String, ComputationalAction> implements Ser
 						+ FILE_NAME).openStream()));
 			} else {
 				File file = new File(dirNameOrURL, FILE_NAME);
-				reader = new BufferedReader(new FileReader(file));
+				reader = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			}
 			initActions(reader);
 		} catch (Exception e) {
