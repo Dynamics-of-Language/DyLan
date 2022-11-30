@@ -72,6 +72,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	protected SpeechActInferenceGrammar sa_grammar;
 
 	protected boolean ready=false;
+
 	
 	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa)
 	{
@@ -122,25 +123,28 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		this(new Lexicon(resourceDir), new Grammar(resourceDir), new SpeechActInferenceGrammar(resourceDir));
 		
 	}
-	
-	
-	
-	
+
 
 	/**
+	 * Modified by Arash-Ash
+	 *
 	 * @param resourceDirNameOrURL
-	 *            the dir containing computational-actions.txt,
-	 *            lexical-actions.txt, lexicon.txt
+	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
 	 */
 	public DAGParser(String resourceDirNameOrURL) {
-		this(new Lexicon(resourceDirNameOrURL), new Grammar(
-				resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL));
+		this(null, new Grammar(resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL)); // TODO: check for a cleaner way instead of passing null.
+		                                                                                                          // TODO: did I have to copy and paste a computational-actions.txtx file in the directory? Because I did...
+		// Because of an annoying error, I'm passing null as a "dummy variable" to initialise Lexicon and then I'm modifying it below. Idk if it's necessarily cleaner to use a
+		// ref: 1) https://stackoverflow.com/questions/13202672/if-else-statements-inside-a-java-constructor
+		//      2) https://www.baeldung.com/java-cannot-reference-x-before-supertype-constructor-error
+
+		File f = new File(resourceDirNameOrURL+"/lexicon.txt");
+
+		if(f.exists() && !f.isDirectory())
+			this.lexicon = new Lexicon(resourceDirNameOrURL);
+		else
+			this.lexicon = new Lexicon().loadLearntLexiconTxt(resourceDirNameOrURL, 3); // TODO fix this topN
 	}
-	
-	
-	
-	
-	
 	
 	
 	/** BEGIN METHODS FOR RERUNNING ACTIONS________________________________________________________________________ 
