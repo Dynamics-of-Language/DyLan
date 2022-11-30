@@ -672,9 +672,9 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	 * 
 	 * @Author Arash Ashrafzadeh
 	 * 
-	 * to-do: decide on the structure of the function pass topN instead of
-	 * hard-coding it what's exactly in `prob`? add necessary logs -> check
-	 * initLexicalTemplates add necessary try-catches
+	 * TODO double-check the structure of the function pass topN instead of hard-coding it
+	 * TODO what's exactly in `prob`? add necessary logs -> check
+	 * TODO initLexicalTemplates add necessary try-catches
 	 * 
 	 */
 	/**
@@ -684,18 +684,20 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	 * @param topN
 	 * @return
 	 */
-	public Lexicon loadLearntLexiconTxt(String grammarPath, int topN) { // remove corpusPath
+	public Lexicon loadLearntLexiconTxt(String grammarPath, int topN) {
+
+		if (topN == 0) // not the best way of setting a default value probably. TODO fix this.
+			topN = 3;
 
 		Lexicon lexicon = new Lexicon();
-
 		File lexFile = new File(grammarPath + "lexicon.lex-top-" + topN + ".txt");
 		BufferedReader reader = readLexText(lexFile, topN);
 
 		try {
 			String line;
 			List<String> lines = new ArrayList<String>(); // A String for lexical actions associated to a word
-			String prob = null;
-			String word = null;
+			String prob = null; // TODO remove, and redefine in line 711
+			String word = null; // TODO remove, and redefine in line 713
 			List<String> actionStr = null; // or String [] ?
 			LexicalAction lexAct = null;
 
