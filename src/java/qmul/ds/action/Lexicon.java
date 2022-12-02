@@ -146,6 +146,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	}
 
 	/**
+	 * Modified by Arash Ash -> added support for lexical actions learnt by Eshghi et al. (2013)
 	 * Read a set of {@link LexicalAction}s from file
 	 * 
 	 * @param dirNameOrURL containing at least the lexical-actions.txt and
@@ -154,6 +155,10 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	public Lexicon(String dirNameOrURL) {
 		BufferedReader reader;
 		try {
+			// to add support for initialising a lexicon object from the learnt lexical actions by Eshghi et al. (2013).
+			File f = new File(dirNameOrURL + "/lexicon.txt");
+			if(f.exists() && !f.isDirectory())
+			{
 			if (dirNameOrURL.matches("(https?|file):.*")) {
 				reader = new BufferedReader(new InputStreamReader(
 						new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
@@ -180,7 +185,10 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			} else {
 				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
 			}
-			readWords(reader);
+			readWords(reader);}
+			else // not sure if this works "new" ??
+				 new Lexicon().loadLearntLexiconTxt(dirNameOrURL, 3); // TODO fix this topN
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Error reading lexical actions file " + dirNameOrURL);
@@ -690,7 +698,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			topN = 3;
 
 		Lexicon lexicon = new Lexicon();
-		File lexFile = new File(grammarPath + "lexicon.lex-top-" + topN + ".txt");
+		File lexFile = new File(grammarPath + "/lexicon.lex-top-" + topN + ".txt");
 		BufferedReader reader = readLexText(lexFile, topN);
 
 		try {
@@ -724,7 +732,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 						HashSet<LexicalAction> lexActs = new HashSet<LexicalAction>();
 						lexActs.add(lexAct);
 						lexicon.put(word, lexActs);
-						logger.info("Added lexical action " + lexAct);						
+						logger.info("Added lexical action " + lexAct);
 					}
 					lines.clear();
 //					word= null;
