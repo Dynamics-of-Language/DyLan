@@ -20,18 +20,18 @@ public class GeneratorTester
     //TODO make the appropriate changes here so that I don't have to have the same path here and in the GeneratorLearner class.
     static final String corpusPath = "dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt";//.replaceAll("/", Matcher.quoteReplacement(File.separator));
     static final String grammarPath = "dsttr/resource/2013-ttr-learner-output/";//.replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static GeneratorLearner g = new GeneratorLearner(corpusPath, grammarPath); // is this ok that I'm instansiating here?
+    static GeneratorLearner g = new GeneratorLearner(grammarPath, corpusPath); // is this ok that I'm instansiating here?
 
 
     public static void testComputeRInc()
     {
-        // I need a method like "string to ttr-rt".
         // below is the semantics for "I took it" from "CHILDESconversion400Final", 8th sentence.
         TTRRecordType rG = TTRRecordType.parse("[x1==it : e|x==i : e|e1==take : es|p2==subj(e1, x) : t|p3==obj(e1, x1) : t|head==e1 : es]");
         TTRRecordType rCurr = TTRRecordType.parse("[x==i : e|head==e1 : es]"); // is this a valid TTR for "I" only?
 
+//        System.out.println(rG.toString());
         TTRRecordType rInc = g.computeRInc(rG, rCurr);
-        System.out.println(rInc.toString());
+        System.out.println("rInc = " + rInc.toString());
     }
 
 
