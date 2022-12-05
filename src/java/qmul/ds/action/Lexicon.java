@@ -674,83 +674,61 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		return reader;
 	}
 
-	/*
-	 * Loads learnt lexical actions from a text file (an example is resource/2013-ttr-learner-output)
-	 * The format is different as it includes probabilities and does not use lexical templates.
-	 * 
-	 * @Author Arash Ashrafzadeh
-	 * 
-	 * TODO double-check the structure of the function pass topN instead of hard-coding it
-	 * TODO what's exactly in `prob`? add necessary logs -> check
-	 * TODO initLexicalTemplates add necessary try-catches
-	 * 
-	 */
-	/**
-	 * add docs here
-	 * 
-	 * @param grammarPath 
-	 * @param topN
-	 * @return
-	 */
-	public Lexicon loadLearntLexiconTxt(String grammarPath, int topN) {
+    /**
+     * Loads learnt lexical actions by Eshghi et al. (2013b) from a text file.
+     * The format is different as it includes probabilities and does not use lexical templates.
+     *
+     * @author Arash Ash
+     *
+     * TODO what's exactly in `prob`? add necessary logs/docs
+     * TODO initLexicalTemplates add necessary try-catches
+     *
+     * @param grammarPath path that contains lexicon.lex-top-N.txt files.
+     * @param topN the number of most probable lexical actions to be read from the learnt lexicon files.
+     */
+    public void loadLearntLexiconTxt(String grammarPath, int topN) {
 
-		if (topN == 0) // not the best way of setting a default value probably. TODO fix this.
-			topN = 3;
+        File lexFile = new File(grammarPath + File.separator + "lexicon.lex-top-" + topN + ".txt");
+        BufferedReader reader = readLexText(lexFile, topN);
 
-		Lexicon lexicon = new Lexicon();
-		File lexFile = new File(grammarPath + "/lexicon.lex-top-" + topN + ".txt");
-		BufferedReader reader = readLexText(lexFile, topN);
+        try {
+            String line;
+            List<String> lines = new ArrayList<String>(); // A String for lexical actions associated to a word
 
-		try {
-			String line;
-			List<String> lines = new ArrayList<String>(); // A String for lexical actions associated to a word
-			String prob = null; // TODO remove, and redefine in line 711
-			String word = null; // TODO remove, and redefine in line 713
-			List<String> actionStr = null; // or String [] ?
-			LexicalAction lexAct = null;
+            while ((line = reader.readLine()) != null) {
+                line = comment(line.trim());
 
-			while ((line = reader.readLine()) != null) {
-				line = comment(line.trim());
+                if ((line == null) || (line.isEmpty() && lines.isEmpty()))
+                    continue;
 
-				if ((line == null) || (line.isEmpty() && lines.isEmpty()))
-					continue;
+                if (line.isEmpty() && !lines.isEmpty()) { // means the end of a lexical action
+                    String prob = lines.get(0); // Not being used anywhere, for now.
+                    String word = lines.get(1);
+                    List<String> actionStr = lines.subList(2, lines.size());
+                    LexicalAction lexAct = new LexicalAction(word, actionStr);
+                    // TODO add log "created lexical action lexAct"
 
-				if (line.isEmpty() && !lines.isEmpty()) { // means the end of a lexical action
-					prob = lines.get(0); // what am I supposed to do with prob?
-//					System.out.println("Prob: " + prob);
-					word = lines.get(1);
-//					System.out.println("Word: " + word);
-					actionStr = lines.subList(2, lines.size());
-//					System.out.println("Lexical Action: " + actionStr);
-					lexAct = new LexicalAction(word, actionStr);
-					// log created lexical action lexAct
+                    if (this.containsKey(word))
+                        this.get(word).add(lexAct);
+                        // TODO log here
+                    else {
+                        HashSet<LexicalAction> lexActs = new HashSet<LexicalAction>();
+                        lexActs.add(lexAct);
+                        this.put(word, lexActs);
+                        logger.info("Added lexical action " + lexAct.toString());
+                    }
+                    lines.clear();
+                } else
+                    lines.add(line);
+            }
 
-					if (lexicon.containsKey(word))
-						lexicon.get(word).add(lexAct);
-					// log here
-					else {
-						HashSet<LexicalAction> lexActs = new HashSet<LexicalAction>();
-						lexActs.add(lexAct);
-						lexicon.put(word, lexActs);
-						logger.info("Added lexical action " + lexAct);
-					}
-					lines.clear();
-//					word= null;
-//					lexAct = null;
-//					lexActs = null;
-				} 
-				
-				else
-					lines.add(line);
-			}
-			
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error("Error reading lexical actions from " + reader);
-		}
-		return lexicon;
-	}
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("Error reading lexical actions from " + reader);
+        }
+        logger.info("Loaded lexicon with: " + this.keySet().size() + " words.");
+    }
 
 	private static boolean commented = false;
 
