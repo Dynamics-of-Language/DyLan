@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c) 2001, 2010 Matthew Purver
  * All Rights Reserved.  Use is subject to license terms.
@@ -59,7 +60,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		private String name;
 		private List<String> metavars;
 		private List<String> lines;
-		private boolean noLeftAdjustment=false;
+		private boolean noLeftAdjustment = false;
 
 		/**
 		 * @param name
@@ -68,20 +69,20 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			this.name = name;
 			this.metavars = new ArrayList<String>(metavars);
 			this.lines = new ArrayList<String>(lines);
-			this.noLeftAdjustment=noLeftAdjustment;
+			this.noLeftAdjustment = noLeftAdjustment;
 		}
 
 		/**
 		 * @param word
 		 * @param metavals
-		 * @return a new {@link LexicalAction} instantiation for this word and metavariable values
+		 * @return a new {@link LexicalAction} instantiation for this word and
+		 *         metavariable values
 		 */
 		protected LexicalAction create(String word, List<String> metavals) { // TODO should work for all versions
 			ArrayList<String> lines = new ArrayList<String>();
 			logger.trace("metavars for word : " + word + " of type " + name);
 
-			
-			logger.info("creating lexical action for "+word+" using template "+name);
+			logger.info("creating lexical action for " + word + " using template " + name);
 			for (String line : this.lines) {
 				for (int i = 0; i < metavals.size(); i++) {
 					line = line.replaceAll(metavars.get(i), metavals.get(i));
@@ -90,8 +91,8 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			}
 
 			lexiconsize++;
-			//logger.info("lexicon size = " + lexiconsize);
-			
+			// logger.info("lexicon size = " + lexiconsize);
+
 			return new LexicalAction(word, lines, this.name, this.noLeftAdjustment);
 		}
 
@@ -116,8 +117,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	/**
 	 * Read a set of {@link LexicalAction}s from file
 	 * 
-	 * @param dir
-	 *            containing at least the lexical-actions.txt and lexicon.txt files
+	 * @param dir containing at least the lexical-actions.txt and lexicon.txt files
 	 */
 	public Lexicon(File dir) {
 		File file = new File(dir, MACRO_FILE_NAME);
@@ -135,7 +135,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 			BufferedReader macroReader = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			initMacroTemplates(macroReader);
-			//Matt change: initLexicalTemplates(macroReader);
+			// Matt change: initLexicalTemplates(macroReader);
 			file = new File(dir, WORD_FILE_NAME);
 			BufferedReader reader2 = new BufferedReader(new FileReader(file, Charset.forName("utf-8")));
 			readWords(reader2);
@@ -147,17 +147,22 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	}
 
 	/**
+	 * Modified by Arash Ash -> added support for lexical actions learnt by Eshghi et al. (2013)
 	 * Read a set of {@link LexicalAction}s from file
 	 * 
-	 * @param dirNameOrURL
-	 *            containing at least the lexical-actions.txt and lexicon.txt files
+	 * @param dirNameOrURL containing at least the lexical-actions.txt and
+	 *                     lexicon.txt files
 	 */
 	public Lexicon(String dirNameOrURL) {
 		BufferedReader reader;
 		try {
+			// to add support for initialising a lexicon object from the learnt lexical actions by Eshghi et al. (2013).
+			File f = new File(dirNameOrURL + "/lexicon.txt");
+			if(f.exists() && !f.isDirectory())
+			{
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ MACRO_FILE_NAME).openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
 			} else {
 				File macroFile = new File(dirNameOrURL, MACRO_FILE_NAME);
 				if (!macroFile.exists()) {
@@ -168,20 +173,23 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			}
 			initMacroTemplates(reader);
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ ACTION_FILE_NAME).openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + ACTION_FILE_NAME).openStream()));
 			} else {
 				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME), Charset.forName("utf-8")));
 			}
 			initLexicalTemplates(reader);
 
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ WORD_FILE_NAME).openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + WORD_FILE_NAME).openStream()));
 			} else {
 				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
 			}
-			readWords(reader);
+			readWords(reader);}
+			else // not sure if this works "new" ??
+				 new Lexicon().loadLearntLexiconTxt(dirNameOrURL, 3); // TODO fix this topN
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Error reading lexical actions file " + dirNameOrURL);
@@ -189,23 +197,23 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	}
 
 	/**
-	 * Read a set of {@link LexicalAction}s from file and create lexicon.txt on the fly
+	 * Read a set of {@link LexicalAction}s from file and create lexicon.txt on the
+	 * fly
 	 * 
-	 * @param dirNameOrURL
-	 *            containing at least the lexical-actions.txt file, not the lexicon.txt
-	 * @param distribution
-	 *            a list of String-int pairs which is the POS and the target number of instances of each corresponding
-	 *            lexical action in the lexicon
-	 * @param lexiconSize
-	 *            will stop when lexicon has this many entries
+	 * @param dirNameOrURL containing at least the lexical-actions.txt file, not the
+	 *                     lexicon.txt
+	 * @param distribution a list of String-int pairs which is the POS and the
+	 *                     target number of instances of each corresponding lexical
+	 *                     action in the lexicon
+	 * @param lexiconSize  will stop when lexicon has this many entries
 	 */
 	public Lexicon(String dirNameOrURL, HashMap<String, String[]> POStypes, HashMap<String, int[]> targetDistribution,
 			int lexiconSize) {
 		BufferedReader reader;
 		try {
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ MACRO_FILE_NAME).openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
 			} else {
 				File macroFile = new File(dirNameOrURL, MACRO_FILE_NAME);
 				if (!macroFile.exists()) {
@@ -216,23 +224,23 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 			}
 			initMacroTemplates(reader);
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ ACTION_FILE_NAME).openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + ACTION_FILE_NAME).openStream()));
 			} else {
 				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME), Charset.forName("utf-8")));
 			}
 			initLexicalTemplates(reader);
 
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ WORD_FILE_NAME).openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + WORD_FILE_NAME).openStream()));
 			} else {
 				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
 			}
 
 			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(new URL(dirNameOrURL.replaceAll("/?$", "/")
-						+ "lexicon_Complete.txt").openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						new URL(dirNameOrURL.replaceAll("/?$", "/") + "lexicon_Complete.txt").openStream()));
 			} else {
 				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, "lexicon_Complete.txt"), Charset.forName("utf-8")));
 			}
@@ -260,7 +268,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		return lex;
 	}
 
-	public void writeToTextFile(String fileName) throws IOException {
+	public void writeToTexlearntFile(String fileName) throws IOException {
 		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 
 		for (String word : keySet()) {
@@ -283,14 +291,13 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	/**
 	 * Read a set of {@link LexicalAction} templates from file
 	 * 
-	 * @param reader
-	 *            containing the lexical-actions.txt file
+	 * @param reader containing the lexical-actions.txt file
 	 */
 	private void initLexicalTemplates(BufferedReader reader) {
 		try {
 			String line;
 			String name = null;
-			boolean noLeftAdjustment=false;
+			boolean noLeftAdjustment = false;
 			List<String> metavars = new ArrayList<String>();
 			List<String> lines = new ArrayList<String>();
 			while ((line = reader.readLine()) != null) {
@@ -300,33 +307,34 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 				}
 				if (line.isEmpty() && !lines.isEmpty()) {
 					actionTemplates.put(name, new LexicalTemplate(name, metavars, lines, noLeftAdjustment));
-					logger.info((noLeftAdjustment)?"Added Lexical Template for " +"*"+name: "Added Lexical Template for "+name);
+					logger.info((noLeftAdjustment) ? "Added Lexical Template for " + "*" + name
+							: "Added Lexical Template for " + name);
 					lines.clear();
 					name = null;
 					metavars.clear();
-					noLeftAdjustment=false;
+					noLeftAdjustment = false;
 				} else if (name == null) {
 					Matcher m = TEMPLATE_SPEC_PATTERN.matcher(line);
 					if (m.matches()) {
-						if (m.group(1).startsWith("*"))
-						{
+						if (m.group(1).startsWith("*")) {
 							name = m.group(1).substring(1, m.group(1).length());
-							noLeftAdjustment=true;
-						}
-						else name=m.group(1);
+							noLeftAdjustment = true;
+						} else
+							name = m.group(1);
 						for (String s : m.group(2).split(",")) {
 							metavars.add(s);
 						}
 					} else {
 						throw new IllegalArgumentException("unrecognised template spec " + line);
 					}
-					logger.info((noLeftAdjustment)?"New Lexical Template: " +"*"+name: "Added Lexical Template for "+name);
+					logger.info((noLeftAdjustment) ? "New Lexical Template: " + "*" + name
+							: "Added Lexical Template for " + name);
 				} else {
 					lines.add(line);
 				}
 			}
 			if (!lines.isEmpty()) {
-				actionTemplates.put(name, new LexicalTemplate(name, metavars, lines,noLeftAdjustment));
+				actionTemplates.put(name, new LexicalTemplate(name, metavars, lines, noLeftAdjustment));
 				logger.debug("Added Lexical Template for " + name);
 			}
 			reader.close();
@@ -348,8 +356,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	/**
 	 * Read a set of {@link LexicalAction}s from file
 	 * 
-	 * @param reader
-	 *            containing the lexicon.txt file
+	 * @param reader containing the lexicon.txt file
 	 */
 	private void readWords(BufferedReader reader) {
 		try {
@@ -380,7 +387,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 						// logger.warn(e);
 						logger.warn("Macros used in lexical template could not be instatiated. Template:" + template
 								+ "; Word:" + word + " Skipping this");
-						//e.printStackTrace();
+						// e.printStackTrace();
 
 						continue;
 					}
@@ -398,13 +405,11 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 	/**
 	 * Read a set of {@link LexicalAction}s from file
 	 * 
-	 * @param reader
-	 *            containing the lexiconComplete.txt file
-	 * @param distribution
-	 *            a list of String-int pairs which is the POS and the target number of instances of each corresponding
-	 *            lexical action in the lexicon
-	 * @param lexiconSize
-	 *            will stop when lexicon has this many entries
+	 * @param reader       containing the lexiconComplete.txt file
+	 * @param distribution a list of String-int pairs which is the POS and the
+	 *                     target number of instances of each corresponding lexical
+	 *                     action in the lexicon
+	 * @param lexiconSize  will stop when lexicon has this many entries
 	 */
 	private void readWordsDistribution(BufferedReader reader, HashMap<String, String[]> POStypes,
 			HashMap<String, int[]> targetDistribution, int lexiconSize) {
@@ -467,7 +472,8 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 				seen.add(word);
 			}
 
-			// now sample lexical actions from each type randomly and then look for ambiguous words..
+			// now sample lexical actions from each type randomly and then look for
+			// ambiguous words..
 			POSloop: for (String POS : POSLinesMap.keySet()) { // loops through noun,verb etc..
 
 				Collections.shuffle(POSLinesMap.get(POS)); // shuffles lexical actions for randomness
@@ -482,7 +488,8 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					String word = fields.get(0);
 					String template = fields.get(1);
 					String semantics = fields.get(2); // should always have at least these three
-					// check if they match any string in the POStypes list, if so, add a count to the relevant list
+					// check if they match any string in the POStypes list, if so, add a count to
+					// the relevant list
 					int numberOfSenses = 1;
 					boolean addWord = true;
 					boolean addedFirstAmbig = false;
@@ -522,7 +529,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 					if (addWord == false) {
 						continue lexicalLoop;
-					}// keep going as we're not adding this word
+					} // keep going as we're not adding this word
 
 					// if we've got this far, add to the types list with the fields
 					if (!mytypes.containsKey(template)) {
@@ -533,7 +540,8 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 						mytypes.get(template).add(fields);
 					}
 
-					// now look for ambiguous words and add them with the given frequency we want, specified at top of
+					// now look for ambiguous words and add them with the given frequency we want,
+					// specified at top of
 					// this method
 					if (ambiguous.containsKey(word)) {
 						if (ambiguityCount >= ambiguityTarget) { // reached the target
@@ -619,8 +627,8 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 		try {
 			// Create file with the lexicon itself
-			FileWriter fstream = new FileWriter("resource" + File.separator + "2009-english-test-induction"
-					+ File.separator + "lexicon.txt");
+			FileWriter fstream = new FileWriter(
+					"resource" + File.separator + "2009-english-test-induction" + File.separator + "lexicon.txt");
 			BufferedWriter out = new BufferedWriter(fstream);
 			for (String key : mytypes.keySet()) {
 				logger.debug(mytypes.get(key));
@@ -650,11 +658,85 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		logger.trace(this);
 	}
 
+	private BufferedReader readLexText(File lexFile, int topN) {
+		BufferedReader reader = null;
+		try {
+
+			if (!lexFile.exists())
+				logger.debug("No file \"lexicon.lex-top-" + topN + "\" found.");
+
+			else
+				reader = new BufferedReader(new FileReader(lexFile));
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			logger.error("Error reading lexical actions file " + lexFile.getAbsolutePath());
+		}
+		return reader;
+	}
+
+    /**
+     * Loads learnt lexical actions by Eshghi et al. (2013b) from a text file.
+     * The format is different as it includes probabilities and does not use lexical templates.
+     *
+     * @author Arash Ash
+     *
+     * TODO what's exactly in `prob`? add necessary logs/docs
+     * TODO initLexicalTemplates add necessary try-catches
+     *
+     * @param grammarPath path that contains lexicon.lex-top-N.txt files.
+     * @param topN the number of most probable lexical actions to be read from the learnt lexicon files.
+     */
+    public void loadLearntLexiconTxt(String grammarPath, int topN) {
+
+        File lexFile = new File(grammarPath + File.separator + "lexicon.lex-top-" + topN + ".txt");
+        BufferedReader reader = readLexText(lexFile, topN);
+
+        try {
+            String line;
+            List<String> lines = new ArrayList<String>(); // A String for lexical actions associated to a word
+
+            while ((line = reader.readLine()) != null) {
+                line = comment(line.trim());
+
+                if ((line == null) || (line.isEmpty() && lines.isEmpty()))
+                    continue;
+
+                if (line.isEmpty() && !lines.isEmpty()) { // means the end of a lexical action
+                    String prob = lines.get(0); // Not being used anywhere, for now.
+                    String word = lines.get(1);
+                    List<String> actionStr = lines.subList(2, lines.size());
+                    LexicalAction lexAct = new LexicalAction(word, actionStr);
+                    // TODO add log "created lexical action lexAct"
+
+                    if (this.containsKey(word))
+                        this.get(word).add(lexAct);
+                        // TODO log here
+                    else {
+                        HashSet<LexicalAction> lexActs = new HashSet<LexicalAction>();
+                        lexActs.add(lexAct);
+                        this.put(word, lexActs);
+                        logger.info("Added lexical action " + lexAct.toString());
+                    }
+                    lines.clear();
+                } else
+                    lines.add(line);
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("Error reading lexical actions from " + reader);
+        }
+        logger.info("Loaded lexicon with: " + this.keySet().size() + " words.");
+    }
+
 	private static boolean commented = false;
 
 	/**
 	 * @param line
-	 * @return null if the line is entirely commented out, all uncommented parts (including empty line) otherwise
+	 * @return null if the line is entirely commented out, all uncommented parts
+	 *         (including empty line) otherwise
 	 */
 	public static String comment(String line) {
 		// return empty lines unchanged
@@ -686,30 +768,26 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		}
 		return line;
 	}
-	
+
 	/**
-	 * Precondition: only works with lexicons in TTR
-	 * Goes through each lexical action and extracts the contributed semantics from it. When the semantics is functional,
-	 * the semantics is beta-reduced with underspecified arguments.
+	 * Precondition: only works with lexicons in TTR Goes through each lexical
+	 * action and extracts the contributed semantics from it. When the semantics is
+	 * functional, the semantics is beta-reduced with underspecified arguments.
+	 * 
 	 * @return the list of all possible semantic increments by this lexicon
 	 */
-	public List<TTRRecordType> extractSemanticAtoms()
-	{
-		ArrayList<TTRRecordType> result=new ArrayList<TTRRecordType>();
-		
-		for(String word: keySet())
-		{
-			for(LexicalAction action: get(word))
-			{
-				
-				Effect[] ites=action.getEffects();
-				
-				for(Effect ifte:ites)
-				{
-					IfThenElse ite=(IfThenElse)ifte;
-					
-					for(Effect atomic: ite.getTHENClause())
-					{
+	public List<TTRRecordType> extractSemanticAtoms() {
+		ArrayList<TTRRecordType> result = new ArrayList<TTRRecordType>();
+
+		for (String word : keySet()) {
+			for (LexicalAction action : get(word)) {
+
+				Effect[] ites = action.getEffects();
+
+				for (Effect ifte : ites) {
+					IfThenElse ite = (IfThenElse) ifte;
+
+					for (Effect atomic : ite.getTHENClause()) {
 //						if (atomic instanceof TTRFreshPut)
 //						{
 //							
@@ -717,9 +795,10 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 					}
 				}
 			}
-			
+
 		}
 		return null;
 	}
 
 }
+
