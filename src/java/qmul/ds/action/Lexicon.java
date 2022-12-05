@@ -146,55 +146,57 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 		}
 	}
 
-	/**
-	 * Modified by Arash Ash -> added support for lexical actions learnt by Eshghi et al. (2013)
-	 * Read a set of {@link LexicalAction}s from file
-	 * 
-	 * @param dirNameOrURL containing at least the lexical-actions.txt and
-	 *                     lexicon.txt files
-	 */
-	public Lexicon(String dirNameOrURL) {
-		BufferedReader reader;
-		try {
-			// to add support for initialising a lexicon object from the learnt lexical actions by Eshghi et al. (2013).
-			File f = new File(dirNameOrURL + "/lexicon.txt");
-			if(f.exists() && !f.isDirectory())
-			{
-			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(
-						new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
-			} else {
-				File macroFile = new File(dirNameOrURL, MACRO_FILE_NAME);
-				if (!macroFile.exists()) {
-					logger.debug("no lexical-macro file. expecting no macro calls in lexical action file");
-					reader = null;
-				} else
-					reader = new BufferedReader(new FileReader(macroFile, Charset.forName("utf-8")));
-			}
-			initMacroTemplates(reader);
-			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(
-						new URL(dirNameOrURL.replaceAll("/?$", "/") + ACTION_FILE_NAME).openStream()));
-			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME), Charset.forName("utf-8")));
-			}
-			initLexicalTemplates(reader);
 
-			if (dirNameOrURL.matches("(https?|file):.*")) {
-				reader = new BufferedReader(new InputStreamReader(
-						new URL(dirNameOrURL.replaceAll("/?$", "/") + WORD_FILE_NAME).openStream()));
-			} else {
-				reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
-			}
-			readWords(reader);}
-			else // not sure if this works "new" ??
-				 new Lexicon().loadLearntLexiconTxt(dirNameOrURL, 3); // TODO fix this topN
+    /**
+     * Modified by Arash Ash -> added support for loading lexical actions learnt by Eshghi et al. (2013b)
+     * Read a set of {@link LexicalAction}s from file
+     *
+     * @param dirNameOrURL containing at least the lexical-actions.txt and lexicon.txt files,
+     *                     or newly, lexicon.lex-top-N.txt files.
+     * @param topN the number of most probable lexical actions to be read from the learnt lexicon files.
+     */
+    public Lexicon(String dirNameOrURL, int topN) {
+        BufferedReader reader;
+        try {
+            // Adds support for initialising a lexicon object from the learnt lexical actions by
+            // Eshghi et al. (2013b) instead of using macro files as templates.
+            File f = new File(dirNameOrURL + File.separator + "lexicon.txt");
+            if (f.exists() && !f.isDirectory()) { // If lexicon.txt exists, load normally. Otherwise use learnt files.
+                if (dirNameOrURL.matches("(https?|file):.*")) {
+                    reader = new BufferedReader(new InputStreamReader(
+                            new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
+                } else {
+                    File macroFile = new File(dirNameOrURL, MACRO_FILE_NAME);
+                    if (!macroFile.exists()) {
+                        logger.debug("no lexical-macro file. expecting no macro calls in lexical action file");
+                        reader = null;
+                    } else
+                        reader = new BufferedReader(new FileReader(macroFile, Charset.forName("utf-8")));
+                }
+                initMacroTemplates(reader);
+                if (dirNameOrURL.matches("(https?|file):.*")) {
+                    reader = new BufferedReader(new InputStreamReader(
+                            new URL(dirNameOrURL.replaceAll("/?$", "/") + ACTION_FILE_NAME).openStream()));
+                } else {
+                    reader = new BufferedReader(new FileReader(new File(dirNameOrURL, ACTION_FILE_NAME), Charset.forName("utf-8")));
+                }
+                initLexicalTemplates(reader);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("Error reading lexical actions file " + dirNameOrURL);
-		}
-	}
+                if (dirNameOrURL.matches("(https?|file):.*")) {
+                    reader = new BufferedReader(new InputStreamReader(
+                            new URL(dirNameOrURL.replaceAll("/?$", "/") + WORD_FILE_NAME).openStream()));
+                } else {
+                    reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
+                }
+                readWords(reader);
+            } else
+                loadLearntLexiconTxt(dirNameOrURL, topN);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Error reading lexical actions file " + dirNameOrURL);
+        }
+    }
 
 	/**
 	 * Read a set of {@link LexicalAction}s from file and create lexicon.txt on the
