@@ -61,7 +61,7 @@ public class GeneratorLearner {
 	protected HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>();
 // what was this doing?
 	static final String corpusPath = "dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/", Matcher.quoteReplacement(File.separator));
-	static final String grammarPath = "dsttr/resource/2013-ttr-learner-output/".replaceAll("/",Matcher.quoteReplacement(File.separator));
+	static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
 	
 	 // --------------------------------------------------------------------------------------------------------------
 	 
@@ -98,7 +98,7 @@ public class GeneratorLearner {
 //		InteractiveContextParser p = new InteractiveContextParser(l, g);
 //		this.parser = p;
 //		InteractiveContextParser generatorParser = 
-		this.parser = new InteractiveContextParser(grammarPath);
+		this.parser = new InteractiveContextParser(parserPath);
 	}
 
 /**
@@ -108,7 +108,7 @@ public class GeneratorLearner {
  * @param goldSem  the complete semantics of the sentence we want to generate to.
  * @return rInc    (Incremental RT) the semantics to be generated, calculated as `goldSem-curSem`
  */
-	public TTRRecordType computeRInc(TTRRecordType curSem, TTRRecordType goldSem) {
+	public TTRRecordType computeRInc(TTRRecordType goldSem, TTRRecordType curSem) {
 		TTRRecordType rInc = goldSem.minus(curSem).first(); // there's first() and second() which second kind of means `curSem-goldSem`.
 		return rInc;
 	}
