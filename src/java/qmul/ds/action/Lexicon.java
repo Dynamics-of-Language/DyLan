@@ -147,6 +147,19 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
 
     /**
+     * @author Arash Ash & Arash Eshghi
+     * This constructor is added to provide a default value of topN=3 for
+     * the constructor with (String dirNameOrURL, int topN) parameters.
+     *
+     * @param dirNameOrURL containing at least the lexical-actions.txt and lexicon.txt files,
+     *                     or newly, lexicon.lex-top-N.txt files.
+     */
+    public Lexicon(String dirNameOrURL) {
+        this(dirNameOrURL, 3);
+    }
+
+
+    /**
      * Modified by Arash Ash -> added support for loading lexical actions learnt by Eshghi et al. (2013b)
      * Read a set of {@link LexicalAction}s from file
      *
