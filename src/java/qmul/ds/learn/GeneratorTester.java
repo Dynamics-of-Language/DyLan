@@ -35,20 +35,30 @@ public class GeneratorTester
     }
 
 
-    public void testNormaliseCountTable()
+    public static void testNormaliseCountTable()
     {
-        HashMap<String, HashMap<TTRRecordType, Integer>> myCountTable = null; // remaining
+        HashMap<String, HashMap<TTRRecordType, Integer>> myCountTable = new HashMap<String, HashMap<TTRRecordType, Integer>>();
+        // TODO is there a better way to make this more compact?
+
+        HashMap<TTRRecordType, Integer> v1 = new HashMap<TTRRecordType, Integer>(); // value1
+        HashMap<TTRRecordType, Integer> v2 = new HashMap<TTRRecordType, Integer>(); // value2
+        v1.put(TTRRecordType.parse("[s==i : e]"), 2);
+        v1.put(TTRRecordType.parse("[s==you : e]"), 1);
+        myCountTable.put("i", v1);
+        v2.put(TTRRecordType.parse("[s==you : e]"), 3);
+        v2.put(TTRRecordType.parse("[s==i : e]"), 0);
+        myCountTable.put("you", v2);
+
         HashMap<String, HashMap<TTRRecordType, Double>> myProbTable = g.normaliseCountTable(myCountTable);
 
-        // how tf should I print this? with for loops?
-        // print table
+        // print table // TODO make this cleaner
+        System.out.println("\nThe probTable is: ");
         for (String k: myProbTable.keySet())
         {
-            System.out.println(" word: " + k + " | ");
+            System.out.print(" word: " + k + " | ");
             HashMap<TTRRecordType, Double> row = myProbTable.get(k);
             for (TTRRecordType rt: row.keySet())
-                System.out.println(Double.toString(row.get(rt)) + ",  ");
-
+                System.out.print(Double.toString(row.get(rt)) + ",  ");
             System.out.println("\n");
         }
     }
@@ -67,9 +77,7 @@ public class GeneratorTester
 
     public static void main(String[] args)
     {
-
-//		HashMap<String, HashMap<TTRRecordType, Integer>> conditionalCountTable = new HashMap<String, HashMap<TTRRecordType, Integer>>();
-//		HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>();
-        testComputeRInc();
+//        testComputeRInc(); // Seems to work fine.
+        testNormaliseCountTable();
     }
 }
