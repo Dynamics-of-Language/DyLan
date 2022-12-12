@@ -58,7 +58,7 @@ public class GeneratorLearner {
 	// `Object` is used because feature types can be TTRRecordType or ?
 	// but how to deal with it???
 	protected HashMap<String, HashMap<TTRRecordType, Integer>> conditionalCountTable = new HashMap<String, HashMap<TTRRecordType, Integer>>();
-	protected HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>();
+	protected HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>(); // TODO attention: these are NOT being globally updated.
 // what was this doing?
 	static final String corpusPath = "dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/", Matcher.quoteReplacement(File.separator));
 	static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
@@ -154,17 +154,18 @@ public class GeneratorLearner {
 	 * Normalises a table by dividing elements in a column by their sum.
 	 * 
 	 * @param table				     the table to be normalised
-	 * @return conditionalProbTable  the normalised table
+	 * @return probTable  the normalised table
 	 */
 	public HashMap<String, HashMap<TTRRecordType, Double>> normaliseCountTable(HashMap<String, HashMap<TTRRecordType, Integer>> table)
 	{
+		HashMap<String, HashMap<TTRRecordType, Double>> probTable = new  HashMap<String, HashMap<TTRRecordType, Double>>();
 		HashMap<TTRRecordType, Double> total = new HashMap<TTRRecordType, Double>(); // Don't have to init to zero since I'm using getOrDefault method.
 		// First find total of each column in this loop
 		for (HashMap<TTRRecordType, Integer> row : table.values())
 		{
-			for (TTRRecordType feature : row.keySet()) {
-				Integer count = row.get(feature);
-				total.put(feature, total.getOrDefault(feature, 0.0) + count); // If `feature` was already in `total`, add `count` to the previous value.
+			for (TTRRecordType col : row.keySet()) {
+				Integer count = row.get(col);
+				total.put(col, total.getOrDefault(col, 0.0) + count); // If `feature` was already in `total`, add `count` to the previous value.
 													 // If not, add `count` to 0, which means just put `count`. Used because key might not be available.
 			}
 		}
@@ -172,12 +173,14 @@ public class GeneratorLearner {
 		for (String word : table.keySet()) // Divide columns by the corresponding `total` to get probabilities and save them in `conditionalProbTable`.
 		{
 			HashMap<TTRRecordType, Integer> row = table.get(word);
+			HashMap<TTRRecordType, Double> probRow = new HashMap<TTRRecordType, Double>();
 			for (TTRRecordType rt : row.keySet()) {
 				Double prob = ((double) row.get(rt)) / total.get(rt); // do I need to do casting?
-				conditionalProbTable.get(word).put(rt, prob); // is this right?
+				probRow.put(rt, prob);
 			}
+			probTable.put(word, probRow);
 		}
-		return conditionalProbTable;
+		return probTable;
 	}
 	
 	/**
