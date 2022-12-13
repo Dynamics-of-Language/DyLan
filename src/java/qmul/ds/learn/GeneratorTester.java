@@ -9,6 +9,7 @@
 package qmul.ds.learn;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
@@ -35,7 +36,7 @@ public class GeneratorTester
     }
 
 
-    public static void testNormaliseCountTable()
+    public static HashMap<String, HashMap<TTRRecordType, Double>> testNormaliseCountTable()
     {
         HashMap<String, HashMap<TTRRecordType, Integer>> myCountTable = new HashMap<String, HashMap<TTRRecordType, Integer>>();
         // TODO is there a better way to make this more compact?
@@ -61,12 +62,12 @@ public class GeneratorTester
                 System.out.print(Double.toString(row.get(rt)) + ",  ");
             System.out.println("\n");
         }
+        return myProbTable;
     }
 
 
-    public void testSaveModelToFile()
-    {
-
+    public static void testSaveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> table) throws IOException {
+        g.saveModelToFile(table);
     }
 
     public void testLearn()
@@ -75,9 +76,9 @@ public class GeneratorTester
     }
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws IOException {
 //        testComputeRInc(); // Seems to work fine.
-        testNormaliseCountTable();
+//        testNormaliseCountTable();
+        testSaveModelToFile(testNormaliseCountTable());
     }
 }
