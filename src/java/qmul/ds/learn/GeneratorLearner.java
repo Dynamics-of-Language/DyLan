@@ -3,17 +3,10 @@
  */
 package qmul.ds.learn;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -182,43 +175,66 @@ public class GeneratorLearner {
 		}
 		return probTable;
 	}
-	
+
 	/**
-	 * Saves the `conditionalProbTable` to a csv file.
-	 * 
-	 * @param model					  Same as `conditionalProbTable`.
+	 * Saves a HashMap<String, HashMap<TTRRecordType, Double>> to a csv file.
+	 *
+	 * @param model The 2D HashMap to be saved.
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static void saveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> model)
+	public void saveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> model)
 			throws FileNotFoundException, IOException // eclipse recommended it so I said yes.
 	{
-		String modelPath = "resource/2022-DSProbNLG/model_properties".replaceAll("/", // ?
-				Matcher.quoteReplacement(File.separator));
-		// TODO create file if it wasn't there
 		// TODO write features: WORDS, feature1, feature2, ...
 		// TODO Make more efficient
-		for (HashMap<TTRRecordType, Double> row : model.values())
+		// First, clear the file if it was already there. RF: https://stackoverflow.com/questions/6994518/how-to-delete-the-content-of-text-file-without-deleting-itself
+		File f = new File(grammarPath + "model.csv");
+		if (f.exists() && !f.isDirectory()) {
+			PrintWriter writer = new PrintWriter(f);
+			writer.print("");
+			writer.close();
+		}
+		// Writing features row
+		ArrayList<String> featuresStr = new ArrayList<String>();
+		for (String wo: model.keySet()){ // This is not clean code.
+			HashMap<TTRRecordType, Double> row = model.get(wo);
+			ArrayList<TTRRecordType> features = new ArrayList<>(row.keySet());
+			for (TTRRecordType feature : features) // todo make this more efficient
+				featuresStr.add(feature.toString());
+			break;
+		}
+		String strFeatures = String.join(",", featuresStr);
+		strFeatures = "WORDS\\FEATURES" + "," + strFeatures + "\n";
+		FileWriter writer1 = new FileWriter(grammarPath + "model.csv", true);
+		writer1.write(strFeatures);
+		writer1.close();
+
+		// Writing words and probs
+		for (var entry : model.entrySet()) // REF: https://stackoverflow.com/questions/46898/how-do-i-efficiently-iterate-over-each-entry-in-a-java-map
 		{
+			String word = entry.getKey();
+			HashMap<TTRRecordType, Double> row = entry.getValue();
 			ArrayList<Double> probs = new ArrayList<>(row.values());
 			ArrayList<String> probsStr = new ArrayList<String>();
-			for (Double prob: probs) {probsStr.add(Double.toString(prob));} // make this more efficient
-			
-			// convert the list to a string joined by comma
+			for (Double prob : probs) // todo make this more efficient
+				probsStr.add(Double.toString(prob));
+
+			// Converts the list to a string joined by comma
 			String strRow = String.join(",", probsStr); //REF: https://mkyong.com/java/java-how-to-join-list-string-with-commas/
+			strRow = word + "," + strRow;
 			// write to file
-			try {
-			      FileWriter writer = new FileWriter("model.csv");
-			      writer.write(strRow);
-			      writer.write(System.lineSeparator()); // REF: https://stackoverflow.com/questions/18549704/create-a-new-line-in-javas-filewriter
-			      writer.close();
-			      System.out.println("Successfully wrote row the file."); // add logs + add what row!
-			    } catch (IOException e) {
-			      System.out.println("An error occurred.");
-			      e.printStackTrace();
-			    }
+			try { // Do I need to use BufferedWriter as in https://stackoverflow.com/a/1625263/6306387 ?
+				FileWriter writer = new FileWriter(grammarPath + "model.csv", true);
+				writer.write(strRow);
+				writer.write(System.lineSeparator()); // To go to next line. REF: https://stackoverflow.com/questions/18549704/create-a-new-line-in-javas-filewriter
+				writer.close();
+				System.out.println("Successfully wrote row the file."); // todo add logs + add what row!
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
 		}
-		
 	}
 
 	/**
