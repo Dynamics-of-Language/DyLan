@@ -32,7 +32,8 @@ IF		ty(e>t)
         ¬<\/0>Ex.x
         ¬<\/1>Ex.x
 THEN	delete(?Ex.fo(x))
-		v_inran_content(PRED)
+		rdfput(G1^{var:e a schema:Action, dsrdf:Head; rdfs:label "PRED"@en; schema:agent var:G1.})
+		put(!)
 ELSE	abort
 
 v_intran_ing(PRED,TENSE,PERSON)

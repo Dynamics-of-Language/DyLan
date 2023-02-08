@@ -70,7 +70,8 @@ public class RDFGraph extends RDFFormula {
 	public static final String DSRDF_PREFIX = "@prefix dsrdf: <" + DSRDF_NAMESPACE + ">";
 	public static final String VAR_PREFIX = "@prefix var: <" + RDFVariable.VAR_NAMESPACE + ">";
 
-	public static final String DEFAULT_RDF_PREFIX = "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ."
+	public static final String DEFAULT_RDF_PREFIX = "@prefix not: <http://dsrdf.com/ontology/!> ." + 
+	"@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ."
 			+ "@prefix schema: <http://schema.org/> ." + DSRDF_PREFIX + VAR_PREFIX;
 
 	public RDFGraph(Model rdfm) {
