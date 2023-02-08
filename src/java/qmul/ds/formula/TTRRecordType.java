@@ -578,50 +578,76 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	}
 
-
+	/**
+	 * 
+	 * @param r
+	 * @return
+	 */
+	public TTRRecordType subtract(TTRRecordType r, HashMap<Variable, Variable> map)
+	{
+		//HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+		TTRRecordType maxSuper = this.mostSpecificCommonSuperType(r, map);
+		
+		List<TTRField> superTypeFields = maxSuper.getFields();
+		TTRRecordType result = new TTRRecordType(this);
+		for(int i=superTypeFields.size()-1; i>=0;i--)
+		{
+			TTRField cur = superTypeFields.get(i);
+			if (this.getDependents(cur).isEmpty())
+			{
+				result.remove(cur.getLabel());
+				continue;
+			}
+			
+			if (cur.isManifest())
+			{
+				
+				result.getField(cur.getLabel()).setType(null);		
+			}
+			
+		}	
+		
+		return result;
+		
+	}
 	
 	public static void main(String[] a) {
 
-		TTRRecordType st = TTRRecordType.parse("[e1:es|p4==make(e1):t|x:e|pred1==reservation(x):cn|p1==obj(e1,x):t|x2:e|p2==restaurant(x2):t|p3==of(x,x2):t]");
+		TTRRecordType r1 = TTRRecordType.parse("[e1==go:es|x1==you:e|p==subj(e1,x1):t]");
 		
-		TTRRecordType syn = TTRRecordType.parse("[e1:es|p2==book(e1):t|x:e|p==table(x):cn|p1==obj(e1,x):t]");
+		TTRRecordType r2 = TTRRecordType.parse("[x==you:e|p3==person(x):t|e2==go:es]");
+		
+		// Maximimally specific supertype (r1, r2) == [x==you:e|e2:es|p1==subj(e2,x)]
+		// map: {x1=x, e1=e2, p=p1}
+		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+		
+		System.out.println("subtracted:"+r1.subtract(r2,map));
+		
+		System.out.println("map is:"+map);
+		
+		
+		//System.out.println(r1.mostSpecificCommonSuperType(r2, map));
+		
+		
+		//System.out.println("Map is: " + map);
+		
+		
+		
+		//TTRRecordType r2 = TTRRecordType.parse("[e1:es|p2==here(e1):t]");
+		
+		//TTRRecordType removedHead = r1.removeHead();
+		
+		//Pair<TTRRecordType, TTRRecordType> result = r1.minus(r2);
+		
+		//System.out.println(result.first);
+		//System.out.println(result.second);
+		
+		
+		
+		//System.out.println(r1.subsumes(r2));
+		//System.out.println(r2.subsumes(r1));
+		
 
-		
-
-		//TTRRecordType st = TTRRecordType.parse("[e10:es|p4==make(e10):t|x4:e|x:e|p1==obj(e10,x):t|p3==subj(e10,x4):t]");
-		
-		//TTRRecordType syn = TTRRecordType.parse("[e1:es|x:e|x1:e|p1==make(e1,x,x1):t]");
-
-		
-		
-		
-		Map<Variable,Variable> map=new HashMap<Variable,Variable>();
-		map.put(new Variable("e1"), new Variable("e1"));
-//		map.put(new Variable("e10"), new Variable("e1"));
-//		map.put(new Variable("x4"), new Variable("x"));
-//		map.put(new Variable("x"), new Variable("x1"));
-//		
-		InteractiveContextParser parser=new InteractiveContextParser("resource/2016-english-ttr-restaurant-search");
-		Utterance utt=new Utterance("usr: I want to make a restaurant reservation in london.");
-		parser.parseUtterance(utt);
-		
-		TTRRecordType sem=TTRRecordType.parse("[x1 : e|e4==make : es|head==e4 : es|p8==subj(e4, x1) : t]");
-		//TTRRecordType.parse("[x1: e|p25==usr(x1):t|e4 : es|p21==want(e4):t|e6 : es|p22==make(e6):t|x7 : e|x6 : e|x9 : e|p23==london(x9):t|p6==pres(e4) : t|head==e4 : es|pred2==reservation(x7) : cn|p14==restaurant(x6) : t|p20==loc(x9) : t|"
-//				+ "p7==obj(e4, e6) : t|p8==subj(e4, x1) : t|p10==obj(e6, x7) : t|p11==subj(e6, x1) : t|p15==of(x7, x6) : t|p19==in(e4, x9) : t]");
-				//parser.getFinalSemantics();
-		
-		List<TTRRecordType> components=sem.decompose();
-		
-		for(TTRRecordType component:components)
-		{
-			System.out.println(component);
-		}
-		
-//		
-//		System.out.println("sem:"+sem);
-//		System.out.println("st:"+st);
-//		System.out.println("syn:"+syn);
-//		System.out.println("---------\n st replaced by syn in sem:\n"+sem.replaceSuperTypeWith(st, syn, map));
 		
 	}
 	
@@ -1388,13 +1414,23 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	}
 
-	public TTRRecordType makeUnmanifest(TTRField f) {
-
-		if (!fields.contains(f))
-			throw new IllegalArgumentException("Trying make a non-existant field:" + f + " unfanifest in" + this);
-		TTRRecordType copy = new TTRRecordType(this);
-		copy.getField(f.getLabel()).setType(null);
-		return copy;
+//	public TTRRecordType makeUnmanifest(TTRField f) {
+//
+//		if (!fields.contains(f))
+//			throw new IllegalArgumentException("Trying make a non-existant field:" + f + " unfanifest in" + this);
+//		TTRRecordType copy = new TTRRecordType(this);
+//		copy.getField(f.getLabel()).setType(null);
+//		return copy;
+//	}
+	
+	public void makeUnmanifest(TTRField f)
+	{
+		if (!this.fields.contains(f))
+			logger.error("non existant field:" + f);
+		
+		TTRField myF = record.get(f.getLabel());
+		
+		myF.setType(null);
 	}
 
 	
