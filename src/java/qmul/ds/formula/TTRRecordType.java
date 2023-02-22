@@ -583,8 +583,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		//so maxsupertype is in terms of labels of r here.
 		// System.out.println("MCS:"+maxSuperType);
 		// System.out.println("map:"+map);
-		System.out.println(mcs);
-		System.out.println(map);
+		//System.out.println(mcs);
+		//System.out.println(map);
 
 		List<TTRField> mcsFields = mcs.getFields();
 		TTRRecordType result = new TTRRecordType(this);
@@ -595,7 +595,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 			
 			TTRField curMCSField = mcsFields.get(i);
-			System.out.println("Processing field in mcs:"+curMCSField);
+			//System.out.println("Processing field in mcs:"+curMCSField);
 			Variable labelInThis = map.get(curMCSField.getLabel());
 			TTRField fieldInThis = result.getField(labelInThis);
 			
