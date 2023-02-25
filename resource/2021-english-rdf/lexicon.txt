@@ -12,17 +12,25 @@ liked                         v_tran_fin                    like                
 liked                         v_tran_pas                    like                          inf                           per  
 catch                         v_tran_fin                   catch                          pres							per
 catches                       v_tran_fin                   catch                          pres							s3
+catch                         v_intran_inf                   catch                          inf							per
+caught						  v_tran_fin				    catch							past						per
 walk                          v_intran_fin                   walk                          pres							per
 walks	                      v_intran_fin                   walk                          pres							s3
+walk                          v_intran_inf                    walk                          inf                           per
+walked                         v_intran_fin                   walk                          past                          per
 will                          v_aux_inf                     will                          inf                          	per
 runs						  v_intran_fin					run							  pres                          s3
+run                          v_intran_inf                    run                          inf                           per
 ran						      v_intran_fin					run							  past                          per
 dearly						  manner_adv					dear
 quickly						  manner_adv					quick
 gracefully					  manner_adv					graceful
 slowly						  manner_adv					slow
-cat						      count							cat					       s3						obj
-dog						      count							dog					       s3						obj
+yesterday						  manner_adv			    yesterday
+cat						      count							cat					       s3					        	obj
+dog						      count							dog					       s3		        				obj
+cats                          count_plur                          cat                        plur                             loc
+dogs                          count_plur                          dog                        plur                             loc
 a                             det_indef                     eps
 <rt>				  		  release_turn					null
 with						  prep_es						with
@@ -45,4 +53,7 @@ good						  adj							good
 bad							  adj							bad
 //who                           pron_whq                      per
 who                           pron_whrel                    per
-
+which						  pron_whrel					per
+that						  pron_whrel					per
+//is                            copula                    	pres                          s3
+//are						      copula						past						  plur

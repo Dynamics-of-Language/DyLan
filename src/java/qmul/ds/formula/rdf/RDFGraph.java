@@ -43,7 +43,7 @@ import qmul.ds.tree.Tree;
  *         Variables don't have DS types, therefore the following conventions
  *         should be followed, otherwise some funcionality might not work:
  * 
- *         Variables of type e: x1, x2, x3, ... Variables of type es: e1, e2,
+ *         Variables of ds type e: x1, x2, x3, ... Variables of ds type es: e1, e2,
  *         e3, ....
  * 
  * 
@@ -200,7 +200,7 @@ public class RDFGraph extends RDFFormula {
 			RDFVariable headThis = this.getHead();
 
 			// Heads of the same DS type should collapse, so:
-			// 		first substitute head of g, with head of this
+			// first substitute head of g, with head of this
 			// If not of same DS type, then remove head of the argument (g) - head comes
 			// from left hand side conjunct (this RDFGraph)
 
@@ -380,8 +380,11 @@ public class RDFGraph extends RDFFormula {
 
 					fresh = fresh.substitute(var, newVar);
 
-				} else
-					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
+				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
+					continue;
+				else {
+					throw new IllegalArgumentException("Illegal Variable:" + var);
+				}
 
 				done.add(var);
 
@@ -401,9 +404,8 @@ public class RDFGraph extends RDFFormula {
 			Statement stmt = iter.next();
 			Resource subj = stmt.getSubject();
 
-			// Assuming every variable is the subject of some statement
+			// Assuming every variable is the rdf subject of some rdf statement
 			// might turn out to be a bad assumption
-			// String subjS = subj.toString();
 
 			if (RDFVariable.isRDFVariable(subj)) {
 				RDFVariable var = new RDFVariable(subj);
@@ -424,7 +426,9 @@ public class RDFGraph extends RDFFormula {
 
 					fresh = fresh.substitute(var, newVar);
 
-				} else
+				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
+					continue;
+				else
 					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
 
 				done.add(var);
