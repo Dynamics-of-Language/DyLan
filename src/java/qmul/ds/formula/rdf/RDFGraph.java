@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Selector;
@@ -24,6 +25,7 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.ResourceUtils;
+import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
 import qmul.ds.formula.Formula;
@@ -60,6 +62,7 @@ public class RDFGraph extends RDFFormula {
 	private static final long serialVersionUID = 1L;
 	protected Model rdfModel;
 
+	protected static Logger logger = Logger.getLogger(RDFGraph.class);
 	/**
 	 * Assuming that RDFGraph is specified in Turtle, and that the spec is enclosed
 	 * in {}
@@ -279,10 +282,146 @@ public class RDFGraph extends RDFFormula {
 		return 0;
 	}
 
-	@Override
-	public boolean subsumesMapped(Formula other, HashMap<Variable, Variable> map) {
-		// TODO
+	/**
+	 * We have this helper method because Statement is a jena class, and subclassing it etc. like TTRField with all these
+	 * useful methods, like subsumes, is just too much work ....
+	 * @param s1
+	 * @param s2
+	 * @param map
+	 * @return true if s1 subsumes s2, and map will contain the mapping constructed
+	 */
+	
+
+	public static boolean statementSubsumes(Statement s1, Statement s2, HashMap<Variable, Variable> map)
+	{
+		//the Predicate should match
+		if (!s1.getPredicate().equals(s2.getPredicate()))
+			return false;
+		//we know the subject is always going to be a variable
+		RDFVariable s1SubjVar = new RDFVariable(s1.getSubject());
+		RDFVariable s2SubjVar = new RDFVariable(s2.getSubject());
+		
+		if (map.containsKey(s1SubjVar))
+		{
+			if (!map.get(s1SubjVar).equals(s2SubjVar))
+				return false;
+		}
+		
+		//need to remember to add to map, but only if full subsumption is ultimately successful 
+		
+		
+		//if we are here, we have subsumption for the subject
+		//now check the object
+		
+		
+		
+		RDFNode s1Obj = s1.getObject();
+		RDFNode s2Obj = s2.getObject();
+		
+		if (RDFVariable.isRDFVariable(s1Obj))
+		{
+			RDFVariable s1ObjVar = new RDFVariable((Resource)s1Obj);
+			//of the object of s2 is not also a variable, then return false
+			if (!RDFVariable.isRDFVariable(s2Obj))
+				return false;
+			
+			RDFVariable s2ObjVar = new RDFVariable((Resource)s2Obj);
+			
+			
+			if (map.containsKey(s1ObjVar))
+			{
+				if (!map.get(s1ObjVar).equals(s2ObjVar))
+					return false;
+						
+			}
+			else
+				map.put(s1ObjVar, s2ObjVar);
+			
+			//remember to also add the subj map
+			map.put(s1SubjVar, s2SubjVar);
+			return true;
+	
+			
+		}
+		else
+		{
+			//if s1Obj is not a variable, then we need equality for subsumption
+			//logger.debug("checking "+s1Obj+" equals "+s2Obj);
+			if (s1Obj.equals(s2Obj))
+			{
+				map.put(s1SubjVar, s2SubjVar);
+				return true;
+			}
+			return false;
+		}
+		
+		
+		
+	}
+	
+	
+	private boolean subsumesMapped(RDFGraph other, StmtIterator iter, HashMap<Variable, Variable> map)
+	{
+		
+		//when we are here, we have already mapped all the triples in this up to and excluding iter.next()
+		//with the current mapping, map. 
+		
+		//if iter doesn't have any more triples, means we have managed to map everything
+		//return true
+		if (!iter.hasNext())
+			return true;
+		
+		//if not, more to do.
+		
+		Statement curTriple = iter.next();
+		logger.debug("checking subsumption of:"+curTriple);
+		Property predicate = curTriple.getPredicate();
+		RDFVariable subjVarInThis = new RDFVariable(curTriple.getSubject());
+		
+		StmtIterator matchingInOther = other.rdfModel.listStatements(new SimpleSelector(null, predicate, (RDFNode) null));
+		HashMap<Variable,Variable> copy = new HashMap<Variable, Variable>(map);
+		
+		
+		while(matchingInOther.hasNext())
+		{
+			//iterating over all triples in other that match curTriple
+			//for each, call subsumesMapped(other, iter, map) recursively
+			
+			//first need to add to map
+			Statement tripleInOther = matchingInOther.next();
+			
+			//check to see if this triple is subsumed by curTriple
+			
+			if (RDFGraph.statementSubsumes(curTriple, tripleInOther, map))
+			{
+				logger.debug("Subsumed " + tripleInOther);
+				logger.debug("map is now:" + map);
+				
+				if (subsumesMapped(other, iter, map))
+					return true;
+				
+				logger.debug("Failed");
+				map.clear();
+				map.putAll(copy);
+				
+				
+			}
+			
+		}
+		
 		return false;
+		
+	}
+	
+	@Override
+	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map) {
+		
+		if (!(o instanceof RDFGraph))
+			return false;
+		
+		RDFGraph other = (RDFGraph)o;
+		
+		return subsumesMapped(other, this.rdfModel.listStatements(), map);
 	}
 
 	protected String removePrefix(String turtle) {
@@ -480,29 +619,50 @@ public class RDFGraph extends RDFFormula {
 		return new Dimension(maxW, height);
 	}
 
+	
 	public static void main(String args[]) {
 
-		String putS = "{var:e rdfs:label \"put\"@en;"
-				+ "event:e1 var:e1;"
-				+ "event:e2 var:e2;"
-				+ "event:e3 var:e3;"
-				+ "event:e4 var:e4 ."
-				+ "var:e1 a dsrdf:Event;"
-				+ "dsrdf:has_location var:x24;"
-				+ "dsrdf:theme var:x51 ."
-				+ "var:e2 a dsrdf:Event;"
-				+ "dsrdf:agent var:x2;"
-				+ "dsrdf:cause var:e3 ."
-				+ "var:e3 a dsrdf:Process;"
-				+ "dsrdf:theme var:x51;"
-				+ "dsrdf:not_has_location var:x24;"
-				+ " dsrdf:motion var:x56 ."
-				+ "var:e4 a dsrdf:Event;"
-				+ "}";
+//		String putS = "{var:e rdfs:label \"put\"@en;"
+//				+ "event:e1 var:e1;"
+//				+ "event:e2 var:e2;"
+//				+ "event:e3 var:e3;"
+//				+ "event:e4 var:e4 ."
+//				+ "var:e1 a dsrdf:Event;"
+//				+ "dsrdf:has_location var:x24;"
+//				+ "dsrdf:theme var:x51 ."
+//				+ "var:e2 a dsrdf:Event;"
+//				+ "dsrdf:agent var:x2;"
+//				+ "dsrdf:cause var:e3 ."
+//				+ "var:e3 a dsrdf:Process;"
+//				+ "dsrdf:theme var:x51;"
+//				+ "dsrdf:not_has_location var:x24;"
+//				+ " dsrdf:motion var:x56 ."
+//				+ "var:e4 a dsrdf:Event;"
+//				+ "}";
+//		
 		
-		RDFGraph putG = new RDFGraph(putS);
+		RDFGraph G1 =  new RDFGraph("{"
+				+ "var:e dsrdf:agent var:x3; "
+				+ "rdfs:label \"go\"@en; "
+				+ "dsrdf:theme var:x1 ."
+				+ "var:x1 a dsrdf:Theme;"
+				+ "rdfs:label \"mary\"@en .}");
 		
-		System.out.println(putG);
+		RDFGraph G2 = new RDFGraph("{"
+				+ "var:e7 dsrdf:agent var:x12;"
+				+ "rdfs:label \"go\"@en ."
+				+ "var:e2 dsrdf:agent var:x6; "
+				+ "rdfs:label \"come\"@en; "
+				+ "dsrdf:theme var:x7 ."
+				+ "var:x7 rdfs:label \"mary\"@en;"
+				+ "a dsrdf:Theme .}");
+		
+		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+		
+		
+		System.out.println(G1.subsumesMapped(G2, map));
+		
+		System.out.println(map);
 
 		
 

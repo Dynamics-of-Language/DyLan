@@ -296,9 +296,11 @@ public class WordHypothesisBase {
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f+"-top-"+topN));
 		
 		Lexicon lex = this.getLearnedLexicon(topN);
+		
 		out.writeObject(lex);
 		out.close();
 		lex.writeToTextFile(f + "-top-"+topN +".txt");
+		
 	}
 
 	private void loadPriorIntoCur(Collection<Word> sw) {

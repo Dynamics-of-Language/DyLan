@@ -3,6 +3,7 @@
  */
 package qmul.ds.formula.rdf;
 
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
 import qmul.ds.formula.Variable;
@@ -26,6 +27,7 @@ public class RDFVariable extends Variable {
 	public RDFVariable(Variable v)
 	{
 		super(VAR_NAMESPACE + v.getName());
+		
 	}
 	
 	public RDFVariable(String var) {		
@@ -59,7 +61,7 @@ public class RDFVariable extends Variable {
 		return this.name;
 	}
 	
-	public static boolean isRDFVariable(Resource r)
+	public static boolean isRDFVariable(RDFNode r)
 	{
 		return r.toString().startsWith(VAR_NAMESPACE);
 		

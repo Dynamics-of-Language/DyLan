@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.ttr.TTRRecordType;
 import qmul.ds.type.DSType;
@@ -24,6 +26,7 @@ public abstract class RDFFormula extends Formula {
 	 */
 	private static final long serialVersionUID = -2738227532139543921L;
 
+	protected static Logger logger = Logger.getLogger(RDFFormula.class);
 	
 	/**
 	 * @param f1
