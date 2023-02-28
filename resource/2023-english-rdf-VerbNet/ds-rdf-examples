@@ -1,0 +1,37 @@
+
+put-9.1, simplified.
+
+
+var:e rdfs:label "put"@en;
+  a dsrdf:Head;
+  event:e1 var:e1;
+  event:e2 var:e2;
+  event:e3 var:e3;
+  event:e4 var:e4 .
+
+ 
+
+var:e1 a dsrdf:Event;
+  dsrdf:has_location var:x1;
+  dsrdf:theme var:G1 .
+
+ 
+
+var:e2 a dsrdf:Event;
+  dsrdf:agent var:G2;
+  dsrdf:cause var:e3 .
+
+ 
+
+var:e3 a dsrdf:Process;
+  dsrdf:theme var:G1;
+  dsrdf:not_has_location var:x1;
+  dsrdf:motion var:x4 .
+
+ 
+
+var:e4 a dsrdf:Event;
+  dsrdf:has_location var:x3;
+  dsrdf:theme var:G1 .
+
+ 

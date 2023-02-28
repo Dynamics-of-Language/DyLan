@@ -67,12 +67,14 @@ public class RDFGraph extends RDFFormula {
 	public static final String RDFGraphPattern = "\\{((.|\\R)+)\\}";
 
 	public static final String DSRDF_NAMESPACE = "http://dsrdf.com/ontology/";
-	public static final String DSRDF_PREFIX = "@prefix dsrdf: <" + DSRDF_NAMESPACE + ">";
-	public static final String VAR_PREFIX = "@prefix var: <" + RDFVariable.VAR_NAMESPACE + ">";
+	public static final String DSRDF_EVENT = "@prefix event: <"+ DSRDF_NAMESPACE + "event/> .";
+	public static final String DSRDF_PREFIX = "@prefix dsrdf: <" + DSRDF_NAMESPACE + "> .";
+	public static final String VAR_PREFIX = "@prefix var: <" + RDFVariable.VAR_NAMESPACE + "> .";
+	
 
 	public static final String DEFAULT_RDF_PREFIX = "@prefix not: <http://dsrdf.com/ontology/!> ." + 
 	"@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ."
-			+ "@prefix schema: <http://schema.org/> ." + DSRDF_PREFIX + VAR_PREFIX;
+			+ "@prefix schema: <http://schema.org/> ." + DSRDF_PREFIX + VAR_PREFIX + DSRDF_EVENT;
 
 	public RDFGraph(Model rdfm) {
 		this.rdfModel = rdfm;
@@ -480,33 +482,29 @@ public class RDFGraph extends RDFFormula {
 
 	public static void main(String args[]) {
 
-		String jLikesJ = "{var:x " + "a schema:Person;" + "rdfs:label \"Jane\"@en ." + "var:y " + "a schema:Person;"
-				+ "rdfs:label \"John\"@en ." + "var:e " + "a schema:Action;" + "rdfs:label \"like\"@en;"
-				+ "a dsrdf:Head;" + "schema:agent var:x;" + "schema:object var:y.}";
+		String putS = "{var:e rdfs:label \"put\"@en;"
+				+ "event:e1 var:e1;"
+				+ "event:e2 var:e2;"
+				+ "event:e3 var:e3;"
+				+ "event:e4 var:e4 ."
+				+ "var:e1 a dsrdf:Event;"
+				+ "dsrdf:has_location var:x24;"
+				+ "dsrdf:theme var:x51 ."
+				+ "var:e2 a dsrdf:Event;"
+				+ "dsrdf:agent var:x2;"
+				+ "dsrdf:cause var:e3 ."
+				+ "var:e3 a dsrdf:Process;"
+				+ "dsrdf:theme var:x51;"
+				+ "dsrdf:not_has_location var:x24;"
+				+ " dsrdf:motion var:x56 ."
+				+ "var:e4 a dsrdf:Event;"
+				+ "}";
+		
+		RDFGraph putG = new RDFGraph(putS);
+		
+		System.out.println(putG);
 
-		String jane = "{var:x a schema:Person, dsrdf:Head; " + "rdfs:label \"Jane\"@en .}";
-
-		RDFGraph janeGraph = new RDFGraph(jane);
-
-		String run = "G1^{var:e a schema:Action, dsrdf:Head; rdfs:label \"PRED\"@en; schema:agent var:G1.}";
-
-		RDFLambdaAbstract runG = (RDFLambdaAbstract) Formula.create(run);
-
-		String pres = "{var:e5 a dsrdf:Head; dsrdf:tense dsrdf:pres .}";
-
-		RDFGraph presentTense = new RDFGraph(pres);
-
-		String cat = "G1^{var:G1 a dsrdf:Head, dsrdf:cat.}";
-		String entity = "{var:x a dsrdf:Head, schema:Thing.}";
-		String a = "G1^{var:G1 a dsrdf:Head.}";
-
-		RDFGraph entG = new RDFGraph(entity);
-		RDFLambdaAbstract catfunctor = (RDFLambdaAbstract) Formula.create(cat);
-		RDFLambdaAbstract aFunctor = (RDFLambdaAbstract) Formula.create(a);
-
-		System.out.println(aFunctor.betaReduce(catfunctor.betaReduce(entG)));
-
-		System.out.println(runG.conjoin(presentTense));
+		
 
 		// System.out.println(runG.betaReduce(janeGraph));
 		// System.out.println("before collapse:\n"+ janeGraph);

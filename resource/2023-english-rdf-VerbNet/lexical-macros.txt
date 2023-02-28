@@ -1,0 +1,120 @@
+//WARNING: MUST use brackets with all infix operators, and space between operator and arguments compulsory 
+// e.g. (x & y)  (x overlap y) (z < x) etc...
+
+	
+event_restrictor(past)
+	rdfput({var:e1 a dsrdf:Head; dsrdf:tense dsrdf:past.})
+
+
+event_restrictor(pres)
+	rdfput({var:e1 a dsrdf:Head; dsrdf:tense dsrdf:pres.})
+
+event_restrictor(future)
+	rdfput({var:e1 a dsrdf:Head; dsrdf:tense dsrdf:future.})
+
+event_restrictor(modal)
+	rdfput({var:e1 a dsrdf:Head, dsrdf:modal.})
+
+event_restrictor(should)
+	rdfput({var:e1 a dsrdf:Head, dsrdf:should.})
+
+event_restrictor(imper)
+	rdfput({var:e1 a dsrdf:Head, dsrdf:imper.})
+
+v_intran_content(PRED)
+	rdfput(G1^{var:e a schema:Action, dsrdf:Head; rdfs:label "PRED"@en; schema:agent var:G1.})
+	put(!)
+
+
+v_tran_content(PRED)
+	make(\/1)
+	go(\/1)
+	rdfput(G1^G2^{var:e a schema:Action, dsrdf:Head; rdfs:label "PRED"@en; schema:agent var:G2; schema:object var:G1.})
+	put(ty(e>(e>t)))
+	put(!)
+	go(/\1)
+	make(\/0)
+	go(\/0)
+	put(?ty(e))
+	
+v_put_9.1(PRED)
+	make(\/1)
+	go(\/1)
+	rdfput(G1^G2^{var:e rdfs:label "PRED"@en; a dsrdf:Head; event:e1 var:e1; event:e2 var:e2; event:e3 var:e3; event:e4 var:e4 . var:e1 a dsrdf:Event; dsrdf:has_location var:x1; dsrdf:theme var:G1 . var:e2 a dsrdf:Event; dsrdf:agent var:G2; dsrdf:cause var:e3 . var:e3 a dsrdf:Process; dsrdf:theme var:G1; dsrdf:not_has_location var:x1; dsrdf:motion var:x4 .})
+	put(ty(e>(e>t)))
+	put(!)
+	go(/\1)
+	make(\/0)
+	go(\/0)
+	put(?ty(e))	
+
+
+aux_content(can)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(modal)
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))	
+		put(?Ex.fo(x))
+
+aux_content(should)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(should)
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))	
+		put(?Ex.fo(x))
+
+
+aux_content(will)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(future)
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))	
+		put(?Ex.fo(x))
+		
+aux_content(would)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(pres)
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))	
+		put(?Ex.fo(x))
+
+aux_content(did)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(past)
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))		
+		put(?Ex.fo(x))
+	
+aux_content(do)
+		put(?+eval)
+		make(\/L)
+		go(\/L)
+		put(ty(t))
+		event_restrictor(pres)
+		go(/\L)
+		put(ty(e>t))
+		delete(?ty(e>t))		
+		put(?Ex.fo(x))
+
+
+		
