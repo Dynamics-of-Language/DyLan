@@ -27,6 +27,7 @@ import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.RevokedWord;
 import qmul.ds.dag.UtteredWord;
+import qmul.ds.formula.Formula;
 import qmul.ds.formula.FormulaMetavariable;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
@@ -527,11 +528,34 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	
 	public abstract List<UtteredWord> generateTo(TTRFormula goal);
 
-	public abstract boolean parse();
+	/** successive calls to this after adding a word on the stack will step through the different parses of
+	 * a (partial) sentence  
+	 * 
+	 * @param goal
+	 * @return true if parse is successful
+	 */
+	public boolean parse()
+	{
+		return parse((Formula)null);
+	}
+	
+	/** Used in generation. Like parse() but always checks that any update to the dag subsumes the provided formula.
+	 * No new tuples are added unless they subsume the goal. 
+	 * 
+	 * @param goal
+	 * @return true if successfully parsed and subsumed goal. False if unsuccessful; any interim changes to the dag 
+	 * will be backtracked / undone. 
+	 */
+	public abstract boolean parse(Formula goal);
 
 	
 
 	public abstract DAG<T, E> parseWord(UtteredWord word);
+	
+	/**
+	 * Attempt to parse word in addition checking checking subsumption of goal. Returns null if unsuccessful. 
+	 */
+	public abstract DAG<T, E> generateWord(UtteredWord word, Formula goal);
 
 
 	

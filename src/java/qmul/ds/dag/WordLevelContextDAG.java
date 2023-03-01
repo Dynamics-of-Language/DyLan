@@ -284,7 +284,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 		// return null;
 		// }
 		SortedSet<GroundableEdge> edges = getOutEdgesForTraversal();
-		logger.info("edges:" + edges);
+		logger.debug("edges:" + edges);
 
 		for (GroundableEdge e : edges) {
 
@@ -292,11 +292,11 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 				continue;
 			markAllEdgesBelowAsUnseen(e);
 			markAllEdgesBelowAsNotInContext(e);
-			logger.info("Going forward first reset along: " + e);
+			logger.debug("Going forward first reset along: " + e);
 			e.traverse(this);
-			logger.info("now on" + getCurrentTuple());
+			logger.debug("now on" + getCurrentTuple());
 
-			logger.info("Depth is now:" + getDepth());
+			logger.debug("Depth is now:" + getDepth());
 			return e;
 
 		}
@@ -325,9 +325,15 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			logger.debug("Going forward first along: " + e.toDebugString());
 			if (e instanceof CompletionEdge) {
 
-			} else if (e.word().speaker().equals(DAGGenerator.myName))
-				wordStack.push(e.word());
-
+			} 
+//			else if (e.word().speaker().equals(DAGGenerator.agentName))
+//			{
+//				wordStack.push(e.word());
+//				System.out.println("pushing word on stack"+e.word);
+//				System.out.println("stack now:"+wordStack);
+//			}
+			//AE does not understand the point of the above, which was ruining the parse.
+			//commented out for now.
 			else if (!wordStack.isEmpty() && wordStack.peek().equals(e.word()))
 				wordStack().pop();
 			else if (e instanceof VirtualRepairingEdge) {
@@ -629,19 +635,22 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 			GroundableEdge backover = getActiveParentEdge();
 			if (backover.word() != null) {
-				if (backover.word().speaker().equals(DAGGenerator.myName)) {
-					if (!wordStack.peek().equals(backover.word()))
-						throw new IllegalStateException(
-								"top of stack is " + wordStack.peek() + " but edge is " + backover);
-
-					UtteredWord word = wordStack.pop();
-					logger.info("Backtrack: popped word off stack:" + word);
-					logger.debug("Backtrack: stack now:" + wordStack);
-				} else {
-					wordStack.push(backover.word());
-					logger.info("Backtrack: adding word to stack, now:" + backover.word());
-					logger.debug("Backtracked over:+ " + backover + "|stack now:" + wordStack);
-				}
+//				if (backover.word().speaker().equals(DAGGenerator.agentName)) {
+//					//AE@1 March 2023: I do not get this! why did I do this?
+//					//Why would I want to pop a word if I'm generating?!!!
+//					//Commenting this out for now
+//					if (!wordStack.peek().equals(backover.word()))
+//						throw new IllegalStateException(
+//								"top of stack is " + wordStack.peek() + " but edge is " + backover);
+//
+//					UtteredWord word = wordStack.pop();
+//					logger.info("Backtrack: popped word off stack:" + word);
+//					logger.debug("Backtrack: stack now:" + wordStack);
+//				} else {
+				wordStack.push(backover.word());
+				logger.info("Backtrack: adding word to stack:" + backover.word());
+				logger.debug("Backtracked over:+ " + backover + "|stack now:" + wordStack);
+				//}
 
 			}
 
