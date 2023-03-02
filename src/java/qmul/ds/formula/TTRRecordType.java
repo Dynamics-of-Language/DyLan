@@ -681,15 +681,27 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
 		TTRRecordType r1 = TTRRecordType
-				.parse("[r : [x2:e|p5==man(x2):t|p6==tall(x2):t|head==x2:e] | x1==iota(r.head,r) : e|e3==go : es|p2==subj(e3, x1) : t]");
-		TTRRecordType r2 = TTRRecordType
-				.parse("[r3 : [x3:e|p==man(x3):t|head==x3:e] | x==eps(r3.head,r3) : e|e2==go : es|p2==subj(e2, x) : t]");
+				.parse("[r : [x2:e|p5==man(x2):t|p6==tall(x2):t|head==x2:e] | x1==iota(r.head,r) : e|e3==go : es|p2==subj(e3, x1) : t|head==e3:es]");
 		
-		TTRRecordType r3 = TTRRecordType
-				.parse("[e3 : es|r : [x2 : e|head==x2 : e]|x1==iota(r.head, r) : e]");
-		TTRRecordType r4 = TTRRecordType
-				.parse("[x3:e|p==man(x3):t|head==x3:e]");
-		 
+	
+		
+		TTRRecordType r7 = TTRRecordType.parse("[x2:e|p5==man(x2):t|p6==tall(x2):t|head==x2:e]");
+		List<TTRRecordType> features = r1.decompose();
+//		
+		for(TTRRecordType r: features)
+			System.out.println(r);
+//		
+		
+		
+		
+//		TTRRecordType r2 = TTRRecordType
+//				.parse("[r3 : [x3:e|p==man(x3):t|head==x3:e] | x==eps(r3.head,r3) : e|e2==go : es|p2==subj(e2, x) : t]");
+//		
+//		TTRRecordType r3 = TTRRecordType
+//				.parse("[e3 : es|r : [x2 : e|head==x2 : e]|x1==iota(r.head, r) : e]");
+//		TTRRecordType r4 = TTRRecordType
+//				.parse("[x3:e|p==man(x3):t|head==x3:e]");
+//		 
 
 //		TTRRecordType r2 = TTRRecordType.parse("[r2 : [x5:e|head==x5:e] " + "|x2 : e|e1 : es|p3==subj(e1, x2) : t]");
 //		TTRRecordType r1 = TTRRecordType.parse("[x2:e|head==x2:e]");
@@ -700,14 +712,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 //		System.out.println("-----------------------");
 //		
 //		
-		System.out.println("this:" + r1);
-		System.out.println("other:" + r2);
-		System.out.println("mcs: " + r1.mostSpecificCommonSuperType(r2, map));
-		System.out.println("map is: " + map);
-		map.clear();
-		
-		System.out.println("this minus other is: " + r1.subtract(r2, map));
-		System.out.println("map is: " + map);
+//		System.out.println("this:" + r1);
+//		System.out.println("other:" + r2);
+//		System.out.println("mcs: " + r1.mostSpecificCommonSuperType(r2, map));
+//		System.out.println("map is: " + map);
+//		map.clear();
+//		
+//		System.out.println("this minus other is: " + r1.subtract(r2, map));
+//		System.out.println("map is: " + map);
 
 //		 System.out.println("r1:" + r1);
 		// System.out.println("r2:" + r2);
@@ -1190,12 +1202,29 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		TTRRecordType sorted = this.sortFieldsBySpecificity();
 
+
 		for (int i = sorted.fields.size() - 1; i >= 0; i--) {
 			TTRField f = sorted.fields.get(i);
 			if (sorted.head() != null && f == sorted.head())
 				continue;
 
 			if (f.getType() != null) {
+				
+				if (f.getDSType() == null)
+				{
+					//we are looking at a restrictor field. decompose it recursively, then embed.
+					TTRRecordType restrictor = (TTRRecordType)f.getType();
+					for(TTRRecordType component: restrictor.decompose())
+					{
+						TTRRecordType superType = new TTRRecordType();
+						TTRField newF = new TTRField(f.getLabel(), component);
+						superType.add(newF);
+						decomposedList.add(superType);
+						
+					}
+					continue;
+				}
+				
 				TTRRecordType superType = this.getMinimalSuperTypeWith(f);
 				if (sorted.head() != null && superType.hasLabel(sorted.getHeadField().getLabel()))
 					superType.add(new TTRField(sorted.head()));
@@ -2235,6 +2264,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return result;
 	}
 
+	
 	public List<TTRField> getParents(TTRField field) {
 
 		List<TTRField> result = new ArrayList<TTRField>();
@@ -2248,6 +2278,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			}
 		}
 
+		return result;
+	}
+	
+	public List<TTRField> getImmediateParents(TTRField field)
+	{
+		List<TTRField> result = new ArrayList<TTRField>();
+		for (int i = fields.indexOf(field) - 1; i >= 0; i--) {
+			TTRField f = fields.get(i);
+			if (field.dependsOn(f)) 
+				result.add(f);
+		}
 		return result;
 	}
 
@@ -2306,10 +2347,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * gets minimal super type of this type with f. Just brings in the parents.
 	 * Manifest values will all be null in result.
 	 * 
+	 * This methods assumes f is not a restrictor field (i.e. an embedded record type)
+	 * These are dealt with in the decompose method itself.
+	 * 
+	 * But the method deals with quantifier fields (e.g. iota(r.head, r))
+	 * 
 	 * @param f
 	 * @return
 	 */
 	public TTRRecordType getMinimalSuperTypeWith(TTRField f) {
+		
 		TTRRecordType result = new TTRRecordType();
 
 		if (f.getVariables().isEmpty()) {
@@ -2317,11 +2364,34 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			return result;
 		}
 
-		List<TTRField> parents = getParents(f);
+		List<TTRField> parents = this.getImmediateParents(f);
 		for (TTRField parent : parents) {
-			TTRField newF = new TTRField(parent);
-			newF.setType(null);
-			result.add(newF);
+			if (parent.getDSType() == null && parent.getType() instanceof TTRRecordType)
+			{
+				
+				//looking at the restrictor of f
+				//construct a least specific restrictor record type (usually just [x:e|head==x:e]
+				PredicateArgumentFormula quantifierF= (PredicateArgumentFormula)f.getType();
+				
+				TTRPath path = (TTRPath) quantifierF.getArguments().get(0);
+				Variable restLabel = (Variable) quantifierF.getArguments().get(1);
+				TTRRecordType restrictor = (TTRRecordType) this.getField(restLabel).getType();
+				
+				TTRLabel last = path.getFinalLabel();
+				TTRField pathTarget = restrictor.getField(last);
+				
+				TTRRecordType leastSpecRest = restrictor.getMinimalSuperTypeWith(pathTarget);
+				TTRField newF = new TTRField(new TTRLabel(restLabel), leastSpecRest);
+				result.add(newF);
+				
+				
+			}
+			else
+			{
+				TTRField newF = new TTRField(parent);
+				newF.setType(null);
+				result.add(newF);
+			}
 		}
 		result.add(new TTRField(f));
 		return result;
