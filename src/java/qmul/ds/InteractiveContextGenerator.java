@@ -27,7 +27,7 @@ import qmul.ds.tree.Tree;
 
 /**
  * @author Arash
- *
+ * @deprecated Please ignore this class, it's a failed exercise. Later to be deleted.
  */
 public class InteractiveContextGenerator extends
 		DAGGenerator<DAGTuple, GroundableEdge> {
@@ -88,7 +88,7 @@ public class InteractiveContextGenerator extends
 				Pair<List<Action>, Tree> res = this.leftAdjustAndApply(la);
 				if (res != null) {
 					GroundableEdge wordEdge;
-					UtteredWord w = new UtteredWord(word, myName);
+					UtteredWord w = new UtteredWord(word, agentName);
 					
 					wordEdge = parser.getState().getNewEdge(res.first, w);
 
@@ -239,6 +239,11 @@ public class InteractiveContextGenerator extends
 			System.out.println("Failed!");
 			
 		}
+	}
+	@Override
+	public boolean generate() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 
 }
