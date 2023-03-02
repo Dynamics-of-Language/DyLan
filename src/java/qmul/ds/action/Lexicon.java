@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2001, 2010 Matthew Purver
  * All Rights Reserved.  Use is subject to license terms.
@@ -283,7 +282,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         return lex;
     }
 
-    public void writeToTextFile(String fileName) throws IOException {
+    public void writeToTexlearntFile(String fileName) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 
         for (String word : keySet()) {
@@ -819,4 +818,3 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
     }
 
 }
-
