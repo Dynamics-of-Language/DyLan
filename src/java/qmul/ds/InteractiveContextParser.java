@@ -472,33 +472,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	}
 
-	/**
-	 * Only generating to propositional semantics. And not incrementally -
-	 * incremental generation inevitably involves repair processing (not done yet
-	 * for generation), and probabilistic, best first parsing/generation, so that
-	 * the best path is taken locally. We aren't there yet.
-	 * 
-	 * @param goal
-	 * @return true of generation to propositional goal is successful.
-	 */
-	public List<UtteredWord> generateTo(TTRFormula goal) {
-		ArrayList<UtteredWord> result = new ArrayList<UtteredWord>();
-		DAGGenerator<DAGTuple, GroundableEdge> gen = getDAGGenerator();
-		gen.setGoal(goal);
 
-		if (gen.generate()) {
-			result.addAll(getState().wordStack());
-			getState().wordStack().clear();
-			getState().thisIsFirstTupleAfterLastWord();
-			return result;
-		}
-		getState().resetToFirstTupleAfterLastWord();
-		return null;
-	}
-
-	public DAGGenerator<DAGTuple, GroundableEdge> getDAGGenerator() {
-		return new InteractiveContextGenerator(this);
-	}
 
 	public synchronized DAG<DAGTuple, GroundableEdge> generateWord(UtteredWord word, Formula goal)
 	{

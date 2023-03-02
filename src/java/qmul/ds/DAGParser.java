@@ -524,9 +524,8 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 
 	}
 	
-	public abstract DAGGenerator<T, E> getDAGGenerator();
+
 	
-	public abstract List<UtteredWord> generateTo(TTRFormula goal);
 
 	/** successive calls to this after adding a word on the stack will step through the different parses of
 	 * a (partial) sentence  
