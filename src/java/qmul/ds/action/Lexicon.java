@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 
 import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
-import qmul.ds.action.atomic.FreshPut;
 import qmul.ds.action.atomic.IfThenElse;
 import qmul.ds.formula.TTRRecordType;
 
@@ -154,7 +153,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * the constructor with (String dirNameOrURL, int topN) parameters.
      */
     public Lexicon(String dirNameOrURL) {
-        this(dirNameOrURL, 3);
+        this(dirNameOrURL, 1);
     }
 
 
@@ -282,7 +281,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         return lex;
     }
 
-    public void writeToTexlearntFile(String fileName) throws IOException {
+    public void writeToTextFile(String fileName) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 
         for (String word : keySet()) {
