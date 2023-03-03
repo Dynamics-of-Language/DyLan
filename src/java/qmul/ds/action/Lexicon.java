@@ -282,7 +282,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         return lex;
     }
 
-    public void writeToTexlearntFile(String fileName) throws IOException {
+    public void writeToTextFile(String fileName) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 
         for (String word : keySet()) {
