@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.ling.Word;
 import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.ling.HasWord;
@@ -34,6 +36,16 @@ public class Utterance {
 
 	public Utterance(String speaker, String utt) {
 		this(speaker+SPEAKER_SEP+utt);
+	}
+
+	public Utterance(Sentence<Word> sent){
+		//todo new constructor
+		words = new ArrayList<UtteredWord>();
+		speaker = Utterance.defaultSpeaker;
+		for(Word w: sent){
+			UtteredWord uw = new UtteredWord(w);
+			words.add(uw);
+		}
 	}
 
 	public Utterance(String text) {
