@@ -3,6 +3,7 @@ package qmul.ds.dag;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.stanford.nlp.ling.Word;
 import qmul.ds.Utterance;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.util.Pair;
@@ -37,6 +38,10 @@ public class UtteredWord implements HasWord{
 		this.word=new String(w.word);
 		this.speaker=new String(w.speaker);
 		this.addressee=new String(w.addressee);
+	}
+
+	public UtteredWord(Word w){
+		this(w.toString());
 	}
 
 	@Override
