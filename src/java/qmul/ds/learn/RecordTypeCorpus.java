@@ -60,6 +60,10 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 				line=reader.readLine();
 				continue;
 			}
+			if(line.startsWith("//")){ // AA: Arash Eshghi suggested to add this to skip comments at the beginning of some files.
+				line = reader.readLine();
+				continue;
+			}
 			List<String> lines=new ArrayList<String>();
 			
 			if (line.trim().startsWith("END"))
