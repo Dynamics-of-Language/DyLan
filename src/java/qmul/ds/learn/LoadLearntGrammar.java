@@ -57,39 +57,38 @@ public class LoadLearntGrammar extends Lexicon { // why extend lexicon?
 	/*
 	 * Loads learnt computational actions from text files
 	 */
-	public static TestParser testFromText(String grammarPath, String corpusPath, int topN) { // just changed `private` to `public`. not sure what will happen. 
+	public static TestParser testFromText(String grammarPath, int topN) { // just changed `private` to `public`. not sure what will happen.
 
 			// Loading the learnt lexical actions
 //			Lexicon learntLex = Lexicon.loadLexicon(grammarPath + "lexicon.lex-top-" + topN);
-			Lexicon lex = new Lexicon();
+			Lexicon lex = new Lexicon(grammarPath);
 
 			// Loading the computational actions (grammar)
 			Grammar compActions = new Grammar(grammarPath);
 
 			// Initializing TestParser object
 			
-			TestParser tp = new TestParser(lex.loadLearntLexiconTxt(grammarPath, topN), compActions);
+			TestParser tp = new TestParser(lex, compActions);
 			return tp;
 
 			}
 
 	
 	public static void main(String[] args) {
-
-		String grammarPath = "/dsttr/resource/2013-ttr-learner-output/".replaceAll("/",
+		String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/",
 				Matcher.quoteReplacement(File.separator));
-		String corpusPath = "/dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion400Final.txt".replaceAll("/",
+		String corpusPath = "dsttr/corpus/CHILDES/eveTrainPairs/LC-CHILDESconversion396FinalCopy.txt".replaceAll("/",
 				Matcher.quoteReplacement(File.separator));
-		Integer topN = 2;
+		Integer topN = 1;
 		
 //		TestParser tp = testFromBinary(grammarPath, topN);
-		TestParser tp = testFromText(grammarPath, corpusPath, topN);
+		TestParser tp = testFromText(grammarPath, topN);
 
 //		 Loading CHILDES corpus
 		tp.loadTestCorpus(corpusPath, true);
 		
 		// Testing the loaded parser
-		tp.parseCorpusToFile(grammarPath + "RTsIncremental.txt", grammarPath + "Errors.txt", 30, false, true);
+		tp.parseCorpusToFile(grammarPath + "RTsIncremental.txt", grammarPath + "Errors.txt", 30, false, false);
 	}
 
 }
