@@ -246,7 +246,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					DAGTuple tuple = getState().getNewTuple(res);
 					// check subsumption to goal if it's not null
 					// if not subsumed continue
-					if (goal != null && !tuple.getSemantics(this.context).subsumes(goal))
+					TTRFormula cur = tuple.getSemantics(this.context);
+					TTRFormula headLess = cur.removeHead();
+					
+					if (goal != null && !headLess.subsumes(goal))
 						continue;
 
 					List<Action> edgeActs = new ArrayList<Action>();
@@ -322,7 +325,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				if (res != null) {
 					logger.debug("success:" + res);
 					TTRFormula f = res.getMaximalSemantics(context);
-					if (goal != null && !f.subsumes(goal)) {
+					TTRFormula headLess = f.removeHead();
+					if (goal != null && !headLess.subsumes(goal)) {
 						logger.debug("Oops. Cur semantics:" + f);
 						logger.debug("does not subsume goal:" + goal);
 						continue;
