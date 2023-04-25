@@ -1,3 +1,39 @@
+
+put							  NPVNPPPdest_inf				put							  inf							per  
+put							  NPVNPPPdest_fin				put							  pres							per
+puts						  NPVNPPPdest_fin				put							  pres					        s3
+put							  NPVNPPPdest_fin				put							  past							per
+putting						  NPVNPPPdest_ing				put							  ing							per
+on							  prep_dest
+in  						  prep_dest
+under						  prep_dest
+
+
+absorb						  NPVNP_inf						absorb					      inf							per
+absorb						  NPVNP_fin						absorb					      pres							per
+absorbs						  NPVNP_fin						absorb					      pres							s3
+absorbed				      NPVNP_fin						absorb					      past							per
+absorbing				      NPVNP_ing						absorb					      ing							per
+
+absorb						  NPVNPPPsource_inf						absorb					      inf							per
+absorb						  NPVNPPPsource_fin						absorb					      pres							per
+absorbs						  NPVNPPPsource_fin						absorb					      pres							s3
+absorbed				      NPVNPPPsource_fin						absorb					      past							per
+absorbing				      NPVNPPPsource_ing						absorb					      ing							per
+from						  prep_source
+
+drive 
+.
+.
+.
+to						      prep_dest
+
+
+
+
+
+
+
 bill                          proper                        bill                          s3                            male
 john                          proper                        john                          s3                            male
 ruth						  proper						ruth						  s3							male
