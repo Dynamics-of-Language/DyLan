@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import qmul.ds.*;
 import qmul.ds.dag.*;
 import qmul.ds.formula.*;
+import qmul.ds.tree.Node;
+import qmul.ds.type.DSType;
 
 // TODO: save modelPath as a constant string so I can access it in BFG class by importing it from here.
 // todo add support for Feature everywhere basically.
@@ -28,22 +30,31 @@ public class GeneratorLearner {
     protected DAGParser<? extends DAGTuple, ? extends DAGEdge> parser;  //todo why this is not ICP?
     RecordTypeCorpus corpus = new RecordTypeCorpus();
 
-    protected HashMap<String, HashMap<TTRRecordType, Integer>> conditionalCountTable = new HashMap<String, HashMap<TTRRecordType, Integer>>();
-    protected HashMap<String, HashMap<TTRRecordType, Double>> conditionalProbTable = new HashMap<String, HashMap<TTRRecordType, Double>>(); // TODO attention: these are NOT being globally updated.
+    protected TreeMap<String, TreeMap<Feature, Integer>> conditionalCountTable = new TreeMap<>();
+    protected TreeMap<String, TreeMap<Feature, Double>> conditionalProbTable = new TreeMap<>(); // TODO attention: these are NOT being globally updated.
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     static final String corpusPath = corpusFolderPath + "LC-CHILDESconversion396FinalCopy.txt";//"AAtrain.txt";
     static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static final Integer K_SMOOTHING = 0;
+    static public String[] DSTypesString = new String[]{"e", "t", "cn", "e>t", "cn>e", "e>cn", "e>(e>t)", "e>(t>t)", "e>(e>(e>t))"};
+    static final int DSTypesCount = DSTypesString.length*2;
+    static final Integer K_SMOOTHING = 1;
+    static final boolean LOG_PROB = true;
 
     // copied from: core/src/babble/dialog/rl/TTRMDPStateEncoding.java
     // Semantic features of the goal, i.e. the grounded content, that are to be tracked by the mdp
-    protected List<TTRRecordType> goal_features = new ArrayList<TTRRecordType>();  // AA: Shouldn't this be "new List<xxx>(); ? what's the difference?" because in your code it was null, and I changed it since I  was getting an error.
+    protected TreeSet<Feature> goal_features = new TreeSet<>();//Collections.reverseOrder());  // AA: Shouldn't this be "new List<xxx>(); ? what's the difference?" because in your code it was null, and I changed it since I  was getting an error.
     protected List<String> slot_values = new ArrayList<String>();
     // a set of lists of integers. Each list encodes a goal state, by enumerating the indeces of the features which should be on (i.e. = 1) in that goal state.
-    protected Set<SortedSet<Integer>> goal_states = new HashSet<SortedSet<Integer>>();
-    protected List<String> words = new ArrayList<String>();
+//    protected Set<String> words = new HashSet<>();
+    protected HashMap<String, Integer> words = new HashMap<>(); // todo check for the usage
 
     protected static Logger logger = Logger.getLogger(GeneratorLearner.class);
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
 
     // ====================== constructors ======================
 
@@ -86,52 +97,49 @@ public class GeneratorLearner {
      *
      * @param goal
      */
-    public List<TTRRecordType> addAsGoal(TTRRecordType goal) {
+    public void addAsGoal(TTRRecordType goal) {
 
 //		List<TTRRecordType> goal_features = null;
         logger.trace("Adding " + goal);
-        TTRRecordType successContext = abstractOutSlotValues(goal);
-        logger.trace("Abstracted " + successContext);
+//        TTRRecordType successContext = abstractOutSlotValues(goal);
+//        logger.trace("Abstracted " + successContext);
+//        List<TTRRecordType> decomposition = successContext.decompose();
         List<TTRRecordType> decomposition = goal.decompose();
-
+        HashMap<Variable, Variable> map = new HashMap<>();
         SortedSet<Integer> goalIndeces = new TreeSet<Integer>();
-        // int initSize=this.goal_ttr_features.size();
-        int newCount = 0;
         List<TTRRecordType> newFeatures = new ArrayList<TTRRecordType>();
         decompLoop:
-        for (int i = 0; i < decomposition.size(); i++) {
-            TTRRecordType newFeature = decomposition.get(i);  // AA: You could just iterate without index: for(TTRRecordType newFeature: decomposition)
-
-            for (int j = 0; j < goal_features.size(); j++) { // AA: columns of the table
-                TTRRecordType existingFeature = goal_features.get(j);
-                newFeature.resetMetas();
-                existingFeature.resetMetas();
-                if ((!newFeature.getMetas().isEmpty() && existingFeature.getMetas().isEmpty())  // AA: What is this doing?
-                        || (newFeature.getMetas().isEmpty() && !existingFeature.getMetas().isEmpty()))
-                    continue;
-                else if (existingFeature.subsumes(newFeature)) {
+        for (TTRRecordType newFeature : decomposition) {
+            for (Feature existingFeature : goal_features) { // AA: columns of the table
+                HashMap<Variable, Variable> newMap = new HashMap<>(map);
+                if (existingFeature.rt.subsumesMapped(newFeature, map)) { // is this correct? I think it is because when we are calling this method, we don't yet have the DSTree features.
                     logger.trace("Matched existing feature:" + existingFeature);
-                    // if (j>=initSize)
-                    goalIndeces.add(j + 2);  // first and second indeces reserved for pointed type and floor status
                     continue decompLoop;
-                } else
+                } else {
+                    map.clear();
+                    map.putAll(newMap);
                     logger.trace(existingFeature + " didn't subsume " + newFeature);
+                }
             }
             logger.trace("NO MATCH FOR:" + newFeature);
             logger.trace("ADDING AT END");
-            newCount++;
-            newFeatures.add(newFeature);
-            goal_features.add(newFeature);
+
+//            newFeature.resetMetas();
+//            newFeature = newFeature.freshenVars(newFeature, map);
+            TTRRecordType mappedNewFeature = newFeature.relabel(map);
+            newFeatures.add(mappedNewFeature);
+            goal_features.add(new Feature(mappedNewFeature));
+            logger.trace("Adding feature:" + mappedNewFeature);
+            logger.trace(ANSI_CYAN+"goal features: " + goal_features+ANSI_RESET);
             goalIndeces.add(goal_features.size() + 1);  // first and second indeces reserved for pointed type and floor status
         }
 
-        this.goal_states.add(goalIndeces);
-        logger.trace("Added Goal:" + goalIndeces);
-        logger.info("There were " + newCount + " new goal features in this dialogue.");
+//        this.goal_states.add(goalIndeces);
+//        logger.trace("Added Goal:" + goalIndeces);
+//        logger.info("There were " + newCount + " new goal features in this dialogue.");
         for (TTRRecordType f : newFeatures) {
-            logger.info(f);
+            logger.info("Newly added feature is: " + f);
         }
-        return goal_features;
     }
 
     // AA: copied from core/src/babble/dialog/rl/TTRMDPStateEncoding.java
@@ -149,20 +157,25 @@ public class GeneratorLearner {
         TTRRecordType result = new TTRRecordType();
 
         for (TTRField f : rec.getFields()) {
-            TTRField newF = new TTRField(f);
-            if (f.getType() != null && f.getType() instanceof AtomicFormula) {
+            TTRField newF = new TTRField(f); // I think this only makes a copy.
+            System.out.println(f.getType());
+            if (f.getType() != null && f.getType() instanceof AtomicFormula) { // AA TODO: You are calling getType 3 times here. Wasn't it better to cache it?
                 AtomicFormula af = (AtomicFormula) f.getType();
-
+                System.out.println(af.getName());
                 if (slot_values.contains(af.getName())) {
-
-                    newF.setType(result.getFreshAtomicMetaVariable());
+                    newF.setType(result.getFreshAtomicMetaVariable()); // I think the problem is it's not going inside here. Check if we ever get here.
                 }
-
-            } else if (f.getType() != null && f.getType() instanceof PredicateArgumentFormula) {
+                // otherwise update slot_values
+//                else {
+//                    slot_values.add(af.getName());
+//                }
+            }
+            else if (f.getType() != null && f.getType() instanceof PredicateArgumentFormula) {
                 PredicateArgumentFormula paf = (PredicateArgumentFormula) f.getType();
                 if (slot_values.contains(paf.getPredicate().getName()))
-                    newF.setType(
-                            new PredicateArgumentFormula(result.getFreshPredicateMetaVariable(), paf.getArguments()));
+                    newF.setType(new PredicateArgumentFormula(result.getFreshPredicateMetaVariable(), paf.getArguments()));
+//                else
+//                    slot_values.add(paf.getPredicate().getName());
             }
             result.add(newF);
         }
@@ -177,78 +190,90 @@ public class GeneratorLearner {
      * @param rInc
      * @return state
      */
-    public List<Integer> mapFeatures(TTRFormula rInc) {
-        List<Integer> goalIndeces = new ArrayList<Integer>();
-        HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+    public List<TTRRecordType> mapFeatures(TTRFormula rInc) { //todo -------------------------------- only ttr
+        List<TTRRecordType> mappedFeatures = new ArrayList<>();
+        HashMap<Variable, Variable> map = new HashMap<>();
         logger.trace(rInc);
+        ArrayList<TTRRecordType> onlySemanticsFeatures = new ArrayList<>();
+        for (Feature feature : goal_features) {
+            if (feature.rt != null)
+                onlySemanticsFeatures.add(feature.rt);
+        }
 
-        for (int i = 0; i < goal_features.size(); i++) {
-            TTRFormula feature = goal_features.get(i);
+        for (TTRRecordType feature : onlySemanticsFeatures) {
             feature.resetMetas();
             logger.trace(feature + " -> "); // what does this mean??#
             if (feature.subsumesMapped(rInc, map)) {
                 logger.trace(feature + " added.");
-                goalIndeces.add(i);
+                mappedFeatures.add(feature);
             }
             feature.resetMetas();  // AA: Why resetting metas twice? (6 lines before!))
-            logger.trace("map is: " + map);  // AA: The map is not being updated? [apparantly it is :/]
+            logger.trace("map is: " + map);
         }
-        return goalIndeces;
+        return mappedFeatures;
     }
 
 
-    public HashMap<Variable, Variable> myMapFeatures(TTRFormula r1, TTRFormula r2) {
-//        List<Integer> goalIndeces = new ArrayList<Integer>();
-        HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
-        logger.trace(r1);
-
-//        for (int i = 0; i < goal_features.size(); i++) {
-//            TTRFormula r2 = goal_features.get(i);
-        r2.resetMetas();
-        logger.trace(r2 + " -> "); // what does this mean??
-        if (r1.subsumesMapped(r2, map)) {
-            logger.trace(r2 + " added.");
-//                goalIndeces.add(i);
+    // Calculates the probability of words by dividing their count by total count and writes results to file.
+    public void calculateProbabilities(Integer totalWordsCount) {
+        for (String word : words.keySet()) {
+            double prob = (double) words.get(word) / (double) totalWordsCount;
+            String line = String.format("%s\t%f", word, prob);
         }
-        r2.resetMetas();  // AA: Why resetting metas twice? (6 lines before!))
-        logger.info("map is: " + map);
-//        }
-        return map;
     }
-
 
     /**
      * Creates a 2D hashmap as the count table and initialises counts to 0.
      */
     public void initialiseCountTable() {
-        // think about this: maybe it's not efficient to make a table and then addd ot it, and it's better to add to table on the fly?
-        // First, gather all the possible semantic features from data.
+        Integer totalWordsCount = 0;
+        // think about this: maybe it's not efficient to make a table and then add ot it, and it's better to add to table on the fly?
+        // First, gather all the possible semantic features from data:
         for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
             Sentence<Word> sentence = pair.first();
             TTRRecordType goldSem = pair.second();
 //            goldSem = goldSem.removeHead();
             goldSem = goldSem.removeHeadIfManifest();
             addAsGoal(goldSem);
-            for (Word word : sentence) // todo Does this add duplicate words?
-                words.add(word.toString());
+            for (Word word : sentence) { // todo Does this add duplicate words?
+                String w = word.toString();
+                Integer count = words.getOrDefault(w, 0) + 1;
+                words.put(w, count);
+                totalWordsCount += count;
+            }
+            calculateProbabilities(totalWordsCount);
         }
-        // Then add them as  columns in the table.
-        for (int i = 0; i < words.size(); i++) {
-            String word = words.get(i);
-            HashMap<TTRRecordType, Integer> row = new HashMap<TTRRecordType, Integer>();
-            for (TTRRecordType rt : goal_features)
-                row.put(rt, 0);
+
+        // Now same thing for DSTree features and corresponding requirement types:
+        for(String typeStr: DSTypesString){
+            DSType dsType = DSType.parse(typeStr);
+            Feature dsTypeAsFeature = new Feature(dsType, false);
+            Feature reqTypeAsFeature = new Feature(dsType, true);
+            goal_features.add(dsTypeAsFeature);
+            logger.info("Added DSType " + dsTypeAsFeature);
+            logger.info("goal features (size: " + goal_features.size() + "): " + goal_features);
+            goal_features.add(reqTypeAsFeature);
+            logger.info("Added reqType " + reqTypeAsFeature);
+            logger.info("goal features (size: " + goal_features.size() + "): " + goal_features);
+        }
+
+        // Then add them as columns in the table.
+        for (String word: words.keySet()) {
+            TreeMap<Feature, Integer> row = new TreeMap<>();
+            for (Feature f : goal_features)
+                row.put(f, 0);
             conditionalCountTable.put(word, row);
-            logger.trace("Added row " + i + " to conditionalCountTable: " + row);
+//            logger.trace("Added row " + i + " to conditionalCountTable: " + row);
         }
+        logger.info("goal_features at the end of initialiseCountTable: " + goal_features);
     }
 
-    public void printCountTable() { //todo
-        System.out.println();
-        for (String w : words) {
-
-            for (TTRRecordType rt : goal_features) {
-
+    public void printCountTable() {
+        for (String word : words.keySet()) {
+            TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
+            for (Feature feature: goal_features) {
+                Integer count = row.get(feature);
+                logger.trace(word + "\t" + feature + "\t" + count);
             }
         }
     }
@@ -256,39 +281,48 @@ public class GeneratorLearner {
 
     /**
      * Normalises a table by dividing elements in a column by their sum.
-     * Pass addKSmoothing =0 to have no smoothing.
+     * Pass addKSmoothing=0 to have no smoothing.
      *
-     * @param table the table to be normalised
-     * @return probTable  the normalised table
+     * @param addKSmoothing value of K for addKSmoothing. Set the global variable `K_SMOOTHING`.
+     * @param log_prob if we want to save log_prob or prob
      */
-    public void normaliseCountTable(HashMap<String, HashMap<TTRRecordType, Integer>> table, int addKSmoothing, boolean log_prob) {
-        // modify so it works with the global tables, not amke local ones and then pass them!
-        // todo why pass int-table, when I can access conditionalCountTable? also may need refactoring to use goal_features over `row`.
-        //todo also no need to return a new table, just update the one we have.
-        HashMap<String, HashMap<TTRRecordType, Double>> probTable = new HashMap<String, HashMap<TTRRecordType, Double>>();
-        HashMap<TTRRecordType, Double> total = new HashMap<TTRRecordType, Double>(); // Don't have to init to zero since I'm using getOrDefault method.
-        // First find total of each column in this loop
-        for (String word : words) {
-            HashMap<TTRRecordType, Integer> row = conditionalCountTable.get(word);
-            for (TTRRecordType feature : goal_features) {
+    public void normaliseCountTable(int addKSmoothing, boolean log_prob) throws IOException {
+        FileWriter writer = new FileWriter(grammarPath + File.separator+"wordProbs.tsv", false);
+        HashMap<String, Double> wordsProb = new HashMap<>();
+        HashMap<Feature, Double> total = new HashMap<>(); // Don't have to init to zero since I'm using getOrDefault method.
+        Double totalCount = 0.0; // to calculate wordsProb
+        // First, find total sum of each column in this loop:
+        for (String word : words.keySet()) {
+            TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
+            for (Feature feature : goal_features) {
                 Integer count = row.get(feature);
+                wordsProb.put(word, wordsProb.getOrDefault(word, 0.0) + (double)count);
+                totalCount += count;
                 row.put(feature, count + addKSmoothing);
-                total.put(feature, total.getOrDefault(feature, 0.0) + count + addKSmoothing); // If `feature` was already in `total`, add `count` to the previous value.
+                total.put(feature, total.getOrDefault(feature, 0.0) + count + addKSmoothing); // todo I don't think if addk here is correct
                 // If not, add `count` to 0, which means just put `count`. Used because key might not be available.
             }
         }
-
-        for (String word : words) {  // Divide columns by the corresponding `total` to get probabilities and save them in `conditionalProbTable`.
-            HashMap<TTRRecordType, Integer> row = conditionalCountTable.get(word);
-            HashMap<TTRRecordType, Double> probRow = new HashMap<TTRRecordType, Double>();
-            for (TTRRecordType rt : goal_features) { //todo probably need to update this to use goal_features?
-                Double prob = ((double) row.get(rt)) / total.get(rt); // do I need to do casting?
+        // Then divide columns by the corresponding `total` to get probabilities and save them in `conditionalProbTable`.
+        for (String word : words.keySet()) {
+            TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
+            TreeMap<Feature, Double> probRow = new TreeMap<>();
+            for (Feature feature : goal_features) { //todo probably need to update this to use goal_features?
+                    Double prob = ((double) row.get(feature)) / total.get(feature); // do I need to do casting?
                 if (log_prob)
                     prob = Math.log(prob);
-                probRow.put(rt, prob);
+                probRow.put(feature, prob);
             }
             conditionalProbTable.put(word, probRow);
+            // AA: Write wordsprob to file
+            Double wordProb = wordsProb.get(word) / totalCount;
+            if (log_prob)
+                wordProb = Math.log(wordProb);
+            wordsProb.put(word, wordProb); // not going to use the map really after this. basically updating for no reason.
+            String line = word + "\t" + wordProb + "\n";
+            writer.write(line);
         }
+        writer.close();
     }
 
     /**
@@ -298,13 +332,12 @@ public class GeneratorLearner {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public void saveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> model)
+    public void saveModelToFile(TreeMap<String, TreeMap<Feature, Double>> model)
             throws FileNotFoundException, IOException // eclipse recommended it so I said yes.
     {
-        // TODO write features: WORDS, feature1, feature2, ...
         // TODO Make more efficient
         // First, clear the file if it was already there. RF: https://stackoverflow.com/questions/6994518/how-to-delete-the-content-of-text-file-without-deleting-itself
-        File f = new File(grammarPath + "model.csv");
+        File f = new File(grammarPath + "genLearnedModel.csv");
         if (f.exists() && !f.isDirectory()) {
             PrintWriter writer = new PrintWriter(f);
             writer.print("");
@@ -312,40 +345,46 @@ public class GeneratorLearner {
         }
         // Writing features row
         ArrayList<String> featuresStr = new ArrayList<String>();
-        for (String wo : model.keySet()) { // This is not clean code.
-            HashMap<TTRRecordType, Double> row = model.get(wo);
-            ArrayList<TTRRecordType> features = new ArrayList<>(row.keySet());
-            for (TTRRecordType feature : features) // todo make this more efficient
+//        for (String wo : model.keySet()) { // This is not clean code.
+//            HashMap<TTRRecordType, Double> row = model.get(wo);
+//            ArrayList<TTRRecordType> features = new ArrayList<>(row.keySet());
+            for (Feature feature : goal_features) // todo make this more efficient
                 featuresStr.add(feature.toString());
-            break;
-        }
-        String strFeatures = String.join(",", featuresStr);
-        strFeatures = "WORDS\\FEATURES" + "," + strFeatures + "\n";
-        FileWriter writer1 = new FileWriter(grammarPath + "model.csv", true);
+//            break;
+//        }
+        String strFeatures = String.join(" , ", featuresStr);
+        strFeatures = "[WORDS\\FEATURES]" + " , " + strFeatures + "\n";
+        FileWriter writer1 = new FileWriter(grammarPath + "genLearnedModel.csv", true);
         writer1.write(strFeatures);
         writer1.close();
 
         // Writing words and probs
         int row_num = 0;
-        for (var entry : model.entrySet()) // REF: https://stackoverflow.com/questions/46898/how-do-i-efficiently-iterate-over-each-entry-in-a-java-map
+        for (String word: model.keySet()) // REF: https://stackoverflow.com/questions/46898/how-do-i-efficiently-iterate-over-each-entry-in-a-java-map
         {
-            String word = entry.getKey();
-            HashMap<TTRRecordType, Double> row = entry.getValue();
-            ArrayList<Double> probs = new ArrayList<>(row.values());
+//            String word = entry.getKey();
+//            ArrayList<Double> probs = new ArrayList<>();
             ArrayList<String> probsStr = new ArrayList<String>();
-            for (Double prob : probs) // todo make this more efficient
+            TreeMap<Feature, Double> row = model.get(word);
+            for (Feature feature: goal_features){
+                Double prob = row.get(feature);
                 probsStr.add(Double.toString(prob));
+            }
+//            ArrayList<Double> probs = new ArrayList<>();
+//            ArrayList<String> probsStr = new ArrayList<String>();
+//            for (Double prob : probs) // todo make this more efficient
+//                probsStr.add(Double.toString(prob));
 
             // Converts the list to a string joined by comma
-            String strRow = String.join(",", probsStr); //REF: https://mkyong.com/java/java-how-to-join-list-string-with-commas/
-            strRow = word + "," + strRow;
+            String strRow = String.join(" , ", probsStr); //REF: https://mkyong.com/java/java-how-to-join-list-string-with-commas/
+            strRow = word + " , " + strRow;
             // write to file
             try { // Do I need to use BufferedWriter as in https://stackoverflow.com/a/1625263/6306387 ?
-                FileWriter writer = new FileWriter(grammarPath + "model.csv", true);
+                FileWriter writer = new FileWriter(grammarPath + "genLearnedModel.csv", true);
                 writer.write(strRow);
                 writer.write(System.lineSeparator()); // To go to next line. REF: https://stackoverflow.com/questions/18549704/create-a-new-line-in-javas-filewriter
                 writer.close();
-                System.out.printf("Successfully wrote row %d to the file.\n", row_num); // todo add logs
+                logger.trace("Successfully wrote row " + row_num + " to the file."); // todo add logs
                 row_num++;
             } catch (IOException e) {
                 System.out.println("An error occurred."); // todo better message (could not write row x to file.)
@@ -368,9 +407,9 @@ public class GeneratorLearner {
      * - Save `conditionalProbTable` to a csv file.
      */
     public void learn() throws IOException {
-        // todo modify Lexicon constructor so we can pass default top-n value.
         initialiseCountTable();
-        // todo change corpus here to the clean one.
+        logger.info("features length: " + goal_features.size());
+        logger.info("table features: " + goal_features);
         for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
             parser.init();  // Restarts parser
             Sentence<Word> sentence = pair.first();
@@ -394,19 +433,19 @@ public class GeneratorLearner {
 //                            rCur = rCur.removeHead();
                         rCur = rCur.removeHeadIfManifest();
                         String word = curEdge.word().word();
-//                                    Node pointedNode = parser.getState().getCurrentTuple().getTree().getPointedNode();
-//                                    DSType pointedNodeType = pointedNode.getType();
-//                                    DSType motherNodeType = parser.getState().getCurrentTuple().getTree().getLocalRoot(pointedNode).getType();  // todo is getLocalRoot correct to get the mother node?
-                        // todo add two tree features as well + should I use dag here, or parser is fine?
-                        TTRRecordType rInc = finalSem.subtract(rCur, new HashMap<Variable, Variable>());  // todo it doesn't make sense to me that I have to pass an empty map to this!
-                        System.out.println("rG: " + finalSem + " MINUS rCur: " + rCur + " EQUALS rInc: " + rInc);
+                        Node pointedNode = parser.getState().getCurrentTuple().getTree().getPointedNode(); // TODO ----------------------------------------------------------------------
+                        Feature pointedNodeFeature = new Feature(pointedNode.getType());
+//                        DSType motherNodeType = parser.getState().getCurrentTuple().getTree().getLocalRoot(pointedNode).getType();  // todo is getLocalRoot correct to get the mother node? + deal with this later.
+                        TTRRecordType rInc = finalSem.subtract(rCur, new HashMap<>());
                         logger.trace("rG: " + finalSem + " MINUS rCur: " + rCur + " EQUALS rInc: " + rInc);
-                        HashMap<TTRRecordType, Integer> row = conditionalCountTable.get(word);
-                        List<Integer> indeces = mapFeatures(rInc);
-                        for (Integer idx : indeces) {
-                            TTRRecordType correspondingFeature = goal_features.get(idx);
-                            row.put(correspondingFeature, row.get(correspondingFeature) + 1);
+                        TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
+                           List<TTRRecordType> mappedFeatures = mapFeatures(rInc);
+
+                        for (TTRRecordType correspondingFeature: mappedFeatures) { // Updates the CountTable with semantic features.
+                            Feature f = new Feature(correspondingFeature);
+                            row.put(f, row.get(f) + 1);
                         }
+                        row.put(pointedNodeFeature, row.get(pointedNodeFeature)+ 1); // Updates the CountTable with syntactic features.
                         curEdge = dag.getParentEdge(curTuple);
                         curTuple = dag.getParent(curTuple); // AA: Updating curTuple to the previous one (until we get to root).
                     }
@@ -415,8 +454,10 @@ public class GeneratorLearner {
                 parsed = parser.parse();
             }
         }
-        normaliseCountTable(conditionalCountTable, K_SMOOTHING, false);
+        normaliseCountTable(K_SMOOTHING, LOG_PROB);
+        System.out.println(goal_features);
         saveModelToFile(conditionalProbTable);  // todo asked for some unhandled exception, I just added it. IS THAT OK?
+        // todo there is a BUG in writeToFile: if you re-run it, it will append to the file, not overwrite it.
     }
 
 }
