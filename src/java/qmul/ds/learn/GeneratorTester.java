@@ -16,37 +16,21 @@ import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
 import qmul.ds.Utterance;
+import qmul.ds.formula.AtomicFormula;
+import qmul.ds.formula.TTRField;
 import qmul.ds.formula.TTRRecordType;
 
 public class GeneratorTester
 {
     // TODO make the appropriate changes here so that I don't have to have the same path here and in the GeneratorLearner class.
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static final String corpusPath = corpusFolderPath + "LC-CHILDESconversion3200TrainFinal.txt";//"LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
+    static public String corpusPath = corpusFolderPath + "AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
     static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     static GeneratorLearner g = new GeneratorLearner(grammarPath, corpusPath); // TODO is this meaningful? how can I have a constructor that uses default
     protected static Logger logger = Logger.getLogger(GeneratorTester.class);
 
 
-    public static void testAFewStuff()
-    {
-        // below is the semantics for "I took it" from "CHILDESconversion400Final", 8th sentence.
-        // but replacced `x` with `x2`
-        TTRRecordType r = TTRRecordType.parse("[x1==it : e|x2==i : e|e1==take : es|p2==subj(e1, x2) : t|p3==obj(e1, x1) : t|head==e1 : es]");
-        System.out.println("r is                               : " + r);
-
-        r = r.removeHead();
-        System.out.println("r after removeHead (works in-place): " + r);
-
-        r.resetMetas();
-        System.out.println("r after resetMetas (works in-place): " + r);
-
-        System.out.println("r after decompose: ");
-        for (TTRRecordType d: r.decompose())
-            System.out.println(d);
-    }
-
-
+// ==================================||   Learner Tests   ||==================================
     public static void testMapFeatures(){
         // below is the semantics for "I took it" from "CHILDESconversion400Final", 8th sentence.
         // but replacced `x` with `x2`
@@ -54,9 +38,9 @@ public class GeneratorTester
         TTRRecordType r1 = TTRRecordType.parse("[x1==it : e|x2==i : e|e1==take : es|p2==subj(e1, x2) : t|p3==obj(e1, x1) : t|head==e1 : es]");
         r1 = r1.removeHead();
         for(TTRRecordType r: r1.decompose()){
-            List<Integer> indeces = g.mapFeatures(r);
-            for (Integer i: indeces){
-                System.out.println("My rt: " + r + " , subsumes in goal_features: " + g.goal_features.get(i));
+            List<TTRRecordType> mappedFeatures = g.mapFeatures(r);
+            for (TTRRecordType feature: mappedFeatures) {
+                System.out.println("My rt: " + r + " , subsumes in goal_features: " + feature); // double check
             }
         }
     }
@@ -98,7 +82,7 @@ public class GeneratorTester
     }
 
 
-    public static void testSaveModelToFile(HashMap<String, HashMap<TTRRecordType, Double>> table) throws IOException {
+    public static void testSaveModelToFile(TreeMap<String, TreeMap<Feature, Double>> table) throws IOException {
         g.saveModelToFile(table);
     }
 
@@ -172,8 +156,8 @@ public class GeneratorTester
 //            }
             index++;
         }
-//        writeToFile(corpusFolderPath + File.separator + "AA-test2.txt", matchingCorpus, test);
-        writeToFile(corpusFolderPath + File.separator + "AA-test2.txt", uniqueCorpus, uniqueCorpusStats);
+        writeToFile(corpusFolderPath, File.separator + "AA-train-lower-396-matching-top3.txt", matchingCorpus, matchingCorpusStats);
+        writeToFile(corpusFolderPath, File.separator + "AA-train-lower-396-unique-top3.txt", uniqueCorpus, uniqueCorpusStats);
 //        writeToFile(corpusFolderPath + File.separator + "AA-train-lower-3200-unique-top1.txt", uniqueCorpus, corpusStatsUnique);
 //        writeToFile(corpusFolderPath+File.separator+"tp_not_icp.txt", tpNotICPList, corpusStatsL);
         Integer totalSize = g.corpus.size();
@@ -189,6 +173,7 @@ public class GeneratorTester
 //        System.out.println(matchingsSet); //todo make these sorted
 //        System.out.println("tp not icp len: " + tpNotICPIndices.size());
         System.out.println("Unique | len: " + uniqueCorpus.size());
+
     }
 
     /**
@@ -199,19 +184,19 @@ public class GeneratorTester
      * @param ttrCorpus
      * @param corpusStats
      */
-    public static void writeToFile(String fileDir, List<String[]> ttrCorpus, CorpusStats corpusStats) {
+    public static void writeToFile(String fileDir, String fileName, List<String[]> ttrCorpus, CorpusStats corpusStats) {
         PrintStream out = null;
-        FileOutputStream fileOpen = null;
+        FileOutputStream fileOpen;
         try {
-            fileOpen = new FileOutputStream(fileDir);
+            fileOpen = new FileOutputStream(fileDir+fileName);
             out = new PrintStream(fileOpen);
             for (String[] thepair : ttrCorpus) {
                 out.print("Sent : " + thepair[0] + "\nSem : " + thepair[1] + "\nFile : " + thepair[2] + "\n\n");
                 // Since debugging CorpusStatistics was taking too much time (which was initially used in this method and was not adding correct
                 // stats at the end of the corpus text file, I wrote CorpusStats and started using that.
             }
-
             out.print(corpusStats.statReporter());
+            corpusStats.writeWordProbsToFile(fileDir, true);
         } catch (Exception e) {
             logger.error("Couldn't write to file!");
         } finally {
@@ -220,7 +205,11 @@ public class GeneratorTester
         }
     }
 
+// ==================================||   Generator Tests   ||==================================
 
+
+
+// ==================================||   MAIN   ||==================================
     public static void main(String[] args) throws IOException {
 //        testComputeRInc(); // Seems to work fine.
 //        testNormaliseCountTable();
@@ -229,8 +218,13 @@ public class GeneratorTester
 //        testInitialiseCountTable();
 //        testAFewStuff();
 //        testMapFeatures()
-//        testLearn();
-        seperateParsableData();
+        testLearn();
+//        seperateParsableData();
 
+
+//        TTRRecordType a = TTRRecordType.parse("[x==what : e|e1==eq : es|x1==that : e|p2==subj(e1, x) : t|p3==obj(e1, x1) : t]");
+//        TTRRecordType b = TTRRecordType.parse("[x==what : e]");
+//        System.out.println(a.subsumes(b));
+//        System.out.println(b.subsumes(a));
     }
 }
