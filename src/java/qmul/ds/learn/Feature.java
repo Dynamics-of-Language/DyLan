@@ -3,10 +3,12 @@ package qmul.ds.learn;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.type.DSType;
 
+import java.util.TreeSet;
+
 // todo fix hashcode
 // all of the above for `isRequirement`
 
-public class Feature {
+public class Feature implements Comparable<Feature>{
     public TTRRecordType rt = null;
     public DSType dsType = null;
     public boolean isRequirement = false;
@@ -49,10 +51,7 @@ public class Feature {
         if(dsType != null)
             return dsType.equals(other.dsType) && (isRequirement == other.isRequirement);
 
-        if(other.rt != null || other.dsType != null)
-            return false;
-
-        return true;
+        throw new NullPointerException("RT and DSType are both null!");
     }
 
     public String toString(){
@@ -67,4 +66,55 @@ public class Feature {
         throw new NullPointerException();
     }
 
+    @Override
+    public int compareTo(Feature o) {
+        // Attention: The feature comperator, reverses the natural ordering of TTRRecordType comparator for use in our learner probTable.
+        if (this.equals(o))
+            return 0;
+        else if (this.rt != null && o.rt != null)
+            return -this.rt.compareTo(o.rt);
+        else if (this.dsType != null && o.dsType != null) // TODO not sure fo this is correct.
+//            return 1;
+//            return this.dsType.compareTo(o.dsType);
+            return this.toString().compareTo(o.toString()); // AA: I commented out the line above and used the same trick AE used in TTRRecordType compareTo.
+        else if (rt != null)
+            return 1;
+        else if (dsType != null)
+            return -1;
+        else
+            throw new NullPointerException("Either this feature or the other feature are null.");
+
+//        if (this.rt != null)
+//            return -1;
+//            return 1;
+//        else
+//            return -1;
+
+ //from here on this Feature object is invalid
+        //returning arbitrary order
+//        return -1;
+    }
+
+
+//    public int compareTo(Feature o) {
+//        if (rt!=null && o.rt!=null)
+//            return rt.compareTo(o.rt);
+//
+//        return toString().compareTo(o.toString());
+//    }
+
+    public static void main(String[] args) {
+        TreeSet<Feature> feature = new TreeSet<Feature>();
+        feature.add(new Feature(DSType.e));
+        feature.add(new Feature(DSType.t));
+        feature.add(new Feature(DSType.et));
+        feature.add(new Feature(DSType.t, true));
+
+        feature.add(new Feature(TTRRecordType.parse("[e : es]")));
+        feature.add(new Feature(TTRRecordType.parse("[x==john : e]")));
+        feature.add(new Feature(TTRRecordType.parse("[e15==go : es]")));
+        feature.add(new Feature(TTRRecordType.parse("[e : es|p==go(e) : t]")));
+
+        System.out.println(feature);
+    }
 }
