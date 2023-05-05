@@ -47,6 +47,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	private static final long serialVersionUID = 1L;
 
 	protected static Logger logger = Logger.getLogger(TTRRecordType.class);
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String TTR_OPEN = "[";
 	public static final String TTR_LABEL_SEPARATOR = ":";
 	public static final String TTR_FIELD_SEPARATOR = "|";
@@ -752,7 +754,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * Maybe the implementation should actually be done in these terms... yes....
 	 * TODO: later.
 	 *
-	 * @param superType
+	 * @param
 	 * @return
 	 */
 	public TTRRecordType replaceSuperTypeWith(TTRRecordType st, TTRRecordType syn,
@@ -2346,8 +2348,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * @return
 	 */
 	public TTRRecordType getMinimalSuperTypeWith(TTRField f) {
-		System.out.println("minimal supertype: " + f); // aa
-		System.out.println("this: " + this);
+//		System.out.println("minimal supertype: " + f); // aa
+//		System.out.println("this: " + this);
 		TTRRecordType result = new TTRRecordType();
 
 		if (f.getVariables().isEmpty()) {
@@ -2918,7 +2920,11 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	public int getSpecificity() {
 		int specificity = 0;
 		for (TTRField f : this.fields) {
-			if (f.isManifest())
+			if(f.getType() instanceof  TTRRecordType){
+				specificity = specificity + ((TTRRecordType) f.getType()).getSpecificity();
+			}
+			else
+				if (f.isManifest())
 				specificity = specificity + 2;
 			else
 				specificity = specificity + 1;
@@ -2926,21 +2932,44 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		return specificity;
 	}
 
+
+	/**
+	 * This method implements an ordering between record types, whereby the ordering is defined in terms of a crude notion of specificity.
+	 * The notion of specificity is based on the number of fields in the record type, and recursively for all the embedded record types.
+	 *
+	 * @param other the object to be compared.
+	 * @return
+	 */
 	public int compareTo(TTRRecordType other) {
-		if (this.subsumes(other) && other.subsumes(this))
-			return 0;
-		else if (this.subsumes(other))
+
+		// AA: Cached the subsumptions because it's computationally expensive, and it's used twice.
+		// todo: should I do this with getSpecificity as well?
+		logger.info(ANSI_GREEN+"this: " + this + " / other: " + other+ANSI_RESET);
+		boolean to = this.subsumes(other);
+		boolean ot = other.subsumes(this);
+		logger.info("this subsumes other: " + to);
+		logger.info("other subsumes this: " + ot);
+
+
+		if (this.getSpecificity() > other.getSpecificity()) {
+			logger.info(" ======== this is more specific than other. ========");
+			return 1;
+		} else if (this.getSpecificity() < other.getSpecificity()) {
+			logger.info(" ======== other is more specific than this. ========");
 			return -1;
-		else if (other.subsumes(this))
-			return 1;
-		else if (this.getSpecificity() > other.getSpecificity())
-			return 1;
-		else if (this.getSpecificity() < other.getSpecificity())
-			return -1;
-		else
-			return 1;
+		} else {
+			logger.info(" ======== none of the cases. ========");
+			return this.toString().compareTo(other.toString()); // AA: I have a feeling this is incorrect.
+		}
 
 	}
+
+
+//	public boolean equals(Object o){
+//		if (o instanceof TTRRecordType)
+//			return (this.subsumes(o) && o.subsumes(this));
+//		return false;
+//	}
 
 
 
