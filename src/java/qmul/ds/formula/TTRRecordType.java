@@ -575,7 +575,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	/**
 	 *
 	 * @param r
-	 * @return
+	 * @return this minus r
 	 */
 
 	public TTRRecordType subtract(TTRRecordType r, HashMap<Variable, Variable> map) {
