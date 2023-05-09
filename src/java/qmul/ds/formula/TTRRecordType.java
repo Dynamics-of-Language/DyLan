@@ -719,61 +719,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		System.out.println("this minus other is: " + r1.subtract(r7, map));
 		System.out.println("map is: " + map);
 		
-//		
-
-
-//		TTRRecordType r2 = TTRRecordType
-//				.parse("[r3 : [x3:e|p==man(x3):t|head==x3:e] | x==eps(r3.head,r3) : e|e2==go : es|p2==subj(e2, x) : t]");
-//		
-//		TTRRecordType r3 = TTRRecordType
-//				.parse("[e3 : es|r : [x2 : e|head==x2 : e]|x1==iota(r.head, r) : e]");
-//		TTRRecordType r4 = TTRRecordType
-//				.parse("[x3:e|p==man(x3):t|head==x3:e]");
-//		 
-
-//		TTRRecordType r2 = TTRRecordType.parse("[r2 : [x5:e|head==x5:e] " + "|x2 : e|e1 : es|p3==subj(e1, x2) : t]");
-//		TTRRecordType r1 = TTRRecordType.parse("[x2:e|head==x2:e]");
-//		System.out.println("immediate supertypes:");
-//		for (TTRRecordType underspec : r3.makeOneStepLessSpecific())
-//			System.out.println(underspec);
-
-//		System.out.println("-----------------------");
-//		
-//		
-//		System.out.println("this:" + r1);
-//		System.out.println("other:" + r2);
-//		System.out.println("mcs: " + r1.mostSpecificCommonSuperType(r2, map));
-//		System.out.println("map is: " + map);
-//		map.clear();
-//		
-//		System.out.println("this minus other is: " + r1.subtract(r2, map));
-//		System.out.println("map is: " + map);
-
-//		 System.out.println("r1:" + r1);
-		// System.out.println("r2:" + r2);
-
-		// System.out.println(r2.subsumesMapped(r1, map));
-		// System.out.println(map);
-
-		// TTRRecordType r2 = TTRRecordType.parse("[x1==you : e|e2 : es|p1==subj(e2, x1)
-		// : t]");
-		// expected output: [e3==go : es]
-		// Maximimally specific supertype (r1, r2) == [x==you:e|e2:es|p1==subj(e2,x)]
-		// map: {x1=x, e1=e2, p=p1}
-
-		// map = new HashMap<Variable, Variable>();
-		// TTRRecordType r3 = TTRRecordType.parse("[x1==me : e|"
-		// + "x3==that : e|e3==eq : es|p4==obj(e3, x3) : t|p5==subj(e3, x1) : t]");
-
-		// TTRRecordType r4 = TTRRecordType.parse("[x2==that : e|e2==eq : es|p1==obj(e2,
-		// x2) : t]");
-
-//		System.out.println("this:" + r3);
-//		System.out.println("other:" + r4);
-//		System.out.println("max super type is: " + r4.mostSpecificCommonSuperType(r3, map));
-//		map.clear();
-//		System.out.println("this minus other is: " + r3.subtract(r4, map));
-		// System.out.println("map is: " + map);
 
 	}
 
