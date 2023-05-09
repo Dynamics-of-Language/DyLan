@@ -620,23 +620,27 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				//If it's non-empty, make sure it has a head field
 				if (subtract.isEmpty()&&result.getDependents(fieldInThis).isEmpty())
 				{
-					//
+					//subtract is empty,and the restrictor doesn't have dependents
+					//remove the restrictor from the result
+					
 					result.remove(fieldInThis.getLabel());
 				}
 				else if (subtract.isEmpty())
 				{
-					//subtract is empty, but rest has dependents. Add head and set
+					//subtract is empty, but rest has dependents. Add the head and head field.
 					if (restHead!=null) {
 						subtract.add(restInThis.getField((Variable)restHead.getType()));
 						subtract.add(restHead);
 					}
 					else
 						throw new IllegalArgumentException("Restrictor has no head:"+restInThis);
-					
+					//now set the type
 					result.getField(fieldInThis.getLabel()).setType(subtract);
 				}
 				else
 				{
+					//the subtraction isn't empty. Make sure it has a head, and then set 
+					// it in result.
 					if (restHead!=null && !subtract.hasHead())
 						subtract.add(restInThis.head());
 					
@@ -646,38 +650,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				continue;
 
 			}
-/*
-			if (fieldInThis.getType() != null && fieldInThis.getDSType().equals(DSType.e)
-					&& fieldInThis.getType() instanceof PredicateArgumentFormula) {
-				// we are looking at an epsilon / quantifier term
-				// we have processed the restrictor already
-				// if it's empty in result, then if it has dependants, set it to null, remove the restrictor
-
-				
-				PredicateArgumentFormula quantifierTermInThis = (PredicateArgumentFormula) fieldInThis.getType();
-				System.out.println("Found quantifier term:"+quantifierTermInThis);
-				Variable restrictorLabelInThis = (Variable) quantifierTermInThis.getArguments().get(1);
-				TTRPath path = (TTRPath) quantifierTermInThis.getArguments().get(0);
-
-				if (!path.getFinalLabel().equals(HEAD))
-					throw new UnsupportedOperationException(
-							"non-head path in quantifier term not supported in the MCS operation" + fieldInThis);
-
-
-				TTRField restFieldInResult = result.getField(restrictorLabelInThis);
-				TTRRecordType restrictorInResult = (TTRRecordType) restFieldInResult.getType();
-				System.out.println("Found restrictor:"+ restFieldInResult);
-				if (restrictorInResult.isEmpty() && result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest()) {
-					//result.remove(labelInThis);
-					System.out.println("It's empty. Removing it");
-					result.remove(restrictorLabelInThis);
-
-				}
-
-				//if it's not empty, do as you normally do -- process the rest of the ifs below
-
-
-			}*/
 
 			//TODO: tidy up the following.
 			
@@ -707,7 +679,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
 		TTRRecordType r1 = TTRRecordType
-				.parse("[e==go:es|r1 : [x:e|p5==man(x):t|p6==tall(x):t|head==x:e] | x6==iota(r1.head,r1) : e|p==subj(e,x6):t]");
+				.parse("[e==go:es|r1 : [x:e|p5==man(x):t|p6==tall(x):t|head==x:e] | x6==eps(r1.head,r1) : e|p==subj(e,x6):t]");
 
 
 		TTRRecordType r7 = TTRRecordType.parse("[e==run:es|r : [x2:e|p11 == man(x2):t|p12 == tall(x2):t|head==x2:e] | x1==eps(r.head,r) : e|p9==subj(e,x1):t]");
