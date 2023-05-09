@@ -13,6 +13,9 @@ package qmul.ds.learn;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -22,6 +25,7 @@ public class CorpusStats {
     Integer totalWordsCount = 0;
     HashMap<Integer, Integer> sentLenCountMap = new HashMap<>(); // A map from sentence length to the count of sentences with that length in the dataset.
     Integer corpusSize = 0;
+
 
     /**
      * Receives a sentence and:
@@ -34,6 +38,7 @@ public class CorpusStats {
         corpusSize++;
         statUpdater(sentence);
     }
+
 
     /**
      * Updates word-level and sentence-level information about the corpus based on the sentence it receives.
@@ -53,6 +58,21 @@ public class CorpusStats {
         // ------Update sentence stats------
         Integer len = sentence.size();
         sentLenCountMap.put(len, sentLenCountMap.getOrDefault(len, 0) + 1);
+    }
+
+    // AA: shouldn't be using this here. so copied the body in genlearner/normaliseConutTable.
+    public void writeWordProbsToFile(String path, boolean logProb) throws IOException {
+        FileWriter writer = new FileWriter(path + File.separator+"wordProbs.tsv", false);
+        for(String word : wordsCountMap.keySet()) {
+            Integer count = wordsCountMap.get(word);
+            Double prob = (double) count / totalWordsCount;
+            if (logProb) {
+                prob = Math.log(prob);
+            }
+            String line = word + "\t" + prob + "\n";
+            writer.write(line);
+        }
+        writer.close();
     }
 
     /**
