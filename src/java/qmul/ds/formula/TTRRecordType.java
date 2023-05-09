@@ -569,9 +569,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param r
-	 * @return
+	 * @return this minus r
 	 */
 
 	public TTRRecordType subtract(TTRRecordType r, HashMap<Variable, Variable> map) {
@@ -595,66 +595,88 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		for (int i = mcsFields.size() - 1; i >= 0; i--) {
 
 			TTRField curMCSField = mcsFields.get(i);
-			// System.out.println("Processing field in mcs:"+curMCSField);
+			System.out.println("Processing field in mcs:"+curMCSField);
 			Variable labelInThis = map.get(curMCSField.getLabel());
 			TTRField fieldInThis = result.getField(labelInThis);
 
 
-			if (fieldInThis.getDSType() == null&& fieldInThis.getType() instanceof TTRRecordType)
-			{
+			if (fieldInThis.getDSType() == null&& fieldInThis.getType() instanceof TTRRecordType) {
 				// we are looking at an embedded rec type/restrictor
 				//subtract them recursively
 				TTRRecordType restInThis = (TTRRecordType) fieldInThis.getType();
 				TTRField restHead = restInThis.head();
+				//TTRField restHeadField = restInThis.getHeadField();
 				TTRRecordType restInMCS = (TTRRecordType) curMCSField.getType();
+				//subtract the restrictors
 				TTRRecordType subtract = restInThis.subtract(restInMCS, new HashMap<Variable,Variable>());
-				//If subtract is empty, we remove the field later when we process the quantifier term
-				//If non-empty, just set it in result
-				if (!subtract.isEmpty() && restHead!=null && !subtract.hasHead())
+				
+				
+				//If subtract is empty, if it doesn't have dependents, remove it
+				//if it does, we need to add back the head field and the head
+				//If it's non-empty, make sure it has a head field
+				if (subtract.isEmpty()&&result.getDependents(fieldInThis).isEmpty())
 				{
-					if (!subtract.hasHead())
-						subtract.add(restInThis.head());
+					//
+					result.remove(fieldInThis.getLabel());
 				}
-			
-				result.getField(fieldInThis.getLabel()).setType(subtract);
+				else if (subtract.isEmpty())
+				{
+					//subtract is empty, but rest has dependents. Add head and set
+					if (restHead!=null) {
+						subtract.add(restInThis.getField((Variable)restHead.getType()));
+						subtract.add(restHead);
+					}
+					else
+						throw new IllegalArgumentException("Restrictor has no head:"+restInThis);
+					
+					result.getField(fieldInThis.getLabel()).setType(subtract);
+				}
+				else
+				{
+					if (restHead!=null && !subtract.hasHead())
+						subtract.add(restInThis.head());
+					
+					result.getField(fieldInThis.getLabel()).setType(subtract);
+				}				
+				
 				continue;
-			
-			}
 
+			}
+/*
 			if (fieldInThis.getType() != null && fieldInThis.getDSType().equals(DSType.e)
 					&& fieldInThis.getType() instanceof PredicateArgumentFormula) {
 				// we are looking at an epsilon / quantifier term
 				// we have processed the restrictor already
 				// if it's empty in result, then if it has dependants, set it to null, remove the restrictor
+
 				
-
 				PredicateArgumentFormula quantifierTermInThis = (PredicateArgumentFormula) fieldInThis.getType();
-
+				System.out.println("Found quantifier term:"+quantifierTermInThis);
 				Variable restrictorLabelInThis = (Variable) quantifierTermInThis.getArguments().get(1);
 				TTRPath path = (TTRPath) quantifierTermInThis.getArguments().get(0);
 
 				if (!path.getFinalLabel().equals(HEAD))
 					throw new UnsupportedOperationException(
 							"non-head path in quantifier term not supported in the MCS operation" + fieldInThis);
-				
-				
-				
+
+
 				TTRField restFieldInResult = result.getField(restrictorLabelInThis);
 				TTRRecordType restrictorInResult = (TTRRecordType) restFieldInResult.getType();
-				if (restrictorInResult.isEmpty() && result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest())
-				{
+				System.out.println("Found restrictor:"+ restFieldInResult);
+				if (restrictorInResult.isEmpty() && result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest()) {
 					//result.remove(labelInThis);
+					System.out.println("It's empty. Removing it");
 					result.remove(restrictorLabelInThis);
-					
+
 				}
-				
+
 				//if it's not empty, do as you normally do -- process the rest of the ifs below
 
-					
-				
-				
-			}
 
+			}*/
+
+			//TODO: tidy up the following.
+			
 			if (result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest()) {
 				// field has no dependents and the corresponding MCS field is manifest
 				// therefore this field is also manifest with the same type
@@ -664,7 +686,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			}
 
 			if (result.getDependents(fieldInThis).isEmpty() && !curMCSField.isManifest() && !fieldInThis.isManifest()) {
-				// field has no dependents and the corresponding MCS field is manifest
+				
 				// MCS field and field in this are both unmanifest. Remove it.
 				result.remove(labelInThis);
 				continue;
@@ -681,71 +703,19 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
 		TTRRecordType r1 = TTRRecordType
-				.parse("[r : [x2:e|p5==man(x2):t|p6==tall(x2):t|head==x2:e] | x1==iota(r.head,r) : e|e3==go : es|p2==subj(e3, x1) : t|head==e3:es]");
+				.parse("[e==go:es|r1 : [x:e|p5==man(x):t|p6==tall(x):t|head==x:e] | x6==iota(r1.head,r1) : e|p==subj(e,x6):t]");
+
+
+		TTRRecordType r7 = TTRRecordType.parse("[e==run:es|r : [x2:e|p11 == man(x2):t|p12 == tall(x2):t|head==x2:e] | x1==eps(r.head,r) : e|p9==subj(e,x1):t]");
+
+		System.out.println("this:" + r1);
+		System.out.println("other:" + r7);
+		System.out.println("max super type is: " + r1.mostSpecificCommonSuperType(r7, map));
+		map.clear();
+		System.out.println("this minus other is: " + r1.subtract(r7, map));
+		System.out.println("map is: " + map);
 		
-	
-		
-		TTRRecordType r7 = TTRRecordType.parse("[x2:e|p5==man(x2):t|p6==tall(x2):t|head==x2:e]");
-		List<TTRRecordType> features = r1.decompose();
-//		
-		for(TTRRecordType r: features)
-			System.out.println(r);
-//		
-		
-		
-		
-//		TTRRecordType r2 = TTRRecordType
-//				.parse("[r3 : [x3:e|p==man(x3):t|head==x3:e] | x==eps(r3.head,r3) : e|e2==go : es|p2==subj(e2, x) : t]");
-//		
-//		TTRRecordType r3 = TTRRecordType
-//				.parse("[e3 : es|r : [x2 : e|head==x2 : e]|x1==iota(r.head, r) : e]");
-//		TTRRecordType r4 = TTRRecordType
-//				.parse("[x3:e|p==man(x3):t|head==x3:e]");
-//		 
 
-//		TTRRecordType r2 = TTRRecordType.parse("[r2 : [x5:e|head==x5:e] " + "|x2 : e|e1 : es|p3==subj(e1, x2) : t]");
-//		TTRRecordType r1 = TTRRecordType.parse("[x2:e|head==x2:e]");
-//		System.out.println("immediate supertypes:");
-//		for (TTRRecordType underspec : r3.makeOneStepLessSpecific())
-//			System.out.println(underspec);
-
-//		System.out.println("-----------------------");
-//		
-//		
-//		System.out.println("this:" + r1);
-//		System.out.println("other:" + r2);
-//		System.out.println("mcs: " + r1.mostSpecificCommonSuperType(r2, map));
-//		System.out.println("map is: " + map);
-//		map.clear();
-//		
-//		System.out.println("this minus other is: " + r1.subtract(r2, map));
-//		System.out.println("map is: " + map);
-
-//		 System.out.println("r1:" + r1);
-		// System.out.println("r2:" + r2);
-
-		// System.out.println(r2.subsumesMapped(r1, map));
-		// System.out.println(map);
-
-		// TTRRecordType r2 = TTRRecordType.parse("[x1==you : e|e2 : es|p1==subj(e2, x1)
-		// : t]");
-		// expected output: [e3==go : es]
-		// Maximimally specific supertype (r1, r2) == [x==you:e|e2:es|p1==subj(e2,x)]
-		// map: {x1=x, e1=e2, p=p1}
-
-		// map = new HashMap<Variable, Variable>();
-		// TTRRecordType r3 = TTRRecordType.parse("[x1==me : e|"
-		// + "x3==that : e|e3==eq : es|p4==obj(e3, x3) : t|p5==subj(e3, x1) : t]");
-
-		// TTRRecordType r4 = TTRRecordType.parse("[x2==that : e|e2==eq : es|p1==obj(e2,
-		// x2) : t]");
-
-//		System.out.println("this:" + r3);
-//		System.out.println("other:" + r4);
-//		System.out.println("max super type is: " + r4.mostSpecificCommonSuperType(r3, map));
-//		map.clear();
-//		System.out.println("this minus other is: " + r3.subtract(r4, map));
-		// System.out.println("map is: " + map);
 
 	}
 
