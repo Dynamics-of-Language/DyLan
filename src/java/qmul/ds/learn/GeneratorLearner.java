@@ -19,6 +19,8 @@ import qmul.ds.*;
 import qmul.ds.dag.*;
 import qmul.ds.formula.*;
 import qmul.ds.tree.Node;
+import qmul.ds.tree.label.Requirement;
+import qmul.ds.tree.label.TypeLabel;
 import qmul.ds.type.DSType;
 
 // TODO: save modelPath as a constant string so I can access it in BFG class by importing it from here.
@@ -30,15 +32,16 @@ public class GeneratorLearner {
     protected DAGParser<? extends DAGTuple, ? extends DAGEdge> parser;  //todo why this is not ICP?
     RecordTypeCorpus corpus = new RecordTypeCorpus();
 
-    protected TreeMap<String, TreeMap<Feature, Integer>> conditionalCountTable = new TreeMap<>();
+    protected TreeMap<String, TreeMap<Feature, Double>> conditionalCountTable = new TreeMap<>();
     protected TreeMap<String, TreeMap<Feature, Double>> conditionalProbTable = new TreeMap<>(); // TODO attention: these are NOT being globally updated.
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     static final String corpusPath = corpusFolderPath + "LC-CHILDESconversion396FinalCopy.txt";//"AAtrain.txt";
     static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     static public String[] DSTypesString = new String[]{"e", "t", "cn", "e>t", "cn>e", "e>cn", "e>(e>t)", "e>(t>t)", "e>(e>(e>t))"};
     static final int DSTypesCount = DSTypesString.length*2;
-    static final Integer K_SMOOTHING = 1;
+    static final Double K_SMOOTHING = 0.01;
     static final boolean LOG_PROB = true;
+    static final boolean useDSTypes = true;
 
     // copied from: core/src/babble/dialog/rl/TTRMDPStateEncoding.java
     // Semantic features of the goal, i.e. the grounded content, that are to be tracked by the mdp
@@ -46,7 +49,7 @@ public class GeneratorLearner {
     protected List<String> slot_values = new ArrayList<String>();
     // a set of lists of integers. Each list encodes a goal state, by enumerating the indeces of the features which should be on (i.e. = 1) in that goal state.
 //    protected Set<String> words = new HashSet<>();
-    protected HashMap<String, Integer> words = new HashMap<>(); // todo check for the usage
+    protected HashMap<String, Integer> wordsCountMap = new HashMap<>(); // todo check for the usage
 
     protected static Logger logger = Logger.getLogger(GeneratorLearner.class);
     public static final String ANSI_RESET = "\u001B[0m";
@@ -98,15 +101,13 @@ public class GeneratorLearner {
      * @param goal
      */
     public void addAsGoal(TTRRecordType goal) {
-
-//		List<TTRRecordType> goal_features = null;
         logger.trace("Adding " + goal);
 //        TTRRecordType successContext = abstractOutSlotValues(goal);
 //        logger.trace("Abstracted " + successContext);
 //        List<TTRRecordType> decomposition = successContext.decompose();
         List<TTRRecordType> decomposition = goal.decompose();
         HashMap<Variable, Variable> map = new HashMap<>();
-        SortedSet<Integer> goalIndeces = new TreeSet<Integer>();
+        SortedSet<Integer> goalIndeces = new TreeSet<Integer>(); // from when we had a list; Now it's a treeset so we don't need this.
         List<TTRRecordType> newFeatures = new ArrayList<TTRRecordType>();
         decompLoop:
         for (TTRRecordType newFeature : decomposition) {
@@ -215,11 +216,18 @@ public class GeneratorLearner {
 
 
     // Calculates the probability of words by dividing their count by total count and writes results to file.
-    public void calculateProbabilities(Integer totalWordsCount) {
-        for (String word : words.keySet()) {
-            double prob = (double) words.get(word) / (double) totalWordsCount;
-            String line = String.format("%s\t%f", word, prob);
+    public void calculateWordProbabilities(Integer totalWordsCount) throws IOException {
+        FileWriter writer = new FileWriter(grammarPath + File.separator+"wordProbs.tsv", false);
+
+        for (String word : wordsCountMap.keySet()) {
+            double prob = (double) wordsCountMap.get(word) / (double) totalWordsCount;
+            if (LOG_PROB)
+                prob = Math.log(prob);
+            String line = String.format("%s\t%f\n", word, prob);
+            writer.write(line);
         }
+        writer.close();
+
     }
 
     /**
@@ -237,92 +245,74 @@ public class GeneratorLearner {
             addAsGoal(goldSem);
             for (Word word : sentence) { // todo Does this add duplicate words?
                 String w = word.toString();
-                Integer count = words.getOrDefault(w, 0) + 1;
-                words.put(w, count);
-                totalWordsCount += count;
+                wordsCountMap.put(w, wordsCountMap.getOrDefault(w, 0) + 1);
+                totalWordsCount += 1;
             }
-            calculateProbabilities(totalWordsCount);
+            try {
+                calculateWordProbabilities(totalWordsCount);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // Now same thing for DSTree features and corresponding requirement types:
-        for(String typeStr: DSTypesString){
-            DSType dsType = DSType.parse(typeStr);
-            Feature dsTypeAsFeature = new Feature(dsType, false);
-            Feature reqTypeAsFeature = new Feature(dsType, true);
-            goal_features.add(dsTypeAsFeature);
-            logger.info("Added DSType " + dsTypeAsFeature);
-            logger.info("goal features (size: " + goal_features.size() + "): " + goal_features);
-            goal_features.add(reqTypeAsFeature);
-            logger.info("Added reqType " + reqTypeAsFeature);
-            logger.info("goal features (size: " + goal_features.size() + "): " + goal_features);
+        if(useDSTypes) {
+            for (String typeStr : DSTypesString) {
+                DSType dsType = DSType.parse(typeStr);
+                Feature dsTypeAsFeature = new Feature(dsType, false);
+                Feature reqTypeAsFeature = new Feature(dsType, true);
+                goal_features.add(dsTypeAsFeature);
+                logger.info("Added DSType " + dsTypeAsFeature);
+                logger.info("goal features (size: " + goal_features.size() + "): " + goal_features);
+                goal_features.add(reqTypeAsFeature);
+                logger.info("Added reqType " + reqTypeAsFeature);
+                logger.info("goal features (size: " + goal_features.size() + "): " + goal_features);
+            }
         }
 
         // Then add them as columns in the table.
-        for (String word: words.keySet()) {
-            TreeMap<Feature, Integer> row = new TreeMap<>();
+        for (String word: wordsCountMap.keySet()) {
+            TreeMap<Feature, Double> row = new TreeMap<>();
             for (Feature f : goal_features)
-                row.put(f, 0);
+                row.put(f, 0.0);
+
             conditionalCountTable.put(word, row);
 //            logger.trace("Added row " + i + " to conditionalCountTable: " + row);
         }
         logger.info("goal_features at the end of initialiseCountTable: " + goal_features);
     }
 
-    public void printCountTable() {
-        for (String word : words.keySet()) {
-            TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
-            for (Feature feature: goal_features) {
-                Integer count = row.get(feature);
-                logger.trace(word + "\t" + feature + "\t" + count);
-            }
-        }
-    }
-
 
     /**
      * Normalises a table by dividing elements in a column by their sum.
-     * Pass addKSmoothing=0 to have no smoothing.
-     *
-     * @param addKSmoothing value of K for addKSmoothing. Set the global variable `K_SMOOTHING`.
-     * @param log_prob if we want to save log_prob or prob
+     * Set K_SMOOTHING=0 on top of the class to have no smoothing.
      */
-    public void normaliseCountTable(int addKSmoothing, boolean log_prob) throws IOException {
-        FileWriter writer = new FileWriter(grammarPath + File.separator+"wordProbs.tsv", false);
-        HashMap<String, Double> wordsProb = new HashMap<>();
+    public void normaliseCountTable() {
         HashMap<Feature, Double> total = new HashMap<>(); // Don't have to init to zero since I'm using getOrDefault method.
-        Double totalCount = 0.0; // to calculate wordsProb
         // First, find total sum of each column in this loop:
-        for (String word : words.keySet()) {
-            TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
+        for (String word : wordsCountMap.keySet()) {
+            TreeMap<Feature, Double> row = conditionalCountTable.get(word);
             for (Feature feature : goal_features) {
-                Integer count = row.get(feature);
-                wordsProb.put(word, wordsProb.getOrDefault(word, 0.0) + (double)count);
-                totalCount += count;
-                row.put(feature, count + addKSmoothing);
-                total.put(feature, total.getOrDefault(feature, 0.0) + count + addKSmoothing); // todo I don't think if addk here is correct
+                Double count = row.get(feature);
+                Double smoothedCount = count + K_SMOOTHING;
+                row.put(feature, smoothedCount);
+                total.put(feature, total.getOrDefault(feature, 0.0) + smoothedCount);
                 // If not, add `count` to 0, which means just put `count`. Used because key might not be available.
             }
+            conditionalCountTable.put(word, row);
         }
         // Then divide columns by the corresponding `total` to get probabilities and save them in `conditionalProbTable`.
-        for (String word : words.keySet()) {
-            TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
+        for (String word : wordsCountMap.keySet()) {
+            TreeMap<Feature, Double> row = conditionalCountTable.get(word);
             TreeMap<Feature, Double> probRow = new TreeMap<>();
             for (Feature feature : goal_features) { //todo probably need to update this to use goal_features?
-                    Double prob = ((double) row.get(feature)) / total.get(feature); // do I need to do casting?
-                if (log_prob)
+                    Double prob = row.get(feature) / total.get(feature); // do I need to do casting?
+                if (LOG_PROB)
                     prob = Math.log(prob);
                 probRow.put(feature, prob);
             }
             conditionalProbTable.put(word, probRow);
-            // AA: Write wordsprob to file
-            Double wordProb = wordsProb.get(word) / totalCount;
-            if (log_prob)
-                wordProb = Math.log(wordProb);
-            wordsProb.put(word, wordProb); // not going to use the map really after this. basically updating for no reason.
-            String line = word + "\t" + wordProb + "\n";
-            writer.write(line);
         }
-        writer.close();
     }
 
     /**
@@ -433,19 +423,39 @@ public class GeneratorLearner {
 //                            rCur = rCur.removeHead();
                         rCur = rCur.removeHeadIfManifest();
                         String word = curEdge.word().word();
-                        Node pointedNode = parser.getState().getCurrentTuple().getTree().getPointedNode(); // TODO ----------------------------------------------------------------------
-                        Feature pointedNodeFeature = new Feature(pointedNode.getType());
+
+                        Feature pointedNodeFeature;
+                        if(useDSTypes){
+                            Node pointedNode = curTuple.getTree().getPointedNode();//parser.getState().getCurrentTuple().getTree().getPointedNode(); // TODO ----------------------------------------------------------------------
+                            DSType t = pointedNode.getType();
+                            Requirement req = pointedNode.getTypeRequirement();
+                            if (t != null) {
+                                pointedNodeFeature = new Feature(t);
+                            } else if (req != null) {
+                                TypeLabel tl = (TypeLabel) req.getLabel();
+                                t = tl.getType();
+                                pointedNodeFeature = new Feature(t, true);
+                            } else {
+                                logger.error("pointedNodeFeature is null");
+                                throw new IllegalStateException("pointedNodeFeature is null");
+                            }
+                            System.out.println("tree: " + curTuple.getTree());
+                            System.out.println(ANSI_CYAN+"pointedNodeFeature: " + pointedNodeFeature+ " _____ Current word: " + word + ANSI_RESET);
 //                        DSType motherNodeType = parser.getState().getCurrentTuple().getTree().getLocalRoot(pointedNode).getType();  // todo is getLocalRoot correct to get the mother node? + deal with this later.
+                            System.out.println("adding 1 to cell: type:"+ pointedNodeFeature + " word: " + word);
+                        }
                         TTRRecordType rInc = finalSem.subtract(rCur, new HashMap<>());
                         logger.trace("rG: " + finalSem + " MINUS rCur: " + rCur + " EQUALS rInc: " + rInc);
-                        TreeMap<Feature, Integer> row = conditionalCountTable.get(word);
-                           List<TTRRecordType> mappedFeatures = mapFeatures(rInc);
-
+                        TreeMap<Feature, Double> row = conditionalCountTable.get(word);
+                        List<TTRRecordType> mappedFeatures = mapFeatures(rInc);
                         for (TTRRecordType correspondingFeature: mappedFeatures) { // Updates the CountTable with semantic features.
                             Feature f = new Feature(correspondingFeature);
                             row.put(f, row.get(f) + 1);
                         }
-                        row.put(pointedNodeFeature, row.get(pointedNodeFeature)+ 1); // Updates the CountTable with syntactic features.
+
+                        if (useDSTypes)
+                            row.put(pointedNodeFeature, row.get(pointedNodeFeature)+ 1); // Updates the CountTable with syntactic features.
+
                         curEdge = dag.getParentEdge(curTuple);
                         curTuple = dag.getParent(curTuple); // AA: Updating curTuple to the previous one (until we get to root).
                     }
@@ -454,7 +464,7 @@ public class GeneratorLearner {
                 parsed = parser.parse();
             }
         }
-        normaliseCountTable(K_SMOOTHING, LOG_PROB);
+        normaliseCountTable();
         System.out.println(goal_features);
         saveModelToFile(conditionalProbTable);  // todo asked for some unhandled exception, I just added it. IS THAT OK?
         // todo there is a BUG in writeToFile: if you re-run it, it will append to the file, not overwrite it.
