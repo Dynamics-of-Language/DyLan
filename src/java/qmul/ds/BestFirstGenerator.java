@@ -13,7 +13,7 @@ import qmul.ds.dag.WordLevelContextDAG;
 import qmul.ds.tree.Tree;
 /**
  * An abstract best first DAG generator with a beam whose corresponding parser is {@link InteractiveContextParser} 
- * This class is agnostic about how the beam is populated (e.g. probabilistically, neurally, etc.
+ * This class is agnostic about how the beam is populated (e.g. probabilistically, neurally, etc.)
  * 
  * @author arash
  *
@@ -68,7 +68,7 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 	public abstract List<String> populateBeam();
 	
 	
-	public String generateNextWord()
+	public boolean generateNextWord()
 	{
 		
 		List<String> beamWords = this.populateBeam();
@@ -77,10 +77,13 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 		{
 			DAG<DAGTuple, GroundableEdge> result = this.generateWord(word, goal);
 			if (result!=null)
-				return word;
+			{
+				this.generated.addWord(word);
+				return true;
+			}
 		}
 		
-		return null;
+		return false;
 	}
 
 }

@@ -26,7 +26,8 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 
 	protected TTRFormula goal;
 
-	protected List<String> generated = new ArrayList<String>();
+	//This can be changed to an object of Utterance
+	protected Utterance generated = new Utterance(agentName, "");
 
 	public static String agentName = "Dylan";
 
@@ -108,7 +109,9 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 	/**
 	 * Generate to goal from the current context. Default implementation is to call generateNextWord until goal is reached.
 	 * 
-	 * Contract with generateNextWord: it will return false if no option subsumes goal.
+	 * Contract with generateNextWord: it will return false if no option subsumes goal, else the generation fails for some 
+	 * other reason (e.g. no words parsable). It is generateNextWord that needs to add the word to {@link generated}, 
+	 * as this method does not do that. Risk is getting duplicates.
 	 * 
 	 * @return true if goal is reached. {@link generated} will contain the list of words generated, even when
 	 * the goal was not reached, and the generation is partial.
@@ -122,25 +125,22 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		
 		//generate until goal is reached.
 		//we know that curTuple subsumes goal. Generate until the reverse is also true.
+		//this impelentation assumes monotonicity (as does DS in general)
 		while(!(goal.subsumes(curTuple.getSemantics())))
-		{
-			String nextWord = generateNextWord();
-			
-			if (nextWord == null)
+		{	
+			if (!generateNextWord())
 				return false;
 			
-			generated.add(nextWord);
 		}
 		
-		return true;
-		
+		return true;	
 	}
 	
-	/**
+	/** Contract: it is generateNextWord() and NOT generate() that adds words to the list {@link generated}
 	 * 
-	 * @return the next word; null if none can be generated
+	 * @return boolean if the next word was successfully generate; false otherwise
 	 */
-	public abstract String generateNextWord();
+	public abstract boolean generateNextWord();
 	
 	public void init()
 	{

@@ -333,6 +333,14 @@ public class Utterance {
 		return null;
 	}
 	
+	/**
+	 * Add one more word to this utterance; i.e. with no speaker change. Assumes this.speaker is already initialised.
+	 * @param word
+	 */
+	public void addWord(String word)
+	{
+		words.add(new UtteredWord(word, this.speaker));
+	}
 	
 
 }

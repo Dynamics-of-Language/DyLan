@@ -245,10 +245,12 @@ public class InteractiveContextGenerator extends
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
+	
+	
 	@Override
-	public String generateNextWord() {
+	public boolean generateNextWord() {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 }
