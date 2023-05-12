@@ -89,6 +89,14 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		return parser.getState();
 	}
 	
+	/**
+	 * will use parser.generateWord to generate word w in the current context. This will fail when:
+	 * (a) the word is not parsable; or (b) that no parse path can be found such that the resulting tuple
+	 * subsumes goal. 
+	 * @param w
+	 * @param goal
+	 * @return resulting DAG; null if the word cannot be generated.
+	 */
 	public DAG<T,E> generateWord(String w, TTRFormula goal)
 	{
 		UtteredWord word = new UtteredWord(w.toLowerCase(), agentName);
@@ -97,54 +105,48 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 		return dag;
 	}
 
-	public abstract boolean generate();
+	/**
+	 * Generate to goal from the current context. Default implementation is to call generateNextWord until goal is reached.
+	 * 
+	 * Contract with generateNextWord: it will return false if no option subsumes goal.
+	 * 
+	 * @return true if goal is reached. {@link generated} will contain the list of words generated, even when
+	 * the goal was not reached, and the generation is partial.
+	 */
+	public boolean generate()
+	{
+		Context<T,E> context = parser.getContext();
+		T curTuple = context.getCurrentTuple();
+		if (!curTuple.getSemantics().subsumes(goal))
+			return false;
+		
+		//generate until goal is reached.
+		//we know that curTuple subsumes goal. Generate until the reverse is also true.
+		while(!(goal.subsumes(curTuple.getSemantics())))
+		{
+			String nextWord = generateNextWord();
+			
+			if (nextWord == null)
+				return false;
+			
+			generated.add(nextWord);
+		}
+		
+		return true;
+		
+	}
 	
+	/**
+	 * 
+	 * @return the next word; null if none can be generated
+	 */
+	public abstract String generateNextWord();
 	
 	public void init()
 	{
 		parser.init();
 	}
 
-//	public boolean generate() {
-//		if (parser.getState().isExhausted()) {
-//			logger.info("state exhausted");
-//			return false;
-//		}
-//
-//		do {
-//
-//			if (!adjustOnce()) {
-//				logger.info("wordstack:" + parser.getState().wordStack());
-//				logger.info("depth:" + parser.getState().getDepth());
-//				parser.getState().setExhausted(true);
-//				return false;
-//			}
-//
-//		} while (!(parser.getState().getCurrentTuple().isComplete()
-//				&& goal.subsumes(parser.getState().getCurrentTuple().getSemantics(parser.getContext()))));
-//
-//		return true;
-//	}
-
-//
-//	private boolean adjustOnce() {
-//
-//		if (parser.getState().outDegree(parser.getState().getCurrentTuple()) == 0)
-//			applyAllOptions();
-//
-//		E result;
-//		do {
-//
-//			result = parser.getState().goFirst();
-//
-//			if (result != null) {
-//
-//				break;
-//			}
-//		} while (parser.getState().attemptBacktrack());
-//
-//		return (result != null);
-//
-//	}
+	
 
 }
