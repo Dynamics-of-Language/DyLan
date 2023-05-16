@@ -35,12 +35,38 @@ public class RDFVariable extends Variable {
 		super.name = VAR_NAMESPACE + var;
 	}
 	
-	public RDFVariable(Resource var)
+	public RDFVariable(RDFNode variable)
 	{
+		if (!(variable instanceof Resource))
+			throw new IllegalArgumentException("Cannot create an RDFVariable from a non-resource (e.g. literal):"+ variable);
+		
+		Resource var = (Resource) variable;
+		
 		if (var.getURI().startsWith(VAR_NAMESPACE))
 			super.name = var.getURI();
 		else
 			throw new IllegalArgumentException("Doesn't seem to be a variable resource:"+var.getURI());
+	}
+	
+	/**
+	 * Variable factory; 
+	 * @param variable
+	 * @return
+	 */
+	public static RDFVariable getNewVariable(RDFNode variable)
+	{
+		if (!(variable instanceof Resource))
+			throw new IllegalArgumentException("Cannot create an RDFVariable from a non-resource (e.g. literal):"+ variable);
+		
+		Resource var = (Resource) variable;
+		
+		if (var.getURI().startsWith(VAR_NAMESPACE) && var.getURI().substring(VAR_NAMESPACE.length(), var.getURI().length()).matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+			return new RDFMetaVariable(var);
+		else if (var.getURI().startsWith(VAR_NAMESPACE))
+			return new RDFVariable(var);
+		else
+			throw new IllegalArgumentException("Doesn't seem to be a variable resource:"+var.getURI());
+		
 	}
 	
 	public String toString()
@@ -64,6 +90,15 @@ public class RDFVariable extends Variable {
 	public static boolean isRDFVariable(RDFNode r)
 	{
 		return r.toString().startsWith(VAR_NAMESPACE);
+		
+	}
+	
+	public static boolean isRDFMetaVariable(RDFNode r)
+	{
+		String nameAndPrefix = r.toString();
+		
+		return nameAndPrefix.startsWith(VAR_NAMESPACE) 
+				&& nameAndPrefix.substring(VAR_NAMESPACE.length(), nameAndPrefix.length()).matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN);
 		
 	}
 	

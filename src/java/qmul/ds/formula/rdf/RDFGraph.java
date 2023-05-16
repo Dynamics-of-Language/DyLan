@@ -28,6 +28,7 @@ import org.apache.jena.util.ResourceUtils;
 import org.apache.log4j.Logger;
 
 import qmul.ds.Context;
+import qmul.ds.action.meta.Meta;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.Variable;
 import qmul.ds.formula.ttr.TTRRecordType;
@@ -39,7 +40,7 @@ import qmul.ds.tree.Tree;
  * 
  *         RDFGraphs are specified in turtle.
  * 
- *         Variables are designated using the prefix 'var', e.g. var:x, var:e,
+ *         Variables are designated using the prefix 'var', e.g. var:x, var:e; for metavariables it's, var:X, var:E1, etc.
  *         etc
  * 
  *         Variables don't have DS types, therefore the following conventions
@@ -54,13 +55,14 @@ import qmul.ds.tree.Tree;
  * 
  *         Best practice is to use available properties, predicates, etc. from
  *         an existing ontology, e.g. schema.org
- * 
- *
  */
-public class RDFGraph extends RDFFormula {
+
+public class RDFGraph extends RDFFormula implements Meta<RDFGraph> {
 
 	private static final long serialVersionUID = 1L;
 	protected Model rdfModel;
+	
+	
 
 	protected static Logger logger = Logger.getLogger(RDFGraph.class);
 	/**
@@ -122,6 +124,7 @@ public class RDFGraph extends RDFFormula {
 		storeVariables(this.rdfModel);
 	}
 
+	
 	@Override
 	public RDFGraph substitute(Formula f1, Formula f2) {
 		RDFGraph newGraph = new RDFGraph(this);
@@ -132,6 +135,7 @@ public class RDFGraph extends RDFFormula {
 		RDFVariable v1 = (RDFVariable) f1;
 		RDFVariable v2 = (RDFVariable) f2;
 
+		
 		ResourceUtils.renameResource(newGraph.findResource(v1.getFullName()), v2.getFullName());
 
 		newGraph.variables.remove(v1);
@@ -143,6 +147,7 @@ public class RDFGraph extends RDFFormula {
 
 	public Resource findResource(String nodeID) {
 		Resource node = this.rdfModel.getResource(nodeID);
+		
 		return node;
 	}
 
@@ -151,7 +156,7 @@ public class RDFGraph extends RDFFormula {
 		while (mIter.hasNext()) {
 			Statement stmt = mIter.nextStatement();
 
-			Resource subj = stmt.getSubject();
+			RDFNode subj = stmt.getSubject();
 			RDFNode obj = stmt.getObject();
 
 			Resource objR = obj.isResource() ? obj.asResource() : null;
@@ -159,22 +164,31 @@ public class RDFGraph extends RDFFormula {
 			String subjS = subj.toString();
 
 			if (subjS.startsWith(RDFVariable.VAR_NAMESPACE)) {
-				getVariables()
-						.add(new RDFVariable(subjS.substring(RDFVariable.VAR_NAMESPACE.length(), subjS.length())));
+				String name = subjS.substring(RDFVariable.VAR_NAMESPACE.length(), subjS.length());
+				
+				if (name.matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+				{
+					logger.debug("Storing RDF MetaVariable: "+name);
+					getVariables().add(new RDFMetaVariable(name));
+				}
+				else
+					getVariables().add(new RDFVariable(name));
 
 			}
 
 			if (objR != null && objR.toString().startsWith(RDFVariable.VAR_NAMESPACE)) {
 				String objRS = objR.toString();
-				getVariables().add(new RDFVariable(
-						objRS.substring(RDFVariable.VAR_NAMESPACE.length(), objRS.length()).toString()));
+				String name = objRS.substring(RDFVariable.VAR_NAMESPACE.length(), objRS.length());
+				
+				if (name.matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+				{
+					logger.debug("Storing RDF MetaVariable: "+name);
+					getVariables().add(new RDFMetaVariable(name));
+				}
+				else
+					getVariables().add(new RDFVariable(name));
 			}
 
-			// System.out.println("subj is: "+subj);
-			// System.out.println("obj is: "+objR);
-
-			// getVariables().add(new RDFVariable(stmt.getSubject().toString()));
-			// getVariables().add(new RDFVariable(stmt.getObject().toString()));
 		}
 	}
 
@@ -298,8 +312,12 @@ public class RDFGraph extends RDFFormula {
 		if (!s1.getPredicate().equals(s2.getPredicate()))
 			return false;
 		//we know the subject is always going to be a variable
-		RDFVariable s1SubjVar = new RDFVariable(s1.getSubject());
-		RDFVariable s2SubjVar = new RDFVariable(s2.getSubject());
+		RDFVariable s1SubjVar = RDFVariable.getNewVariable(s1.getSubject());
+		RDFVariable s2SubjVar = RDFVariable.getNewVariable(s2.getSubject());
+		
+		//currently not allowing s2 to contain metavariables
+		if (s2SubjVar instanceof RDFMetaVariable)
+			throw new IllegalArgumentException("Metas in argument of subsumes not currently allowed:"+s2SubjVar);
 		
 		if (map.containsKey(s1SubjVar))
 		{
@@ -320,12 +338,12 @@ public class RDFGraph extends RDFFormula {
 		
 		if (RDFVariable.isRDFVariable(s1Obj))
 		{
-			RDFVariable s1ObjVar = new RDFVariable((Resource)s1Obj);
+			RDFVariable s1ObjVar = RDFVariable.getNewVariable(s1Obj);
 			//of the object of s2 is not also a variable, then return false
 			if (!RDFVariable.isRDFVariable(s2Obj))
 				return false;
 			
-			RDFVariable s2ObjVar = new RDFVariable((Resource)s2Obj);
+			RDFVariable s2ObjVar = RDFVariable.getNewVariable(s2Obj);
 			
 			
 			if (map.containsKey(s1ObjVar))
@@ -412,8 +430,15 @@ public class RDFGraph extends RDFFormula {
 		return false;
 		
 	}
-	
-	@Override
+	/**
+	 * Checking Subsumption has an important side-effect: if it's successful, all the RDF meta variables in
+	 * this graph will instantiate to the RDFVariable they map to for the subsumption.
+	 * 
+	 * LIMITATION: the argument graph, o, must not contain any meta-variables. Can add this functionality later, but 
+	 * right now it is not needed for our purpose: that of picking out a sub-graph from the main graph and copying it 
+	 * onto a LINK-structure to model adjuncts.
+	 * 
+	 */
 	public boolean subsumesMapped(Formula o, HashMap<Variable, Variable> map) {
 		
 		if (!(o instanceof RDFGraph))
@@ -421,7 +446,19 @@ public class RDFGraph extends RDFFormula {
 		
 		RDFGraph other = (RDFGraph)o;
 		
-		return subsumesMapped(other, this.rdfModel.listStatements(), map);
+		if (subsumesMapped(other, this.rdfModel.listStatements(), map))
+		{
+			//TODO: instantiate the meta-variables in this, and in o, based on map
+			for (RDFMetaVariable meta: getMetaVariables())
+			{
+					//need to instantiate v to map.get(v)
+				
+				meta.set(map.get(meta));
+				
+			}
+			return true;
+		}
+		return false;
 	}
 
 	protected String removePrefix(String turtle) {
@@ -445,7 +482,27 @@ public class RDFGraph extends RDFFormula {
 
 		return "{" + removePrefix(writer.toString()) + "}";
 	}
+	
+	public String toDebugString() {
+		StringWriter writer = new StringWriter();
 
+		RDFDataMgr.write(writer, this.rdfModel, Lang.TURTLE);
+
+		return "{" + removePrefix(writer.toString()) + "} / Metas: "+getMetaVariables();
+	}
+
+	public Set<RDFMetaVariable> getMetaVariables()
+	{
+		Set<RDFMetaVariable> metas = new HashSet<RDFMetaVariable>();
+		for(Variable v: getVariables())
+		{
+			if (v instanceof RDFMetaVariable)
+				metas.add((RDFMetaVariable)v);
+		}
+		return metas;
+		
+	}
+	
 	public String toUnicodeString() {
 		String plain = toString();
 		String[] lines = plain.split("\n");
@@ -496,14 +553,49 @@ public class RDFGraph extends RDFFormula {
 
 		while (iter.hasNext()) {
 			Statement stmt = iter.next();
-			Resource subj = stmt.getSubject();
+			RDFNode subj = stmt.getSubject();
+			RDFNode obj = stmt.getObject();
 
-			// Assuming every variable is the subject of some statement
-			// might turn out to be a bad assumption
-			// String subjS = subj.toString();
+			//first freshen the subject var
 
 			if (RDFVariable.isRDFVariable(subj)) {
 				RDFVariable var = new RDFVariable(subj);
+				if (done.contains(var))
+					continue;
+				
+				
+
+				if (var.getName().startsWith(Tree.ENTITY_VARIABLE_ROOT)) {
+					RDFVariable newVar = new RDFVariable(c.getFreshEntityVariable());
+					while (hasVariable(newVar))
+						newVar = new RDFVariable(c.getFreshEntityVariable());
+
+					fresh = fresh.substitute(var, newVar);
+
+				} else if (var.getName().startsWith(Tree.EVENT_VARIABLE_ROOT)) {
+					RDFVariable newVar = new RDFVariable(c.getFreshEventVariable());
+					while (hasVariable(newVar))
+						newVar = new RDFVariable(c.getFreshEventVariable());
+
+					fresh = fresh.substitute(var, newVar);
+
+				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
+					continue;
+				//not freshening metavariables
+				else if (var.getName().matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+				{
+					logger.trace("Not freshening meta-variable: "+var);
+				}
+				else
+					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
+
+				done.add(var);
+
+			}
+			
+			//now freshen obj var
+			if (RDFVariable.isRDFVariable(obj)) {
+				RDFVariable var = new RDFVariable(obj);
 				if (done.contains(var))
 					continue;
 
@@ -523,13 +615,19 @@ public class RDFGraph extends RDFFormula {
 
 				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
 					continue;
-				else {
-					throw new IllegalArgumentException("Illegal Variable:" + var);
+				//not freshening metavariables
+				else if (var.getName().matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+				{
+					logger.trace("Not freshening meta-variable: "+var);
 				}
+				else
+					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
 
 				done.add(var);
 
 			}
+			
+			
 		}
 
 		return fresh;
@@ -543,13 +641,49 @@ public class RDFGraph extends RDFFormula {
 
 		while (iter.hasNext()) {
 			Statement stmt = iter.next();
-			Resource subj = stmt.getSubject();
+			RDFNode subj = stmt.getSubject();
+			RDFNode obj = stmt.getObject();
 
-			// Assuming every variable is the rdf subject of some rdf statement
-			// might turn out to be a bad assumption
+			//first freshen the subject var
 
 			if (RDFVariable.isRDFVariable(subj)) {
 				RDFVariable var = new RDFVariable(subj);
+				if (done.contains(var))
+					continue;
+				
+				
+
+				if (var.getName().startsWith(Tree.ENTITY_VARIABLE_ROOT)) {
+					RDFVariable newVar = new RDFVariable(t.getFreshEntityVariable());
+					while (hasVariable(newVar))
+						newVar = new RDFVariable(t.getFreshEntityVariable());
+
+					fresh = fresh.substitute(var, newVar);
+
+				} else if (var.getName().startsWith(Tree.EVENT_VARIABLE_ROOT)) {
+					RDFVariable newVar = new RDFVariable(t.getFreshEventVariable());
+					while (hasVariable(newVar))
+						newVar = new RDFVariable(t.getFreshEventVariable());
+
+					fresh = fresh.substitute(var, newVar);
+
+				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
+					continue;
+				//not freshening metavariables
+				else if (var.getName().matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+				{
+					logger.trace("Not freshening meta-variable: "+var);
+				}
+				else
+					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
+
+				done.add(var);
+
+			}
+			
+			//now freshen obj var
+			if (RDFVariable.isRDFVariable(obj)) {
+				RDFVariable var = new RDFVariable(obj);
 				if (done.contains(var))
 					continue;
 
@@ -569,18 +703,50 @@ public class RDFGraph extends RDFFormula {
 
 				} else if (var.getName().startsWith(Formula.RDF_LAMBDA_VARIABLE_ROOT))
 					continue;
+				//not freshening metavariables
+				else if (var.getName().matches(RDFMetaVariable.META_RDFVARIABLE_PATTERN))
+				{
+					logger.trace("Not freshening meta-variable: "+var);
+				}
 				else
 					throw new IllegalStateException("Found illegal RDF variable:" + var.getName());
 
 				done.add(var);
 
 			}
+			
+			
 		}
 
 		return fresh;
 
 	}
 
+	/**
+	 * Returns RDFGraph with all RDFMetaVariables instantiated to their values, 
+	 * and left untouched if the meta variable is uninstantiated.
+	 */
+	public RDFGraph instantiate()
+	{
+		//TODO: iterate through all metavariables and substitute by their instance.
+		
+		RDFGraph instance = new RDFGraph(this);
+		
+		Set<RDFMetaVariable> metas = getMetaVariables();
+
+		for(RDFMetaVariable meta: metas)
+		{
+			
+			RDFVariable inst = meta.instantiate();
+			
+			instance = instance.substitute(meta, inst);
+		}
+		
+		return instance;
+		
+	}
+	
+	
 	public Dimension getDimensionsWhenDrawn(Graphics2D g2) {
 		FontMetrics metrics = g2.getFontMetrics();
 
@@ -641,52 +807,86 @@ public class RDFGraph extends RDFFormula {
 //				+ "}";
 //		
 		
-		RDFGraph G1 =  new RDFGraph("{"
-				+ "var:e dsrdf:agent var:x3; "
-				+ "rdfs:label \"go\"@en; "
-				+ "dsrdf:theme var:x1 ."
-				+ "var:x1 a dsrdf:Theme;"
-				+ "rdfs:label \"mary\"@en .}");
+//		
+		
+		RDFGraph G1 = new RDFGraph("{"
+				+ "var:E7 dsrdf:agent var:x12;"
+				+ "rdfs:label \"go\"@en ."
+				
+				+ "var:e2 dsrdf:agent var:X6; "
+				+ "rdfs:label \"come\"@en; "
+				+ "dsrdf:theme var:x7 ."
+				
+				+ "var:x7 rdfs:label \"mary\"@en;"
+				+ "a dsrdf:Theme .}");
+		
+		
 		
 		RDFGraph G2 = new RDFGraph("{"
 				+ "var:e7 dsrdf:agent var:x12;"
 				+ "rdfs:label \"go\"@en ."
+				
 				+ "var:e2 dsrdf:agent var:x6; "
 				+ "rdfs:label \"come\"@en; "
 				+ "dsrdf:theme var:x7 ."
+				
 				+ "var:x7 rdfs:label \"mary\"@en;"
 				+ "a dsrdf:Theme .}");
 		
-		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 		
 		
-		System.out.println(G1.subsumesMapped(G2, map));
+	
+		HashMap<Variable,Variable> map = new HashMap<Variable,Variable>();
 		
-		System.out.println(map);
-
 		
+		System.out.println("G1:"+ G1.toDebugString());
+		System.out.println();
+		System.out.println("G2:"+ G2.toDebugString());
+		System.out.println("-------------------------------------");
+	
+		if (G1.subsumesMapped(G2, map))
+		{
+			System.out.println("Subsumption succeeded. ---------");
+			System.out.println("G1 now is:"+G1.toDebugString());
+		}
+		else
+			System.out.println("Subsumption failed");
+		
+		RDFGraph G1Instance = G1.instantiate();
+		
+		System.out.println("G1 instance:"+G1Instance.toDebugString());
 
-		// System.out.println(runG.betaReduce(janeGraph));
-		// System.out.println("before collapse:\n"+ janeGraph);
 
-		// RDFGraph janeFuture = janeGraph.substitute(new RDFVariable("y"), new
-		// RDFVariable("x"));
+	}
 
-		// System.out.println("after collapse:\n"+ janeGraph.collapseHeads());
+	@Override
+	public boolean backtrack() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-		// System.out.println(janeGraph.removeHead());
+	@Override
+	public void unbacktrack() {
+		// TODO Auto-generated method stub
+		
+	}
 
-//		System.out.println("Head is: "+janeGraph.getHead());
-//		
-//		RDFFormula subst = janeGraph.substitute(new RDFVariable("x"), new RDFVariable("x1"));
-//		
-//		RDFDataMgr.write(System.out, janeGraph.getModel(), Lang.TURTLE); //write graph
-//		
-//		System.out.println(subst);
-//		
-//		System.out.println("Variables are:");
-//		System.out.println(subst.getVariables());
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void partialReset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public RDFGraph getValue() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
