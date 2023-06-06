@@ -885,8 +885,8 @@ public class RDFGraph extends RDFFormula implements Meta<RDFGraph> {
 
 	@Override
 	public RDFGraph getValue() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return instantiate();
 	}
 
 }
