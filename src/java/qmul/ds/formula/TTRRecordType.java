@@ -599,7 +599,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		for (int i = mcsFields.size() - 1; i >= 0; i--) {
 
 			TTRField curMCSField = mcsFields.get(i);
-			System.out.println("Processing field in mcs:"+curMCSField);
+			logger.debug("Processing field in mcs:"+curMCSField);
 			Variable labelInThis = map.get(curMCSField.getLabel());
 			TTRField fieldInThis = result.getField(labelInThis);
 

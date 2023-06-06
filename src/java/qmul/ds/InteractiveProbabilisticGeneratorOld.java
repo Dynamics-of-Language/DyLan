@@ -3,7 +3,6 @@
  */
 package qmul.ds;
 
-import java.awt.geom.Arc2D;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -11,14 +10,12 @@ import java.util.regex.Matcher;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
-import org.apache.jena.tdb.store.Hash;
 import org.apache.log4j.Logger;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.Lexicon;
 import qmul.ds.dag.DAG;
 import qmul.ds.dag.DAGTuple;
 import qmul.ds.dag.GroundableEdge;
-import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.Variable;
 import qmul.ds.learn.*;
@@ -31,7 +28,7 @@ import qmul.ds.type.DSType;
 /**
  * @author Arash Ashrafzadeh, Arash Eshghi
  */
-public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, GroundableEdge> {
+public class InteractiveProbabilisticGeneratorOld extends BestFirstGenerator {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -41,54 +38,59 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
     public static final String ANSI_RED = "\u001B[31m";
     final static String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static final String corpusPath = GeneratorTester.corpusPath;//corpusFolderPath + "AAtrain-3.txt";//""AA-train-lower-396-matching-top1.txt"; //todo same corpus as leanrer
-    static final Integer BEAM = 3;
-    static final String[] DSTypesString = GeneratorLearner.DSTypesString;
-    static final int DSTypesCount = DSTypesString.length * 2;
-    static final boolean useDSTypes = true; //GeneratorLearner.useDSTypes; // todo make it use the one in the learner
-    protected static Logger logger = Logger.getLogger(InteractiveProbabilisticGenerator.class);
+    static final String corpusPath = GeneratorLearner.corpusPath;//corpusFolderPath + "AAtrain-3.txt";//""AA-train-lower-396-matching-top1.txt"; //todo same corpus as leanrer
+//    static final Integer BEAM = 3;
+//    static final String[] DSTypesString = GeneratorLearner.DSTypesString;
+//    static final int DSTypesCount = DSTypesString.length * 2;
+    final boolean useDSTypes = true; //GeneratorLearner.useDSTypes; // todo make it use the one in the learner
+    TreeMap<String, TreeMap<Feature, Double>> learnedModel;
+    HashMap<String, Double> wordProbs;
+    TreeSet<Feature> goalFeatures;
+    protected static Logger logger = Logger.getLogger(InteractiveProbabilisticGeneratorOld.class);
+
+    // ---------------------------------- Constructors ----------------------------------
+    // TODO  missing the (File, beam) constructor, whatever it is
+
+    /**
+     * @param resourceDir
+     */
+    public InteractiveProbabilisticGeneratorOld(File resourceDir) {
+        super(resourceDir);
+    }
+
 
     /**
      * @param lexicon
      * @param grammar
      */
-    public InteractiveProbabilisticGenerator(Lexicon lexicon, Grammar grammar) {
+    public InteractiveProbabilisticGeneratorOld(Lexicon lexicon, Grammar grammar) {
         super(lexicon, grammar);
     }
 
-    /**
-     * @param parser
-     */
-    public InteractiveProbabilisticGenerator(DAGParser<DAGTuple, GroundableEdge> parser) {
-        super(parser);
+    // TODO this doesn't exist in the mother class.
+//    /**
+//     * @param parser
+//     */
+//    public InteractiveProbabilisticGenerator(DAGParser<DAGTuple, GroundableEdge> parser) {
+//        super(parser);
+//    }
 
-    }
-
-    /**
-     * @param resourceDir
-     */
-    public InteractiveProbabilisticGenerator(File resourceDir) {
-        super(resourceDir);
-
-    }
 
     /**
      * @param resourceDirNameOrURL
      */
-    public InteractiveProbabilisticGenerator(String resourceDirNameOrURL) {
-        super(resourceDirNameOrURL);
-
+    public InteractiveProbabilisticGeneratorOld(String resourceDirNameOrURL) {
+        super(new File(resourceDirNameOrURL));
     }
 
     @Override
-    public DAG<DAGTuple, GroundableEdge> getNewState(Tree start) {
+    public DAG<DAGTuple, GroundableEdge> getNewState(Tree start) { // TODO I don't know the purpose of this.
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public DAGParser<DAGTuple, GroundableEdge> getParser(Lexicon lexicon, Grammar grammar) {
-
         return new InteractiveContextParser(lexicon, grammar);
     }
 
@@ -98,74 +100,58 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
         int lineNumber = 0;
         FileReader reader = new FileReader(grammarPath + "genLearnedModel.csv");
         BufferedReader stream = new BufferedReader(reader);
-        ArrayList<Feature> features = new ArrayList<>();
+        TreeSet<Feature> features = new TreeSet<>();
         String line;
         while ((line = stream.readLine()) != null) {
-
             String lineList[] = line.split(" , ");
-            if (lineNumber == 0) { // Features line // todo make this mor efficient since it only happens when reawding line one
-                for (int i = 1; i < lineList.length; i++) // Ignoring the first element since it's "WORDS\FEATURES"
-                    // ATTENTION: This relies on the fact that the first DSTypesCount features are DSTypes.
-                    if (useDSTypes) {
-                        if (i < DSTypesCount + 1) {
-                            String featureStr = lineList[i];
-                            if (featureStr.startsWith("?"))
-                                features.add(new Feature(DSType.parse(featureStr.substring(1)), true));
-                            else
-                                features.add(new Feature(DSType.parse(featureStr)));
-//						features.add(new Feature(DSType.parse(lineList[i])));
-//						logger.info("DSType feature \"" + lineList[i] + "\" loaded.");
-                        }
-                    } else {
-                        features.add(new Feature(TTRRecordType.parse(lineList[i])));
-                        logger.info("TTRRecordType feature \"" + lineList[i] + "\" loaded.");
-                    }
+            if (lineNumber == 0) { // Controls reading features line
+                for (int i = 1; i < lineList.length; i++) { // Ignoring the first element since it's "WORDS\FEATURES"
+                    // This assumes there is at least one DSType feature.
+                    String featureStr = lineList[i];
+                    Feature newFeature;
+                    if (featureStr.startsWith("?"))
+                        newFeature = new Feature(DSType.parse(featureStr.substring(1)), true);
+                    else if (featureStr.startsWith("["))
+                        newFeature = new Feature(TTRRecordType.parse(featureStr));
+                    else
+                        newFeature = new Feature(DSType.parse(featureStr));
+
+                    features.add(newFeature);
+                    logger.debug("Loaded feature \"" + newFeature + "\" from file.");
+                    lineNumber++;
+                }
+                logger.info(ANSI_GREEN+"Loaded " + features.size() + " features from file."+ANSI_RESET);
+                logger.info(ANSI_GREEN+"Features are: " + features+ANSI_RESET);
+            }
+            else {  // Otherwise we have a <WORD,PROBS> line.
+                String word = lineList[0];
+                TreeMap<Feature, Double> row = new TreeMap<>();
+                ArrayList<Double> probs = new ArrayList<>();
+                for (int i = 1; i < lineList.length; i++) {
+                    Double prob = Double.parseDouble(lineList[i]);
+                    probs.add(prob);
+                }
+                ArrayList<Feature> featuresList = new ArrayList<>(features); // AA: Doing this to be able to align the features with the probs.
+                for (int i = 0; i < featuresList.size(); i++) {
+                    Feature f = featuresList.get(i);
+                    Double p = probs.get(i);
+                    row.put(f, p);
+                    logger.debug("Word \"" + word + "\" Feature \"" + f + "\" Prob " + p + " loaded.");
+                }
+                table.put(word, row);
+                logger.info("Word \"" + word + "\" loaded from model.");
                 lineNumber++;
-                continue;
             }
-            // Otherwise we have a <WORD,PROBS> line.
-            String word = lineList[0];
-            TreeMap<Feature, Double> row = new TreeMap<>();
-            ArrayList<Double> probs = new ArrayList<>();
-            for (int i = 1; i < lineList.length; i++) {
-                Double prob = Double.parseDouble(lineList[i]);
-                probs.add(prob);
-            }
-            for (int i = 0; i < features.size(); i++)
-                row.put(features.get(i), probs.get(i));
-            table.put(word, row);
-//			System.out.println(word +  row);
-            logger.info("Word \"" + word + "\" loaded.");
-            lineNumber++;
         }
         return table;
     }
 
 
-    public TreeMap<String, TreeMap<TTRRecordType, Double>> constrainSearchSpace(TreeMap<String, TreeMap<TTRRecordType, Double>> currentSpace, TTRRecordType rInc) {
-        // return a portion of the columns that rInc subsumes
-        TreeMap<String, TreeMap<TTRRecordType, Double>> smallerSpace = new TreeMap<>();
-        // TODO write features to file and then load them here, so I don't have to load them again.
-        for (String word : currentSpace.keySet()) {
-            TreeMap<TTRRecordType, Double> row = currentSpace.get(word);
-            TreeMap<TTRRecordType, Double> newRow = new TreeMap<>();
-            for (TTRRecordType feature : row.keySet()) {
-                if (feature.subsumes(rInc))
-                    newRow.put(feature, row.get(feature));
-            }
-            smallerSpace.put(word, newRow);
-        }
-        return smallerSpace;
-    }
-
-
     public List<WordLogProb> chooseTopWords(HashMap<String, Double> allProbs) {
         // returns the top beamSize words based on their probabilities
-//		HashMap<String, Double> topWords = new HashMap<>();
-//		TreeMap<Double, String> topWords = new TreeMap<>(Comparator.reverseOrder());
         //TODO make this treemap too, so always you pick top three elements and return them, it's sorted by prob value
         List<WordLogProb> topWords = new ArrayList<>();
-        for (int i = 0; i < BEAM; i++) {
+        for (int i = 0; i < beam; i++) {
             String maxWord = allProbs.keySet().toArray()[0].toString(); // Initialising to the first element.
             Double maxProb = allProbs.get(maxWord);
             for (String w : allProbs.keySet()) {
@@ -182,19 +168,23 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
     }
 
 
-    public List<WordLogProb> pickCandidates(List<TTRRecordType> mappedFeatures, TreeMap<String, TreeMap<Feature, Double>> model, HashMap<String, Double> wordProbs, Feature DSTypeFeature){
+    // TODO Here, I want to pass different arguments ot the method, so should I use generics (ref: https://stackoverflow.com/questions/49509625/abstract-function-with-different-parameters)?
+//    @Override
+    public List<WordLogProb> populateBeam(List<TTRRecordType> mappedFeatures) {
         // looks into the current search space and picks the top beam candidates based on the probability of words given their semantics. Then returns the top beam candidates.
-        // ATTENTION: This methods assumes using log probabilities, therefore t
+        // ATTENTION: This method assumes using log probabilities, therefore the probabilities are added instead of multiplied.
         List<WordLogProb> candidates;
         HashMap<String, Double> allProbs = new HashMap<>();
-        for (String w : model.keySet()) {
-            TreeMap<Feature, Double> row = model.get(w);
+        Feature dsTypeFeature = getPointedNodeFeature();
+
+        for (String w : learnedModel.keySet()) {
+            TreeMap<Feature, Double> row = learnedModel.get(w);
             Double probSum = 0.0;
             for (TTRRecordType r : mappedFeatures) {
                 probSum += row.get(new Feature(r));
             }
             if (useDSTypes) // I think I have to do this: see what type is required, get the prob of that for all the words and hope this helps for picking the right word.
-                probSum += row.get(DSTypeFeature); // TODO TEST
+                probSum += row.get(dsTypeFeature); // TODO TEST
 
             probSum += wordProbs.get(w); // Adds the probability of the word itself.
             allProbs.put(w, probSum); // choose a better name over allProbs.
@@ -237,35 +227,30 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
      * @param rInc
      * @return state
      */
-    public List<TTRRecordType> mapFeatures(TTRRecordType rInc, TreeSet<Feature> goal_features) {
+    public List<TTRRecordType> mapFeatures(TTRRecordType rInc) {
         List<TTRRecordType> mappedFeatures = new ArrayList<>();
         HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
         logger.trace(rInc);
         ArrayList<TTRRecordType> onlySemanticsFeatures = new ArrayList<>();
-        for (Feature feature : goal_features) {
-            if (feature.rt != null)
-                onlySemanticsFeatures.add(feature.rt);
-        }
-        for (TTRRecordType feature : onlySemanticsFeatures) {
-            feature.resetMetas();
-            logger.trace(feature + " -> "); // what does this mean??#
-            if (feature.subsumesMapped(rInc, map)) { // or is it the other way?
-                logger.trace(feature + " added to map.");
-                mappedFeatures.add(feature);
+//        for (Feature feature : goal_features) {
+//            if (feature.rt != null)
+//                onlySemanticsFeatures.add(feature.rt);
+//        }
+        for (Feature f : goalFeatures) {
+
+            if(f.rt != null){
+                TTRRecordType feature = f.rt;
+                feature.resetMetas();
+                logger.trace(feature + " -> "); // what does this mean??#
+                if (feature.subsumesMapped(rInc, map)) { // or is it the other way?
+                    logger.trace(feature + " added to map.");
+                    mappedFeatures.add(feature);
+                }
+                feature.resetMetas();  // AA: todo Why resetting metas twice? (6 lines before!))
+                logger.trace("map is: " + map);  // AA: The map is not being updated? [apparantly it is :/]
             }
-            feature.resetMetas();  // AA: todo Why resetting metas twice? (6 lines before!))
-            logger.trace("map is: " + map);  // AA: The map is not being updated? [apparantly it is :/]
         }
         return mappedFeatures;
-    }
-
-
-    public List<Integer> initSearchSpace(Integer featureSize) {
-        List<Integer> goalIndeces = new ArrayList<Integer>();
-        for (int i = 0; i < featureSize; i++) {
-            goalIndeces.add(i);
-        }
-        return goalIndeces;
     }
 
 
@@ -286,24 +271,39 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
     }
 
 
-    public Feature getPointedNodeFeature(){
+    public Feature getPointedNodeFeature() {
         Feature pointedNodeFeature;
         Node pointedNode = this.parser.getContext().getDAG().getCurrentTuple().getTree().getPointedNode();
-//                    Node pointedNode = curTuple.getTree().getPointedNode();//parser.getState().getCurrentTuple().getTree().getPointedNode(); // TODO ----------------------------------------------------------------------
         DSType t = pointedNode.getType();
         Requirement req = pointedNode.getTypeRequirement();
+        logger.debug(ANSI_YELLOW+"pointed Node type is: " + t+ANSI_RESET);
         if (t != null) {
             pointedNodeFeature = new Feature(t);
         } else if (req != null) {
             TypeLabel tl = (TypeLabel) req.getLabel();
             t = tl.getType();
             pointedNodeFeature = new Feature(t, true);
+//            logger.info(ANSI_YELLOW+"pointed Node Feature is: " + pointedNodeFeature+ANSI_RESET);
         } else {
             logger.error("pointedNodeFeature is null");
             throw new IllegalStateException("pointedNodeFeature is null");
         }
+        logger.info(ANSI_YELLOW+"pointed Node Feature is: " + pointedNodeFeature+ANSI_RESET);
         return pointedNodeFeature;
     }
+
+
+    @Override
+    public List<String> populateBeam() {
+        return null;
+    }
+
+
+//    @Override
+//    public boolean generateNextWord() { //todo
+//        return false;
+//    }
+
 
     /**
      * @return
@@ -314,13 +314,13 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
         List<String[]> partiallyGeneratedList = new ArrayList<>();
         CorpusStats fullyGeneratedStats = new CorpusStats();
         CorpusStats partiallyGeneratedStats = new CorpusStats();
-		int absCorrect = 0;
+        int absCorrect = 0; // these have to go to test class.
 
         try { // recommended by the IDE...
-            TreeMap<String, TreeMap<Feature, Double>> learnedModel = loadModelFromFile(grammarPath);
-            TreeSet<Feature> goalFeatures = getGoalFeatures(learnedModel);
-            System.out.println("goalFeatures: " + goalFeatures);
-            HashMap<String, Double> wordProbs = loadWordProbsFromFile(grammarPath + File.separator + "wordProbs.tsv"); // not to be confused wordsLogProb; This is for global word probabilities.
+            learnedModel = loadModelFromFile(grammarPath);
+            goalFeatures = getGoalFeatures(learnedModel);
+            logger.info("goalFeatures: " + goalFeatures);
+            wordProbs = loadWordProbsFromFile(grammarPath + File.separator + "wordProbs.tsv"); // not to be confused wordsLogProb; This is for global word probabilities.
             RecordTypeCorpus corpus = new RecordTypeCorpus();
             corpus.loadCorpus(new File(corpusPath));
 
@@ -337,38 +337,50 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
                 TTRRecordType rCur;
 
                 while (!rInc.isEmpty()) {
-                    // this shouldn't be a treeset of features?
-                    mappedFeatures = mapFeatures(rInc, goalFeatures);
-//                    System.out.println(ANSI_YELLOW+"mappedFeatures: " + mappedFeatures+ANSI_RESET);
-                    Feature pointedNodeFeature = getPointedNodeFeature();
+                    mappedFeatures = mapFeatures(rInc); //TODO FIX THIS AND NEXT LINE.
+                    List<WordLogProb> candidates = populateBeam(mappedFeatures);
 
-                    List<WordLogProb> candidates = pickCandidates(mappedFeatures, learnedModel, wordProbs, pointedNodeFeature);
-                    boolean nothingGenerated = true;
-                    for (WordLogProb wordLogProb : candidates) {
-                        // try to generate the word and skip to the next word if it's not parsable/generatable.
-                        String w = wordLogProb.getWord();
-                        Double prob = wordLogProb.getProb();
-                        DAG d = this.generateWord(w, rG); // ---------------------------------------------
-                        if (d != null) {
-                            logger.info(ANSI_GREEN + "Generated word \"" + w + "\" with log-probability " + prob + ANSI_RESET);
-                            generatedSentence.add(new Word(w));
-                            nothingGenerated = false;
-                            logger.info("Current sentence: " + generatedSentence);
-                            TTRRecordType rGCopy = TTRRecordType.parse(rG.toString()).removeHeadIfManifest(); // to get over the bug for now, I want to make a copy of rG, and use it to compute rInc.
-                            rCur = (TTRRecordType) this.getParser().getContext().getDAG().getCurrentTuple().getSemantics().removeHeadIfManifest();  // How expensive is this operation?
-                            rInc = rGCopy.subtract(rCur, new HashMap<>());
-                            // dstype of pointed node, only that, nothing else
-                            if (goldSentence.toString().equals("you droped the cheese")){
-                                System.out.println(ANSI_PURPLE+"rG: " + rG+ANSI_RESET);
-                                System.out.println(ANSI_PURPLE+"rCur: " + rCur+ANSI_RESET);
-                            }
-                            logger.info("rInc now is: " + rInc);
-                            break;
-                        } else
-                            logger.error(ANSI_RED + "Could NOT generate word \"" + w + "\" with log-probability " + prob + ANSI_RESET);
-                    }
+//                    List<WordLogProb> candidates = populateBeam(); // TODO
+//                    boolean nothingGenerated = true;
 
-                    if (nothingGenerated) {
+
+//                    for (WordLogProb wordLogProb : candidates) {
+//                        // try to generate the word and skip to the next word if it's not parsable/generatable.
+//                        String w = wordLogProb.getWord();
+//                        Double prob = wordLogProb.getProb();
+//                        DAG d = this.generateWord(w, rG); // ---------------------------------------------
+//                        if (d != null) {
+//                            logger.info(ANSI_GREEN + "Generated word \"" + w + "\" with log-probability " + prob + ANSI_RESET);
+//                            generatedSentence.add(new Word(w));
+//                            nothingGenerated = false;
+//                            logger.info("Current sentence: " + generatedSentence);
+//                            TTRRecordType rGCopy = TTRRecordType.parse(rG.toString()).removeHeadIfManifest(); // to get over the bug for now, I want to make a copy of rG, and use it to compute rInc.
+//                            rCur = (TTRRecordType) this.getParser().getContext().getDAG().getCurrentTuple().getSemantics().removeHeadIfManifest();  // How expensive is this operation?
+//                            rInc = rGCopy.subtract(rCur, new HashMap<>());
+//                            // dstype of pointed node, only that, nothing else
+//                            logger.info("rInc now is: " + rInc);
+//                            break;
+//                        } else
+//                            logger.error(ANSI_RED + "Could NOT generate word \"" + w + "\" with log-probability " + prob + ANSI_RESET);
+//                    }
+
+
+                    if(generateNextWord()){ //TODO this new design (using genereateNextWord) is not allowing me to get word and prob easily.
+                        String w = this.parser.getContext().getDAG().getParentEdge().word().word();
+                        logger.info(ANSI_GREEN + "Generated word \"" + w);// + "\" with log-probability " + prob + ANSI_RESET);
+                        generatedSentence.add(new Word(w));
+//                        nothingGenerated = false;
+                        logger.info("Current sentence: " + generatedSentence);
+                        TTRRecordType rGCopy = TTRRecordType.parse(rG.toString()).removeHeadIfManifest(); // to get over the bug for now, I want to make a copy of rG, and use it to compute rInc.
+                        rCur = (TTRRecordType) this.getParser().getContext().getDAG().getCurrentTuple().getSemantics().removeHeadIfManifest();  // How expensive is this operation?
+                        rInc = rGCopy.subtract(rCur, new HashMap<>());
+                        // dstype of pointed node, only that, nothing else
+                        logger.info("rInc now is: " + rInc);
+                        break;
+                    }// else
+                        //logger.error(ANSI_RED + "Could NOT generate word"); // \"" + w + "\" with log-probability " + prob + ANSI_RESET);
+
+                    else {//if (nothingGenerated) {
                         logger.error(ANSI_RED + "Could NOT continue generation!" + ANSI_RESET); // later add the word that was not generated to the error message.
                         // todo better log message.
                         addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, partiallyGeneratedList, partiallyGeneratedStats);
@@ -380,23 +392,24 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
                 // Below is not clean. Have to clean up later.
                 if (rInc.isEmpty()) {    // If we are here, then we have a fully generated sentence.
                     logger.info(ANSI_BLUE + "Fully generated sentence: " + generatedSentence + ANSI_RESET);
-                    if(generatedSentence.equals(goldSentence))
-						absCorrect++;
-					// TODO if a sentence is fully generated, it's not necessarily correct. We should check that too in a way: putting it in the other output file or keep this in mind when processing this output file.
+                    if (generatedSentence.equals(goldSentence))
+                        absCorrect++;
+                    // TODO if a sentence is fully generated, it's not necessarily correct. We should check that too in a way: putting it in the other output file or keep this in mind when processing this output file.
                     addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, fullyGeneratedList, fullyGeneratedStats);
                 }
             }
             // later add the support to also write the prob of generated sentence for all beams.
             writeToFile(grammarPath + "genOutputFull.txt", fullyGeneratedList, fullyGeneratedStats);
             writeToFile(grammarPath + "genOutputPartial.txt", partiallyGeneratedList, partiallyGeneratedStats);
-			System.out.println("Absolutely correct: " + absCorrect);
-		} catch (IOException e) {
+            System.out.println("Absolutely correct: " + absCorrect);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         return false;
     }
+
 
     // inspired from the one in GeneratorTester, but modified to write generated sentence instead of "File : 1".
     public static void writeToFile(String fileDir, List<String[]> ttrCorpus, CorpusStats corpusStats) {
@@ -447,7 +460,8 @@ public class InteractiveProbabilisticGenerator extends DAGGenerator<DAGTuple, Gr
 
 
         // Tests by AA:
-        InteractiveProbabilisticGenerator ipg = new InteractiveProbabilisticGenerator(grammarPath);
+        InteractiveProbabilisticGeneratorOld ipg = new InteractiveProbabilisticGeneratorOld(grammarPath);
+
         ipg.generate();
     }
 }

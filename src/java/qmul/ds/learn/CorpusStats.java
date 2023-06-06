@@ -83,30 +83,30 @@ public class CorpusStats {
     public String statReporter() {
 
         // ------Make sentence stats------
-        String sentStats = "\n\n---- Sentence-Level Stats ----\n";
+        String sentStats = "\n\n// ---- Sentence-Level Stats ----\n";
         Integer totalSentLen = 0; // Used to calculate average sentence length.
         for (Integer len : sentLenCountMap.keySet()) {
             Integer count = sentLenCountMap.get(len);
-            sentStats += String.format("Count of sentences with length %d is %d.\n", len, count);
+            sentStats += String.format("// Count of sentences with length %d is %d.\n", len, count);
             totalSentLen += len*count;
         }
-        sentStats += String.format("\nCorpus size: %d", corpusSize);
+        sentStats += String.format("\n// Corpus size: %d", corpusSize);
         Integer maxLen = Collections.max(sentLenCountMap.keySet()); // AA: reference: https://stackoverflow.com/questions/14831045/find-the-biggest-number-in-hashset-hashmap-java
-        sentStats += String.format("\nMaximum length: %d", maxLen);
+        sentStats += String.format("\n// Maximum length: %d", maxLen);
         Integer minLen = Collections.min(sentLenCountMap.keySet());
-        sentStats += String.format("\nMinimum length: %d", minLen);
+        sentStats += String.format("\n// Minimum length: %d", minLen);
         Double avgLen = Double.valueOf(totalSentLen) / corpusSize;
-        sentStats += String.format("\nAverage length: %f\n", avgLen);
+        sentStats += String.format("\n// Average length: %f\n", avgLen);
 
         // ------Make word stats------
-        String wordStats = "\n---- Word-Level Stats ----";
-        wordStats += String.format("\nCount of all words: %d", totalWordsCount);
+        String wordStats = "\n// ---- Word-Level Stats ----";
+        wordStats += String.format("\n// Count of all words: %d", totalWordsCount);
         Integer tokensCount = wordsCountMap.keySet().size();
-        wordStats += String.format("\nCount of unique tokens: %d", tokensCount);
+        wordStats += String.format("\n// Count of unique tokens: %d", tokensCount);
         Double ratio = Double.valueOf(totalWordsCount) / tokensCount;
-        wordStats += String.format("\nWords/Tokens count ratio: %f", ratio);
+        wordStats += String.format("\n// Words/Tokens count ratio: %f", ratio);
 
-        String finalStats = "\n\n\n====== DATASET STATS ======";
+        String finalStats = "\n\n\n// ====== DATASET STATS ======";
         finalStats += sentStats;
         finalStats += wordStats;
         return finalStats;

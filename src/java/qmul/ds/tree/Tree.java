@@ -942,7 +942,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	}
 
 	public TTRFormula getMaximalSemantics() {
-		System.out.println("Running max sem without context");
+		logger.warn("Running max sem without context");
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:" + this);
 		List<Tree> merged = mergeUnfixed();

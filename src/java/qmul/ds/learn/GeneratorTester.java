@@ -16,34 +16,39 @@ import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
 import qmul.ds.Utterance;
-import qmul.ds.formula.AtomicFormula;
-import qmul.ds.formula.TTRField;
+import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.TTRRecordType;
 
 public class GeneratorTester
 {
     // TODO make the appropriate changes here so that I don't have to have the same path here and in the GeneratorLearner class.
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static public String corpusPath = corpusFolderPath + "AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
+    static public String corpusPath = corpusFolderPath + "AAtrain-3.txt";//AA-full-lower-4000-Copy.txt";//""LC-CHILDESconversion400FinalCopy.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt"; //"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
     static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static GeneratorLearner g = new GeneratorLearner(grammarPath, corpusPath); // TODO is this meaningful? how can I have a constructor that uses default
     protected static Logger logger = Logger.getLogger(GeneratorTester.class);
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_RED = "\u001B[31m";
 
 
 // ==================================||   Learner Tests   ||==================================
-    public static void testMapFeatures(){
-        // below is the semantics for "I took it" from "CHILDESconversion400Final", 8th sentence.
-        // but replacced `x` with `x2`
-        g.initialiseCountTable();
-        TTRRecordType r1 = TTRRecordType.parse("[x1==it : e|x2==i : e|e1==take : es|p2==subj(e1, x2) : t|p3==obj(e1, x1) : t|head==e1 : es]");
-        r1 = r1.removeHead();
-        for(TTRRecordType r: r1.decompose()){
-            List<TTRRecordType> mappedFeatures = g.mapFeatures(r);
-            for (TTRRecordType feature: mappedFeatures) {
-                System.out.println("My rt: " + r + " , subsumes in goal_features: " + feature); // double check
-            }
-        }
-    }
+//    public void testMapFeatures(){
+//        // below is the semantics for "I took it" from "CHILDESconversion400Final", 8th sentence.
+//        // but replacced `x` with `x2`
+//        g.initialiseCountTable();
+//        TTRRecordType r1 = TTRRecordType.parse("[x1==it : e|x2==i : e|e1==take : es|p2==subj(e1, x2) : t|p3==obj(e1, x1) : t|head==e1 : es]");
+//        r1 = r1.removeHead();
+//        for(TTRRecordType r: r1.decompose()){
+//            List<TTRRecordType> mappedFeatures = g.mapFeatures(r);
+//            for (TTRRecordType feature: mappedFeatures) {
+//                System.out.println("My rt: " + r + " , subsumes in goal_features: " + feature); // double check
+//            }
+//        }
+//    }
 
 
 //    public static HashMap<String, HashMap<TTRRecordType, Double>> testNormaliseCountTable() //todo match the new method
@@ -76,22 +81,22 @@ public class GeneratorTester
 //    }
 
 
-    public static void testInitialiseCountTable(){
-        g.initialiseCountTable();
-        System.out.println(g.conditionalCountTable);
-    }
+//    public static void testInitialiseCountTable(){
+//        g.initialiseCountTable();
+//        System.out.println(g.conditionalCountTable);
+//    }
 
 
-    public static void testSaveModelToFile(TreeMap<String, TreeMap<Feature, Double>> table) throws IOException {
-        g.saveModelToFile(table);
-    }
+//    public static void testSaveModelToFile() throws IOException {
+//        g.saveModelToFile();
+//    }
 
-    public static void testLearn() throws IOException {
-        g.learn();
-    }
+//    public static void testLearn() throws IOException {
+//        g.learn();
+//    }
 
 
-    public static void seperateParsableData() {
+    public static void seperateParsableData(GeneratorLearner g) {
         ArrayList<Integer> parseableIndices = new ArrayList<>();
         ArrayList<Integer> matchingIndices = new ArrayList<>();
         List<String[]> matchingCorpus = new ArrayList<>();
@@ -156,8 +161,8 @@ public class GeneratorTester
 //            }
             index++;
         }
-        writeToFile(corpusFolderPath, File.separator + "AA-train-lower-396-matching-top3.txt", matchingCorpus, matchingCorpusStats);
-        writeToFile(corpusFolderPath, File.separator + "AA-train-lower-396-unique-top3.txt", uniqueCorpus, uniqueCorpusStats);
+        writeToFileData(corpusFolderPath, File.separator + "AA-full-lower-4000-matching-top3.txt", matchingCorpus, matchingCorpusStats);
+        writeToFileData(corpusFolderPath, File.separator + "AA-full-lower-4000-unique-top3.txt", uniqueCorpus, uniqueCorpusStats);
 //        writeToFile(corpusFolderPath + File.separator + "AA-train-lower-3200-unique-top1.txt", uniqueCorpus, corpusStatsUnique);
 //        writeToFile(corpusFolderPath+File.separator+"tp_not_icp.txt", tpNotICPList, corpusStatsL);
         Integer totalSize = g.corpus.size();
@@ -184,7 +189,7 @@ public class GeneratorTester
      * @param ttrCorpus
      * @param corpusStats
      */
-    public static void writeToFile(String fileDir, String fileName, List<String[]> ttrCorpus, CorpusStats corpusStats) {
+    public static void writeToFileData(String fileDir, String fileName, List<String[]> ttrCorpus, CorpusStats corpusStats) {
         PrintStream out = null;
         FileOutputStream fileOpen;
         try {
@@ -207,6 +212,112 @@ public class GeneratorTester
 
 // ==================================||   Generator Tests   ||==================================
 
+    public void addToOutputCorpus(String goldSentence, String rG, Sentence<Word> generatedSentence, List<String[]> corpusList, CorpusStats corpusStats) {
+        String[] pair = new String[3];
+        pair[0] = goldSentence;
+        pair[1] = rG;
+        pair[2] = generatedSentence.toString();
+        corpusList.add(pair);
+        corpusStats.addSentence(generatedSentence);
+    }
+
+
+    // inspired from the one in GeneratorTester, but modified to write generated sentence instead of "File : 1".
+    public static void writeToFileOutput(String fileDir, List<String[]> ttrCorpus, CorpusStats corpusStats) {
+        PrintStream out = null;
+        FileOutputStream fileOpen = null;
+        try {
+            fileOpen = new FileOutputStream(fileDir);
+            out = new PrintStream(fileOpen);
+            for (String[] thepair : ttrCorpus)
+                out.print("GoldSent : " + thepair[0] + "\nSem : " + thepair[1] + "\nGenSent : " + thepair[2] + "\n\n");
+            // stats at the end of the corpus text file, I wrote CorpusStats and started using that.
+
+            out.print(corpusStats.statReporter()); // If the corpus is empty, this will throw an error. Have to handle it properly.
+        } catch (Exception e) {
+            logger.error(ANSI_RED + "Couldn't write to \"" + fileDir + "\"!" + ANSI_RESET);
+        } finally {
+            if (out != null)
+                out.close();
+        }
+    }
+
+
+    /**
+     * Assumes learning has happened on the correct data, therefore loads the last saved learned model.
+     */
+    public void testProbabilisticGenerator() {
+        InteractiveProbabilisticGenerator generator = new InteractiveProbabilisticGenerator(grammarPath, grammarPath);
+        List<String[]> fullyGeneratedList = new ArrayList<>();
+        List<String[]> partiallyGeneratedList = new ArrayList<>();
+        CorpusStats fullyGeneratedStats = new CorpusStats();
+        CorpusStats partiallyGeneratedStats = new CorpusStats();
+        int absCorrect = 0; // these have to go to test class.
+        RecordTypeCorpus corpus = new RecordTypeCorpus();
+
+        try {
+            corpus.loadCorpus(new File(corpusPath));
+            for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
+                generator.init();
+                List<TTRRecordType> mappedFeatures;
+                Sentence<Word> goldSentence = pair.first();
+                // AE: This is assuming that the goal record type in the corpus is headless.
+                TTRRecordType rG = pair.second().removeHeadIfManifest();
+//                this.init(); // Why there is two of this? commenting this one out.
+                logger.info(ANSI_CYAN + "Gold sentence: " + goldSentence + ANSI_RESET);
+                Sentence<Word> generatedSentence = new Sentence<>(); // todo fix
+                TTRRecordType rInc = rG; // Init to goal.
+                TTRRecordType rCur;
+                generator.setGoal(rG);
+
+                while (!rInc.isEmpty()) { // rInc is now updated by populateBeam.
+//                    generator.populateBeam();
+                    if(generator.generate()){
+//                        String w = generator.getParser().getContext().getDAG().getParentEdge().word().word();
+                        // todo the following is only working for the last word of the sentence.
+//                        logger.info(ANSI_GREEN + "Generated word \"" + w + "\"" + ANSI_RESET);// + "\" with log-probability " + prob + ANSI_RESET);
+
+                        List<UtteredWord> sent = generator.getGenerated().getWords();
+                        sent.forEach((w) -> generatedSentence.add(new Word(w.word()))); //todo test
+                        generatedSentence.remove(0); // remove the first word, which is the speaker.
+
+//                        generatedSentence.add(new Word(w));
+//                        logger.info("Current sentence: " + generatedSentence);
+//                        logger.info("Current utterance: " + generator.getGenerated()); // this doesn't work word-by-word because of the structure of BFG.
+                        rCur = (TTRRecordType) generator.getParser().getContext().getDAG().getCurrentTuple().getSemantics().removeHeadIfManifest();  // How expensive is this operation?
+                        rInc = rG.subtract(rCur, new HashMap<>());
+                        break;
+                    }
+                    else{
+                        logger.error(ANSI_RED + "Could NOT continue generation!" + ANSI_RESET); // later add the word that was not generated to the error message.
+                        // todo better log message.
+                        addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, partiallyGeneratedList, partiallyGeneratedStats);
+//                        generatedSentence = new Sentence<>();
+                        break; // todo: or not to break, this is the question.
+                    }
+                }
+                if (rInc.isEmpty()) {   //todo is this necessary? I mean this si the condition for the while loop!! // If we are here, then we have a fully generated sentence.
+//                    List<UtteredWord> sent = generator.getGenerated().getWords();
+//                    sent.forEach((w) -> generatedSentence.add(new Word(w.word()))); //todo test
+//                    generatedSentence.remove(0); // remove the first word, which is the speaker.
+//                    System.out.println("Generated sentence: " + generatedSentence);
+                    logger.info(ANSI_BLUE + "Fully generated sentence: " + generatedSentence + ANSI_RESET);
+                    if (generatedSentence.equals(goldSentence))
+                        absCorrect++;
+                    // TODO if a sentence is fully generated, it's not necessarily correct. We should check that too in a way: putting it in the other output file or keep this in mind when processing this output file.
+                    addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, fullyGeneratedList, fullyGeneratedStats);
+//                    generatedSentence = new Sentence<>();
+                }
+            }
+            writeToFileOutput(grammarPath + "genOutputFull.txt", fullyGeneratedList, fullyGeneratedStats);
+            writeToFileOutput(grammarPath + "genOutputPartial.txt", partiallyGeneratedList, partiallyGeneratedStats);
+            System.out.println("Absolutely correct: " + absCorrect);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could NOT load corpus from file.");
+        }
+
+    }
 
 
 // ==================================||   MAIN   ||==================================
@@ -218,13 +329,18 @@ public class GeneratorTester
 //        testInitialiseCountTable();
 //        testAFewStuff();
 //        testMapFeatures()
-        testLearn();
-//        seperateParsableData();
+//        testLearn();
+//        seperateParsableData(learner);
 
+        // todo I should be setting the paths and parameters that are shared just here, not inside each separately.
 
-//        TTRRecordType a = TTRRecordType.parse("[x==what : e|e1==eq : es|x1==that : e|p2==subj(e1, x) : t|p3==obj(e1, x1) : t]");
-//        TTRRecordType b = TTRRecordType.parse("[x==what : e]");
-//        System.out.println(a.subsumes(b));
-//        System.out.println(b.subsumes(a));
+        GeneratorLearner learner = new GeneratorLearner(grammarPath, corpusPath); // TODO is this meaningful? how can I have a constructor that uses default
+        GeneratorTester tester = new GeneratorTester();
+        logger.info("Learning phase begins.");
+        learner.learn();
+        logger.info(ANSI_GREEN+"Learning phase finished successfully."+ANSI_RESET);
+        logger.info("Generation phase begins.");
+        tester.testProbabilisticGenerator();
+        logger.info(ANSI_GREEN+"Generation phase finished successfully."+ANSI_RESET);
     }
 }

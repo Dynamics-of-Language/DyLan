@@ -20,133 +20,141 @@ import qmul.ds.tree.Tree;
 
 public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 
-	private static Logger logger = Logger.getLogger(DAGGenerator.class);
+    private static Logger logger = Logger.getLogger(DAGGenerator.class);
 
-	protected DAGParser<T, E> parser;
+    protected DAGParser<T, E> parser;
 
-	protected TTRFormula goal;
+    protected TTRFormula goal;
 
-	//This can be changed to an object of Utterance
-	protected Utterance generated = new Utterance(agentName, "");
+    public Utterance getGenerated() {
+        return generated;
+    }
 
-	public static String agentName = "Dylan";
+    //This can be changed to an object of Utterance
+    protected Utterance generated = new Utterance(agentName, "");
 
-	public String[] interregna = { "uh", "I mean", "sorry", "rather" };
+    public static String agentName = "Dylan";
 
-	public DAGGenerator(Lexicon lexicon, Grammar grammar) {
+    public String[] interregna = {"uh", "I mean", "sorry", "rather"};
 
-		parser = getParser(lexicon, grammar);
+    public DAGGenerator(Lexicon lexicon, Grammar grammar) {
+        parser = getParser(lexicon, grammar);
+    }
 
-	}
+    public abstract DAG<T, E> getNewState(Tree start);
 
-	public abstract DAG<T, E> getNewState(Tree start);
 
-	public void setGoal(TTRFormula goal) {
-		this.goal = goal;
-	}
+    public void setGoal(TTRFormula goal) {
+        this.goal = goal;
+    }
 
-	public DAGGenerator(DAGParser<T, E> parser) {
-		this.parser = parser;
-	}
 
-	/**
-	 * @param lexicon
-	 * @param grammar
-	 * @return a {@link DAGParser} suitable for this implementation
-	 */
-	public abstract DAGParser<T, E> getParser(Lexicon lexicon, Grammar grammar);
-	
-	/**
-	 * 
-	 * @return the {@link DAGParser} associated with this generator
-	 */
-	public DAGParser<T,E> getParser()
-	{
-		return parser;
-	}
-	
-	/**
-	 * @param resourceDir the dir containing computational-actions.txt,
-	 *                    lexical-actions.txt, lexicon.txt
-	 */
-	public DAGGenerator(File resourceDir) {
-		this(new Lexicon(resourceDir), new Grammar(resourceDir));
-	}
+    public DAGGenerator(DAGParser<T, E> parser) {
+        this.parser = parser;
+    }
 
-	/**
-	 * @param resourceDirNameOrURL the dir containing computational-actions.txt,
-	 *                             lexical-actions.txt, lexicon.txt
-	 */
-	public DAGGenerator(String resourceDirNameOrURL) {
-		this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL));
 
-	}
+    /**
+     * @param lexicon
+     * @param grammar
+     * @return a {@link DAGParser} suitable for this implementation
+     */
+    public abstract DAGParser<T, E> getParser(Lexicon lexicon, Grammar grammar);
 
-	/**
-	 * @return a shallow copy of the current state
-	 */
-	public DAG<T, E> getState() {
 
-		return parser.getState();
-	}
-	
-	/**
-	 * will use parser.generateWord to generate word w in the current context. This will fail when:
-	 * (a) the word is not parsable; or (b) that no parse path can be found such that the resulting tuple
-	 * subsumes goal. 
-	 * @param w
-	 * @param goal
-	 * @return resulting DAG; null if the word cannot be generated.
-	 */
-	public DAG<T,E> generateWord(String w, TTRFormula goal)
-	{
-		UtteredWord word = new UtteredWord(w.toLowerCase(), agentName);
-		
-		DAG<T,E> dag = parser.generateWord(word, goal);
-		return dag;
-	}
+    /**
+     * @return the {@link DAGParser} associated with this generator
+     */
+    public DAGParser<T, E> getParser() {
+        return parser;
+    }
 
-	/**
-	 * Generate to goal from the current context. Default implementation is to call generateNextWord until goal is reached.
-	 * 
-	 * Contract with generateNextWord: it will return false if no option subsumes goal, else the generation fails for some 
-	 * other reason (e.g. no words parsable). It is generateNextWord that needs to add the word to {@link generated}, 
-	 * as this method does not do that. Risk is getting duplicates.
-	 * 
-	 * @return true if goal is reached. {@link generated} will contain the list of words generated, even when
-	 * the goal was not reached, and the generation is partial.
-	 */
-	public boolean generate()
-	{
-		Context<T,E> context = parser.getContext();
-		T curTuple = context.getCurrentTuple();
-		if (!curTuple.getSemantics().subsumes(goal))
-			return false;
-		
-		//generate until goal is reached.
-		//we know that curTuple subsumes goal. Generate until the reverse is also true.
-		//this impelentation assumes monotonicity (as does DS in general)
-		while(!(goal.subsumes(curTuple.getSemantics())))
-		{	
-			if (!generateNextWord())
-				return false;
-			
-		}
-		
-		return true;	
-	}
-	
-	/** Contract: it is generateNextWord() and NOT generate() that adds words to the list {@link generated}
-	 * 
-	 * @return boolean if the next word was successfully generate; false otherwise
-	 */
-	public abstract boolean generateNextWord();
-	
-	public void init()
-	{
-		parser.init();
-	}
 
-	
+    /**
+     * @param resourceDir the dir containing computational-actions.txt,
+     *                    lexical-actions.txt, lexicon.txt
+     */
+    public DAGGenerator(File resourceDir) {
+        this(new Lexicon(resourceDir), new Grammar(resourceDir));
+    }
+
+
+    /**
+     * @param resourceDirNameOrURL the dir containing computational-actions.txt,
+     *                             lexical-actions.txt, lexicon.txt
+     */
+    public DAGGenerator(String resourceDirNameOrURL) {
+        this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL));
+    }
+
+
+    /**
+     * @return a shallow copy of the current state
+     */
+    public DAG<T, E> getState() {
+        return parser.getState();
+    }
+
+
+    /**
+     * will use parser.generateWord to generate word w in the current context. This will fail when:
+     * (a) the word is not parsable; or (b) that no parse path can be found such that the resulting tuple
+     * subsumes goal.
+     *
+     * @param w
+     * @param goal
+     * @return resulting DAG; null if the word cannot be generated.
+     */
+    public DAG<T, E> generateWord(String w, TTRFormula goal) {
+        UtteredWord word = new UtteredWord(w.toLowerCase(), agentName);
+
+        DAG<T, E> dag = parser.generateWord(word, goal);
+        return dag;
+    }
+
+
+    /**
+     * Generate to goal from the current context. Default implementation is to call generateNextWord until goal is reached.
+     * <p>
+     * Contract with generateNextWord: it will return false if no option subsumes goal, else the generation fails for some
+     * other reason (e.g. no words parsable). It is generateNextWord that needs to add the word to {@link generated},
+     * as this method does not do that. Risk is getting duplicates.
+     *
+     * @return true if goal is reached. {@link generated} will contain the list of words generated, even when
+     * the goal was not reached, and the generation is partial.
+     */
+    public boolean generate() {
+        logger.debug("Generating to goal: " + goal);
+        Context<T, E> context = parser.getContext();
+        T curTuple = context.getCurrentTuple();
+        if (!curTuple.getSemantics().subsumes(goal))
+            return false;
+
+        //generate until goal is reached.
+        //we know that curTuple subsumes goal. Generate until the reverse is also true.
+        //this impelentation assumes monotonicity (as does DS in general)
+        while (!(goal.subsumes(curTuple.getSemantics()))) {
+            logger.info("Current tuple semantics: " + curTuple.getSemantics());
+            logger.info("Goal: " + goal);
+            if (!generateNextWord())
+                return false;
+            curTuple = context.getCurrentTuple();
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Contract: it is generateNextWord() and NOT generate() that adds words to the list {@link generated}
+     *
+     * @return boolean if the next word was successfully generate; false otherwise
+     */
+    public abstract boolean generateNextWord();
+
+    public void init() {
+        parser.init();
+        generated = new Utterance(agentName, "");
+    }
 
 }
