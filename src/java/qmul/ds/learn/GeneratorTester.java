@@ -15,6 +15,8 @@ import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
+
+import qmul.ds.InteractiveProbabilisticGenerator;
 import qmul.ds.Utterance;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.formula.TTRRecordType;

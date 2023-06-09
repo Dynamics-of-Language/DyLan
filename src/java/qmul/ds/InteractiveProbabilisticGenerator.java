@@ -1,23 +1,26 @@
-package qmul.ds.learn;
-
-import org.apache.jena.tdb.store.Hash;
-import org.apache.log4j.Logger;
-import qmul.ds.BestFirstGenerator;
-import qmul.ds.InteractiveProbabilisticGeneratorOld;
-import qmul.ds.formula.TTRRecordType;
-import qmul.ds.formula.Variable;
-import qmul.ds.tree.Node;
-import qmul.ds.tree.Tree;
-import qmul.ds.tree.label.Requirement;
-import qmul.ds.tree.label.TypeLabel;
-import qmul.ds.type.DSType;
+package qmul.ds;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
+
+import org.apache.log4j.Logger;
+
+import qmul.ds.formula.TTRRecordType;
+import qmul.ds.formula.Variable;
+import qmul.ds.learn.Feature;
+import qmul.ds.tree.Node;
+import qmul.ds.tree.Tree;
+import qmul.ds.tree.label.Requirement;
+import qmul.ds.tree.label.TypeLabel;
+import qmul.ds.type.DSType;
 
 public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
 
