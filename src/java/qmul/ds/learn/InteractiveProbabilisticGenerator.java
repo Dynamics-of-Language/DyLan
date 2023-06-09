@@ -176,14 +176,19 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
             Double probSum = 0.0;
             for (TTRRecordType r : mappedFeatures) {
                 probSum += row.get(new Feature(r));
+                logger.info("word: " + w + ", feature: " + new Feature(r) + ", prob: " + row.get(new Feature(r)));
             }
-            if (useDSTypes) // I think I have to do this: see what type is required, get the prob of that for all the words and hope this helps for picking the right word.
+            if (useDSTypes) { // I think I have to do this: see what type is required, get the prob of that for all the words and hope this helps for picking the right word.
                 probSum += row.get(dsTypeFeature); // TODO TEST
-
+                logger.info("word: " + w + ", feature: " + dsTypeFeature + ", prob: " + row.get(dsTypeFeature));
+            }
             probSum += wordProbs.get(w); // Adds the probability of the word itself.
             allProbs.put(w, probSum); // choose a better name over allProbs.
         }
         // pick top beamSize words from allProbs and return them as candidates.
+        for(String w: allProbs.keySet())
+            logger.info("word: " + w + ", prob: " + allProbs.get(w));
+//        System.out.println("allProbs: " + allProbs);
         List<String> candidates = chooseTopWords(allProbs);
         return candidates;
     }
