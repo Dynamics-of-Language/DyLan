@@ -26,7 +26,7 @@ public class PerturbationSample {
         this.pI = pI;
         this.isForward = isForward;
         this.distance = distance;
-        this.pos = pos;
+        this.pos = pos; // Currently not used.
     }
 
     /**

@@ -28,15 +28,7 @@ public class GeneratorEvaluator {
                 }
                 // if index of word is reached, update rG and continue generation.
                 generator.setGoal(sample.rP);
-                // if generation was possible, continue ?
-                if (generator.generate()){
-                    // GOOD.
-                }
-                // if generation was not possible, decide if this is breaking or if you should backtrack.
-                else{
-                    // backtrackAndGenerate();  // Backtracks until the last point where subsumption happens.
-                    // also check until when you should backtrack..
-                }
+                generator.generate();
             }
         } catch (IOException e) {
             throw new RuntimeException("Could not load perturbation data.");
@@ -45,6 +37,7 @@ public class GeneratorEvaluator {
 
 
     public static void main(String[] args) {
-
+        GeneratorEvaluator evaluator = new GeneratorEvaluator();
+        evaluator.evaluateOnPerturbations();
     }
 }
