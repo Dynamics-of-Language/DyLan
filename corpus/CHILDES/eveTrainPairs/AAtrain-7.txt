@@ -1,0 +1,23 @@
+Sent : that 's racketyboom
+Sem : [x1==racketyboom : e|x==that : e|e1==eq : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t]
+File : 1
+
+Sent : eve read
+Sem : [x==eve : e|e1==read : es|p2==subj(e1, x) : t]
+File : 1
+
+Sent : mommy 'll read later
+Sem : [x==mommy : e|e1==read : es|p2==later(e1) : t|p3==will_aux_feature(e1) : t|p6==subj(e1, x) : t]
+File : 1
+
+Sent : i 'll read later
+Sem : [x==i : e|e1==read : es|p2==later(e1) : t|p3==will_aux_feature(e1) : t|p6==subj(e1, x) : t]
+File : 1
+
+Sent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+File : 1
+
+Sent : i don 't have it
+Sem : [x1==it : e|x==i : e|e1==have : es|p1==not_feature(e1) : t|p2==do_aux_feature(e1) : t|p4==subj(e1, x) : t|p5==obj(e1, x1) : t]
+File : 1

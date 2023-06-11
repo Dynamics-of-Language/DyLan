@@ -1,0 +1,224 @@
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what 's this
+Sem : [x1==this : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's this
+
+GoldSent : what 's this
+Sem : [x1==this : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's this
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : who 's that
+Sem : [x1==that : e|e1==eq : es|x==who : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : who 's that
+
+GoldSent : you tell me
+Sem : [x1==me : e|x==you : e|e1==tell : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t]
+GenSent : you tell me
+
+GoldSent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's it
+
+GoldSent : who is that
+Sem : [x1==that : e|e1==eq : es|x==who : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : who 's that
+
+GoldSent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's it
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : you 'll get it
+Sem : [x1==it : e|x==you : e|e1==get : es|p1==will_aux_feature(e1) : t|p3==subj(e1, x) : t|p4==obj(e1, x1) : t]
+GenSent : you 'll get it
+
+GoldSent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's it
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : can you see it
+Sem : [x1==it : e|x==you : e|e1==see : es|p2==can_aux_feature(e1) : t|p4==subj(e1, x) : t|p5==obj(e1, x1) : t]
+GenSent : you can see it
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's it
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : that 's what
+Sem : [x1==that : e|e1==eq : es|x==what : e|p2==subj(e1, x1) : t|p3==obj(e1, x) : t]
+GenSent : that 's what
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's it
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : what 's this
+Sem : [x1==this : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's this
+
+GoldSent : who is that
+Sem : [x1==that : e|e1==eq : es|x==who : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : who 's that
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : may i have it
+Sem : [x1==it : e|x==i : e|e1==have : es|p2==may_aux_feature(e1) : t|p4==subj(e1, x) : t|p5==obj(e1, x1) : t]
+GenSent : i may have it
+
+GoldSent : i can see it
+Sem : [x1==it : e|x==i : e|e1==see : es|p1==can_aux_feature(e1) : t|p3==subj(e1, x) : t|p4==obj(e1, x1) : t]
+GenSent : i can see it
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : do you see it
+Sem : [x1==it : e|x==you : e|e1==see : es|p2==do_aux_feature(e1) : t|p4==subj(e1, x) : t|p5==obj(e1, x1) : t]
+GenSent : you see it don
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what is that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : there
+Sem : [e : es|p1==there(e) : t]
+GenSent : there
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : i don 't have it
+Sem : [x1==it : e|x==i : e|e1==have : es|p1==not_feature(e1) : t|p2==do_aux_feature(e1) : t|p4==subj(e1, x) : t|p5==obj(e1, x1) : t]
+GenSent : i don 't have it
+
+GoldSent : what 's that
+Sem : [x1==that : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's that
+
+GoldSent : what is it
+Sem : [x1==it : e|e1==eq : es|x==what : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : what 's it
+
+GoldSent : it 's what
+Sem : [x1==it : e|e1==eq : es|x==what : e|p2==subj(e1, x1) : t|p3==obj(e1, x) : t]
+GenSent : it 's what
+
+GoldSent : i see you
+Sem : [x1==you : e|x==i : e|e1==see : es|p1==subj(e1, x) : t|p2==obj(e1, x1) : t]
+GenSent : i see you
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 1 is 10.
+// Count of sentences with length 3 is 35.
+// Count of sentences with length 4 is 5.
+// Count of sentences with length 5 is 1.
+
+// Corpus size: 51
+// Maximum length: 5
+// Minimum length: 1
+// Average length: 2.745098
+
+// ---- Word-Level Stats ----
+// Count of all words: 140
+// Count of unique tokens: 19
+// Words/Tokens count ratio: 7.368421
