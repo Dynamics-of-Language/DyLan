@@ -67,7 +67,7 @@ public class PerturbationSample {
 
     @Override
     public String toString() {
-        return  "rG= " + rG +
+        return  "\nrG= " + rG +
                 ",\nrP= " + rP +
                 ",\npI= " + pI +
                 ",\nisForward= " + isForward +
