@@ -309,7 +309,7 @@ public class GeneratorLearner {
     {
         // TODO Make more efficient
         // First, clear the file if it was already there. RF: https://stackoverflow.com/questions/6994518/how-to-delete-the-content-of-text-file-without-deleting-itself
-        File f = new File(grammarPath + "genLearnedModel.csv");
+        File f = new File(grammarPath + "top-1-400_11-6-2023_model.csv");
         if (f.exists() && !f.isDirectory()) {
             PrintWriter writer = new PrintWriter(f);
             writer.print("");
@@ -323,7 +323,7 @@ public class GeneratorLearner {
 
         String strFeatures = String.join(" , ", featuresStr);
         strFeatures = "[WORDS\\FEATURES]" + " , " + strFeatures + "\n";
-        FileWriter writer1 = new FileWriter(grammarPath + "genLearnedModel.csv", true);
+        FileWriter writer1 = new FileWriter(grammarPath + "top-1-400_11-6-2023_model.csv", true);
         writer1.write(strFeatures);
         writer1.close();
 
@@ -342,7 +342,7 @@ public class GeneratorLearner {
             strRow = word + " , " + strRow;
             // write to file
             try {
-                FileWriter writer = new FileWriter(grammarPath + "genLearnedModel.csv", true);
+                FileWriter writer = new FileWriter(grammarPath + "top-1-400_11-6-2023_model.csv", true);
                 writer.write(strRow);
                 writer.write(System.lineSeparator()); // To go to next line. REF: https://stackoverflow.com/questions/18549704/create-a-new-line-in-javas-filewriter
                 writer.close();

@@ -25,7 +25,7 @@ public class GeneratorTester
 {
     // TODO make the appropriate changes here so that I don't have to have the same path here and in the GeneratorLearner class.
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static public String corpusPath = corpusFolderPath + "AAtrain-3.txt";//AA-full-lower-4000-Copy.txt";//""LC-CHILDESconversion400FinalCopy.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt"; //"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
+    static public String corpusPath = corpusFolderPath + "amat.txt";//"test-4000-1s.txt";//"test-4000-3.txt";//amat.txt";//"AA-train-lower-396-matching-top3.txt";//"amat.txt";//AA-full-lower-4000-Copy.txt";//""LC-CHILDESconversion400FinalCopy.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt"; //"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
     static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     protected static Logger logger = Logger.getLogger(GeneratorTester.class);
     public static final String ANSI_RESET = "\u001B[0m";
@@ -163,8 +163,8 @@ public class GeneratorTester
 //            }
             index++;
         }
-        writeToFileData(corpusFolderPath, File.separator + "AA-full-lower-4000-matching-top3.txt", matchingCorpus, matchingCorpusStats);
-        writeToFileData(corpusFolderPath, File.separator + "AA-full-lower-4000-unique-top3.txt", uniqueCorpus, uniqueCorpusStats);
+        writeToFileData(corpusFolderPath, File.separator + "test-4000-1s.txt", matchingCorpus, matchingCorpusStats);
+//        writeToFileData(corpusFolderPath, File.separator + "AA-full-lower-4000-unique-top3.txt", uniqueCorpus, uniqueCorpusStats);
 //        writeToFile(corpusFolderPath + File.separator + "AA-train-lower-3200-unique-top1.txt", uniqueCorpus, corpusStatsUnique);
 //        writeToFile(corpusFolderPath+File.separator+"tp_not_icp.txt", tpNotICPList, corpusStatsL);
         Integer totalSize = g.corpus.size();
@@ -180,7 +180,6 @@ public class GeneratorTester
 //        System.out.println(matchingsSet); //todo make these sorted
 //        System.out.println("tp not icp len: " + tpNotICPIndices.size());
         System.out.println("Unique | len: " + uniqueCorpus.size());
-
     }
 
     /**
@@ -311,8 +310,8 @@ public class GeneratorTester
 //                    generatedSentence = new Sentence<>();
                 }
             }
-            writeToFileOutput(grammarPath + "genOutputFull.txt", fullyGeneratedList, fullyGeneratedStats);
-            writeToFileOutput(grammarPath + "genOutputPartial.txt", partiallyGeneratedList, partiallyGeneratedStats);
+            writeToFileOutput(grammarPath + "top-1-400_11-06-2023_full.txt", fullyGeneratedList, fullyGeneratedStats);
+            writeToFileOutput(grammarPath + "top-1-400_11-06-2023_partial.txt", partiallyGeneratedList, partiallyGeneratedStats);
             System.out.println("Absolutely correct: " + absCorrect);
 
         } catch (IOException e) {
@@ -334,13 +333,16 @@ public class GeneratorTester
 //        testLearn();
 //        seperateParsableData(learner);
 
-        // todo I should be setting the paths and parameters that are shared just here, not inside each separately.
+//          GeneratorLearner learner = new GeneratorLearner(grammarPath, corpusPath);
+//            seperateParsableData(learner);
 
         GeneratorLearner learner = new GeneratorLearner(grammarPath, corpusPath); // TODO is this meaningful? how can I have a constructor that uses default
         GeneratorTester tester = new GeneratorTester();
+
         logger.info("Learning phase begins.");
         learner.learn();
         logger.info(ANSI_GREEN+"Learning phase finished successfully."+ANSI_RESET);
+
         logger.info("Generation phase begins.");
         tester.testProbabilisticGenerator();
         logger.info(ANSI_GREEN+"Generation phase finished successfully."+ANSI_RESET);

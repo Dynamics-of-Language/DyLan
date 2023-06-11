@@ -33,7 +33,7 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
     public static final String ANSI_RED = "\u001B[31m";
 
     final static String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static String modelFileName = "genLearnedModel.csv";
+    static String modelFileName = "top-1-400_11-6-2023_model.csv";
     static String wordProbFileName = "wordProbs.tsv";
     protected TreeMap<String, TreeMap<Feature, Double>> model;
     protected HashMap<String, Double> wordProbs;
@@ -173,13 +173,14 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
         // ATTENTION: This method assumes using log probabilities, therefore the probabilities are added instead of multiplied.
         HashMap<String, Double> allProbs = new HashMap<>();
         Feature dsTypeFeature = getPointedNodeFeature(); // SHOULD this go below the "if useDSTypes" block?
+        logger.info("pointed node: " + dsTypeFeature);
 
         for (String w : model.keySet()) {
             TreeMap<Feature, Double> row = model.get(w);
             Double probSum = 0.0;
             for (TTRRecordType r : mappedFeatures) {
                 probSum += row.get(new Feature(r));
-                logger.info("word: " + w + ", feature: " + new Feature(r) + ", prob: " + row.get(new Feature(r)));
+                logger.debug("word: " + w + ", feature: " + new Feature(r) + ", prob: " + row.get(new Feature(r)));
             }
             if (useDSTypes) { // I think I have to do this: see what type is required, get the prob of that for all the words and hope this helps for picking the right word.
                 probSum += row.get(dsTypeFeature); // TODO TEST
@@ -190,7 +191,7 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
         }
         // pick top beamSize words from allProbs and return them as candidates.
         for(String w: allProbs.keySet())
-            logger.info("word: " + w + ", prob: " + allProbs.get(w));
+            logger.debug("word: " + w + ", prob: " + allProbs.get(w));
 //        System.out.println("allProbs: " + allProbs);
         List<String> candidates = chooseTopWords(allProbs);
         return candidates;
