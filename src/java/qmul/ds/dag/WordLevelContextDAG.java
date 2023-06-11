@@ -321,29 +321,19 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 				continue;
 			}
+			
+			
 			logger.info("Going forward first along: " + e.toDebugString());
 			logger.debug("Going forward first along: " + e.toDebugString());
-			if (e instanceof CompletionEdge) {
 
-			} 
-//			else if (e.word().speaker().equals(DAGGenerator.agentName))
-//			{
-//				wordStack.push(e.word());
-//				System.out.println("pushing word on stack"+e.word);
-//				System.out.println("stack now:"+wordStack);
-//			}
-			//AE does not understand the point of the above, which was ruining the parse.
-			//commented out for now.
-			else if (!wordStack.isEmpty() && wordStack.peek().equals(e.word()))
+
+			if (!(e instanceof CompletionEdge) && !wordStack.isEmpty() && wordStack.peek().equals(e.word()))
 				wordStack().pop();
-			else if (e instanceof VirtualRepairingEdge) {
-				VirtualRepairingEdge vr = (VirtualRepairingEdge) e;
-
-			} else if (!wordStack.isEmpty()) {
+			else if (!(e instanceof CompletionEdge)&&!wordStack.isEmpty()) {
 				logger.error("Trying to pop word " + wordStack.peek() + " off the stack when going along " + e);
 				throw new IllegalStateException("top of stack is not the same as word on this edge, or stack is empty");
 			}
-
+			
 			e.traverse(this);
 			markAllOutEdgesAsUnseen();
 			logger.info("Depth is now:" + getDepth());

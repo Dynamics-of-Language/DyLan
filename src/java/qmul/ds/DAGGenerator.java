@@ -2,6 +2,7 @@ package qmul.ds;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -21,6 +22,13 @@ import qmul.ds.tree.Tree;
 public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 
     private static Logger logger = Logger.getLogger(DAGGenerator.class);
+    
+    private static String[] interreg = { "sorry", "sorry err", "sorry uhm", "uh I mean"};
+    private static String[] hesits = {"uhh", "errm", "err", "er", "uh", "erm", "uhm", "um"};
+    
+	public static List<String> interregna = Arrays.asList(interreg);
+	public static List<String> hesitations = Arrays.asList(hesits);
+
 
     protected DAGParser<T, E> parser;
 
@@ -30,12 +38,12 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
         return generated;
     }
 
+   
+
+    public String agentName = "Dylan";
+    
     //This can be changed to an object of Utterance
     protected Utterance generated = new Utterance(agentName, "");
-
-    public static String agentName = "Dylan";
-
-    public String[] interregna = {"uh", "I mean", "sorry", "rather"};
 
     public DAGGenerator(Lexicon lexicon, Grammar grammar) {
         parser = getParser(lexicon, grammar);
@@ -106,6 +114,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
      * @return resulting DAG; null if the word cannot be generated.
      */
     public DAG<T, E> generateWord(String w, TTRFormula goal) {
+    	
+    	if (!getState().getCurrentTuple().getSemantics().subsumes(goal))
+    	{
+    		logger.info("Cannot generate '" + w + "': current tuple does not subsume goal");
+    		return null;
+    	}
+    	
         UtteredWord word = new UtteredWord(w.toLowerCase(), agentName);
 
         DAG<T, E> dag = parser.generateWord(word, goal);
@@ -127,17 +142,20 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
         logger.debug("Generating to goal: " + goal);
         Context<T, E> context = parser.getContext();
         T curTuple = context.getCurrentTuple();
-        if (!curTuple.getSemantics().subsumes(goal))
-            return false;
+       
+        //if (!curTuple.getSemantics().subsumes(goal))
+        //    return false;
+        //AE: commented out the above, because subsumption will be checked in generateNextWord()
 
         //generate until goal is reached.
-        //we know that curTuple subsumes goal. Generate until the reverse is also true.
-        //this impelentation assumes monotonicity (as does DS in general)
         while (!(goal.subsumes(curTuple.getSemantics()))) {
             logger.info("Current tuple semantics: " + curTuple.getSemantics());
             logger.info("Goal: " + goal);
             if (!generateNextWord())
+            {
+            	logger.warn("Generation failed prematurely. Generated: "+this.generated);
                 return false;
+            }
             curTuple = context.getCurrentTuple();
         }
 
