@@ -1,0 +1,21 @@
+[r : [x : e|head==x : e|p3==highchair(x) : t]|x1==you : e|e1==move : es|x2==your(r.head, r) : e|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t]
+[r : [x : e|head==x : e|p3==horsie(x) : t]|x1==you : e|e1==move : es|x2==your(r.head, r) : e|p1==subj(e1, x1) : t|p2==obj(e1, x2) : t]
+3
+False
+0
+NOUN
+
+[x==mommy : e|e1==read : es|p1==not_feature(e1) : t|p2==can_aux_feature(e1) : t|p5==subj(e1, x) : t]
+[x==mommy : e|e1==sit : es|p1==not_feature(e1) : t|p2==can_aux_feature(e1) : t|p5==subj(e1, x) : t]
+3
+False
+0
+PROPN
+
+[x1==becky : e|x==you : e|e1==see : es|p2==later(e1) : t|p3==can_aux_feature(e1) : t|p5==subj(e1, x) : t|p6==obj(e1, x1) : t]
+[x1==becky : e|x==they : e|e1==see : es|p2==later(e1) : t|p3==can_aux_feature(e1) : t|p5==subj(e1, x) : t|p6==obj(e1, x1) : t]
+4
+False
+4
+PROPN
+
