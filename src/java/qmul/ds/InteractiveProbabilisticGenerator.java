@@ -33,7 +33,7 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
     public static final String ANSI_RED = "\u001B[31m";
 
     final static String grammarPath = "resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static String modelFileName = "top-1-400_11-6-2023_model.csv";
+    static String modelFileName = "genLearnedModel.csv";
     static String wordProbFileName = "wordProbs.tsv";
     protected TreeMap<String, TreeMap<Feature, Double>> model;
     protected HashMap<String, Double> wordProbs;
@@ -183,16 +183,22 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
                 logger.debug("word: " + w + ", feature: " + new Feature(r) + ", prob: " + row.get(new Feature(r)));
             }
             if (useDSTypes) { // I think I have to do this: see what type is required, get the prob of that for all the words and hope this helps for picking the right word.
-                probSum += row.get(dsTypeFeature); // TODO TEST
-                logger.info("word: " + w + ", feature: " + dsTypeFeature + ", prob: " + row.get(dsTypeFeature));
+                Double dsProb = row.get(dsTypeFeature);
+                if (dsProb == null) {  // To handle unseen types, we assign an equal probability to all the features.
+                    logger.error("dsProb is null for word: " + w + ", dsTypeFeature: " + dsTypeFeature);
+                    // here!
+                    dsProb = Math.log(1.0/model.size());
+                }
+                probSum += dsProb; // TODO TEST
+                logger.debug("word: " + w + ", feature: " + dsTypeFeature + ", prob: " + row.get(dsTypeFeature));
             }
-            probSum += wordProbs.get(w); // Adds the probability of the word itself.
+            // AA: commented out to remove the use of prior word probs.
+//            probSum += wordProbs.get(w); // Adds the probability of the word itself.
             allProbs.put(w, probSum); // choose a better name over allProbs.
         }
         // pick top beamSize words from allProbs and return them as candidates.
         for(String w: allProbs.keySet())
             logger.debug("word: " + w + ", prob: " + allProbs.get(w));
-//        System.out.println("allProbs: " + allProbs);
         List<String> candidates = chooseTopWords(allProbs);
         return candidates;
     }

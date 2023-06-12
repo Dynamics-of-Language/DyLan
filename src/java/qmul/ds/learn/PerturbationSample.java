@@ -77,7 +77,7 @@ public class PerturbationSample {
 
 
     public static void main(String[] args) throws IOException {  // Just to test the above.
-        List<PerturbationSample> samples = loadPerturbationData("perturbation.txt");
+        List<PerturbationSample> samples = loadPerturbationData("perturbationData.txt");
         System.out.println(samples);
     }
 }

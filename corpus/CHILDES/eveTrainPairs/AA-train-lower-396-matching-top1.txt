@@ -621,3 +621,22 @@ File : 1
 
 
 
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 1 is 16.
+// Count of sentences with length 2 is 8.
+// Count of sentences with length 3 is 85.
+// Count of sentences with length 4 is 24.
+// Count of sentences with length 5 is 21.
+// Count of sentences with length 6 is 1.
+
+// Corpus size: 155
+// Maximum length: 6
+// Minimum length: 1
+// Average length: 3.187097
+
+// ---- Word-Level Stats ----
+// Count of all words: 494
+// Count of unique tokens: 108
+// Words/Tokens count ratio: 4.574074

@@ -25,7 +25,7 @@ public class GeneratorTester
 {
     // TODO make the appropriate changes here so that I don't have to have the same path here and in the GeneratorLearner class.
     static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
-    static public String corpusPath = corpusFolderPath + "amat.txt";//"test-4000-1s.txt";//"test-4000-3.txt";//amat.txt";//"AA-train-lower-396-matching-top3.txt";//"amat.txt";//AA-full-lower-4000-Copy.txt";//""LC-CHILDESconversion400FinalCopy.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt"; //"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
+    static public String corpusPath = corpusFolderPath + "AA-train-lower-396-matching-top1.txt";//"train-4000-1s.txt";//"test-4000-3.txt";//amat.txt";//"AA-train-lower-396-matching-top3.txt";//"amat.txt";//AA-full-lower-4000-Copy.txt";//""LC-CHILDESconversion400FinalCopy.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt";//"AA-train-lower-396-matching-top1.txt";//"AAtrain-3.txt"; //"AA-train-lower-396-matching-top1.txt";//"LC-CHILDESconversion800TestFinalCopy.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt";//"AAtrain-72.txt"; //"LC-CHILDESconversion3200TrainFinalCopy.txt"; //"AAtrain-72.txt"; // "LC-CHILDESconversion396FinalCopy.txt"; // "LC-CHILDESconversion3200TrainFinal.txt"; //"LC-CHILDESconversion396FinalCopy.txt"; //"LC-CHILDESconversion400FinalCopy.txt";//"AAtrain-3.txt";//"CHILDESconversion100TestFinalCopy.txt";
     static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     protected static Logger logger = Logger.getLogger(GeneratorTester.class);
     public static final String ANSI_RESET = "\u001B[0m";
@@ -163,7 +163,7 @@ public class GeneratorTester
 //            }
             index++;
         }
-        writeToFileData(corpusFolderPath, File.separator + "test-4000-1s.txt", matchingCorpus, matchingCorpusStats);
+        writeToFileData(corpusFolderPath, File.separator + "test-4000-3s.txt", matchingCorpus, matchingCorpusStats);
 //        writeToFileData(corpusFolderPath, File.separator + "AA-full-lower-4000-unique-top3.txt", uniqueCorpus, uniqueCorpusStats);
 //        writeToFile(corpusFolderPath + File.separator + "AA-train-lower-3200-unique-top1.txt", uniqueCorpus, corpusStatsUnique);
 //        writeToFile(corpusFolderPath+File.separator+"tp_not_icp.txt", tpNotICPList, corpusStatsL);
@@ -250,8 +250,12 @@ public class GeneratorTester
     public void testProbabilisticGenerator() {
         InteractiveProbabilisticGenerator generator = new InteractiveProbabilisticGenerator(grammarPath, grammarPath);
         List<String[]> fullyGeneratedList = new ArrayList<>();
+        List<String[]> fullyGeneratedEM = new ArrayList<>();
+        List<String[]> fullyGeneratedNonEM = new ArrayList<>();
         List<String[]> partiallyGeneratedList = new ArrayList<>();
         CorpusStats fullyGeneratedStats = new CorpusStats();
+        CorpusStats fullyGeneratedEMStats = new CorpusStats();
+        CorpusStats fullyGeneratedNonEMStats = new CorpusStats();
         CorpusStats partiallyGeneratedStats = new CorpusStats();
         int absCorrect = 0; // these have to go to test class.
         RecordTypeCorpus corpus = new RecordTypeCorpus();
@@ -273,18 +277,17 @@ public class GeneratorTester
 
                 while (!rInc.isEmpty()) { // rInc is now updated by populateBeam.
 //                    generator.populateBeam();
-                    if(generator.generate()){
+                    boolean hasGenerated = generator.generate();
+                    List<UtteredWord> sent = generator.getGenerated().getWords();
+                    sent.forEach((w) -> generatedSentence.add(new Word(w.word()))); //todo test
+                    if(hasGenerated){
 //                        String w = generator.getParser().getContext().getDAG().getParentEdge().word().word();
                         // todo the following is only working for the last word of the sentence.
 //                        logger.info(ANSI_GREEN + "Generated word \"" + w + "\"" + ANSI_RESET);// + "\" with log-probability " + prob + ANSI_RESET);
 
-                        List<UtteredWord> sent = generator.getGenerated().getWords();
-                        sent.forEach((w) -> generatedSentence.add(new Word(w.word()))); //todo test
-                        generatedSentence.remove(0); // remove the first word, which is the speaker.
-
-//                        generatedSentence.add(new Word(w));
-//                        logger.info("Current sentence: " + generatedSentence);
-//                        logger.info("Current utterance: " + generator.getGenerated()); // this doesn't work word-by-word because of the structure of BFG.
+//                        List<UtteredWord> sent = generator.getGenerated().getWords();
+//                        sent.forEach((w) -> generatedSentence.add(new Word(w.word()))); //todo test
+//                        generatedSentence.remove(0); // remove the first word, which is the speaker.
                         rCur = (TTRRecordType) generator.getParser().getContext().getDAG().getCurrentTuple().getSemantics().removeHeadIfManifest();  // How expensive is this operation?
                         rInc = rG.subtract(rCur, new HashMap<>());
                         break;
@@ -293,25 +296,27 @@ public class GeneratorTester
                         logger.error(ANSI_RED + "Could NOT continue generation!" + ANSI_RESET); // later add the word that was not generated to the error message.
                         // todo better log message.
                         addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, partiallyGeneratedList, partiallyGeneratedStats);
-//                        generatedSentence = new Sentence<>();
                         break; // todo: or not to break, this is the question.
                     }
                 }
                 if (rInc.isEmpty()) {   //todo is this necessary? I mean this si the condition for the while loop!! // If we are here, then we have a fully generated sentence.
-//                    List<UtteredWord> sent = generator.getGenerated().getWords();
-//                    sent.forEach((w) -> generatedSentence.add(new Word(w.word()))); //todo test
-//                    generatedSentence.remove(0); // remove the first word, which is the speaker.
-//                    System.out.println("Generated sentence: " + generatedSentence);
                     logger.info(ANSI_BLUE + "Fully generated sentence: " + generatedSentence + ANSI_RESET);
-                    if (generatedSentence.equals(goldSentence))
+                    if (generatedSentence.equals(goldSentence)) {
                         absCorrect++;
+                        addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, fullyGeneratedEM, fullyGeneratedEMStats);
+//                        fullyGeneratedEM.add(generatedSentence.toString());
+                    } else {
+//                        fullyGeneratedNonEM.add(generatedSentence.toString());
+                        addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, fullyGeneratedNonEM, fullyGeneratedNonEMStats);
+                    }
                     // TODO if a sentence is fully generated, it's not necessarily correct. We should check that too in a way: putting it in the other output file or keep this in mind when processing this output file.
                     addToOutputCorpus(goldSentence.toString(), rG.toString(), generatedSentence, fullyGeneratedList, fullyGeneratedStats);
-//                    generatedSentence = new Sentence<>();
                 }
             }
-            writeToFileOutput(grammarPath + "top-1-400_11-06-2023_full.txt", fullyGeneratedList, fullyGeneratedStats);
-            writeToFileOutput(grammarPath + "top-1-400_11-06-2023_partial.txt", partiallyGeneratedList, partiallyGeneratedStats);
+            writeToFileOutput(grammarPath + "genOutputFull.txt", fullyGeneratedList, fullyGeneratedStats);
+            writeToFileOutput(grammarPath + "genOutputPartial.txt", partiallyGeneratedList, partiallyGeneratedStats);
+            writeToFileOutput(grammarPath + "genOutputFullEM.txt", fullyGeneratedEM, fullyGeneratedEMStats);
+            writeToFileOutput(grammarPath + "genOutputFullNonEM.txt", fullyGeneratedNonEM, fullyGeneratedNonEMStats);
             System.out.println("Absolutely correct: " + absCorrect);
 
         } catch (IOException e) {
