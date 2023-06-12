@@ -32,7 +32,7 @@ public class InteractiveProbabilisticGenerator extends BestFirstGenerator {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_RED = "\u001B[31m";
 
-    final static String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
+    final static String grammarPath = "resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     static String modelFileName = "top-1-400_11-6-2023_model.csv";
     static String wordProbFileName = "wordProbs.tsv";
     protected TreeMap<String, TreeMap<Feature, Double>> model;

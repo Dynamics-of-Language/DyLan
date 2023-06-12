@@ -18,7 +18,7 @@ public class PerturbationSample {
     public int distance = -1;
     public String pos = null;
 
-    static final String grammarFolderPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
+    static final String grammarFolderPath = GeneratorEvaluator.grammarPath;
 
     public PerturbationSample(TTRRecordType rG, TTRRecordType rP, int pI, boolean isForward, int distance, String pos){
         this.rG = rG;
@@ -77,7 +77,7 @@ public class PerturbationSample {
 
 
     public static void main(String[] args) throws IOException {  // Just to test the above.
-        List<PerturbationSample> samples = loadPerturbationData("perturbationData.txt");
+        List<PerturbationSample> samples = loadPerturbationData("perturbation.txt");
         System.out.println(samples);
     }
 }

@@ -37,6 +37,8 @@ public class Utterance {
 	public Utterance(String speaker, String utt) {
 		this(speaker+SPEAKER_SEP+utt);
 	}
+	
+	
 
 	public Utterance(Sentence<Word> sent){
 		//todo new constructor
@@ -52,13 +54,22 @@ public class Utterance {
 		if(this.uttSegment_map == null)
 			this.uttSegment_map = new TreeMap<Integer, String>();
 	
-		String[] split=text.split(SPEAKER_SEP);
+		if (text.trim().indexOf(SPEAKER_SEP) == text.trim().length()-1)
+		{
+			words = new ArrayList<UtteredWord>();
+			this.speaker=text.trim().substring(0,text.trim().length()-1);
+			return;
+		}
+		
+		String[] split=text.trim().split(SPEAKER_SEP);
+		
 		String content=null;
 		String spk=null;
 		if (split.length>1)
 		{
 			spk=split[0];
 			content=split[1];
+			
 		}
 		else
 		{
@@ -149,8 +160,8 @@ public class Utterance {
 	}
 
 	public static void main(String a[]) {
-		Utterance utt = new Utterance("A: no. it is");
-		System.out.println("words: "+utt.words);
+		Utterance utt = new Utterance("Dylan", "");
+		utt.addWord("a");
 		System.out.println(utt);
 		
 		

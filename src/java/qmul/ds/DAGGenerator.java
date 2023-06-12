@@ -28,7 +28,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
     
 	public static List<String> interregna = Arrays.asList(interreg);
 	public static List<String> hesitations = Arrays.asList(hesits);
-
+	public boolean repairGeneration = false;
 
     protected DAGParser<T, E> parser;
 
@@ -115,9 +115,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
      */
     public DAG<T, E> generateWord(String w, TTRFormula goal) {
     	
-    	if (!getState().getCurrentTuple().getSemantics().subsumes(goal))
+    	TTRFormula headLessCur = getState().getCurrentTuple().getSemantics().removeHead();
+    	
+    	if (!headLessCur.subsumes(goal))
     	{
     		logger.info("Cannot generate '" + w + "': current tuple does not subsume goal");
+    		logger.info("Goal:" + goal);
+    		logger.info("Cur: "+getState().getCurrentTuple().getSemantics());
     		return null;
     	}
     	
@@ -139,7 +143,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
      * the goal was not reached, and the generation is partial.
      */
     public boolean generate() {
-        logger.debug("Generating to goal: " + goal);
+        logger.info("Generating to goal: " + goal);
         Context<T, E> context = parser.getContext();
         T curTuple = context.getCurrentTuple();
        
@@ -150,7 +154,7 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
         //generate until goal is reached.
         while (!(goal.subsumes(curTuple.getSemantics()))) {
             logger.info("Current tuple semantics: " + curTuple.getSemantics());
-            logger.info("Goal: " + goal);
+            
             if (!generateNextWord())
             {
             	logger.warn("Generation failed prematurely. Generated: "+this.generated);
@@ -158,6 +162,8 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
             }
             curTuple = context.getCurrentTuple();
         }
+        
+        logger.info("Success. Generated: "+ this.generated);
 
         return true;
     }

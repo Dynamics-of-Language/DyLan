@@ -17,6 +17,7 @@ import qmul.ds.dag.GroundableEdge;
 import qmul.ds.dag.UtteredWord;
 import qmul.ds.dag.VirtualRepairingEdge;
 import qmul.ds.dag.WordLevelContextDAG;
+import qmul.ds.formula.TTRFormula;
 import qmul.ds.tree.Tree;
 
 /**
@@ -85,18 +86,30 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 	public abstract List<String> populateBeam(); // AA: modified.
 
 	public boolean generateNextWord() { // AA: Doesn't seem to be a good name.
+		logger.info("Generating next word");
+		
+		TTRFormula cur = getState().getCurrentTuple().getSemantics().removeHead();
+		//goal is headless
+		
+		if (cur.subsumes(goal))
+		{
+			//if we are here, we will attempt to generate forward
+			List<String> beamWords = this.populateBeam();// AA: modified.
 
-		List<String> beamWords = this.populateBeam();// AA: modified.
-
-		for (String word : beamWords) {
-			DAG<DAGTuple, GroundableEdge> result = this.generateWord(word, goal);
-			if (result != null) {
-				this.generated.addWord(word);
-				return true;
+			for (String word : beamWords) {
+				DAG<DAGTuple, GroundableEdge> result = this.generateWord(word, goal);
+				if (result != null) {
+					logger.info("generated:"+word);
+					this.generated.addWord(word);
+					return true;
+				}
 			}
 		}
 
-		// if we are here, we failed to generate the next word. Could be due to:
+		if (!this.repairGeneration)
+			return false;
+			
+		// if we are here, we failed to generate forward . Could be due to:
 		// (a) goal change; or (b) no suitable words in beam.
 		// either way, we'll attempt to generate repair. Failing this, generateNextWord
 		// will fail completely.
