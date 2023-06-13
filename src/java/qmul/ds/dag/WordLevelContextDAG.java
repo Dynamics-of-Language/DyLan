@@ -279,6 +279,7 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			logger.debug("out degree of cur is 0");
 			return null;
 		}
+		
 		// if (wordStack.isEmpty()) {
 		// logger.debug("GoFirst: wordstack is empty");
 		// return null;
@@ -324,10 +325,13 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 			
 			
 			logger.info("Going forward first along: " + e.toDebugString());
-			logger.debug("Going forward first along: " + e.toDebugString());
-
-
-			if (!(e instanceof CompletionEdge) && !wordStack.isEmpty() && wordStack.peek().equals(e.word()))
+			//logger.debug("Going forward first along: " + e.toDebugString());
+			
+			if (e instanceof VirtualRepairingEdge)
+			{
+				//for virtual repairing edges do nothing as it is the traverse method that will pop words off of stack
+			}
+			else if (!(e instanceof CompletionEdge) && !wordStack.isEmpty() && wordStack.peek().equals(e.word()))
 				wordStack().pop();
 			else if (!(e instanceof CompletionEdge)&&!wordStack.isEmpty()) {
 				logger.error("Trying to pop word " + wordStack.peek() + " off the stack when going along " + e);
@@ -540,12 +544,12 @@ public class WordLevelContextDAG extends DAG<DAGTuple, GroundableEdge> {
 
 		for (GroundableEdge edge : getInEdges(cur)) {
 			if (edge.hasBeenSeen()) {
-				logger.info("edge " + edge + " has been seen");
+				logger.debug("edge " + edge + " has been seen");
 				continue;
 			}
 
 			if (edge instanceof RepairingWordEdge) {
-				logger.info("returning overarching edge: " + ((RepairingWordEdge) edge).overarchingRepairingEdge);
+				logger.debug("returning overarching edge: " + ((RepairingWordEdge) edge).overarchingRepairingEdge);
 				return ((RepairingWordEdge) edge).overarchingRepairingEdge;
 			} else if (edge instanceof BacktrackingEdge) {
 				logger.error("This shouldn't really happen");

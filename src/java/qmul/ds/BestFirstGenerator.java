@@ -95,6 +95,7 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 		{
 			//if we are here, we will attempt to generate forward
 			List<String> beamWords = this.populateBeam();// AA: modified.
+			logger.info("Beam is:"+beamWords);
 
 			for (String word : beamWords) {
 				DAG<DAGTuple, GroundableEdge> result = this.generateWord(word, goal);
@@ -152,10 +153,7 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 			logger.debug("back over:" + repairableEdge);
 			current = getState().getSource(repairableEdge);
 
-			// need to set the current tuple, because populateBeam depdends on it
-			// MUST SET THIS BACK TO rightMostDAGNode before we add the repairing virtual
-			// edge.
-			getState().setCurrentTuple(current);
+			
 
 			backtracked.add(0, repairableEdge);
 			// shouldn't repair right edges like ? . ! <eot> etc.
@@ -164,6 +162,11 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 				continue;
 			}
 
+			// need to set the current tuple, because populateBeam depdends on it
+			// MUST SET THIS BACK TO rightMostDAGNode before we add the repairing virtual
+		    // edge.
+		    getState().setCurrentTuple(current);
+		    
 			List<String> beamWords = populateBeam();
 			logger.debug("Beam is:" + beamWords);
 
@@ -191,16 +194,29 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 					
 					if (result != null) {
 						// now add backtracking edge
+						DAGTuple to = getState().getNewTuple(result);
 						
-						logger.debug("Succeeded. Adding VirutualReparingEdge");
+						TTRFormula cur = to.getSemantics(parser.getContext()).removeHead();
+						
+						
+						if (!cur.subsumes(goal))
+						{
+							logger.debug("Applied la successfully, but result didn't subsume goal");
+							logger.debug("result was:"+cur);
+							continue;
+						}
+						
+						
+						logger.debug("Succeeded. Adding VirtualReparingEdge");
 						logger.debug("from " + current);
+						logger.debug("to " + to);
 						UtteredWord repairWord = new UtteredWord(word,agentName);
 						VirtualRepairingEdge repairing = getState().getNewRepairingEdge(
 								new ArrayList<GroundableEdge>(backtracked), actions, current, repairWord);
 						
-						DAGTuple to = getState().getNewTuple(result);
+						
 
-						logger.debug("to " + to);
+						
 						// first initiate repair
 						getState().setRepairProcessing(true);
 						getState().wordStack().push(new UtteredWord(word, agentName));// first push the repairing word onto the stack
@@ -222,7 +238,13 @@ public abstract class BestFirstGenerator extends DAGGenerator<DAGTuple, Groundab
 						
 						logger.info("Succeeded: generated: "+interregnum + " "+word);
 						
+						this.getState().thisIsFirstTupleAfterLastWord();
+						this.getState().setRepairProcessing(false);
 						
+						//System.out.println("After goFirst; cur is:"+getState().getCurrentTuple());
+						//System.out.println("out degree:"+getState().outDegree(getState().getCurrentTuple()));
+						
+						this.repairGeneration = false;
 						return true;
 
 					} else

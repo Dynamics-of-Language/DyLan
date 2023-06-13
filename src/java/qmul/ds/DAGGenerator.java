@@ -168,6 +168,10 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
         return true;
     }
 
+    public void setRepairGeneration(boolean b)
+    {
+    	this.repairGeneration = b;
+    }
 
     /**
      * Contract: it is generateNextWord() and NOT generate() that adds words to the list {@link generated}
