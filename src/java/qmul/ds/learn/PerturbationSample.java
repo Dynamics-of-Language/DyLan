@@ -1,5 +1,6 @@
 package qmul.ds.learn;
 
+import qmul.ds.Utterance;
 import qmul.ds.formula.TTRRecordType;
 
 import java.io.BufferedReader;
@@ -11,8 +12,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class PerturbationSample {
+    public Utterance originalSent = null;
     public TTRRecordType rG = null;
     public TTRRecordType rP = null;
+    public Utterance perturbedSent = null;
     public int pI = -1;
     public boolean isForward = false;
     public int distance = -1;
@@ -20,9 +23,11 @@ public class PerturbationSample {
 
     static final String grammarFolderPath = GeneratorEvaluator.grammarPath;
 
-    public PerturbationSample(TTRRecordType rG, TTRRecordType rP, int pI, boolean isForward, int distance, String pos){
+    public PerturbationSample(Utterance originalSent, TTRRecordType rG, TTRRecordType rP, Utterance perturbedSent, int pI, boolean isForward, int distance, String pos){
+        this.originalSent = originalSent;
         this.rG = rG;
         this.rP = rP;
+        this.perturbedSent = perturbedSent;
         this.pI = pI;
         this.isForward = isForward;
         this.distance = distance;
@@ -46,9 +51,13 @@ public class PerturbationSample {
         BufferedReader stream = new BufferedReader(reader);
         String line;
         while ((line = stream.readLine()) != null) {
+            Utterance originalSent = new Utterance(line);
+            line = stream.readLine();
             TTRRecordType rG = TTRRecordType.parse(line);
             line = stream.readLine();
             TTRRecordType rP = TTRRecordType.parse(line);
+            line = stream.readLine();
+            Utterance perturbedSent = new Utterance(line);
             line = stream.readLine();
             int pI = Integer.parseInt(line);
             line = stream.readLine();
@@ -57,7 +66,7 @@ public class PerturbationSample {
             int distance = Integer.parseInt(line);
             line = stream.readLine();
             String pos = line;
-            samples.add(new PerturbationSample(rG, rP, pI, isForward, distance, pos));
+            samples.add(new PerturbationSample(originalSent, rG, rP, perturbedSent, pI, isForward, distance, pos));
             String emptyLine = stream.readLine(); // Empty line between samples.
         }
         stream.close();
@@ -67,8 +76,10 @@ public class PerturbationSample {
 
     @Override
     public String toString() {
-        return  "\nrG= " + rG +
+        return  "\noriginalSent= " + originalSent +
+                ",\nrG= " + rG +
                 ",\nrP= " + rP +
+                ",\nperturbedSent= " + perturbedSent +
                 ",\npI= " + pI +
                 ",\nisForward= " + isForward +
                 ",\ndistance= " + distance +
@@ -77,7 +88,8 @@ public class PerturbationSample {
 
 
     public static void main(String[] args) throws IOException {  // Just to test the above.
-        List<PerturbationSample> samples = loadPerturbationData("perturbationData.txt");
-        System.out.println(samples);
+        List<PerturbationSample> samples = loadPerturbationData("perturbations.txt");
+        for (PerturbationSample sample : samples)
+            System.out.println(sample);
     }
 }
