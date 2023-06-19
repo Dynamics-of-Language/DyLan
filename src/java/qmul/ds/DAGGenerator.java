@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -22,8 +23,15 @@ import qmul.ds.tree.Tree;
 public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 
     private static Logger logger = Logger.getLogger(DAGGenerator.class);
-    
-    private static String[] interreg = { "sorry", "sorry err", "sorry uhm", "uh I mean"};
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_RED = "\u001B[31m";
+
+    private static String[] interreg = {"sorry", "I mean"};
     private static String[] hesits = {"uhh", "errm", "err", "er", "uh", "erm", "uhm", "um"};
     
 	public static List<String> interregna = Arrays.asList(interreg);
@@ -53,6 +61,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
 
 
     public void setGoal(TTRFormula goal) {
+        if(!generated.isEmpty()) {
+            // Added by AA. Need to test.
+            Random r = new Random();
+            String hesitation = hesitations.get(r.nextInt(hesitations.size()));
+            generated.addWord(hesitation);
+            logger.info("Generated hesitation: "+hesitation);
+        }
         this.goal = goal;
     }
 
@@ -157,13 +172,13 @@ public abstract class DAGGenerator<T extends DAGTuple, E extends DAGEdge> {
             
             if (!generateNextWord())
             {
-            	logger.warn("Generation failed prematurely. Generated: "+this.generated);
+            	logger.warn(ANSI_RED + "Generation failed prematurely. Generated: "+this.generated + ANSI_RESET);
                 return false;
             }
             curTuple = context.getCurrentTuple();
         }
         
-        logger.info("Success. Generated: "+ this.generated);
+        logger.info(ANSI_GREEN + "Success. Generated: "+ this.generated + ANSI_RESET);
 
         return true;
     }
