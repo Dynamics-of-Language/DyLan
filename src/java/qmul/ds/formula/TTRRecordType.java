@@ -676,21 +676,28 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 	public static void main(String[] a) {
-		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+//		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
+//
+//		TTRRecordType r1 = TTRRecordType
+//				.parse("[e==go:es|r1 : [x:e|p5==man(x):t|p6==tall(x):t|head==x:e] | x6==eps(r1.head,r1) : e|p==subj(e,x6):t]");
+//
+//
+//		TTRRecordType r7 = TTRRecordType.parse("[e==run:es|r : [x2:e|p11 == man(x2):t|p12 == tall(x2):t|head==x2:e] | x1==eps(r.head,r) : e|p9==subj(e,x1):t]");
+//
+//		System.out.println("this:" + r1);
+//		System.out.println("other:" + r7);
+//		System.out.println("max super type is: " + r1.mostSpecificCommonSuperType(r7, map));
+//		map.clear();
+//		System.out.println("this minus other is: " + r1.subtract(r7, map));
+//		System.out.println("map is: " + map);
 
-		TTRRecordType r1 = TTRRecordType
-				.parse("[e==go:es|r1 : [x:e|p5==man(x):t|p6==tall(x):t|head==x:e] | x6==eps(r1.head,r1) : e|p==subj(e,x6):t]");
+//		System.out.println(TTRRecordType.parse("[x==dylan : e]"));
 
+		TTRRecordType r1 = TTRRecordType.parse("[x==dylan : e]");
+		TTRRecordType r2 = TTRRecordType.parse("[agent : e|p==at(e1,x) : t]");
+		TTRRecordType r3 = (TTRRecordType) r1.asymmetricMerge(r2);
+		System.out.println(r3);
 
-		TTRRecordType r7 = TTRRecordType.parse("[e==run:es|r : [x2:e|p11 == man(x2):t|p12 == tall(x2):t|head==x2:e] | x1==eps(r.head,r) : e|p9==subj(e,x1):t]");
-
-		System.out.println("this:" + r1);
-		System.out.println("other:" + r7);
-		System.out.println("max super type is: " + r1.mostSpecificCommonSuperType(r7, map));
-		map.clear();
-		System.out.println("this minus other is: " + r1.subtract(r7, map));
-		System.out.println("map is: " + map);
-		
 
 	}
 
@@ -1089,7 +1096,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 			TTRField field = fields.get(i);
 			if (variables.contains(field.getLabel()))
-				variables.remove(field.getLabel());
+			variables.remove(field.getLabel());
 
 		}
 
@@ -1866,7 +1873,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		} else if (!record.equals(other.record))
 			return false;
 		return true;
-	}
+    }
 
 	public boolean hasManifestContent() {
 		TTRField head = this.getHeadField();

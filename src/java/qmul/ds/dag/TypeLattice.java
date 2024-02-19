@@ -88,6 +88,8 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		ArrayList<TTRField> result = new ArrayList<TTRField>();
 		for (TTRField f : t.getFields()) {
 			if ((f.getDSType() != null && entityTypes.contains(f.getDSType())) || f.getDSType() == null) {
+				// Suggested by IntelliJ: this is just equivalent to :
+				// (f.getDSType() == null || entityTypes.contains(f.getDSType()))
 				result.add(f);
 			}
 
@@ -629,22 +631,28 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 	public static void main(String a[]) {
 
 
-		
-		
+
+
 		TTRRecordType target = TTRRecordType
-				.parse("[x2==you:e|x1==me:e|p==like(x2,x1):t|p1==run(x1):t|head==p:t]");
-		
-		
-		
-		
+				.parse("[r:[x:e|p==glass(x):t|head==x:e]|x1==iota(r.head,r):e|head==x1:e]");
+
+		System.out.println("target:"+target);
+		TTRRecordType target2 = TTRRecordType
+				.parse("[e==go:es|head==e:es|x==john:e|p==subject(e,x):t]");
+
 		TypeLattice lattice=new TypeLattice(target);
-//		TTRRecordType inc=lattice.nextIncrement();
+
+		for(List<?> l: lattice.getIncrements(target.getHeadField().getLabel())) {
+			System.out.println(l);
+		}
+
+
+;//		TTRRecordType inc=lattice.nextIncrement();
 //		while(inc!=null){
 //			
 //			System.out.println(inc);
 //			inc=lattice.nextIncrement();
 //		}
-
 	
 	}
 
