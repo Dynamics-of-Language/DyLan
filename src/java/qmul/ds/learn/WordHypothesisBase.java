@@ -22,7 +22,14 @@ import edu.stanford.nlp.ling.Word;
 
 @SuppressWarnings("serial")
 public class WordHypothesisBase {
-	private static Logger logger = Logger.getLogger(WordHypothesisBase.class);
+	private static final Logger logger = Logger.getLogger(WordHypothesisBase.class);
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_CYAN = "\u001B[36m";
+	public static final String ANSI_RED = "\u001B[31m";
 	//public static final String lexiconSaveFolder = "2013-learner-output" + File.separator;
 	// all split sequences
 	private List<List<WordHypothesis>> tuples;
@@ -265,38 +272,42 @@ public class WordHypothesisBase {
 	}
 
 	public Lexicon getLearnedLexicon(int topN) {
+		logger.info("Getting learned lexicon with topN=" + topN);
 		Lexicon l = new Lexicon();
 		for (HasWord w : priorDist.keySet()) {
 			l.put(w.word(), new ArrayList<LexicalAction>());
-			int n = 1;
+			int n = 1;  // A counter to limit the number of WordHypothesis instances that are processed for each word. By Copilot/Arash A.
 			int rank = -1;
 			double lastProb = -1;
 			for (WordHypothesis h : getWordHyps(w)) {
-
 				if (n > topN)
 					break;
-
+				// Set the rank based on the probability of the WordHypothesis (although, rank is faulty, remains 0)
 				if (h.getProb() > lastProb)
 					rank++;
+
 				LexicalAction act = h.getCoreAction();
 				act.setProb(h.getProb());
 				act.setRank(rank);
+				logger.info(ANSI_GREEN+ "Adding action \"" + act + "\" to lexicon for word: " + w + " with prob:" + h.getProb() + " and rank: " + rank + ANSI_RESET);
+				logger.debug("[ACTION INFO]  word: " + act.getWord() + " | lexical action type: " + act.getLexicalActionType() + " | semantics: " + act.getSemantics());
+				logger.debug("Action effect is: \n" + act.getEffects()[0]);
+				logger.debug("Hyp was:" + h);
 				l.get(w.word()).add(act);
 				n++;
 				lastProb = h.getProb();
-
 			}
-
 		}
 		return l;
 	}
 
-	public void saveLearnedLexicon(String f, int topN) throws IOException, NotSerializableException {
-		
+	public void saveLearnedLexicon(String f, int topN) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f+"-top-"+topN));
 		
 		Lexicon lex = this.getLearnedLexicon(topN);
+		logger.info(ANSI_BLUE + "Lexicon is:" + lex + ANSI_RESET);
 		out.writeObject(lex);
+//		out.writeObject();
 		out.close();
 		lex.writeToTextFile(f + "-top-"+topN +".txt");
 	}
@@ -403,13 +414,11 @@ public class WordHypothesisBase {
 				result += hyp + ")|";
 			}
 			result += "\n";
-
 		}
 		return result;
 	}
 
 	public List<List<WordHypothesis>> getHypothesisTuples() {
-
 		return this.tuples;
 	}
 
@@ -422,7 +431,7 @@ public class WordHypothesisBase {
 		this.tuples.clear();
 		this.curDist.clear();
 		this.indeces.clear();
-		logger.info("tuples now has " + tuples.size() + "rows");
+		logger.info("tuples now has " + tuples.size() + " rows");
 	}
 
 	public Map<HasWord, WordLogProbDistribution> getPrior() {
@@ -444,17 +453,17 @@ public class WordHypothesisBase {
 	}
 
 	public void updateDistsEndOfExample(Collection<Word> sentence) {
-		System.out.print("Updating hypothesis probability distributions.... ");
+		logger.info("Updating hypothesis probability distributions.... " );
 		printHypNumbers(sentence);
 		if (this.tuples.isEmpty())
 			return;
-		logger.info("priorDist before discounting:" + priorDist);
+		logger.debug("priorDist before discounting:" + priorDist);
 		discountPrior(sentence);
-		logger.info("priorDist after discounting:" + priorDist);
+		logger.debug("priorDist after discounting:" + priorDist);
 		loadPriorIntoCur(sentence);
-		logger.info("curDist after loading prior:" + curDist);
+		logger.debug("curDist after loading prior:" + curDist);
 		initCurUniform(sentence);
-		logger.info("curDist after init uniform:" + curDist);
+		logger.debug("curDist after init uniform:" + curDist);
 
 		performLocalEM(EM_ROUNDS);
 		logger.info("After EM curDis:" + curDist);

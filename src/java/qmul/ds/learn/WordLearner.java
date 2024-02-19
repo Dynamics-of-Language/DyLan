@@ -38,7 +38,9 @@ public abstract class WordLearner<T> {
 	Iterator<Pair<Sentence<Word>, T>> corpusIterator;
 	WordHypothesisBase hb = new WordHypothesisBase();
 	public static String parserResourceDir = "resource" + File.separator + "2009-english-test-induction";
-	public static String seedResourceDir = "resource" + File.separator + "2009-english-test-induction-seed";
+//	public static String seedResourceDir = "resource" + File.separator + "2009-english-test-induction-seed"; // commented out by Arash A.
+	public static String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A.
+//	public static String seedResourceDir = "dsttr\\resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // added by Arash A.
 	Corpus<T> skipped=new Corpus<T>();
 	
 	
@@ -93,19 +95,12 @@ public abstract class WordLearner<T> {
 	public void learn() {
 		if (corpus == null || corpus.isEmpty()) {
 			throw new IllegalStateException("Corpus not loaded or is empty");
-
 		}
 		int i=0;
-		while (learnOnce())
-		{
+		while (learnOnce()) {
 			i++;
-			System.out.println("so far processed:"+i+" of "+corpus.size());
-			System.out.println();
-			
+			logger.info("So far processed:"+i+" of "+corpus.size() + "\n");
 		}
-			
-
-		
 	}
 
 	public boolean corpusLoaded() {

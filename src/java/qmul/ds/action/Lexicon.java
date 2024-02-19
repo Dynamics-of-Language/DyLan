@@ -167,6 +167,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * Read a set of {@link LexicalAction}s from file
      */
     public Lexicon(String dirNameOrURL, int topN) {
+//        System.out.println(" dirNameOrURL = " + dirNameOrURL + "\n topN = " + topN);                            // Added by Arash A.
         BufferedReader reader;
         try {
             // Adds support for initialising a lexicon object from the learnt lexical actions by
@@ -283,16 +284,19 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
     public void writeToTextFile(String fileName) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-
+        // Modified by Arash A. to write the effects in file correctly.
         for (String word : keySet()) {
             for (LexicalAction la : get(word)) {
-                out.write("[" + la.getProb() + "," + la.getRank() + "]");
-                out.newLine();
-                out.write(la.toString());
-                out.newLine();
+                logger.info("word: " + word + " | la: " + la);
+                    out.write("[" + la.getProb() + "," + la.getRank() + "]");
+                    out.newLine();
+                    out.write(la.toString());
+                    out.newLine();
+                    out.write(la.getEffects()[0].toString());
+                    out.newLine();
+                    out.newLine();
             }
             out.flush();
-
         }
         out.close();
     }
@@ -435,7 +439,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
         try {
             ArrayList<String> seen = new ArrayList<String>();
-            ; // record of all words we see, for ambiguous to work
+            // record of all words we see, for ambiguous to work
             HashMap<String, ArrayList<List<String>>> ambiguous = new HashMap<String, ArrayList<List<String>>>();
             HashMap<String, ArrayList<List<String>>> POSLinesMap = new HashMap<String, ArrayList<List<String>>>();
             int ambigCount = 0; // number of ambiguous words
@@ -644,8 +648,9 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
         try {
             // Create file with the lexicon itself
-            FileWriter fstream = new FileWriter(
-                    "resource" + File.separator + "2009-english-test-induction" + File.separator + "lexicon.txt");
+            FileWriter fstream = new FileWriter("resource\\2023-babyds-induction-output\\".replace("\\", File.separator)
+                    + "lexicon_Complete.txt".replaceAll("\\\\", File.separator));
+//                    "resource" + File.separator + "2009-english-test-induction" + File.separator + "lexicon.txt");  // Commented by Arash A.
             BufferedWriter out = new BufferedWriter(fstream);
             for (String key : mytypes.keySet()) {
                 logger.debug(mytypes.get(key));

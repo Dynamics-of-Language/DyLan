@@ -1,0 +1,11 @@
+Sent : here
+Sem : [e : es|p1==here(e) : t]
+File : 1
+
+Sent : you go
+Sem : [x==you : e|e1==go : es|p1==subj(e1, x) : t|head==e1 : es]
+File : 1
+
+Sent : what is that
+Sem : [x1==that : e|e1==eq : es|p3==obj(e1, x1) : t|x==what : e|p2==subj(e1, x) : t|head==e1 : es]
+File : 1
