@@ -83,6 +83,7 @@ public class PerturbationSample {
 
 
     public static List<PerturbationSample> findGeneratableSamples(List<PerturbationSample> allSamples) {
+        logger.info("Loading generator...");
         InteractiveProbabilisticGenerator generator = new InteractiveProbabilisticGenerator(grammarPath, grammarPath);
         logger.info("Generator loaded.");
         logger.info("Number of all samples: " + allSamples.size());
@@ -93,7 +94,7 @@ public class PerturbationSample {
             generator.setGoal(sample.rP);
             if (generator.generate()) {
                 generatableSamples.add(sample);
-                logger.trace("Able to generate sample: " + sample + "\n");
+                logger.trace("Was able to generate sample: " + sample + "\n");
             }
         }
         logger.info("Number of generatable samples: " + generatableSamples.size());
@@ -114,7 +115,7 @@ public class PerturbationSample {
 
 
     public static void writePerturbationDataTofFile(List<PerturbationSample> samples, String fileName) {
-        logger.info("Number of all samples: " + samples.size());
+        logger.info("Number of samples to be written to file \"" + fileName + "\": " + samples.size());
         String fileDir = grammarFolderPath + fileName;
         PrintStream out = null;
         FileOutputStream fileOpen = null;
@@ -135,7 +136,7 @@ public class PerturbationSample {
 
 
     public static void writeEvalOutputTofFile(List<PerturbationSample> samples, String fileName, List<String> generated) {
-        logger.info("Number of samples in" + fileName + ": " + samples.size());
+        logger.info("Number of samples in " + fileName + ": " + samples.size());
         String fileDir = grammarFolderPath + fileName;
         PrintStream out = null;
         FileOutputStream fileOpen = null;
@@ -184,7 +185,7 @@ public class PerturbationSample {
 
 
     public static void main(String[] args) throws IOException {  // Just to test the above.
-        List<PerturbationSample> samples = loadPerturbationData("prtbAll.txt");
+        List<PerturbationSample> samples = loadPerturbationData("perturbationsE.txt"); // used ot be prtbAll
         List<PerturbationSample> generatableSamples = findGeneratableSamples(samples);
         writePerturbationDataTofFile(generatableSamples, "prtbGeneratables.txt");
     }

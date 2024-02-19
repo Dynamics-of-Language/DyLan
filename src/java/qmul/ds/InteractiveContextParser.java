@@ -38,7 +38,7 @@ import qmul.ds.tree.Tree;
  * et. al (2015)</a>.
  * 
  * The parser is best-first and constructs an explicit Directed Asyclic Graph
- * (implemented as {@link qmul.ds.dag.WordLevelContextDAG}) which acts both as
+ * (implemented as {@link WordLevelContextDAG}) which acts both as
  * the current parse state, as well as the dialogue context.
  * 
  * The parser currently supports Self-Repair processing, Restarts, Communicative
@@ -94,6 +94,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 * With this set to 1, the repair is always local.
 	 */
 	public static final int max_repair_depth = 1;
+
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_CYAN = "\u001B[36m";
 
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir);
@@ -484,7 +491,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public synchronized List<TTRRecordType> getTopNPending(int i) {
 		List<TTRRecordType> result = new ArrayList<TTRRecordType>();
 
-		qmul.ds.tree.Tree current = context.getCurrentTuple().getTree();
+		Tree current = context.getCurrentTuple().getTree();
 
 		if (!current.getAsserters().isEmpty()) {
 			result.add(new TTRRecordType());
@@ -544,7 +551,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public synchronized DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord w) {
 		UtteredWord word = new UtteredWord(w.word().toLowerCase(), w.speaker());
-		logger.info("Parsing word " + word);
+		logger.info(ANSI_YELLOW+"Parsing word " + word + ANSI_RESET);
 		// set addressee of utterance if inferrable (in the dyadic case):
 		List<String> participants = new ArrayList<String>(context.getParticipants());
 		if (context.getParticipants().size() == 2) {
@@ -566,7 +573,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 			if (!parse()) {
 				logger.info("OOPS! Couldn't parse word as restart or repair");
-				logger.error("OOPS! Couldn't parse word as restart or repair");
+				logger.error(ANSI_PURPLE + "OOPS! Couldn't parse word as restart or repair" + ANSI_RESET);
 				this.forcedRestart = false;
 				this.forcedRepair = false;
 				return null;
@@ -644,7 +651,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		this.getState().thisIsFirstTupleAfterLastWord();
 		this.getState().setRepairProcessing(false);
-		logger.info("Parsed " + word);
+		logger.info(ANSI_GREEN + "Parsed " + word + ANSI_RESET);
 		logger.debug("Final Tuple:" + getState().getCurrentTuple());
 		logger.info("Sem:" + getState().getCurrentTuple().getSemantics(context));
 

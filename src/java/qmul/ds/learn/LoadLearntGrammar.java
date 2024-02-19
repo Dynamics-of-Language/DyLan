@@ -1,20 +1,14 @@
 package qmul.ds.learn;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
 
 // Instead of these, I probably can inherit from ContextParser
 import qmul.ds.action.Lexicon;
-import qmul.ds.learn.TestParser; // what? I'm using it!
 import qmul.ds.action.Grammar;
-//import qmul.ds.learn.WordHypothesisBase;
-import qmul.ds.action.LexicalAction;
 
 
 // I should:
