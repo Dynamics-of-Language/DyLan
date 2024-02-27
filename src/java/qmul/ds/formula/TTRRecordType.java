@@ -610,7 +610,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				//subtract the restrictors
 				TTRRecordType subtract = restInThis.subtract(restInMCS, new HashMap<Variable,Variable>());
 
-
 				//If subtract is empty, if it doesn't have dependents, remove it
 				//if it does, we need to add back the head field and the head
 				//If it's non-empty, make sure it has a head field
@@ -618,6 +617,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				{
 					//
 					result.remove(fieldInThis.getLabel());
+
 				}
 				else if (subtract.isEmpty())
 				{
@@ -673,10 +673,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				//if it's not empty, do as you normally do -- process the rest of the ifs below
 
 
-			}*/
 
 			//TODO: tidy up the following.
 
+
+			}*/
+
+			//TODO: tidy up the following.
+			
 			if (result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest()) {
 				// field has no dependents and the corresponding MCS field is manifest
 				// therefore this field is also manifest with the same type
@@ -704,13 +708,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		TTRRecordType r1 = TTRRecordType
 				.parse("[r : [x:e|p1==red(x):t|p2==door(x):t|head==x:e]|x2==iota(r.head,r):e|head==x2:e]");
 
+
 		TTRField headField = r1.getHeadField();
 
 
 		TTRRecordType inc = r1.getMinimalIncrementWith(headField, headField.getLabel());
 
 		System.out.println(inc);
-
+		
 
 
 	}
@@ -1185,7 +1190,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 						TTRField newF = new TTRField(f.getLabel(), component);
 						superType.add(newF);
 						decomposedList.add(superType);
-
+						
 					}
 					continue;
 				}
@@ -2245,6 +2250,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		return result;
 	}
+	
+	public List<TTRField> getImmediateParents(TTRField field)
+	{
+		List<TTRField> result = new ArrayList<TTRField>();
+		for (int i = fields.indexOf(field) - 1; i >= 0; i--) {
+			TTRField f = fields.get(i);
+			if (field.dependsOn(f)) 
+				result.add(f);
+		}
+		return result;
+	}
 
 	public List<TTRField> getImmediateParents(TTRField field)
 	{
@@ -2276,11 +2292,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				List<TTRPath> paths = field.getTTRPaths();
 
 				//if (paths.isEmpty()) {
+
 				List<TTRField> fResult = new ArrayList<TTRField>();
+
 
 				fResult = getMinimalParents(f, on);
 
 				if (f.getLabel().equals(on) && f.getDSType() != null) {
+
 
 					TTRField newF = new TTRField(f);
 					newF.setType(null);
@@ -2311,6 +2330,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * gets minimal super type of this type with f. Just brings in the parents.
 	 * Manifest values will all be null in result.
+
 	 *
 	 * This methods assumes f is not a restrictor field (i.e. an embedded record type)
 	 * These are dealt with in the decompose method itself.
@@ -2334,6 +2354,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			if (parent.getDSType() == null && parent.getType() instanceof TTRRecordType)
 			{
 
+
 				//looking at the restrictor of f
 				//construct a least specific restrictor record type (usually just [x:e|head==x:e]
 				PredicateArgumentFormula quantifierF= (PredicateArgumentFormula)f.getType();
@@ -2348,7 +2369,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				TTRRecordType leastSpecRest = restrictor.getMinimalSuperTypeWith(pathTarget);
 				TTRField newF = new TTRField(new TTRLabel(restLabel), leastSpecRest);
 				result.add(newF);
-
 
 			}
 			else
