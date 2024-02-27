@@ -700,20 +700,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public static void main(String[] a) {
-		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
 		TTRRecordType r1 = TTRRecordType
-				.parse("[e==go:es|r1 : [x:e|p5==man(x):t|p6==tall(x):t|head==x:e] | x6==iota(r1.head,r1) : e|p==subj(e,x6):t]");
+				.parse("[r : [x:e|p1==red(x):t|p2==door(x):t|head==x:e]|x2==iota(r.head,r):e|head==x2:e]");
+
+		TTRField headField = r1.getHeadField();
 
 
-		TTRRecordType r7 = TTRRecordType.parse("[e==run:es|r : [x2:e|p11 == man(x2):t|p12 == tall(x2):t|head==x2:e] | x1==eps(r.head,r) : e|p9==subj(e,x1):t]");
+		TTRRecordType inc = r1.getMinimalIncrementWith(headField, headField.getLabel());
 
-		System.out.println("this:" + r1);
-		System.out.println("other:" + r7);
-		System.out.println("max super type is: " + r1.mostSpecificCommonSuperType(r7, map));
-		map.clear();
-		System.out.println("this minus other is: " + r1.subtract(r7, map));
-		System.out.println("map is: " + map);
+		System.out.println(inc);
 		
 
 
@@ -2280,7 +2276,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 				List<TTRPath> paths = field.getTTRPaths();
 
-				if (paths.isEmpty()) {
+				//if (paths.isEmpty()) {
 					List<TTRField> fResult = new ArrayList<TTRField>();
 
 					fResult = getMinimalParents(f, on);
@@ -2295,12 +2291,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 						result.addAll(fResult);
 						result.add(f);
 					}
-				} else {
-					for (TTRPath path : paths) {
-						if (path instanceof TTRRelativePath) {
-						}
-					}
-				}
+				//} else {
+				//	for (TTRPath path : paths) {
+				//		if (path instanceof TTRRelativePath) {
+				//		}
+				//	}
+				//}
 
 			}
 		}
