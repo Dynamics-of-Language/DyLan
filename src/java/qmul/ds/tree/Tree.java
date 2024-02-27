@@ -180,7 +180,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	/**
 	 * search for node labelled with the set of labels passed as argument
 	 * 
-	 * @param Treeset
+	 * @param labelSet
 	 *            of labels the pointer to set
 	 * @return Node the node containing all the labels
 	 */
@@ -278,7 +278,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	/**
 	 * Merge the node at modality with the pointed node, and remove it
 	 * 
-	 * @param node
+	 * @param modality
 	 */
 	public void merge(Modality modality) {
 		Node node = getNode(modality);
@@ -716,7 +716,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * method is only called after decorating a new node with a new hypothesis,
 	 * and not immediately after the node is created.... (?) maybe not TODO
 	 * 
-	 * @param t
+	 * @param c
 	 * @return
 	 */
 	private void addUnderspecifiedFormulae(Context c) {
@@ -750,8 +750,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * Should make sure that, when doing induction, the getMaximalSemantics
 	 * method is only called after decorating a new node with a new hypothesis,
 	 * and not immediately after the node is created.... (?) maybe not
-	 * 
-	 * @param t
+	 *
 	 * @return
 	 */
 	private void addUnderspecifiedFormulae() {

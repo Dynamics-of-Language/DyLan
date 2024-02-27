@@ -42,11 +42,13 @@ import qmul.ds.type.DSType;
  *
  * @author arash
  */
-public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
+public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Comparable<TTRRecordType>{
 
 	private static final long serialVersionUID = 1L;
 
 	protected static Logger logger = Logger.getLogger(TTRRecordType.class);
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String TTR_OPEN = "[";
 	public static final String TTR_LABEL_SEPARATOR = ":";
 	public static final String TTR_FIELD_SEPARATOR = "|";
@@ -78,8 +80,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	public static TTRRecordType parse(String s1) {
 		TTRRecordType newRT = new TTRRecordType();
 		String s = s1.trim();
-		if (!s.startsWith(TTR_OPEN) || !s.endsWith(TTR_CLOSE))
+		if (!s.startsWith(TTR_OPEN) || !s.endsWith(TTR_CLOSE)) {
+//			logger.error("The input string does not start with " + TTR_OPEN + " or end with " + TTR_CLOSE + "!");
 			return null;
+		}
 		if (s.substring(1, s.length() - 1).trim().isEmpty())
 			return new TTRRecordType();
 
@@ -595,7 +599,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		for (int i = mcsFields.size() - 1; i >= 0; i--) {
 
 			TTRField curMCSField = mcsFields.get(i);
-			System.out.println("Processing field in mcs:"+curMCSField);
+			logger.debug("Processing field in mcs:"+curMCSField);
 			Variable labelInThis = map.get(curMCSField.getLabel());
 			TTRField fieldInThis = result.getField(labelInThis);
 
@@ -610,29 +614,33 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				//subtract the restrictors
 				TTRRecordType subtract = restInThis.subtract(restInMCS, new HashMap<Variable,Variable>());
 
+
 				//If subtract is empty, if it doesn't have dependents, remove it
 				//if it does, we need to add back the head field and the head
 				//If it's non-empty, make sure it has a head field
 				if (subtract.isEmpty()&&result.getDependents(fieldInThis).isEmpty())
 				{
-					//
-					result.remove(fieldInThis.getLabel());
+					//subtract is empty,and the restrictor doesn't have dependents
+					//remove the restrictor from the result
 
+					result.remove(fieldInThis.getLabel());
 				}
 				else if (subtract.isEmpty())
 				{
-					//subtract is empty, but rest has dependents. Add head and set
+					//subtract is empty, but rest has dependents. Add the head and head field.
 					if (restHead!=null) {
 						subtract.add(restInThis.getField((Variable)restHead.getType()));
 						subtract.add(restHead);
 					}
 					else
 						throw new IllegalArgumentException("Restrictor has no head:"+restInThis);
-
+					//now set the type
 					result.getField(fieldInThis.getLabel()).setType(subtract);
 				}
 				else
 				{
+					//the subtraction isn't empty. Make sure it has a head, and then set
+					// it in result.
 					if (restHead!=null && !subtract.hasHead())
 						subtract.add(restInThis.head());
 
@@ -642,45 +650,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				continue;
 
 			}
-/*
-			if (fieldInThis.getType() != null && fieldInThis.getDSType().equals(DSType.e)
-					&& fieldInThis.getType() instanceof PredicateArgumentFormula) {
-				// we are looking at an epsilon / quantifier term
-				// we have processed the restrictor already
-				// if it's empty in result, then if it has dependants, set it to null, remove the restrictor
-
-
-				PredicateArgumentFormula quantifierTermInThis = (PredicateArgumentFormula) fieldInThis.getType();
-				System.out.println("Found quantifier term:"+quantifierTermInThis);
-				Variable restrictorLabelInThis = (Variable) quantifierTermInThis.getArguments().get(1);
-				TTRPath path = (TTRPath) quantifierTermInThis.getArguments().get(0);
-
-				if (!path.getFinalLabel().equals(HEAD))
-					throw new UnsupportedOperationException(
-							"non-head path in quantifier term not supported in the MCS operation" + fieldInThis);
-
-
-				TTRField restFieldInResult = result.getField(restrictorLabelInThis);
-				TTRRecordType restrictorInResult = (TTRRecordType) restFieldInResult.getType();
-				System.out.println("Found restrictor:"+ restFieldInResult);
-				if (restrictorInResult.isEmpty() && result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest()) {
-					//result.remove(labelInThis);
-					System.out.println("It's empty. Removing it");
-					result.remove(restrictorLabelInThis);
-
-				}
-
-				//if it's not empty, do as you normally do -- process the rest of the ifs below
-
-
 
 			//TODO: tidy up the following.
 
-
-			}*/
-
-			//TODO: tidy up the following.
-			
 			if (result.getDependents(fieldInThis).isEmpty() && curMCSField.isManifest()) {
 				// field has no dependents and the corresponding MCS field is manifest
 				// therefore this field is also manifest with the same type
@@ -704,19 +676,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public static void main(String[] a) {
+		TTRRecordType t = TTRRecordType.parse("[r : [x:e|p1==red(x):t|head==x:e]|x1==iota(r.head,r):e|head==x1:e]");
 
-		TTRRecordType r1 = TTRRecordType
-				.parse("[r : [x:e|p1==red(x):t|p2==door(x):t|head==x:e]|x2==iota(r.head,r):e|head==x2:e]");
-
-
-		TTRField headField = r1.getHeadField();
-
-
-		TTRRecordType inc = r1.getMinimalIncrementWith(headField, headField.getLabel());
+		TTRField headField = t.getHeadField();
+		TTRRecordType inc = t.getMinimalIncrementWith(headField,headField.getLabel());
 
 		System.out.println(inc);
-		
-
 
 	}
 
@@ -729,6 +694,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * Maybe the implementation should actually be done in these terms... yes....
 	 * TODO: later.
 	 *
+	 * @param
 	 * @return
 	 */
 	public TTRRecordType replaceSuperTypeWith(TTRRecordType st, TTRRecordType syn,
@@ -971,7 +937,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					result.add(underspec);
 
 
-
 					// we are looking at epsilon term. only set to null if the restrictor cannot be
 					// further
 					// underspecified
@@ -1180,17 +1145,15 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 			if (f.getType() != null) {
 
-				if (f.getDSType() == null)
-				{
+				if (f.getDSType() == null) {
 					//we are looking at a restrictor field. decompose it recursively, then embed.
 					TTRRecordType restrictor = (TTRRecordType)f.getType();
-					for(TTRRecordType component: restrictor.decompose())
-					{
+					for(TTRRecordType component: restrictor.decompose()) {
 						TTRRecordType superType = new TTRRecordType();
 						TTRField newF = new TTRField(f.getLabel(), component);
 						superType.add(newF);
 						decomposedList.add(superType);
-						
+
 					}
 					continue;
 				}
@@ -2250,20 +2213,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		return result;
 	}
-	
-	public List<TTRField> getImmediateParents(TTRField field)
-	{
-		List<TTRField> result = new ArrayList<TTRField>();
-		for (int i = fields.indexOf(field) - 1; i >= 0; i--) {
-			TTRField f = fields.get(i);
-			if (field.dependsOn(f)) 
-				result.add(f);
-		}
-		return result;
-	}
 
-	public List<TTRField> getImmediateParents(TTRField field)
-	{
+	public List<TTRField> getImmediateParents(TTRField field) {
 		List<TTRField> result = new ArrayList<TTRField>();
 		for (int i = fields.indexOf(field) - 1; i >= 0; i--) {
 			TTRField f = fields.get(i);
@@ -2291,15 +2242,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 				List<TTRPath> paths = field.getTTRPaths();
 
-				//if (paths.isEmpty()) {
 
 				List<TTRField> fResult = new ArrayList<TTRField>();
-
 
 				fResult = getMinimalParents(f, on);
 
 				if (f.getLabel().equals(on) && f.getDSType() != null) {
-
 
 					TTRField newF = new TTRField(f);
 					newF.setType(null);
@@ -2309,15 +2257,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					result.addAll(fResult);
 					result.add(f);
 				}
-				//} else {
-				//	for (TTRPath path : paths) {
-				//		if (path instanceof TTRRelativePath) {
-				//		}
-				//	}
-				//}
-
 			}
+
 		}
+
 
 		return result;
 	}
@@ -2330,7 +2273,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * gets minimal super type of this type with f. Just brings in the parents.
 	 * Manifest values will all be null in result.
-
 	 *
 	 * This methods assumes f is not a restrictor field (i.e. an embedded record type)
 	 * These are dealt with in the decompose method itself.
@@ -2341,7 +2283,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * @return
 	 */
 	public TTRRecordType getMinimalSuperTypeWith(TTRField f) {
-
+//		System.out.println("minimal supertype: " + f); // aa
+//		System.out.println("this: " + this);
 		TTRRecordType result = new TTRRecordType();
 
 		if (f.getVariables().isEmpty()) {
@@ -2351,14 +2294,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		List<TTRField> parents = this.getImmediateParents(f);
 		for (TTRField parent : parents) {
-			if (parent.getDSType() == null && parent.getType() instanceof TTRRecordType)
-			{
-
+			if (parent.getDSType() == null && parent.getType() instanceof TTRRecordType) {
 
 				//looking at the restrictor of f
 				//construct a least specific restrictor record type (usually just [x:e|head==x:e]
 				PredicateArgumentFormula quantifierF= (PredicateArgumentFormula)f.getType();
-
+				System.out.println("quantifier f: " + quantifierF);
 				TTRPath path = (TTRPath) quantifierF.getArguments().get(0);
 				Variable restLabel = (Variable) quantifierF.getArguments().get(1);
 				TTRRecordType restrictor = (TTRRecordType) this.getField(restLabel).getType();
@@ -2370,9 +2311,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				TTRField newF = new TTRField(new TTRLabel(restLabel), leastSpecRest);
 				result.add(newF);
 
-			}
-			else
-			{
+
+			} else {
 				TTRField newF = new TTRField(parent);
 				newF.setType(null);
 				result.add(newF);
@@ -2911,5 +2851,61 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		return maxType.size();
 	}
+
+	public int getSpecificity() {
+		int specificity = 0;
+		for (TTRField f : this.fields) {
+			if(f.getType() instanceof  TTRRecordType){
+				specificity = specificity + ((TTRRecordType) f.getType()).getSpecificity();
+			}
+			else
+			if (f.isManifest())
+				specificity = specificity + 2;
+			else
+				specificity = specificity + 1;
+		}
+		return specificity;
+	}
+
+
+	/**
+	 * This method implements an ordering between record types, whereby the ordering is defined in terms of a crude notion of specificity.
+	 * The notion of specificity is based on the number of fields in the record type, and recursively for all the embedded record types.
+	 *
+	 * @param other the object to be compared.
+	 * @return
+	 */
+	public int compareTo(TTRRecordType other) {
+
+		// AA: Cached the subsumptions because it's computationally expensive, and it's used twice.
+		// todo: should I do this with getSpecificity as well?
+		logger.info(ANSI_GREEN+"this: " + this + " / other: " + other+ANSI_RESET);
+		boolean to = this.subsumes(other);
+		boolean ot = other.subsumes(this);
+		logger.info("this subsumes other: " + to);
+		logger.info("other subsumes this: " + ot);
+
+
+		if (this.getSpecificity() > other.getSpecificity()) {
+			logger.info(" ======== this is more specific than other. ========");
+			return 1;
+		} else if (this.getSpecificity() < other.getSpecificity()) {
+			logger.info(" ======== other is more specific than this. ========");
+			return -1;
+		} else {
+			logger.info(" ======== none of the cases. ========");
+			return this.toString().compareTo(other.toString()); // AA: I have a feeling this is incorrect.
+		}
+
+	}
+
+
+//	public boolean equals(Object o){
+//		if (o instanceof TTRRecordType)
+//			return (this.subsumes(o) && o.subsumes(this));
+//		return false;
+//	}
+
+
 
 }
