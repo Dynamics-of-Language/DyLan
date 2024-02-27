@@ -39,7 +39,7 @@ import qmul.ds.type.DSType;
 
 /**
  * A TTR record type
- * 
+ *
  * @author arash
  */
 public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
@@ -200,7 +200,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * @param formula
+	 * @param rt
 	 */
 	public TTRRecordType(TTRRecordType rt) {
 		for (TTRField f : rt.fields) {
@@ -362,7 +362,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * @return the record
-	 * 
+	 *
 	 */
 	public HashMap<TTRLabel, TTRField> getRecord() {
 		return record;
@@ -390,7 +390,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * If a mapping for label exists, change its value to formula; if not, add a new
 	 * mapping [label = formula : dsType]
-	 * 
+	 *
 	 * @param label
 	 * @param formula
 	 */
@@ -408,7 +408,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * If a mapping for f.label exists, change its value to f.formula; if not, add a
 	 * new mapping [f.label = f.formula : f.dsType]
-	 * 
+	 *
 	 * @param f : a TTR field to be added to this record type
 	 */
 
@@ -425,7 +425,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * Change the label for a mapping
-	 * 
+	 *
 	 * @param oldLabel
 	 * @param newLabel
 	 */
@@ -442,7 +442,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * relabel whole record type using map, respecting all dependencies, and
 	 * avoiding duplicate labels.
-	 * 
+	 *
 	 * @param map
 	 * @return new relabelled record type
 	 */
@@ -496,10 +496,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * collapses duplicate super-types, i.e. super-types which are isomorphic.
 	 * Should Reduce to a minimum....
-	 * 
+	 *
 	 * We can collapse entity variables with the same manifest content. But not
 	 * event terms, because their manifest content is really a type, not an entity.
-	 * 
+	 *
 	 * @return
 	 */
 	public void collapseIsomorphicSuperTypes(HashMap<Variable, Variable> map) {
@@ -556,7 +556,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * field has more fields. (getMaximalSuperTypeWith method) This is used in
 	 * mostSpecificCommonSuperType to explore the super types in order from most
 	 * specific to least specific.
-	 * 
+	 *
 	 * @return
 	 */
 	public TTRRecordType sortFieldsBySpecificity() {
@@ -609,8 +609,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				TTRRecordType restInMCS = (TTRRecordType) curMCSField.getType();
 				//subtract the restrictors
 				TTRRecordType subtract = restInThis.subtract(restInMCS, new HashMap<Variable,Variable>());
-				
-				
+
 				//If subtract is empty, if it doesn't have dependents, remove it
 				//if it does, we need to add back the head field and the head
 				//If it's non-empty, make sure it has a head field
@@ -618,6 +617,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				{
 					//
 					result.remove(fieldInThis.getLabel());
+
 				}
 				else if (subtract.isEmpty())
 				{
@@ -628,17 +628,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					}
 					else
 						throw new IllegalArgumentException("Restrictor has no head:"+restInThis);
-					
+
 					result.getField(fieldInThis.getLabel()).setType(subtract);
 				}
 				else
 				{
 					if (restHead!=null && !subtract.hasHead())
 						subtract.add(restInThis.head());
-					
+
 					result.getField(fieldInThis.getLabel()).setType(subtract);
-				}				
-				
+				}
+
 				continue;
 
 			}
@@ -649,7 +649,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				// we have processed the restrictor already
 				// if it's empty in result, then if it has dependants, set it to null, remove the restrictor
 
-				
+
 				PredicateArgumentFormula quantifierTermInThis = (PredicateArgumentFormula) fieldInThis.getType();
 				System.out.println("Found quantifier term:"+quantifierTermInThis);
 				Variable restrictorLabelInThis = (Variable) quantifierTermInThis.getArguments().get(1);
@@ -673,6 +673,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				//if it's not empty, do as you normally do -- process the rest of the ifs below
 
 
+
+			//TODO: tidy up the following.
+
+
 			}*/
 
 			//TODO: tidy up the following.
@@ -686,7 +690,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 			}
 
 			if (result.getDependents(fieldInThis).isEmpty() && !curMCSField.isManifest() && !fieldInThis.isManifest()) {
-				
+
 				// MCS field and field in this are both unmanifest. Remove it.
 				result.remove(labelInThis);
 				continue;
@@ -704,6 +708,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		TTRRecordType r1 = TTRRecordType
 				.parse("[r : [x:e|p1==red(x):t|p2==door(x):t|head==x:e]|x2==iota(r.head,r):e|head==x2:e]");
 
+
 		TTRField headField = r1.getHeadField();
 
 
@@ -717,18 +722,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * Precondition: r is a supertype of this. Replaces r with replacement.
-	 * 
+	 *
 	 * Really this is equivalant to taking two lambda abstracts with st and syn as
 	 * bodies with variables in abstractedVars abstracted.
-	 * 
+	 *
 	 * Maybe the implementation should actually be done in these terms... yes....
 	 * TODO: later.
-	 * 
-	 * @param superType
+	 *
 	 * @return
 	 */
 	public TTRRecordType replaceSuperTypeWith(TTRRecordType st, TTRRecordType syn,
-			Map<Variable, Variable> abstractedVars) {
+											  Map<Variable, Variable> abstractedVars) {
 		HashMap<Variable, Variable> map = new HashMap<Variable, Variable>();
 
 		if (!(st.subsumesMapped(this, map))) {
@@ -825,7 +829,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * Assumes @this already subsumes subtype. Strict label matching.
-	 * 
+	 *
 	 * @param subtype
 	 * @return
 	 */
@@ -871,7 +875,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * this.mcsRecurse([], rt, map)
-	 * 
+	 *
 	 * @param rt
 	 * @param map
 	 * @return
@@ -961,13 +965,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					if (f.isHead())// will not underspecify or remove head
 						continue;
 
-					
+
 					TTRRecordType underspec = new TTRRecordType(this);
 					underspec.getField(f.getLabel()).setType(null);
 					result.add(underspec);
-					
 
-					
+
+
 					// we are looking at epsilon term. only set to null if the restrictor cannot be
 					// further
 					// underspecified
@@ -992,21 +996,21 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 //						TTRRecordType restrictor = (TTRRecordType) restField.getType();
 //
 //						List<TTRRecordType> rest_underspecs = restrictor.makeOneStepLessSpecific();
-//						
+//
 //						// check to see if the restrictor can be made any less specific
 //						// if not remove it, together with the quantifier term field
 //						TTRRecordType underspec = new TTRRecordType(this);
 //						if (rest_underspecs.isEmpty()) {
 //							// the restrictor cannot be further underspecified
 //							// remove it, and the epsilon term that refers to it
-//							
+//
 //							underspec.getField(f.getLabel()).setType(null);
 //							underspec.remove(restField.getLabel());
 //							result.add(underspec);
 //						}
 //						else
 //						{
-//							//otherwise replace restrictor with the one step less specific 
+//							//otherwise replace restrictor with the one step less specific
 //							//versions
 //							for (TTRRecordType rest_underspec : rest_underspecs) {
 //								underspec = new TTRRecordType(this);
@@ -1065,7 +1069,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * Add (at bottom) this label & formula, renaming label if necessary to avoid
 	 * clashing with existing labels
-	 * 
+	 *
 	 * @param label
 	 * @param formula
 	 * @return the new label - same as original label unless renaming happened
@@ -1087,7 +1091,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * Add this field at an index where all its variable dependencies are satisfied.
 	 * Add at end if they cannot be satisfied.
-	 * 
+	 *
 	 * @param f field to be added
 	 */
 	public void add(TTRField f) {
@@ -1158,8 +1162,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * Decomposes this record type into its constituent record types, R_1..R_N such
 	 * that the constinuents have minimal commonality, and, that, R1 ^ R2 ^ .. ^ R_N
 	 * = @this
-	 * 
-	 * 
+	 *
+	 *
 	 * @return
 	 */
 	public List<TTRRecordType> decompose() {
@@ -1175,7 +1179,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				continue;
 
 			if (f.getType() != null) {
-				
+
 				if (f.getDSType() == null)
 				{
 					//we are looking at a restrictor field. decompose it recursively, then embed.
@@ -1190,7 +1194,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					}
 					continue;
 				}
-				
+
 				TTRRecordType superType = this.getMinimalSuperTypeWith(f);
 				if (sorted.head() != null && superType.hasLabel(sorted.getHeadField().getLabel()))
 					superType.add(new TTRField(sorted.head()));
@@ -1206,7 +1210,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * Add (at top) this label & formula, renaming label if necessary to avoid
 	 * clashing with existing labels
-	 * 
+	 *
 	 * @param label
 	 * @param formula
 	 * @return the new label - same as original label unless renaming happened
@@ -1218,7 +1222,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * Add (at index) this label & formula, renaming label if necessary to avoid
 	 * clashing with existing labels
-	 * 
+	 *
 	 * @param index
 	 * @param label
 	 * @param formula
@@ -1261,7 +1265,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * removes the head label if it exists
-	 * 
+	 *
 	 * @return
 	 */
 	public TTRRecordType removeHead() {
@@ -1282,7 +1286,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param l
 	 * @return new record type with label/field l removed. It is expensive since the
 	 *         whole record type is copied.
@@ -1313,7 +1317,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * all metas should be backtracked together if possible. Shouldn't be done
 	 * partially.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean canBackTrackMetas() {
@@ -1332,7 +1336,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * Backtracks all metas.
-	 * 
+	 *
 	 * @return true if all metas can be backtracked.
 	 */
 	public boolean backtrackMetas() {
@@ -1393,7 +1397,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * MCS is not in general unique. The one returned here is maximally specific,
 	 * but by chance: it depends on the order in which the fields in @this are
 	 * explored, and removed. Now has support for embedded record types.
-	 * 
+	 *
 	 * @param other
 	 * @return the most specific common supertype, expressed in terms of @this's
 	 *         labels.
@@ -1420,7 +1424,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * make field f unmanifest
-	 * 
+	 *
 	 * @param f
 	 */
 	public void makeUnmanifest(TTRField f) {
@@ -1508,7 +1512,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	public boolean subsumesMappedStrictLabelIdentity(TTRRecordType other, int thisIndex,
-			HashMap<Variable, Variable> map) {
+													 HashMap<Variable, Variable> map) {
 
 		if (thisIndex == fields.size())
 			return true;
@@ -1647,14 +1651,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * Freshens all the labels in {@code this} with respect to {@code r}, so that
 	 * the result will not contain any variables from {@code r}.
-	 * 
+	 *
 	 * @param r
 	 * @param map Must be an empty map. After method call it will contain the
 	 *            mappings from old to new variables
 	 * @return
 	 */
 	public <T extends DAGTuple, E extends DAGEdge> TTRRecordType freshenVars(TTRRecordType r,
-			Map<Variable, Variable> map) {
+																			 Map<Variable, Variable> map) {
 		TTRRecordType fresh = new TTRRecordType();
 
 		for (TTRField f : this.fields) {
@@ -1747,7 +1751,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see qmul.ds.formula.Formula#toUnicodeString()
 	 */
 	@Override
@@ -1780,11 +1784,11 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * Conjoins/intersects this rec type with r2, by adding all the fields in r2, at
 	 * the end of r1.
-	 * 
+	 *
 	 * The merge is right-asymmetrical in the sense that identical labels take their
 	 * associated type from the argument record type (i.e. the right hand side of
 	 * the asymmetrical merge operator). 1
-	 * 
+	 *
 	 * @param r2
 	 * @return
 	 */
@@ -1845,7 +1849,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * adds f to the end of this record type.. if field with same label exists it is
 	 * overwritten by f, but f is added to the end of this record type, rather than
 	 * at the position of the original label.
-	 * 
+	 *
 	 * @param f
 	 */
 	public void putAtEnd(TTRField f) {
@@ -1861,7 +1865,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 
@@ -1872,7 +1876,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -1917,7 +1921,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see qmul.ds.formula.Formula#clone()
 	 */
 	public TTRRecordType clone() {
@@ -1926,7 +1930,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -1942,7 +1946,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see qmul.ds.formula.Formula#toUnicodeString()
 	 */
 
@@ -2230,7 +2234,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return result;
 	}
 
-	
+
 	public List<TTRField> getParents(TTRField field) {
 
 		List<TTRField> result = new ArrayList<TTRField>();
@@ -2258,11 +2262,22 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		return result;
 	}
 
+	public List<TTRField> getImmediateParents(TTRField field)
+	{
+		List<TTRField> result = new ArrayList<TTRField>();
+		for (int i = fields.indexOf(field) - 1; i >= 0; i--) {
+			TTRField f = fields.get(i);
+			if (field.dependsOn(f))
+				result.add(f);
+		}
+		return result;
+	}
+
 	/**
 	 * the fields that field depends on minimally, i.e. if field depends on some r,
 	 * the only fields within r that are relevant are the ones pointed to by field,
 	 * e.g. head in r.head, or x in r.x...
-	 * 
+	 *
 	 * @param field
 	 * @return the fields that field depends on...
 	 */
@@ -2277,20 +2292,23 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 				List<TTRPath> paths = field.getTTRPaths();
 
 				//if (paths.isEmpty()) {
-					List<TTRField> fResult = new ArrayList<TTRField>();
 
-					fResult = getMinimalParents(f, on);
+				List<TTRField> fResult = new ArrayList<TTRField>();
 
-					if (f.getLabel().equals(on) && f.getDSType() != null) {
 
-						TTRField newF = new TTRField(f);
-						newF.setType(null);
-						result.add(newF);
-					} else {
+				fResult = getMinimalParents(f, on);
 
-						result.addAll(fResult);
-						result.add(f);
-					}
+				if (f.getLabel().equals(on) && f.getDSType() != null) {
+
+
+					TTRField newF = new TTRField(f);
+					newF.setType(null);
+					result.add(newF);
+				} else {
+
+					result.addAll(fResult);
+					result.add(f);
+				}
 				//} else {
 				//	for (TTRPath path : paths) {
 				//		if (path instanceof TTRRelativePath) {
@@ -2312,17 +2330,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	/**
 	 * gets minimal super type of this type with f. Just brings in the parents.
 	 * Manifest values will all be null in result.
-	 * 
+
+	 *
 	 * This methods assumes f is not a restrictor field (i.e. an embedded record type)
 	 * These are dealt with in the decompose method itself.
-	 * 
+	 *
 	 * But the method deals with quantifier fields (e.g. iota(r.head, r))
-	 * 
+	 *
 	 * @param f
 	 * @return
 	 */
 	public TTRRecordType getMinimalSuperTypeWith(TTRField f) {
-		
+
 		TTRRecordType result = new TTRRecordType();
 
 		if (f.getVariables().isEmpty()) {
@@ -2334,23 +2353,23 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		for (TTRField parent : parents) {
 			if (parent.getDSType() == null && parent.getType() instanceof TTRRecordType)
 			{
-				
+
+
 				//looking at the restrictor of f
 				//construct a least specific restrictor record type (usually just [x:e|head==x:e]
 				PredicateArgumentFormula quantifierF= (PredicateArgumentFormula)f.getType();
-				
+
 				TTRPath path = (TTRPath) quantifierF.getArguments().get(0);
 				Variable restLabel = (Variable) quantifierF.getArguments().get(1);
 				TTRRecordType restrictor = (TTRRecordType) this.getField(restLabel).getType();
-				
+
 				TTRLabel last = path.getFinalLabel();
 				TTRField pathTarget = restrictor.getField(last);
-				
+
 				TTRRecordType leastSpecRest = restrictor.getMinimalSuperTypeWith(pathTarget);
 				TTRField newF = new TTRField(new TTRLabel(restLabel), leastSpecRest);
 				result.add(newF);
-				
-				
+
 			}
 			else
 			{
@@ -2461,19 +2480,19 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * 
+	 *
 	 * this is for conjoining two record types of the same head field ds type (e or
 	 * es). This is used by LinkEvaluation same type in modelling appositions and
 	 * short answers ("Ruth, the professor, just left" Or "A: Who did you meet? B:
 	 * Ruth"). The assumptions are:
-	 * 
+	 *
 	 * (1) that the record types are both headed; (2) the heads have the same ds
 	 * type. (both e, or both es) (3) the heads should be determined (i.e. cannot
 	 * have head:e. should have e.g. head=x:e) (4) the head fields either both have
 	 * epsilon terms as types, or one or both have null types (e.g. x:e). WARNING:
 	 * proper nouns should not be modelled as [x=john:e] but rather as iota terms.
 	 * [r:[x:e; p==john(x)]; x1=iota(r.x, r):e]
-	 * 
+	 *
 	 * Proceeds by unifying their heads labels, and their restrictor labels. and
 	 * their restrictors' head labels. And then calling Assymetric merge as normal
 	 */
@@ -2528,8 +2547,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 		TTRRecordType thisNewRestr = (restrHeadThis != null && restrHeadOther != null
 				&& restrHeadThis instanceof Variable && restrHeadOther instanceof Variable)
-						? (TTRRecordType) thisRestrictor.getType().substitute(restrHeadThis, restrHeadOther)
-						: (TTRRecordType) thisRestrictor.getType().substitute(thisEpsVar, otherEpsVar);
+				? (TTRRecordType) thisRestrictor.getType().substitute(restrHeadThis, restrHeadOther)
+				: (TTRRecordType) thisRestrictor.getType().substitute(thisEpsVar, otherEpsVar);
 
 		headUnified.getRestrictorField().setType(thisNewRestr);
 		headUnified.getRestrictorField().setLabel(new TTRLabel(otherRestrictor.getLabel()));
@@ -2540,7 +2559,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the restrictor record type if this record type is headed, and the
 	 *         head field has an epsilon term as its type
 	 */
@@ -2610,7 +2629,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					boolean checked = true;
 					for (TTRField f : parents) {
 						if (!other.hasField(f)) { // if not matched exactly,
-													// remove all
+							// remove all
 							checked = false;
 							break;
 						}
@@ -2633,7 +2652,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					boolean checked = true;
 					for (TTRField f : parents) {
 						if (!this.hasField(f)) { // if not matched exactly,
-													// remove all
+							// remove all
 							checked = false;
 							break;
 						}
@@ -2673,33 +2692,33 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 		 * in @ttr but not in @this
 		 */
 		TTRRecordType addition = parse("[]"); // initialise the difference
-												// conjuncts
+		// conjuncts
 		TTRRecordType subtract = parse("[]");
 		List<TTRLabel> matched = new ArrayList<TTRLabel>();
 		for (TTRField f : this.fields) { // check each field in @this against
-											// all in @ttr
+			// all in @ttr
 			for (TTRField fother : ttr.fields) {
 				if (!f.getLabel().equals(fother.getLabel())) { // not matched?
-																// carry on
+					// carry on
 					continue;
 				}
 				matched.add(f.getLabel()); // matched field names
 				if (this.get(f.getLabel()) instanceof TTRRecordType) {// one of
-																		// them
-																		// is a
-																		// record
-																		// type
+					// them
+					// is a
+					// record
+					// type
 					if (!f.getType().equals(fother.getType())) { // not the same
-																	// record
-																	// type
+						// record
+						// type
 						addition.add(f); // add to appropriate conjunct
 						subtract.add(fother);
 					}
 				} else if (!f.getDSType().equals(fother.getDSType())
 						|| (!(f.isManifest() && f.getType() instanceof PredicateArgumentFormula)
-								& (fother.isManifest() && fother.getType() instanceof PredicateArgumentFormula))
+						& (fother.isManifest() && fother.getType() instanceof PredicateArgumentFormula))
 						|| (f.isManifest() & f.getType() instanceof PredicateArgumentFormula
-								&& !(fother.isManifest() && fother.getType() instanceof PredicateArgumentFormula))) { // difference
+						&& !(fother.isManifest() && fother.getType() instanceof PredicateArgumentFormula))) { // difference
 					// in
 					// either
 					// DS
@@ -2715,9 +2734,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 					// type and
 					// manifestness
 					if (!f.getType().equals(fother.getType())) { // manifest
-																	// fields
-																	// are
-																	// different
+						// fields
+						// are
+						// different
 						addition.add(f);
 						subtract.add(fother);
 					}
@@ -2725,13 +2744,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 			}
 			if (!matched.contains(f.getLabel())) { // no match for this label,
-													// must be addition
+				// must be addition
 				addition.add(f);
 			}
 		}
 		for (TTRField fother : ttr.fields) { // final pass to add unmatched
-												// fields in other to subtract
-												// conjunct
+			// fields in other to subtract
+			// conjunct
 			if (!matched.contains(fother.getLabel())) {
 				subtract.add(fother);
 			}
@@ -2742,7 +2761,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 
 	/**
 	 * Assuming that this rec type is a context (linguistic or non-linguistic), e.g.
-	 * 
+	 *
 	 * [x1==o1:e|p1==square(x):t|p2==red(x):t|x2==o2:e|p3==circle(x):t] , this
 	 * method takes a restrictor record type e.g. [x:e|p==square(x)|head==x:e] and
 	 * returns a set of record types that are supertypes of this context, and that
@@ -2751,9 +2770,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	 * retrieving an answer to a question, from a context (or knowledge base), and,
 	 * as a way of resolving pronouns, or definite references from context (both
 	 * involving restricted metavariables -to be implemented!).
-	 * 
+	 *
 	 * more on this later. This might be hacky. This is inference.
-	 * 
+	 *
 	 * @param restrictor
 	 * @return a collection of record types.
 	 */
@@ -2778,7 +2797,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */

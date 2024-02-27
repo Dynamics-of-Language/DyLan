@@ -1,0 +1,3 @@
+Sent : more juice
+Sem : [r : [x : e|p2==juice(x) : t|head==x : e]|x1==more(r.head, r) : e|head==x1 : e]
+File : 1

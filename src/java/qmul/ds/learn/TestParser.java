@@ -178,14 +178,15 @@ public class TestParser extends ContextParser {
 							System.out.println("Could not write to error file");
 						}
 						// simple repair backtrack
+						stateMarker--;
 						while (stateMarker >= 0) {
-							stateMarker = stateMarker - 1;
 							setState(stateHistory.get(stateMarker));
 							parseWord(word.word());
 							if (successful()) {
 								// setSuccessful(true);
 								break;
 							}
+							stateMarker--;
 						}
 					}
 
@@ -353,17 +354,16 @@ public class TestParser extends ContextParser {
 	}
 
 	public static void main(String a[]) {
-		if (a.length > 0 && a[0].toLowerCase().startsWith("en")) {
-			TestParser tp = new TestParser("resource/2013-english-ttr".replaceAll("/", File.separator));
+//		if (a.length > 0 && a[0].toLowerCase().startsWith("en")) {
+			TestParser tp = new TestParser("dsttr/resource/2022-learner2013-output/".replace("/", File.separator));
 			// pause();
-			tp.loadTestCorpus("corpus/CHILDES/eveTrainPairs/CHILDESconversion.txt".replaceAll("/", File.separator),
-					true);
+			tp.loadTestCorpus("dsttr/corpus/CHILDES/eveTrainPairs/CHILDESconversion396FinalCopy.txt".replace("/", File.separator), true);
 			tp.parseCorpusToFile("TestCHILDESErrors.txt", "TestCHILDESRTs.txt", 30, false, false);
-		} else {
-			TestParser tp = new TestParser("resource/2015-english-ttr-robot".replaceAll("/", File.separator));
-			// pause();
-			tp.loadTestCorpus("corpus/Robot/Famula.txt".replaceAll("/", File.separator), false);
-			tp.parseCorpusToFile("TestTTRRobotCorpusRTsIncremental.txt", "TestTTRRobotCorpusErrors.txt", 30, true, true);
-		}
+//		} else {
+//			TestParser tp = new TestParser("resource/2015-english-ttr-robot".replace("/", File.separator));
+//			// pause();
+//			tp.loadTestCorpus("corpus/Robot/Famula.txt".replace("/", File.separator), false);
+//			tp.parseCorpusToFile("TestTTRRobotCorpusRTsIncremental.txt", "TestTTRRobotCorpusErrors.txt", 30, true, true);
+//		}
 	}
 }

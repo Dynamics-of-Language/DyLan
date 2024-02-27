@@ -509,9 +509,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 */
 
 	public boolean subsumes(Tree other) {
-
 		return subsumes(other, get(new NodeAddress("0")), other.get(new NodeAddress("0")), new HashSet<Node>()) != null;
-
 	}
 
 	private Set<Node> subsumes(Tree other, Node thisSubtreeRoot, Node otherSubtreeRoot, Set<Node> usedNodes) {
@@ -557,7 +555,6 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			return null;
 		}
 		return used;
-
 	}
 
 	/*
@@ -604,7 +601,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			return false;
 		}
 		return true;
-	}
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -769,7 +766,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
 		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
 		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
-		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
+		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));
 		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
 		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
 		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
@@ -942,7 +939,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	}
 
 	public TTRFormula getMaximalSemantics() {
-		System.out.println("Running max sem without context");
+		logger.warn("Running max sem without context");
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:" + this);
 		List<Tree> merged = mergeUnfixed();
@@ -973,6 +970,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 * @return a record type expressing the maximal semantics of this tree
 	 */
 	public TTRFormula getMaximalSemantics(Node root, Context c) {
+		logger.info("------------------------------------ GETTING MAXIMAL SEMANTICS");
 		// ignore unfixed.
 		if (getDaughters(root, "01").size() == 1) {
 			logger.error("node with only one fixed daughter.." + root);
@@ -1054,9 +1052,9 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				rootReduced = rootReduced.conjoin(unfixedReduced.removeHead().conjoin(localUnfixedReduced.removeHead()));
 
 			else if (unfixedReduced != null && localUnfixedReduced == null)
-				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced.removeHead());
+				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced);
 			else if (localUnfixedReduced != null)
-				rootReduced = unfixedFunctor ? localUnfixedReduced : rootReduced.conjoin(localUnfixedReduced.removeHead());
+				rootReduced = unfixedFunctor ? localUnfixedReduced : rootReduced.conjoin(localUnfixedReduced);
 		}
 		
 		if (!getDaughters(root, "L").isEmpty()) {
@@ -1079,6 +1077,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		return rootReduced;
 
 	}
+
 
 	public boolean atFunctor() {
 		if (pointer.getAddress().endsWith("1"))

@@ -204,14 +204,14 @@ THEN  ttrput(R1^(R1 ++ [head==R1.head : e|p4==pencil(R1.head) : t]))
 ELSE  abort
 
 [0.9065294415642661,0]
-Cromer
+cromer
 IF    ?Ty(e)
 THEN  ttrput([x1==cromer : e|head==x1 : e])
       put(Ty(e))
 ELSE  abort
 
 [0.093470558435732,0]
-Cromer
+cromer
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==eq : es|p1==subj(e1, R1.head) : t|head==e1 : es|p2==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -257,7 +257,7 @@ THEN  ttrput(R1^(R1 ++ [head==R1.head : e|p9==garbage(R1.head) : t]))
 ELSE  abort
 
 [1.0,0]
-Dumpty
+dumpty
 IF    ?Ty(e)
 THEN  ttrput([x==dumpty : e|head==x : e])
       put(Ty(e))
@@ -606,14 +606,14 @@ THEN  put(Ty(e>t))
 ELSE  abort
 
 [0.9185932660031968,0]
-Becky
+becky
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==becky : e|head==x1 : e])
 ELSE  abort
 
 [0.013408336444270641,0]
-Becky
+becky
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e2==see : es|p7==subj(e2, R1.head) : t|head==e2 : es|p8==obj(e2, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -1090,14 +1090,14 @@ THEN  ttrput([x==breakfast : e|head==x : e])
 ELSE  abort
 
 [0.9951134638465313,0]
-HumptyDumpty
+humptydumpty
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==humpty_dumpty : e|head==x1 : e])
 ELSE  abort
 
 [0.004886536153468473,0]
-HumptyDumpty
+humptydumpty
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==eq : es|p1==subj(e1, R1.head) : t|head==e1 : es|p2==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -1130,14 +1130,14 @@ THEN  put(Ty(e>(e>t)))
 ELSE  abort
 
 [0.8984325996874277,0]
-I
+i
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==i : e|head==x : e])
 ELSE  abort
 
 [0.018107504943577168,0]
-I
+i
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==i : e|head==x : e])
@@ -1201,14 +1201,14 @@ THEN  ttrput([head : es|p3==have_aux_feature(head) : t])
 ELSE  abort
 
 [0.4093043663296999,0]
-Granma
+granma
 IF    ?Ty(e>(e>t))
 THEN  put(Ty(e>(e>t)))
       ttrput(R2^R1^(R2 ++ (R1 ++ [e1==call : es|p2==subj(e1, R1.head) : t|head==e1 : es|p3==obj(e1, R2.head) : t])))
 ELSE  abort
 
 [0.2043656000697646,0]
-Granma
+granma
 IF    ?Ty(e)
 THEN  ttrput([x2==granma : e|head==x2 : e])
       put(Ty(e))
@@ -1669,14 +1669,14 @@ THEN  put(Ty(e>(e>t)))
 ELSE  abort
 
 [0.9625690632026086,0]
-Jack
+jack
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==jack : e|head==x1 : e])
 ELSE  abort
 
 [0.0374309367973909,0]
-Jack
+jack
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==eq : es|p1==subj(e1, R1.head) : t|head==e1 : es|p2==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -1984,14 +1984,14 @@ THEN  ttrput(R3^R2^R1^(R3 ++ (R2 ++ (R1 ++ [e1==put : es|p8==subj(e1, R1.head) :
 ELSE  abort
 
 [0.7865448614301813,0]
-Racketyboom
+racketyboom
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==racketyboom : e|head==x1 : e])
 ELSE  abort
 
 [0.17118521336247128,0]
-Racketyboom
+racketyboom
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==eq : es|p1==subj(e1, R1.head) : t|head==e1 : es|p2==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -2424,14 +2424,14 @@ THEN  ttrput(R1^[r : R1|x2==iota(r.head, r) : e|head==x2 : e])
 ELSE  abort
 
 [0.8286259683720567,0]
-Eve
+eve
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==eve : e|head==x1 : e])
 ELSE  abort
 
 [0.0608668119014929,0]
-Eve
+eve
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==eq : es|p1==subj(e1, R1.head) : t|head==e1 : es|p2==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -2476,14 +2476,14 @@ THEN  put(Ty(e>(e>t)))
 ELSE  abort
 
 [0.7074730322098897,0]
-Sambo
+sambo
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==sambo : e|head==x : e])
 ELSE  abort
 
 [0.29252696779011034,0]
-Sambo
+sambo
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==read : es|p2==subj(e1, R1.head) : t|head==e1 : es|p3==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -3286,14 +3286,14 @@ THEN  put(Ty(e>t))
 ELSE  abort
 
 [0.977090585612568,0]
-Jill
+jill
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==jill : e|head==x1 : e])
 ELSE  abort
 
 [0.022909414387430674,0]
-Jill
+jill
 IF    ?Ty(e>(e>t))
 THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==eq : es|p1==subj(e1, R1.head) : t|head==e1 : es|p2==obj(e1, R2.head) : t])))
       put(Ty(e>(e>t)))
@@ -3989,14 +3989,14 @@ THEN  put(Ty(t))
 ELSE  abort
 
 [0.9188791650766386,0]
-Mommy
+mommy
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==mommy : e|head==x : e])
 ELSE  abort
 
 [0.027079105955711925,0]
-Mommy
+mommy
 IF    (?Ty(t) || Ty(t) || ?Ty(e>t))
       ¬<\/L>Ex.x
 THEN  put(?+eval)
@@ -5899,14 +5899,14 @@ THEN  put(Ty(cn>e))
 ELSE  abort
 
 [0.6698903705057244,0]
-Papa
+papa
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==papa : e|head==x : e])
 ELSE  abort
 
 [0.24351702654642113,0]
-Papa
+papa
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==papa : e|head==x : e])
@@ -6165,7 +6165,7 @@ THEN  put(Ty(e))
 ELSE  abort
 
 [0.27197621565451824,0]
-Mama
+mama
 IF    (?Ty(t) || Ty(t) || ?Ty(e>t))
       ¬<\/L>Ex.x
 THEN  put(?+eval)
@@ -6179,21 +6179,21 @@ THEN  put(Ty(t))
 ELSE  abort
 
 [0.22802467849402241,0]
-Mama
+mama
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==mama : e|head==x : e])
 ELSE  abort
 
 [0.9978755293681051,0]
-Neil
+neil
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x==neil : e|head==x : e])
 ELSE  abort
 
 [0.002124470631880447,0]
-Neil
+neil
 IF    (?Ty(t) || Ty(t) || ?Ty(e>t))
       ¬<\/L>Ex.x
 THEN  put(?+eval)
@@ -7005,14 +7005,14 @@ THEN  ttrput(R2^R1^(R2 ++ (R1 ++ [e1==want : es|p4==subj(e1, R1.head) : t|head==
 ELSE  abort
 
 [0.4631071800310579,0]
-Fraser
+fraser
 IF    ?Ty(e)
 THEN  ttrput([x1==fraser : e|head==x1 : e])
       put(Ty(e))
 ELSE  abort
 
 [0.46025677071099047,0]
-Fraser
+fraser
 IF    ?Ty(e>(e>t))
 THEN  put(Ty(e>(e>t)))
       ttrput(R2^R1^(R2 ++ (R1 ++ [e1==say : es|p6==subj(e1, R1.head) : t|head==e1 : es|p7==obj(e1, R2.head) : t])))
@@ -7622,14 +7622,14 @@ THEN  put(Ty(e>(e>t)))
 ELSE  abort
 
 [0.942687861793174,0]
-Kathy
+kathy
 IF    ?Ty(e)
 THEN  put(Ty(e))
       ttrput([x1==kathy : e|head==x1 : e])
 ELSE  abort
 
 [0.03279530509912509,0]
-Kathy
+kathy
 IF    (?Ty(t) || Ty(t) || ?Ty(e>t))
       ¬<\/L>Ex.x
 THEN  put(?+eval)

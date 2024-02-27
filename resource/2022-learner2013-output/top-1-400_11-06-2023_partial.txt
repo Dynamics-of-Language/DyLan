@@ -1,0 +1,121 @@
+GoldSent : here
+Sem : [e : es|p1==here(e) : t]
+GenSent : 
+
+GoldSent : are you saying fraser
+Sem : [e1==say : es|x==you : e|x1==fraser : e|p3==be_aux_feature(e1) : t|p7==obj(e1, x1) : t|p6==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : did you eat it
+Sem : [e1==eat : es|x==you : e|x1==it : e|p2==do_aux_feature(e1) : t|p5==obj(e1, x1) : t|p4==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : you ate it
+Sem : [e1==eat : es|x==you : e|x1==it : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : eve read
+Sem : [e1==read : es|x==eve : e|p2==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : neil sit
+Sem : [e1==sit : es|x==neil : e|p1==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : does she like it
+Sem : [e1==like : es|x==she : e|x1==it : e|p3==do_aux_feature(e1) : t|p6==obj(e1, x1) : t|p5==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : you called granma
+Sem : [e1==call : es|x==you : e|x1==granma : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : becky 's home
+Sem : [e1==eq : es|x==home : e|x1==becky : e|p2==subj(e1, x1) : t|p1==obj(e1, x) : t]
+GenSent : 
+
+GoldSent : it 's not yours
+Sem : [e1==eq : es|x==it : e|x1==yours : e|p1==not_feature(e1) : t|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : i 'll turn it
+Sem : [e1==turn : es|x==i : e|x1==it : e|p1==will_aux_feature(e1) : t|p4==obj(e1, x1) : t|p3==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : you gonna dance
+Sem : [e2==dance : es|x==you : e|p5==go(e2) : t|p4==subj(e2, x) : t]
+GenSent : 
+
+GoldSent : i see it
+Sem : [e1==see : es|x==i : e|x1==it : e|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : off
+Sem : [e : es|p2==off(e) : t]
+GenSent : 
+
+GoldSent : you get it
+Sem : [e1==get : es|x==you : e|x1==it : e|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : outside
+Sem : [e : es|p1==outside(e) : t]
+GenSent : 
+
+GoldSent : you fix it
+Sem : [e1==fix : es|x==you : e|x1==it : e|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : papa had it
+Sem : [e1==have : es|x==papa : e|x1==it : e|p3==obj(e1, x1) : t|p2==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : would you like more tapioca
+Sem : [e1==like : es|x1==you : e|r : [x : e|p7==tapioca(x) : t|head==x : e]|p3==will_aux_feature(e1) : t|x2==more(r.head, r) : e|p6==obj(e1, x2) : t|p5==subj(e1, x1) : t]
+GenSent : 
+
+GoldSent : i 'm going_to cook it
+Sem : [e2==cook : es|x==i : e|x2==it : e|p2==be_aux_feature(e2) : t|p8==go(e2) : t|p7==obj(e2, x2) : t|p6==subj(e2, x) : t]
+GenSent : 
+
+GoldSent : here
+Sem : [e : es|p1==here(e) : t]
+GenSent : 
+
+GoldSent : can you throw the ball
+Sem : [e1==throw : es|x1==you : e|r : [x : e|p6==ball(x) : t|head==x : e]|p2==can_aux_feature(e1) : t|x2==iota(r.head, r) : e|p5==obj(e1, x2) : t|p4==subj(e1, x1) : t]
+GenSent : 
+
+GoldSent : you say that
+Sem : [e1==say : es|x==you : e|x1==that : e|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : you say that
+Sem : [e1==say : es|x==you : e|x1==that : e|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]
+GenSent : 
+
+GoldSent : mommy will read to you
+Sem : [e1==read : es|x==you : e|x2==mommy : e|p3==will_aux_feature(e1) : t|p6==subj(e1, x2) : t|p2==to(e1, x) : t]
+GenSent : 
+
+GoldSent : this is racketyboom
+Sem : [e1==eq : es|x==this : e|x1==racketyboom : e|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]
+GenSent : 
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 0 is 26.
+
+// Corpus size: 26
+// Maximum length: 0
+// Minimum length: 0
+// Average length: 0.000000
+
+// ---- Word-Level Stats ----
+// Count of all words: 0
+// Count of unique tokens: 0
+// Words/Tokens count ratio: NaN

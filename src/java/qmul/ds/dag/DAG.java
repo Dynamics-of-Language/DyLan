@@ -553,33 +553,6 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		return null;
 	}
 
-	public E goFirstGen() {
-		if (outDegree(cur) == 0)
-			return null;
-		SortedSet<E> edges = getOutEdges(cur);
-
-		for (E e : edges) {
-			T child = getDest(e);
-
-			if (!e.hasBeenSeen()) {
-				logger.info("Going forward (first) along: " + e);
-
-				e.setInContext(true);
-
-				this.cur = child;
-
-				updateLastN();
-
-				logger.info("depth is now:" + getDepth());
-
-				if (e.word() != null)
-					wordStack.push(e.word());
-
-				return e;
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * Simulates DAG behaviour. Ignores {@link BacktrackingEdge}s. Assumption:
@@ -806,37 +779,7 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 		
 	}
 	
-	public boolean attemptBacktrackGen() {
-		while (!moreUnseenEdges()) {
-			if (!canBacktrack()) {
-				logger.info("cannot backtrack from:" + cur);
-				return false;
-			}
-
-			E backover = getParentEdge();
-
-			if (backover.word() != null) {
-
-				if (!wordStack.peek().equals(backover.word()))
-					throw new IllegalStateException("top of stack is " + wordStack.peek() + " but edge is " + backover);
-
-				UtteredWord word = wordStack.pop();
-				logger.debug("popped word off stack:" + word);
-				logger.debug("stack now:" + wordStack);
-
-			}
-
-			E backOver = goUpOnce();
-
-			backOver.setSeen(true);
-			backOver.setInContext(false);
-
-		}
-		logger.debug("Backtrack succeeded");
-		return true;
-
-	}
-
+	
 	/**
 	 * 
 	 * @return true if successful, false if we're at root without any more

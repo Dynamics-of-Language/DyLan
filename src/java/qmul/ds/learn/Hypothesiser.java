@@ -1,5 +1,6 @@
 package qmul.ds.learn;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +43,14 @@ import edu.stanford.nlp.util.Pair;
 
 public class Hypothesiser {
 
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_CYAN = "\u001B[36m";
+	public static final String ANSI_RED = "\u001B[31m";
+
 	public static final String HYP_ACTION_PREFIX = "hyp";
 	public static final String HYP_ADJUNCTION_PREFIX = "hyp-adj";
 	public static final String HYP_SEM_PREFIX = "hyp-sem";
@@ -64,14 +73,12 @@ public class Hypothesiser {
 		this.state = new DAGInductionState(start);
 		this.seedLexicon = seedLexicon;
 		separateGrammars(grammar);
-
 	}
 
 	public Hypothesiser(String resourceDirOrURL) {
 		this.seedLexicon = new Lexicon(resourceDirOrURL);
 		separateGrammars(new Grammar(resourceDirOrURL));
 		this.state = new DAGInductionState(new Tree());
-
 	}
 
 	
@@ -79,8 +86,6 @@ public class Hypothesiser {
 		if (this.seedLexicon == null || this.optionalGrammar == null || this.nonoptionalGrammar == null) {
 			throw new IllegalStateException("Hypothesiser not initialised");
 		}
-
-		
 
 		this.state = new DAGInductionState(UtteredWord.getAsUtteredWords(sentence));
 		this.target = target;
@@ -147,7 +152,6 @@ public class Hypothesiser {
 		separateGrammars(new Grammar(resourceDir));
 		this.state = new DAGInductionState(UtteredWord.getAsUtteredWords(sent));
 		this.target = target;
-
 	}
 
 	public static String compactPrintSequence(List<DAGEdge> sequence) {
@@ -280,7 +284,7 @@ public class Hypothesiser {
 			}
 		} while (attemptBacktrack());
 
-		logger.info("DAG Exhausted");
+		logger.info(ANSI_RED + "DAG Exhausted" + ANSI_RESET);
 		return false;
 	}
 
@@ -583,7 +587,11 @@ public class Hypothesiser {
 
 	public static void main(String args[]) {
 
-		ContextParser parser = new ContextParser("resource/2009-english-test-induction");
+		// Added by Arash A.
+		String resourceDir = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);
+
+		ContextParser parser = new ContextParser(resourceDir);
+				//"dsttr/resource/2009-english-test-induction"); // Commented out by Arash A.
 		parser.init();
 		// String[] sentArray = {"a", "swearer", "who", "a", "swearer", "reflected", "reflected", "a", "swearer"};
 		String[] sentArray = { "a", "swearer", "reflected", "a", "swearer" };
@@ -596,7 +604,8 @@ public class Hypothesiser {
 		String[] sentArrayL = { "a", "swearer", "reflected", "a", "swearer" };
 		List<String> sentLearn = Arrays.asList(sentArrayL);
 
-		Hypothesiser h = new Hypothesiser("resource/2009-english-test-induction-seed", complete, sentLearn);
+		Hypothesiser h = new Hypothesiser(resourceDir, complete, sentLearn);
+				//"dsttr/resource/2009-english-test-induction-seed", complete, sentLearn); // Commented out by Arash A.
 		Collection<CandidateSequence> hyps = h.hypothesise();
 		System.out.println(hyps.size() + " candidate sequences returned");
 		printHypMap(hyps);

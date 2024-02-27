@@ -73,6 +73,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	protected SpeechActInferenceGrammar sa_grammar;
 
 	protected boolean ready=false;
+
 	
 	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa)
 	{
@@ -123,25 +124,16 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		this(new Lexicon(resourceDir), new Grammar(resourceDir), new SpeechActInferenceGrammar(resourceDir));
 		
 	}
-	
-	
-	
-	
+
 
 	/**
+	 *
 	 * @param resourceDirNameOrURL
-	 *            the dir containing computational-actions.txt,
-	 *            lexical-actions.txt, lexicon.txt
+	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
 	 */
 	public DAGParser(String resourceDirNameOrURL) {
-		this(new Lexicon(resourceDirNameOrURL), new Grammar(
-				resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL));
+		this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL)); // TODO: did I have to copy and paste a computational-actions.txtx file in the directory? Because I did...
 	}
-	
-	
-	
-	
-	
 	
 	
 	/** BEGIN METHODS FOR RERUNNING ACTIONS________________________________________________________________________ 

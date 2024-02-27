@@ -1609,7 +1609,7 @@ public class CorpusConverter {
 	/**
 	 * A method to read in CHILDES formulae/sentence pairs and return TTRRecordType(string)/sentence pairs
 	 */
-	public static void CHILDESconvert() {
+	public static void CHILDESconvert() {  //AA: todo needs better naming of vars and more docs.
 		CorpusReaderWriter rw = new CorpusReaderWriter(corpusSourceFolder);
 		List<String[]> done = new ArrayList<String[]>();
 		CorpusStatistics corpusStats = new CorpusStatistics();

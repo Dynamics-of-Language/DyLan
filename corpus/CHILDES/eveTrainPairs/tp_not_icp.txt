@@ -1,0 +1,33 @@
+Sent : we 'll play outside later
+Sem : [e1==play : es|x==we : e|head==e1 : es|p3==will_aux_feature(e1) : t|p2==later(e1) : t|p5==subj(e1, x) : t]
+File : 1
+
+Sent : later we 'll go outside
+Sem : [e1==go : es|x==we : e|head==e1 : es|p3==will_aux_feature(e1) : t|p2==outside(e1) : t|p5==subj(e1, x) : t]
+File : 1
+
+Sent : later we 'll go outside
+Sem : [e1==go : es|x==we : e|head==e1 : es|p3==will_aux_feature(e1) : t|p2==outside(e1) : t|p5==subj(e1, x) : t]
+File : 1
+
+Sent : we 'll go outside later
+Sem : [e1==go : es|x==we : e|head==e1 : es|p3==will_aux_feature(e1) : t|p2==later(e1) : t|p5==subj(e1, x) : t]
+File : 1
+
+Sent : we 'll play with sandy later
+Sem : [e1==play : es|x==we : e|head==e1 : es|p3==will_aux_feature(e1) : t|p2==later(e1) : t|p5==subj(e1, x) : t]
+File : 1
+
+END_OF_CORPUS
+
+5
+
+UTTERANCE LENGTH STATS : 
+min sentence length = 1
+max sentence length = 6
+mean sentence length = 3.25
+
+WORD OCCURENCE STATS: 
+Tokens = 520
+Types = 110
+Type/Token ratio = 4.7272725

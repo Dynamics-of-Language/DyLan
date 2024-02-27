@@ -38,7 +38,7 @@ import qmul.ds.tree.Tree;
  * et. al (2015)</a>.
  * 
  * The parser is best-first and constructs an explicit Directed Asyclic Graph
- * (implemented as {@link qmul.ds.dag.WordLevelContextDAG}) which acts both as
+ * (implemented as {@link WordLevelContextDAG}) which acts both as
  * the current parse state, as well as the dialogue context.
  * 
  * The parser currently supports Self-Repair processing, Restarts, Communicative
@@ -94,6 +94,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 * With this set to 1, the repair is always local.
 	 */
 	public static final int max_repair_depth = 1;
+
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_CYAN = "\u001B[36m";
 
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir);
@@ -154,6 +161,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	private boolean adjustOnce(Formula goal) {
 
 		if (repairInitiated()) {
+			logger.info("Repair initiated");
 			if (this.forcedRestart) {
 				logger.debug("restarting");
 				UtteredWord repairWord = getState().wordStack().pop();
@@ -210,10 +218,19 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	private void applyAllPermutations(Formula goal) {
 		if (getState().wordStack().isEmpty())
 			return;
-
+		
+		//in this general version of the method we are passing the potential generation goal as argument
+		// if it's null then it's parsing
+		// if it not null: ONLY when we parse (generate) the final word on the stack (i.e. the word we were
+		// originally going to parse / generate, and not anything we may have pushed onto it because of backtracking)
+		// we need to check that the result subsumes the goal
+		
 		// TTRRecordType goal = g!=null ? (TTRRecordType)g : null;
 
 		UtteredWord word = getState().wordStack().peek();
+		
+		
+		
 		// logger.debug("apply all for word:"+word);
 		if (this.rightEdgeIndicators.contains(word.word())) {
 			replayBacktrackedActions(word);
@@ -223,7 +240,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			getState().getParentEdge(completed).groundFor(lastSpkr);
 			return;
 		}
-
+		
 		/**
 		 * First we are going to apply the actions that don't have any left adjustment
 		 * 
@@ -246,7 +263,10 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					DAGTuple tuple = getState().getNewTuple(res);
 					// check subsumption to goal if it's not null
 					// if not subsumed continue
-					if (goal != null && !tuple.getSemantics(this.context).subsumes(goal))
+					TTRFormula cur = tuple.getSemantics(this.context);
+					TTRFormula headLess = cur.removeHead();
+					
+					if (goal != null && getState().wordStack().size()==1 && !headLess.subsumes(goal))
 						continue;
 
 					List<Action> edgeActs = new ArrayList<Action>();
@@ -322,12 +342,21 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				if (res != null) {
 					logger.debug("success:" + res);
 					TTRFormula f = res.getMaximalSemantics(context);
-					if (goal != null && !f.subsumes(goal)) {
+					TTRFormula headLess = f.removeHead();
+					
+					/**
+					 * The significance of getState().wordStack().size == 1 is that we only want to check goal subsumption
+					 * when parsing the final word on the stack, and not anything before that which we may have pushed 
+					 * onto the stack because of backtracking. The problem is when processing repair sequences, and where
+					 * the goal has changed.
+					 */
+					if (goal != null && getState().wordStack().size()==1 && !headLess.subsumes(goal)) {
 						logger.debug("Oops. Cur semantics:" + f);
 						logger.debug("does not subsume goal:" + goal);
+						logger.debug("Stack is:"+getState().wordStack());
 						continue;
 					}
-
+					
 					ArrayList<Action> newActs = null;
 
 					newActs = new ArrayList<Action>(pair.first);
@@ -462,7 +491,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	public synchronized List<TTRRecordType> getTopNPending(int i) {
 		List<TTRRecordType> result = new ArrayList<TTRRecordType>();
 
-		qmul.ds.tree.Tree current = context.getCurrentTuple().getTree();
+		Tree current = context.getCurrentTuple().getTree();
 
 		if (!current.getAsserters().isEmpty()) {
 			result.add(new TTRRecordType());
@@ -493,27 +522,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			// state.wordStack().remove(0);
 			getState().resetToFirstTupleAfterLastWord();
 			return null;
-			//TODO: the below is currently from parseWord.
-			//needs to be checked and implemented for repair generation. Probably in the generator class.
+			
 		
-//			if (!getState().repairProcessingEnabled()) {
-//				logger.debug("repair processing is disabled. Reset to state after last parsable word.");
-//				return null;
-//			}
-//
-//			logger.info("Now initiating local repair with:" + word);
-//
-//			getState().wordStack().push(word);
-//			getState().initiateLocalRepair();
-//
-//			if (!parse()) {
-//				logger.info("OOPS! Couldn't parse word as local repair either");
-//				logger.error("OOPS! Couldn't parse word as local repair either");
-//				logger.info("Trying to return to state after the last parsable word");
-//				getState().resetToFirstTupleAfterLastWord();
-//				return null;
-//				// state.initiateClauseRepair();
-//			}
+
 		}
 
 		if (word.word().equals(RELEASE_TURN))
@@ -540,7 +551,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public synchronized DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord w) {
 		UtteredWord word = new UtteredWord(w.word().toLowerCase(), w.speaker());
-		logger.info("Parsing word " + word);
+		logger.info(ANSI_YELLOW+"Parsing word " + word + ANSI_RESET);
 		// set addressee of utterance if inferrable (in the dyadic case):
 		List<String> participants = new ArrayList<String>(context.getParticipants());
 		if (context.getParticipants().size() == 2) {
@@ -562,7 +573,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 			if (!parse()) {
 				logger.info("OOPS! Couldn't parse word as restart or repair");
-				logger.error("OOPS! Couldn't parse word as restart or repair");
+				logger.error(ANSI_PURPLE + "OOPS! Couldn't parse word as restart or repair" + ANSI_RESET);
 				this.forcedRestart = false;
 				this.forcedRepair = false;
 				return null;
@@ -640,7 +651,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		this.getState().thisIsFirstTupleAfterLastWord();
 		this.getState().setRepairProcessing(false);
-		logger.info("Parsed " + word);
+		logger.info(ANSI_GREEN + "Parsed " + word + ANSI_RESET);
 		logger.debug("Final Tuple:" + getState().getCurrentTuple());
 		logger.info("Sem:" + getState().getCurrentTuple().getSemantics(context));
 
@@ -737,7 +748,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	}
 
 	private void backtrackAndParse(UtteredWord word) {
-		logger.debug("backtrack and parsing " + word);
+		logger.info("backtrack and parsing " + word);
 		DAGTuple before = getState().getCurrentTuple();
 		for (LexicalAction la : lexicon.get(word.word())) {
 			if (non_repairing_action_types.contains(la.getLexicalActionType()))
@@ -785,8 +796,8 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 				getState().setCurrentTuple(before);
 				if (result != null) {
 					// now add backtracking edge
-					logger.debug("Adding VirutualReparingEdge");
-					logger.debug("from " + current);
+					logger.info("Adding VirutualReparingEdge");
+					logger.info("from " + current);
 					VirtualRepairingEdge repairing = getState()
 							.getNewRepairingEdge(new ArrayList<GroundableEdge>(backtracked), actions, current, word);
 					DAGTuple to = getState().getNewTuple(result);

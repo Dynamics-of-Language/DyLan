@@ -14,7 +14,7 @@ public class CorpusStatistics {
 		public float ratio = 0;
 		public String cats;
 		
-		public Distribution(List<String> cat, List<Integer> freq){
+		public Distribution(List<String> cat, List<Integer> freq){ // AA todo: needs docs
 			categories = cat;
 			frequencies = freq;
 			types = categories.size();
@@ -45,6 +45,7 @@ public class CorpusStatistics {
 			System.out.println("tokens " + tokens);
 			ratio = (float) ((float) tokens)  / ((float) types);
 			System.out.println("ratio tokens/type " + ratio);
+			System.out.println();
 		}
 		public String getRatio() {
 			return Float.toString(ratio);
@@ -63,11 +64,12 @@ public class CorpusStatistics {
 	}
 	
 	public static HashMap<String, Integer> occurences = new HashMap<String,Integer>();
-	public static HashMap<Integer, Integer> uttLengths = new HashMap<Integer, Integer>();
+	public static HashMap<Integer, Integer> uttLengths = new HashMap<Integer, Integer>(); // AA: according to
+	// the usage in `addUtterance`, I think this is a hashmap from uttLen to the number of utts with that length in the dataset.
 	
 	public void addWordToken(String word){
-		if (occurences.containsKey(word)){
-			occurences.put(word,occurences.get(word)+1);
+		if (occurences.containsKey(word)){ // AA todo: cleaner implementation with getOrDefault
+				occurences.put(word,occurences.get(word)+1);
 		} else {
 			occurences.put(word,1);
 		}
@@ -78,7 +80,8 @@ public class CorpusStatistics {
 		for (String word : words){
 			addWordToken(word);
 		}
-		if (uttLengths.keySet().contains(words.length)){
+		// AA: TODO in below code, isn't it better to cache words.length instead of calling it 4 times?
+		if (uttLengths.keySet().contains(words.length)){ // AA todo: cleaner implementation with getOrDefault
 			uttLengths.put(words.length,uttLengths.get(words.length)+1);
 		} else {
 			uttLengths.put(words.length, 1);
@@ -93,7 +96,7 @@ public class CorpusStatistics {
 	}
 	
 	
-	public String finalWordDistribution(){
+	public String finalWordDistribution(){ // AA: Why would we need to make use of Distribution? we can just use the size of categories and frequencies..
 		System.out.println("final word distribrution:");
 		List<String> categories = new ArrayList<String>();
 		List<Integer> frequency = new ArrayList<Integer>();
@@ -102,7 +105,7 @@ public class CorpusStatistics {
 			frequency.add(occurences.get(cat));
 		}
 		Distribution d = new Distribution(categories, frequency);
-		String finalReport = "WORD OCCURENCE STATS: \nTokens = " + d.getTokens() + 
+		String finalReport = "WORD OCCURRENCE STATS: \nTokens = " + d.getTokens() +
 				"\nTypes = " + d.getTypes() + "\nType/Token ratio = " + d.getRatio() + "\n";
 				//d.getDistributionOrdered();
 		return finalReport;
@@ -145,8 +148,49 @@ public class CorpusStatistics {
 		"mean sentence length = " + meanlength + "\n";
 		return finalReport;
 		//return new Distribution(categories, frequency);
-		
-		
+	}
+
+	public String finalUttStatsModiefied(){
+		System.out.println("final utterance length distribution:");
+		List<String> categories = new ArrayList<String>();
+		List<Integer> frequency = new ArrayList<Integer>();
+		int minlength = 100;
+		int maxlength = 0;
+		float meanlength = 0;
+		String allLengths = ""; // AA
+		int totalWords = 0;
+		int totalSentences = 0;
+
+		for (int cat : uttLengths.keySet()){ // TODO AA: not a good var name cat
+			allLengths += String.format("Number of utterances with len %d is %d.\n", cat,  uttLengths.get(cat));
+			if (cat>maxlength){
+				maxlength = cat;
+			}
+			if (cat<minlength){
+				minlength = cat;
+			}
+			totalWords += (uttLengths.get(cat) * cat);
+			totalSentences +=uttLengths.get(cat);
+			//shuffle sort...
+			int placeat = 0;
+			for (int c=0; c<categories.size(); c++){
+				if (Integer.parseInt(categories.get(c))>cat){
+					placeat = c;
+					break;
+				}
+			}
+			categories.add(placeat, Integer.toString(cat));
+			frequency.add(placeat, uttLengths.get(cat));
+		}
+		meanlength = ((float) totalWords) / ((float) totalSentences);
+		Distribution d= new Distribution(categories, frequency);
+
+		String finalReport = "\nUTTERANCE LENGTH STATS : \nmin sentence length = " + minlength + "\n" +
+				"max sentence length = " + maxlength + "\n"  +
+				"mean sentence length = " + meanlength + "\n\n" +
+				allLengths;
+		return finalReport;
+		//return new Distribution(categories, frequency);
 	}
 	
 	
