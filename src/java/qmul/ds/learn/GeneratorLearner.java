@@ -34,9 +34,9 @@ public class GeneratorLearner {
 
     protected TreeMap<String, TreeMap<Feature, Double>> conditionalCountTable = new TreeMap<>();
     protected TreeMap<String, TreeMap<Feature, Double>> conditionalProbTable = new TreeMap<>(); // TODO attention: these are NOT being globally updated.
-    static final String corpusFolderPath = "dsttr/corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
+    static final String corpusFolderPath = "corpus/CHILDES/eveTrainPairs/".replaceAll("/", Matcher.quoteReplacement(File.separator));
     public static String corpusPath = corpusFolderPath + "AAtrain-3.txt";//"auniq.txt";// //""AA-train-lower-396-matching-top1.txt";//"AAtrain-7.txt";
-    static final String grammarPath = "dsttr/resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
+    static final String grammarPath = "resource/2022-learner2013-output/".replaceAll("/", Matcher.quoteReplacement(File.separator));
 //    static public String[] DSTypesString = new String[]{"e", "t", "cn", "e>t", "cn>e", "e>cn", "e>(e>t)", "e>(t>t)", "e>(e>(e>t))"};
 //    static final int DSTypesCount = DSTypesString.length * 2;
     static final Double K_SMOOTHING = 0.01;
