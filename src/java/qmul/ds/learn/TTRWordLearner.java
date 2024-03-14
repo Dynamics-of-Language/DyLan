@@ -142,7 +142,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	{
 //		TTRWordLearner learner = new TTRWordLearner();  // Commented out by Arash A.
 		String babyDSPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // fix later
-		String corpusPath = babyDSPath + "dataset2.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
+		String corpusPath = babyDSPath + "dataset3.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
 		String lexiconPath = babyDSPath + "lexicon.lex";
 		TTRWordLearner learner = new TTRWordLearner(babyDSPath);
 //		logger.info(ANSI_YELLOW + "learner initialized with seed resource dir: " + babyDSPath + ANSI_RESET);
