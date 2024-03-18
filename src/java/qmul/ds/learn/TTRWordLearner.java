@@ -49,7 +49,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	}
 
 	public TTRWordLearner(String seedResourceDir) {
-		TTRWordLearner.seedResourceDir= seedResourceDir; //"resource" + File.separator + "2013-english-ttr-induction-seed";
+		this.seedResourceDir= seedResourceDir; //"resource" + File.separator + "2013-english-ttr-induction-seed";
 		hypothesiser = new TTRHypothesiser(seedResourceDir);
 		corpus = null;
 	}

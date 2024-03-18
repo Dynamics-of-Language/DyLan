@@ -20,7 +20,7 @@ public class LexicalHypothesis extends Action {
 	 * 
 	 * For compatibility with the implementation of the DAGParser and DAGParseState, this class just wraps a sequence of
 	 * atomic actions into the THEN block of an IfThenElse action with an empty array of conditions (Labels) such that
-	 * the action always succeeds, by just running this list of atomic actions in order. The THEN block is just
+	 * the action always succeeds, by just running this list of atomic actions in order. The ELSE block is just
 	 * instantiated to a single Abort() action.
 	 * 
 	 * @param effects

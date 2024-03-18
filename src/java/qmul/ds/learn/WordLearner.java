@@ -39,8 +39,8 @@ public abstract class WordLearner<T> {
 	WordHypothesisBase hb = new WordHypothesisBase();
 	public static String parserResourceDir = "resource" + File.separator + "2009-english-test-induction";
 //	public static String seedResourceDir = "resource" + File.separator + "2009-english-test-induction-seed"; // commented out by Arash A.
-	public static String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A.
-//	public static String seedResourceDir = "dsttr\\resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // added by Arash A.
+	public String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A.
+
 	Corpus<T> skipped=new Corpus<T>();
 	
 	
