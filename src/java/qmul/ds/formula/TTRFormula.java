@@ -158,7 +158,15 @@ public abstract class TTRFormula extends Formula {
 		return result;
 	}
 
+	/**
+	 * Constructs all lambda abstractions of this TTRFormula based on (lambda) abstracting out something of the type specified by
+	 * the first argument. The second argument is the base suffix for new lambda variables (e.g. R1, R2 etc)
+	 * @param basic the type of the function argument to be abstracted
+	 * @param newVarSuffix the base suffix for new lambda variables
+	 * @return list of all possible abstractions
+	 */
 	protected abstract List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(BasicType basic, int newVarSuffix);
+
 
 	public TTRFormula removeHead()
 	{

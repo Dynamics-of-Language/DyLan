@@ -1,4 +1,4 @@
-// This works fine, but "more grape juice" below is not learned.
+// This is learned incorrectly,and "more grape juice" below is not learned at all.
 Sent : more celery
 Sem : [r : [x : e|p2==celery(x) : t|head==x : e]|x1==more(r.head, r) : e|head==x1 : e]
 File : 1

@@ -676,13 +676,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 	public static void main(String[] a) {
-		TTRRecordType t = TTRRecordType.parse("[r : [x:e|p1==red(x):t|head==x:e]|x1==iota(r.head,r):e|head==x1:e]");
+		TTRRecordType t = TTRRecordType.parse("[r : [x:e|p1==juice(x):t|head==x:e]|x1==more(r.head,r):e|head==x1:e]");
 
-		TTRField headField = t.getHeadField();
-		TTRRecordType inc = t.getMinimalIncrementWith(headField,headField.getLabel());
+		//TTRRecordType t = TTRRecordType.parse("[x1==john:e|e1==run:es|p==subj(e1,x1):t|head==e1:es]");
 
-		System.out.println(inc);
+		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = t.getAbstractions(DSType.cn, 1);
 
+		for(Pair<TTRRecordType, TTRLambdaAbstract> pair:abstractions)
+		{
+			System.out.println("The argument:"+pair.first);
+			System.out.println("The function:"+pair.second);
+			System.out.println("-------");
+		}
 	}
 
 	/**
@@ -1720,6 +1725,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	@Override
 	public TTRRecordType substitute(Formula f1, Formula f2) {
 		logger.trace("Substituting " + f2 + " for " + f1 + " in rec type:" + this);
+
+
 
 		TTRRecordType result = new TTRRecordType();
 		for (TTRField cur : fields) {
