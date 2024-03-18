@@ -292,8 +292,10 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                     out.newLine();
                     out.write(la.toString());
                     out.newLine();
-                    out.write(la.getEffects()[0].toString());
-                    out.newLine();
+                    for(Effect ifThenElse: la.getEffects()) {
+                        out.write(ifThenElse.toString());
+                        out.newLine();
+                    }
                     out.newLine();
             }
             out.flush();
@@ -302,7 +304,17 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
     }
 
     public static void main(String a[]) {
-
+        Lexicon lex = new Lexicon("resource/2013-ttr-learner-output/", 1);
+        // print word-action pairs
+        for (String word : lex.keySet()) {
+            for (LexicalAction la : lex.get(word)) {
+                for (Effect e : la.getEffects()) {
+                    System.out.println("word: " + word + "\n" + e + "\n");
+                }
+//                System.out.println("word: " + word + "\n" + la.getEffects() + "\n");
+//                System.out.println("la.getEffects()[0]: " + la.getEffects()[0]);
+            }
+        }
     }
 
     /**
