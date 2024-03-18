@@ -76,6 +76,17 @@ public class CandidateSequence extends ArrayList<Action> {
 		return s;
 	}
 
+	public String toShortString() {
+		String s = "";
+		for (Action a : this) {
+			if (a instanceof LexicalHypothesis)
+				s += a + " | ";
+			else
+				s += a.getName() + "|";
+		}
+		return s;
+	}
+
 	public void setStartTtuple(ParserTuple tuple) {
 		this.start = new ParserTuple(tuple);
 	}

@@ -70,12 +70,17 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	
 	@Override
 	public boolean learnOnce() {
-		if (corpusIterator == null || !corpusIterator.hasNext()) {
-			logger.warn("Either no corpus, or no more examples.");
+		if (corpusIterator == null) {
+			logger.info("No corpus loaded.");
 			return false;
 		}
+		if (!corpusIterator.hasNext()) {
+			logger.info("No more examples in the corpus.");
+			return false;
+		}
+
 		Pair<Sentence<Word>, TTRRecordType> entry = corpusIterator.next();
-		System.out.println("Hypothesising sequences for utterance: " + entry.first());
+		logger.info("Hypothesising sequences for utterance: " + entry.first());
 
 		// logger.info("Hypothesising from training example: "+
 		// sentence+"->"+target);
@@ -84,10 +89,10 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		try {
 			((TTRHypothesiser)hypothesiser).loadTrainingExample(entry.first(), entry.second());
 			hyps = hypothesiser.hypothesise();
-			System.out.println();
+			logger.info("\n");
 			if (hyps.size()==0) {
 				logger.warn("NO SEQUENCES RECEIVED from hypothesiser.. skipping... ");
-				System.out.println("no sequences returned, skipping this");
+//				System.out.println("no sequences returned, skipping this");
 				skipped.add(entry);
 				return true;
 			}
@@ -99,7 +104,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			return true;
 		}
 		logger.info(ANSI_GREEN +  "Got "+hyps.size()+" sequences from Hypothesiser for " + ANSI_RESET);
-		System.out.println("now splitting the sequences");
+		logger.info(ANSI_GREEN + "Now splitting the sequences..." + ANSI_RESET);
 		// DAGHypothesiser.printHypMap(hyps);
 		hb.forgetCurrentDist();
 		int totalSplit = 0;
@@ -107,16 +112,19 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		try {
 			for (CandidateSequence cs : hyps) {
 				i++;
+				logger.debug("Spliting: "+cs.toShortString());
 				Set<List<CandidateSequence>> splitSequences = cs.split();
+				for (List<CandidateSequence> seq:splitSequences)
+					logger.trace("Result: "+seq);
+
 				totalSplit += splitSequences.size();
-				System.out.print(i+":"+splitSequences.size()+" ");
-				if (i%15==0)
-					System.out.println();
+				logger.trace(i+":"+splitSequences.size()+" ");
+				logger.debug("Adding split sequences to hypothesis base...");
 				hb.addSequenceTuples(splitSequences);
 			}	
-			System.out.println();
+			logger.info("\n");
 			this.hb.updateDistsEndOfExample(entry.first());
-			System.out.println("Processing took:"+ (System.currentTimeMillis()-time)/1000 + " seconds");
+			logger.info("Processing took:"+ (System.currentTimeMillis()-time)/1000 + " seconds");
 		} catch (Exception e) {
 			logger.fatal("problem while updating distributions on sentence:" + entry);
 			logger.fatal("this is fatal :(");
@@ -142,7 +150,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	{
 //		TTRWordLearner learner = new TTRWordLearner();  // Commented out by Arash A.
 		String babyDSPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // fix later
-		String corpusPath = babyDSPath + "dataset3.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
+		String corpusPath = babyDSPath + "CHILDES400.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
 		String lexiconPath = babyDSPath + "lexicon.lex";
 		TTRWordLearner learner = new TTRWordLearner(babyDSPath);
 //		logger.info(ANSI_YELLOW + "learner initialized with seed resource dir: " + babyDSPath + ANSI_RESET);
