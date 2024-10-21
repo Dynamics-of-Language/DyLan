@@ -42,7 +42,12 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		implements DSParser {
 
 	private static Logger logger = Logger.getLogger(DAGParser.class);
-	
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_CYAN = "\u001B[36m";
 	//protected DAG<T, E> state;
 	protected Lexicon lexicon;
 	/**
@@ -75,18 +80,16 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	protected boolean ready=false;
 
 	
-	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa)
-	{
-		this.lexicon=lexicon;
+	public DAGParser(Lexicon lexicon, Grammar grammar, SpeechActInferenceGrammar sa) {
+		this.lexicon = lexicon;
 		separateGrammars(grammar);
-		this.sa_grammar=sa;
-		ready=true;
-		
+		this.sa_grammar = sa;
+		ready = true;
 	}
-	
+
+
 	public DAGParser(Lexicon lexicon, Grammar grammar) {
-		this(lexicon,grammar,new SpeechActInferenceGrammar());
-		
+		this(lexicon, grammar, new SpeechActInferenceGrammar());
 	}
 	
 	
@@ -127,7 +130,6 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 
 
 	/**
-	 *
 	 * @param resourceDirNameOrURL
 	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
 	 */
@@ -213,7 +215,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	/**
 	 * 
 	 * @param start
-	 * @param edges
+	 * @param edge
 	 * @return edge, expanded on the left with completion actions that need applying before edge is applicable to start.
 	 */
 	protected Pair<List<Action>,Tree> completeTupleUntilApplicable(Tree start, List<Action> edge)
@@ -287,9 +289,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		return res;
 		// replayEdge.setInContext(true);
 		// setCurrentTuple(res);
-
 	}
-	
+
+
 	/**
 	 * Will complete the current tuple, as much as possible, using the
 	 * non-optional grammar and Completion.
@@ -298,7 +300,6 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 *         resulting tuple.
 	 */
 	protected Pair<List<Action>, Tree> complete(Tree res) {
-
 		// Pair<ParserTuple, List<Action>> initPair=new Pair<ParserTuple,
 		// List<Action>>(new ParserTuple(t.getTree()), new ArrayList<Action>());
 		ArrayList<Action> actions = new ArrayList<Action>();
@@ -312,47 +313,36 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 			if (result.second.isComplete())
 				return result;
 			cur=completeOnce(result.second);
-			
 		} while (!cur.first.isEmpty());
-	
-		
+
 		logger.trace("result:" + result.first);
 		return result;
 	}
-	
+
+
 	/**
-	 *  Helper method. Used by the {@link complete(Tree)} method.
+	 *  Helper method. Used by the {complete(Tree)} method.
 	 *  This implements on step of tree completion: a sequence of non-optional computational actions, followed possibly, by 
 	 *  a single optional one (e.g. completion).
 	 *  
 	 * @param t
 	 * @return the partially completed tree
 	 */
-
-	protected Pair<List<Action>,Tree> completeOnce(Tree t)
-	{
-		
-		
+	protected Pair<List<Action>,Tree> completeOnce(Tree t) {
 		Pair<List<Action>,Tree> init=this.adjustWithNonOptionalGrammar(new Pair<List<Action>,Tree>(new ArrayList<Action>(),t));
 		if (!init.first.isEmpty())
 			return init;
 		
-		for(Action a: completionGrammar.values())
-		{
+		for(Action a: completionGrammar.values()) {
 			Tree completedOnce=a.exec(init.second.clone(), context);
-			
-			if (completedOnce!=null)
-			{
+			if (completedOnce!=null) {
 				init.second=completedOnce;
 				init.first.add(a);
 				return init;
 			}
-				
 		}
-		
 		return init;
 	}
-
 	//END OF methods for completing a tree ------------------------------------------
 	
 
@@ -448,14 +438,12 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public synchronized void init() {
 		FormulaMetavariable.resetPool();
 		context.init();
-
 	}
 
 	/**
 	 * Tell the parser we're beginning a new sentence. By default, this just
 	 * resets to the initial (axiom) state
-	 * 
-	 * @see init()
+	 * see init()
 	 */
 	public synchronized void newSentence() {
 		context.getDAG().init();
@@ -513,23 +501,20 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	public Generator<? extends ParserTuple> getGenerator() {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
-
 	}
-	
 
-	
 
 	/** successive calls to this after adding a word on the stack will step through the different parses of
 	 * a (partial) sentence  
 	 * 
-	 * @param goal
+	 * param goal
 	 * @return true if parse is successful
 	 */
-	public boolean parse()
-	{
-		return parse((Formula)null);
+	public boolean parse() {
+		return parse((Formula) null);
 	}
-	
+
+
 	/** Used in generation. Like parse() but always checks that any update to the dag subsumes the provided formula.
 	 * No new tuples are added unless they subsume the goal. 
 	 * 
@@ -539,7 +524,6 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public abstract boolean parse(Formula goal);
 
-	
 
 	public abstract DAG<T, E> parseWord(UtteredWord word);
 	
@@ -548,13 +532,9 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public abstract DAG<T, E> generateWord(UtteredWord word, Formula goal);
 
-
-	
-
 	
 	
-	public synchronized boolean parseUtterance(Utterance utt)
-	{
+	public synchronized boolean parseUtterance(Utterance utt) {
 		ready=false;
 		logger.info("Parsing Utterance \""+utt+"\"");
 		//add speaker to conversation if not already there
@@ -573,20 +553,14 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 		boolean success=true;
 		for (int i = 0; i < utt.words.size(); i++) {
 			UtteredWord word=utt.words.get(i);
-			
-			DAG<T,E> result = parseWord(
-					word);
-			
-			if (result == null)
-			{
-				logger.error("Failed to parse "+utt.words.get(i));
+			DAG<T,E> result = parseWord(word);
+			if (result == null) {
+				logger.error(ANSI_YELLOW + "Failed to parse " + utt.words.get(i) + ANSI_RESET);
 				logger.error("Skipping it");
 				success=false;
 				context.appendWord(new RevokedWord(word));
-			}
-			else
+			} else
 				context.appendWord(new UtteredWord(word));
-
 		}
 		ready=true;
 		return success;

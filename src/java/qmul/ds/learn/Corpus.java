@@ -39,10 +39,6 @@ import edu.stanford.nlp.util.Pair;
 public class Corpus<T extends Object> extends ArrayList<Pair<Sentence<Word>, T>> implements Serializable {
 	private static Logger logger = Logger.getLogger(Corpus.class);
 
-	/**
-	 * 
-	 */
-
 	public final static String CORPUS_FOLDER = "corpus/";
 	public final static String WORD_SEP_PATTERN = "\\s";
 	private static final long serialVersionUID = 4914176393669845762L;

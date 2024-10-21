@@ -90,7 +90,6 @@ public abstract class WordLearner<T> {
 		hb.reset();
 	}
 
-	
 
 	public void learn() {
 		if (corpus == null || corpus.isEmpty()) {
@@ -99,9 +98,10 @@ public abstract class WordLearner<T> {
 		int i=0;
 		while (learnOnce()) {
 			i++;
-			logger.info("So far processed:"+i+" of "+corpus.size() + "\n");
+			logger.info("So far processed: "+i+" of " + corpus.size() + "\n");
 		}
 	}
+
 
 	public boolean corpusLoaded() {
 		return corpus != null && !corpus.isEmpty();

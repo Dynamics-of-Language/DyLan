@@ -1,15 +1,11 @@
 package qmul.ds.learn;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -24,13 +20,11 @@ import qmul.ds.formula.Variable;
 
 /**
  * A class to evaluate the performance of a ttr parser in terms of precision and recall of test corpus
- * 
  * @author Julian
- * 
  */
 public class Evaluation {
 
-	protected static Logger logger = Logger.getLogger(TTRRecordType.class);
+	protected static Logger logger = Logger.getLogger(Evaluation.class);
 	public static final String corpusSourceFolder = "corpus" + File.separator + "CHILDES" + File.separator
 			+ "eveTrainPairs";
 	public static RecordTypeCorpus corpus = new RecordTypeCorpus();
@@ -38,7 +32,6 @@ public class Evaluation {
 
 	/**
 	 * A class for evaluation results including calculating F-score
-	 * 
 	 * @author mpurver
 	 */
 	public class EvaluationResult {
@@ -59,30 +52,28 @@ public class Evaluation {
 		}
 
 		public float getFScore() {
-			if (recall==0||precision==0){
+			if (recall==0||precision==0)
 				return 0;
-			} 
 			return (float) (2.0 * recall * precision) / (recall + precision);
 		}
 
 	}
 
+
 	/**
 	 * Just copied here not to interfere with TTRRecordType class where it's protected
-	 * 
 	 * @param l
 	 * @return new record type with label/field l removed. It is expensive since the whole record type is copied.
 	 */
 	public TTRRecordType removeLabel(TTRRecordType t, TTRLabel l) {
 		TTRRecordType result = new TTRRecordType();
-		for (TTRField f : t.getFields()) {
-			if (!f.getLabel().equals(l)) {
+		for (TTRField f : t.getFields())
+			if (!f.getLabel().equals(l))
 				result.add(f);
-			}
-		}
 		return result;
 	}
-	
+
+
 	/**
 	 * Just ordering on fields to give precedence to manifest fields, expensive unfort
 	 * @param t
@@ -94,7 +85,7 @@ public class Evaluation {
 		List<TTRField> unmanifest = new ArrayList<TTRField>();
 		List<TTRField> predArg = new ArrayList<TTRField>();
 		List<TTRField> epsilons = new ArrayList<TTRField>();
-		for (int f=0; f<t.getFields().size(); f++){
+		for (int f=0; f<t.getFields().size(); f++) {
 			TTRField myField = t.getFields().get(f);
 			if (myField.getType()==null||myField.getDSType()==null){
 				unmanifest.add(myField);
@@ -107,30 +98,28 @@ public class Evaluation {
 				manifest.add(myField);
 			}
 		}
-		if (m==true){
+		if (m==true) {
 			unmanifest.addAll(manifest);
 			unmanifest.addAll(epsilons);
 			unmanifest.addAll(predArg);
-			logger.info(unmanifest);
+			logger.debug(unmanifest);
 			for (int a=unmanifest.size()-1; a>=0; a--){
 				TTRField field = unmanifest.get(a);
-				logger.info("adding" + field);
+				logger.debug("adding " + field);
 				if (field.getDSType()==null){
 					result.addAtTop(field.getLabel(), field.getType(), null);
 				}else if (field.getType()==null){
 					result.addAtTop(field.getLabel(), null, field.getDSType());
 				} else {
 				result.addAtTop(field.getLabel(),field.getType(),field.getDSType());}
-				System.out.println(field);
+				logger.debug(field);
 			}
 		} else {
 			manifest.addAll(unmanifest);
-			for (TTRField field : manifest){
+			for (TTRField field : manifest)
 				result.add(field);
-			}
-			
 		}
-		System.out.println("::::::");
+		logger.debug("------");
 		return result;
 	}
 
@@ -154,44 +143,45 @@ public class Evaluation {
 			}
 			i++;
 		}
-		logger.info("testGoldPairs size " + this.testGoalPairs.size());
-		logger.info("missed " + missed);
+		logger.debug("testGoldPairs size " + this.testGoalPairs.size());
+		logger.debug("missed " + missed);
 		pause();pause();
 	}
+
 
 	public HashMap<Variable, Variable> maximalMapping(TTRRecordType hypttr, TTRRecordType o,
 			HashMap<Variable, Variable> map) {
 		// Integer myTotal = total; // number of nodes successfully mapped to o
 		logger.debug("TOP LEVEL checking max mapping" + hypttr + " is subsumed by " + o);
 		if (hypttr.isEmpty()) {
-			logger.info("final mapping");
-			for (Variable v : map.keySet()) {
-				System.out.println(v + ":" + map.get(v));
-			}
+			logger.debug("final mapping");
+			for (Variable v : map.keySet())
+				logger.debug(v + ":" + map.get(v));
 			return map;
 		}
 		if (!(o instanceof TTRRecordType))
 			return map;
+
 		TTRRecordType other = (TTRRecordType) o;
-		//order fields in hypttr to give precedence to manifest fields first..
-		logger.info(hypttr);
-		logger.info(other);
+		//order fields in hypttr to give precedence to manifest fields first...
+		logger.debug(hypttr);
+		logger.debug(other);
 		other = orderByManifest(other,true); //not for other, need to check these first
 		hypttr = orderByManifest(hypttr,true);
-		logger.info(hypttr);
-		logger.info(other);
+		logger.debug(hypttr);
+		logger.debug(other);
 		TTRField last = hypttr.getFields().get(hypttr.getFields().size() - 1);
-		logger.info("OUR OUTER testing subsumption for field:" + last);
+		logger.debug("OUR OUTER testing subsumption for field:" + last);
 		//pause();pause();
 		for (int j = other.getFields().size() - 1; j >= 0; j--) {
 			
 			TTRField otherField = other.getFields().get(j);
-			logger.info("inner checking " + otherField.toString());
+			logger.debug("inner checking " + otherField.toString());
 			//pause();pause();
 			// special case for restrictors
 			if (last.getType() != null && otherField.getType() != null && last.getType() instanceof TTRRecordType
 					&& otherField.getType() instanceof TTRRecordType) {
-				logger.info(last + " and " + otherField + " both RT types");
+				logger.debug(last + " and " + otherField + " both RT types");
 				// look for some subsumption (assume we don't have dominant referenced fields outside of scope):
 				HashMap<Variable, Variable> embeddedmap = maximalMapping(((TTRRecordType) last.getType()),
 						((TTRRecordType) otherField.getType()), new HashMap<Variable, Variable>());
@@ -206,8 +196,8 @@ public class Evaluation {
 		} else if ((last.getType()==null||!(last.getType() instanceof PredicateArgumentFormula)) && (otherField.getType()==null||!(otherField.getType() instanceof PredicateArgumentFormula))
 				&&last.subsumesMapped(otherField, map)) { //problem is it maps all arguments, don't really want that?
 				//just for unmaninfest/singleton types
-				logger.info(last + " subsumes " + otherField);
-				logger.info("map is now:" + map);
+				logger.debug(last + " subsumes " + otherField);
+				logger.debug("map is now:" + map);
 				//pause();pause();
 				return maximalMapping(removeLabel(hypttr, last.getLabel()), removeLabel(other, otherField.getLabel()),
 						map);
@@ -217,7 +207,7 @@ public class Evaluation {
 				if (last.getLabel().subsumesMapped(otherField.getLabel(), map)
 						&& ((last.getDSType() == null && otherField.getDSType() == null) || (last.getDSType() != null && last
 								.getDSType().equals(otherField.getDSType())))) {
-					logger.info("field labels subsume " + last + otherField);
+					logger.debug("field labels subsume " + last + otherField);
 					// look for partial mapping here for predicates only, if we get first arg fine..?
 					if (last.getType() != null && otherField.getType() != null) {
 						if (last.getType() instanceof PredicateArgumentFormula
@@ -238,14 +228,14 @@ public class Evaluation {
 								}
 
 								argloop: for (int i = 0; i < myargs.size(); i++) {
-									logger.info("arg" + i + "  " + myargs.get(i));
-									logger.info(hypttr);
-									logger.info(other);
+									logger.debug("arg" + i + "  " + myargs.get(i));
+									logger.debug(hypttr);
+									logger.debug(other);
 									if ((myargs.get(i).toString().contains(".") || myargs.get(i).toString()
 											.startsWith("r"))
 											&& (otherargs.get(i).toString().contains(".") || otherargs.get(i)
 													.toString().startsWith("r"))) { // path
-										logger.info("both paths or restrictors");
+										logger.debug("both paths or restrictors");
 										// both will be embedded RTs, so let's get those
 										String myPathString = !myargs.get(i).toString().contains(".") ? "."
 												+ myargs.get(i).toString() : myargs.get(i).toString();
@@ -254,7 +244,7 @@ public class Evaluation {
 
 										TTRRelativePath mypath = (TTRRelativePath) TTRPath.parse(myPathString);
 										TTRRelativePath otherPath = (TTRRelativePath) TTRPath.parse(otherPathString);
-										logger.info("both now paths  " + myPathString + " and " + otherPathString);
+										logger.debug("both now paths  " + myPathString + " and " + otherPathString);
 										// check whether one subsumes t'other?
 										//if (hypttr.isEmpty()){
 										//	continue argloop;
@@ -281,11 +271,11 @@ public class Evaluation {
 											.get(new TTRLabel(myargs.get(i).toString()))
 											.subsumes(
 													other.getRecord().get(new TTRLabel(otherargs.get(i).toString())))) {
-										logger.info(hypttr
+										logger.debug(hypttr
 											.getRecord()
 											.get(new TTRLabel(myargs.get(i).toString())));
-										logger.info(other.getRecord().get(new TTRLabel(otherargs.get(i).toString())));
-										logger.info(map);
+										logger.debug(other.getRecord().get(new TTRLabel(otherargs.get(i).toString())));
+										logger.debug(map);
 										//pause();pause();
 										k++; // number of args correct, only needs one?
 										break;
@@ -302,8 +292,8 @@ public class Evaluation {
 							} else { // don't add
 								partiallySubsumesMapped = false;
 								//map.remove(last.getLabel());
-								logger.info("Failed partial subsumption for: " + otherField);
-								logger.info("map is now:" + map);
+								logger.debug("Failed partial subsumption for: " + otherField);
+								logger.debug("map is now:" + map);
 							}
 							// pause();pause();
 						} else if (last.getType() instanceof TTRRecordType
@@ -313,20 +303,20 @@ public class Evaluation {
 					}
 
 					if (partiallySubsumesMapped == true) {
-						logger.info("Partially subsumed for :" + otherField);
-						logger.info("map is now:" + map);
+						logger.debug("Partially subsumed for :" + otherField);
+						logger.debug("map is now:" + map);
 						// recurse
 						return maximalMapping(removeLabel(hypttr, last.getLabel()),
 								removeLabel(other, otherField.getLabel()), map);
 					} else { // don't add
 						map.remove(last.getLabel());
-						logger.info("Failed partial subsumption for: " + otherField);
-						logger.info("map is now:" + map);
+						logger.debug("Failed partial subsumption for: " + otherField);
+						logger.debug("map is now:" + map);
 					}
 				} else {
 					map.remove(last.getLabel());
-					logger.info("Failed subsumption for:" + otherField);
-					logger.info("map is now:" + map);
+					logger.debug("Failed subsumption for:" + otherField);
+					logger.debug("map is now:" + map);
 				}
 			}
 		}
@@ -353,6 +343,7 @@ public class Evaluation {
 		return fieldTotal;
 	}
 
+
 	public float totalNodesMapped(TTRRecordType hypttr, TTRRecordType goalttr) {
 		// exhaustive mapping rather than failing, points for nodes:
 		// - unmanifest field in goalttr- maximum 1 point
@@ -361,15 +352,13 @@ public class Evaluation {
 		// 1 point for every arg with right type and position p1==go(e, x):e (here max points =4)
 		// - manifest field embedded rec types- 1 point for right type (i.e. record type),
 		// extra points as above for all fields within it, works recursively
-		if (hypttr==null||goalttr==null){
+		if (hypttr==null || goalttr==null)
 			return 0;
-		}
 		HashMap<Variable, Variable> mapping = maximalMapping(hypttr, goalttr, new HashMap<Variable, Variable>());
-		logger.info("above is mapping for \n" + hypttr + " and gold \n" + goalttr);
+		logger.debug("above is a mapping for \n" + hypttr + " and gold \n" + goalttr);
 		// pause();pause();pause();
 
 		HashMap<Variable, Float> fieldScoreMap = new HashMap<Variable, Float>();
-
 		float totalMappedNodes = 0;
 
 		for (Variable var : mapping.keySet()) {
@@ -415,18 +404,18 @@ public class Evaluation {
 						//TODO reftime any other path name doesn't work
 						if ((args.get(a).toString().contains(".") || (args.get(a).toString().startsWith("r")&&args.get(a).toString().length()<3))
 								&& (otherargs.get(a).toString().contains(".") || (otherargs.get(a).toString().startsWith("r"))&&otherargs.get(a).toString().length()<3)) { // path
-							logger.info("both paths or restrictors");
+							logger.debug("both paths or restrictors");
 							// both will be embedded RTs, so let's get those
 							String myPathString = !args.get(a).toString().contains(".") ? "." + args.get(a).toString()
 									: args.get(a).toString();
 							String otherPathString = !otherargs.get(a).toString().contains(".") ? "."
 									+ otherargs.get(a).toString() : otherargs.get(a).toString();
-							logger.info("both now paths  " + myPathString + " and " + otherPathString);
+							logger.debug("both now paths  " + myPathString + " and " + otherPathString);
 							TTRRelativePath mypath = (TTRRelativePath) TTRPath.parse(myPathString);
 							TTRRelativePath otherPath = (TTRRelativePath) TTRPath.parse(otherPathString);
 							// check whether one susumes t'other?
-							logger.info(hypttr);
-							logger.info(goalttr);
+							logger.debug(hypttr);
+							logger.debug(goalttr);
 							mypath.setParentRecType(hypttr);
 							otherPath.setParentRecType(goalttr);
 							// TODO At the moment, no points for common start of path if result doesn't strictly subsume
@@ -497,20 +486,17 @@ public class Evaluation {
 							totalNodes += ((TTRRelativePath) TTRRelativePath.parse(v.toString())).getLabels().size() - 1;
 						}
 					}
-
 				}
-
 			}
 			logger.debug("field total mapped " + nodesMapped); // would we do p + r for each in instead?
 			logger.debug("field total possible " + totalNodes); // now normalise
 			totalMappedNodes += ((float) (((float) nodesMapped) / ((float) totalNodes)));
 			fieldScoreMap.put(var, ((float) (((float) nodesMapped) / ((float) totalNodes))));
 		}
-		System.out.println(fieldScoreMap); // doesn't include embedded rec types in this map, recursion
-		System.out.println(hypttr);
-		System.out.println(goalttr);
+		logger.debug(fieldScoreMap); // doesn't include embedded rec types in this map, recursion
+		logger.debug(hypttr);
+		logger.debug(goalttr);
 		return totalMappedNodes;
-
 	}
 
 	public static void pause() {
@@ -519,14 +505,14 @@ public class Evaluation {
 			System.in.read();
 		} catch (Exception e) {
 		}
-
 	}
+
 
 	/**
 	 * Simple average of all precisionRecallFScore
-	 * 
-	 * @param mylist
-	 * @return
+	 * AA: Macro here means over all samples; it calls precisionRecall for each [hypttr,goalttr] pair in samples.
+	 * @param mylist list of TTRRecordType pairs
+	 * @return list of floats: precision, recall, f-score
 	 */
 	public List<Float> precisionRecallMacro(List<TTRRecordType[]> mylist) {
 		float overallMassPrecision = 0;
@@ -536,36 +522,34 @@ public class Evaluation {
 			TTRRecordType hypttr = pair[0];
 			TTRRecordType goalttr = pair[1];
 			//logger.info("checking " + hypttr + " verses " + goalttr);
-			if (hypttr==null){
+			if (hypttr==null)
 				hypttr = TTRRecordType.parse("[]");
-			} 
-			if (goalttr==null){
+			if (goalttr==null)
 				goalttr = TTRRecordType.parse("[]");
-			}
 			try {
-			
-				TTRLabel head = new TTRLabel("head"); //dehead manifest heads
-				if (hypttr.getRecord().containsKey(head)&&
-						hypttr.getRecord().get(head).getType()!=null){
-					hypttr = removeLabel(hypttr,head);
-					
-				}
-				if (goalttr.getRecord().containsKey(head)&&
-						goalttr.getRecord().get(head).getType()!=null){
-					goalttr = removeLabel(goalttr,head);
-				}
+				// AA Could have used removeHeadIfManifest (instead of re-doing it) here, but it's not a big deal I guess...
+				TTRLabel head = new TTRLabel("head");  // dehead manifest heads
+				if (hypttr.getRecord().containsKey(head) && hypttr.getRecord().get(head).getType()!=null)
+					hypttr = removeLabel(hypttr, head);
+				if (goalttr.getRecord().containsKey(head) && goalttr.getRecord().get(head).getType()!=null)
+					goalttr = removeLabel(goalttr, head);
 				EvaluationResult pr = precisionRecall(hypttr, goalttr);
+				// AA: Debugging info
+				logger.debug("Eval scores for " + hypttr + " and " + goalttr + " are:");
+				logger.debug("precision = " + pr.getPrecision());
+				logger.debug("recall = " + pr.getRecall());
+				logger.debug("f-score = " + pr.getFScore());
+
 				overallMassPrecision+=  pr.getPrecision();
 				overallMassRecall+= pr.getRecall();
 				overallMassFScore+= pr.getFScore();
 				//pause();
 				
 			} catch (Exception e) {
-				logger.info("COULD not evaluate " + hypttr + " and " + goalttr);
+				logger.error("COULD not evaluate " + hypttr + " and " + goalttr);
 				pause();
 				pause();
 			}
-
 		}
 		List<Float> result = new ArrayList<Float>();
 		float precision = overallMassPrecision / ((float) mylist.size());
@@ -578,14 +562,14 @@ public class Evaluation {
 		logger.info("OVERALL MACRO recall = " + recall);
 		logger.info("OVERALL MACRO f-score = " + fscore);
 		return result;
-
 	}
+
 
 	/**
 	 * Micro-averaged precision and recall over set of results Uses results of each case rather than simple average for
 	 * each case (macro-average)
 	 * 
-	 * @param map
+	 * @param mylist
 	 * @return
 	 */
 	public EvaluationResult precisionRecallMicro(List<TTRRecordType[]> mylist) {
@@ -612,7 +596,7 @@ public class Evaluation {
 				overallNodesMapped += totalNodesMapped(hypttr, goalttr);
 
 			} catch (Exception e) {
-				logger.info("COULD not do MiCRO P AND R ON " + hypttr + " and " + goalttr);
+				logger.error("Could NOT do MICRO P and R on " + hypttr + " and " + goalttr);
 				pause();
 				pause();
 			}
@@ -629,19 +613,18 @@ public class Evaluation {
 
 	/**
 	 * Calculates eval metrics based on number of fields mappable to goalTTR
-	 * 
-	 * @param hypttr
-	 * @param goalttr
-	 * @return an {@link EvaluationResult}
+	 * @param hypttr The hypothesised RT
+	 * @param goalttr The goal RT
+	 * @return an {@link EvaluationResult} object, containing precision, recall and f-score.
 	 */
 	public EvaluationResult precisionRecall(TTRRecordType hypttr, TTRRecordType goalttr) {
-		logger.info("calculating p and r for " + hypttr  + "against gold \n" + goalttr);
-		float totalNodes = totalNodesMapped(hypttr,hypttr);
-		float goalNodes = totalNodesMapped(goalttr,goalttr);
+		logger.debug("Calculating precision and recall for\n" + hypttr  + "\nagainst gold \n" + goalttr + "\n");
+		float totalNodes = totalNodesMapped(hypttr, hypttr);
+		float goalNodes = totalNodesMapped(goalttr, goalttr);
 		float nodesMapped = totalNodesMapped(hypttr, goalttr);
-		logger.info("nodesMapped " + nodesMapped);
-		logger.info("totalNodes " + totalNodes);
-		logger.info("goalNodes " + goalNodes);
+		logger.debug("nodesMapped " + nodesMapped);
+		logger.debug("totalNodes " + totalNodes);
+		logger.debug("goalNodes " + goalNodes);
 		if (totalNodes != ((float) fieldTotal(hypttr)) || goalNodes != ((float) fieldTotal(goalttr))) {
 			logger.warn("SIZE PROBLEM : totalNodes " + totalNodes + " or goalNodes " + goalNodes);
 			logger.warn("field total hypttr " + (float) fieldTotal(hypttr));
@@ -652,12 +635,10 @@ public class Evaluation {
 			pause();
 		}
 		EvaluationResult res = new EvaluationResult(totalNodes, goalNodes, nodesMapped);
-		logger.info("precision = " + res.getPrecision());
-		logger.info("recall = " + res.getRecall());
-		logger.info("f-score = " + res.getFScore());
-		
+		logger.debug("precision = " + res.getPrecision());
+		logger.debug("recall = " + res.getRecall());
+		logger.debug("f-score = " + res.getFScore());
 		return res;
-
 	}
 
 	/**

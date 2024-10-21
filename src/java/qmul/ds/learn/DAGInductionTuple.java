@@ -1,6 +1,5 @@
 package qmul.ds.learn;
 
-import java.util.List;
 
 import qmul.ds.ParserTuple;
 import qmul.ds.dag.DAGTuple;
@@ -8,16 +7,14 @@ import qmul.ds.tree.Tree;
 
 public class DAGInductionTuple extends DAGTuple{
 	
-	private Tree curTarget=new Tree();//used in induction only.... this is hacky.
-	private Tree curNonHeadTarget=new Tree();//used in induction only ... it is hacky.
-	
-	
+	private Tree curTarget = new Tree();  //used in induction only.... this is hacky.
+	private Tree curNonHeadTarget = new Tree();  //used in induction only ... it is hacky.
+
 	
 	public DAGInductionTuple(long id)
 	{
 		super(id);
 	}
-
 	
 
 	public DAGInductionTuple(Tree t, long i) {
@@ -25,11 +22,9 @@ public class DAGInductionTuple extends DAGTuple{
 	}
 
 
-
 	public DAGInductionTuple(ParserTuple t, long i) {
 		super(t, i);
 	}
-
 
 
 	public DAGInductionTuple(Tree clone) {
@@ -37,11 +32,9 @@ public class DAGInductionTuple extends DAGTuple{
 	}
 
 
-
 	public Tree getTargetTree() {
 		return curTarget;
 	}
-
 
 
 	public void setTarget(Tree curTarget) {
@@ -49,11 +42,9 @@ public class DAGInductionTuple extends DAGTuple{
 	}
 
 
-
 	public Tree getNonHeadTarget() {
 		return curNonHeadTarget;
 	}
-
 
 
 	public void setNonHeadTarget(Tree curNonHeadTarget) {

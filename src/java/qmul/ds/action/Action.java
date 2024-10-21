@@ -30,9 +30,6 @@ import edu.stanford.nlp.util.Pair;
  */
 public class Action implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected static Logger logger = Logger.getLogger(Action.class);
@@ -41,9 +38,7 @@ public class Action implements Serializable {
 	protected Effect action;
 	protected boolean backtrackOnSuccess = false;
 
-	public Action() {
-
-	}
+	public Action() {}
 
 	public Action(String name) {
 		this.name = name;
@@ -99,8 +94,7 @@ public class Action implements Serializable {
 		return action.execTupleContext(tree, context);
 	}
 
-	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context)
-	{
+	public <E extends DAGEdge, U extends DAGTuple, T extends Tree> T exec(T tree, Context<U,E> context) {
 		return action.exec(tree, context);
 	}
 	
@@ -174,8 +168,7 @@ public class Action implements Serializable {
 	 */
 
 	public String toDebugString() {
-
 		return name + ":\n" + action;
-
 	}
+
 }

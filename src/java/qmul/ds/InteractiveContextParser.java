@@ -125,6 +125,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, DEFAULT_NAME);
 
 		context.setRepairProcessing(repairing);
+	}
 
 	}
 
@@ -140,8 +141,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		super(lexicon, grammar);
 
 		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
-
 	}
+
+
 
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar, ParserPanel p) {
 		super(lexicon, grammar);
@@ -471,17 +473,13 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 	@Override
 	public synchronized void newSentence() {
-
 		getState().addAxiom();
-
 	}
 
 	public synchronized void init() {
 		this.forcedRepair = false;
 		this.forcedRestart = false;
-
 		context.init();
-
 	}
 
 	public synchronized void init(List<String> participants) {
@@ -543,7 +541,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	
 	
 	/**
-	 * @param word , speaker
+	 * @param w , speaker
 	 * @return the state which results from extending the current state with all
 	 *         possible lexical actions corresponding to the given word; or null if
 	 *         the word is not parsable
@@ -551,7 +549,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public synchronized DAG<DAGTuple, GroundableEdge> parseWord(UtteredWord w) {
 		UtteredWord word = new UtteredWord(w.word().toLowerCase(), w.speaker());
-		logger.info(ANSI_YELLOW+"Parsing word " + word + ANSI_RESET);
+		logger.info("Parsing word: " + word);
 		// set addressee of utterance if inferrable (in the dyadic case):
 		List<String> participants = new ArrayList<String>(context.getParticipants());
 		if (context.getParticipants().size() == 2) {
@@ -612,15 +610,15 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		Collection<LexicalAction> actions = this.lexicon.get(word.word());
 		if (actions == null || actions.isEmpty()) {
-			logger.error("Word not in Lexicon: " + word);
+			logger.error(ANSI_YELLOW + "Word not in Lexicon: " + word + ANSI_RESET);
 			return null;
 		}
 
 		getState().wordStack().push(word);
 
 		if (!parse()) {
-			logger.info("OOPS! Cannot parse:" + word.word() + ". Resetting to the state after the last parsable word");
-			logger.error("OOPS! Cannot parse:" + word.word() + ". Resetting to the state after the last parsable word");
+//			logger.info("OOPS! Cannot parse:" + word.word() + ". Resetting to the state after the last parsable word"); // AA commented out
+			logger.error("OOPS! Cannot parse: " + word.word() + ". Resetting to the state after the last parsable word...");
 			logger.debug("stack:" + getState().wordStack());
 			// state.wordStack().remove(0);
 			getState().resetToFirstTupleAfterLastWord();
@@ -651,9 +649,9 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		this.getState().thisIsFirstTupleAfterLastWord();
 		this.getState().setRepairProcessing(false);
-		logger.info(ANSI_GREEN + "Parsed " + word + ANSI_RESET);
-		logger.debug("Final Tuple:" + getState().getCurrentTuple());
-		logger.info("Sem:" + getState().getCurrentTuple().getSemantics(context));
+		logger.info("Parsed: " + word);
+		logger.debug("Final Tuple: " + getState().getCurrentTuple());
+		logger.info("Sem: " + getState().getCurrentTuple().getSemantics(context));
 
 		return this.getState();
 	}
@@ -731,21 +729,16 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 					DAGTuple to = getState().getNewTuple(result);
 					getState().addChild(to, repairing);
 					logger.debug("to " + to);
-
 					break;
-
 				} else {
 					logger.debug("could not apply:" + actions + "\n at:" + current.getTree());
 					logger.error("this shouldn't happen. Same word... ");
-
 				}
-
 			} while (!getState().isClauseRoot(current));
 		}
-
 		getState().setCurrentTuple(before);
-
 	}
+
 
 	private void backtrackAndParse(UtteredWord word) {
 		logger.info("backtrack and parsing " + word);

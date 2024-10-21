@@ -87,20 +87,18 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 	
 	
 	public DAG(Tree start, List<UtteredWord> words) {
-
 		wordStack = new Stack<UtteredWord>();
-		for (int i = words.size() - 1; i >= 0; i--) {
+		for (int i = words.size() - 1; i >= 0; i--)
 			wordStack.push(words.get(i));
-		}
+
 		cur = getNewTuple(start);
 		addVertex(cur);
 		root = cur;
 		// lastN.add(cur.getTree());
 		thisIsFirstTupleAfterLastWord();
-
 		// this.completionGrammar=completionGrammar;
-
 	}
+
 
 	public DAG() {
 		this(new Tree(), new ArrayList<UtteredWord>());

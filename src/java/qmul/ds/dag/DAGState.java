@@ -5,46 +5,35 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.DAGParser;
 import qmul.ds.action.Action;
 import qmul.ds.tree.Tree;
 /**
- * 
  * @author arash
- *
  */
 public class DAGState extends DAG<DAGTuple, DAGEdge> {
 
 	
-	
-	
-	public DAGState()
-	{
+	public DAGState() {
 		super();
 	}
 
 	public DAGState(List<UtteredWord> words) {
 		super(new Tree(), words);
-		
 	}
 	
 	public DAGState(Tree start) {
 		super(start, new ArrayList<UtteredWord>());
-		
 	}
 
 	public DAGState(Tree start, List<UtteredWord> words) {
 		super(start, words);
-		
 	}
 
 
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = Logger.getLogger(DAGState.class);
 	
-	
 
-	
 	
 	@Override
 	public DAGEdge getNewEdge(List<Action> actions, UtteredWord word) {
@@ -53,7 +42,8 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 		idPoolEdges.add(newID);
 		return result;
 	}
-	
+
+
 	@Override
 	public DAGTuple getNewTuple(Tree t) {
 		long newID = idPoolNodes.size() + 1;
@@ -61,8 +51,7 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 		idPoolNodes.add(newID);
 		return result;
 	}
-	
-	
+
 
 	@Override
 	public DAGTuple execAction(Action a, UtteredWord w) {
@@ -92,69 +81,39 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 
 	public void resetToFirstTupleAfterLastWord() {
 		if (getFirstTupleAfterLastWord() != null) {
-
 			setCurrentTuple(getFirstTupleAfterLastWord());
 			setExhausted(false);
 			wordStack().clear();
 			resetLastN();// reset the loop detection list
 			// removeChildren();
 		}
-
 	}
 
 
 
 	@Override
-	public BacktrackingEdge getNewBacktrackingEdge(
-			List<GroundableEdge> backtrackedOver, String speaker) {
-		
+	public BacktrackingEdge getNewBacktrackingEdge(List<GroundableEdge> backtrackedOver, String speaker) {
 		throw new UnsupportedOperationException();
 	}
-	
-	
-
-
-
-
-	
-	
-	
-
 
 
 	@Override
-	public void groundToClauseRootFor(String speaker, DAGTuple cur)
-	{
+	public void groundToClauseRootFor(String speaker, DAGTuple cur) {
 		throw new UnsupportedOperationException();
 	}
-
-	
-
-
-
-	
-
 
 
 	@Override
 	public void ungroundToClauseRootFor(String speaker, DAGTuple cur) {
 		throw new UnsupportedOperationException();
-		
 	}
-
-
-
 	
 	
-	public DAGTuple addAxiom(List<Action> actions, UtteredWord word)
-	{
-		
+	public DAGTuple addAxiom(List<Action> actions, UtteredWord word) {
 			DAGTuple axiom=this.getNewTuple(new Tree());
 			DAGEdge edge=this.getNewEdge(actions, word);
 			this.addChild(axiom, edge);
 			return axiom;
-			
-		
 	}
 
 
@@ -172,17 +131,10 @@ public class DAGState extends DAG<DAGTuple, DAGEdge> {
 		throw new UnsupportedOperationException("Repairing Word Edge not supported in this DAG class");
 	}
 
+
 	@Override
 	public boolean rollBack(int n) {
 		throw new UnsupportedOperationException("Operation not yet supported");
 	}
-
-
-
-	
-
-	
-	
-
 
 }

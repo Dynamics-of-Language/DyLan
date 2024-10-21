@@ -68,12 +68,10 @@ public class TreeWordLearner extends WordLearner<Tree> {
 		if (corpusIterator == null || !corpusIterator.hasNext()) {
 			logger.warn("Either no corpus, or no more examples");
 			return false;
-
 		}
-		Pair<Sentence<Word>, Tree> entry = corpusIterator.next();
 
+		Pair<Sentence<Word>, Tree> entry = corpusIterator.next();
 		Tree target = entry.second();
-		
 		System.out.println("processing:" + entry.first()+" with "+entry.first().size()+" words ");
 		hypothesiser.loadTrainingExample(entry.first(), target);
 		// logger.info("Hypothesising from training example: "+
@@ -109,19 +107,19 @@ public class TreeWordLearner extends WordLearner<Tree> {
 		// System.out.println("All Done. Prior after "+sentence);
 		// System.out.println(hb.getPrior());
 		return true;
-
 	}
 
 	int skipped = 0;
 
+
 	public void learn() {
 		if (corpus == null || corpus.isEmpty()) {
 			throw new IllegalStateException("Corpus not loaded or is empty");
-
 		}
+		while (learnOnce()) ;
+		logger.warn("Skipped: " + skipped);
+	}
 
-		while (learnOnce())
-			;
 
 		logger.warn("Skipped:" + skipped);
 	}

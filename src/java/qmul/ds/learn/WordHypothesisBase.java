@@ -50,7 +50,6 @@ public class WordHypothesisBase {
 		priorDist = new HashMap<HasWord, WordLogProbDistribution>();
 		// priorDistWeights=new HashMap<HasWord, Integer>();
 		indeces = new HashMap<WordHypothesis, Set<Integer>>();
-
 	}
 
 	/**
@@ -62,7 +61,6 @@ public class WordHypothesisBase {
 	 * 
 	 * @param set
 	 */
-
 	public void addSequenceTuples(Set<List<CandidateSequence>> set) {
 		logger.info("Adding " + set.size() + " rows to base");
 		
@@ -79,7 +77,6 @@ public class WordHypothesisBase {
 					priorDist.put(w, new WordLogProbDistribution(w));
 
 				Set<WordHypothesis> existingHyps = priorDist.get(w).getAllHyps();
-
 				WordHypothesis intersected = null;
 
 				for (WordHypothesis si : existingHyps) {
@@ -94,7 +91,6 @@ public class WordHypothesisBase {
 											// tuples. but add unique address to
 											// wordmap
 					newTuple.add(intersected);
-
 					logger.debug("intersected into existing hyp:" + intersected);
 					logger.debug(w + " now has " + curDist.get(w).size() + " hyps");
 
@@ -105,10 +101,8 @@ public class WordHypothesisBase {
 						Set<Integer> indexSet = new HashSet<Integer>();
 						indexSet.add(tuples.size());
 						indeces.put(intersected, indexSet);
-
 					}
 					curDist.get(w).addHyp(intersected);
-
 				} else {
 					// didn't manage to find any compatible sequences
 					// create new SequenceIntersection, and add it to tuples and
@@ -128,13 +122,10 @@ public class WordHypothesisBase {
 
 					logger.debug(w + " curDist now has: " + curDist.get(w).keySet());
 					logger.debug(w + " priorDist now has: " + priorDist.get(w).keySet());
-
 				}
-
 			}
 			tuples.add(newTuple);
 		}
-
 	}
 
 	/**
@@ -148,12 +139,8 @@ public class WordHypothesisBase {
 	}
 
 	/**
-	 * 
-	 */
-	/**
 	 * calculates the log of the normalising factor Z, i.e. log(Z), for the probability distribution over hypotheses for
-	 * w
-	 * 
+	 * w.
 	 * @param w
 	 * @return log(Z)
 	 */
@@ -238,11 +225,9 @@ public class WordHypothesisBase {
 				aggregate = curDist.get(w).weightedAggregate(new WordLogProbDistribution(w));
 			} else
 				aggregate = curDist.get(w).weightedAggregate(priorDist.get(w));
-
 			priorDist.put(w, aggregate);
 			refreshCurDistFromPrior(w);
 		}
-
 	}
 
 	/**
@@ -262,9 +247,7 @@ public class WordHypothesisBase {
 			if (!wPrior.containsKey(wh))
 				throw new IllegalStateException("refreshing cur from prior, but prior misses a hypothesis " + wh);
 			wCur.put(wh, wPrior.get(wh));
-
 		}
-
 	}
 
 	public Set<LexicalAction> getActions(HasWord w) {
@@ -310,26 +293,19 @@ public class WordHypothesisBase {
 //		out.writeObject();
 		out.close();
 		lex.writeToTextFile(f + "-top-"+topN +".txt");
+		logger.info("Saved top-" + topN + " lexicon to " + f);
 	}
 
 	private void loadPriorIntoCur(Collection<Word> sw) {
 		// remove duplicate
 		HashSet<Word> words = new HashSet<Word>(sw);
-
 		for (HasWord w : words) {
-
 			if (curDist.containsKey(w)) {
-
 				for (WordHypothesis wh : curDist.get(w).keySet()) {
-
 					if (priorDist.get(w).containsKey(wh)) {
-
 						curDist.get(w).put(wh, priorDist.get(w).get(wh));
-
 					}
-
 				}
-
 			} else
 				throw new IllegalArgumentException("Trying to set current uniform probs for " + w
 						+ " but this does not exist in the current Distribution");
@@ -379,32 +355,25 @@ public class WordHypothesisBase {
 		for (WordHypothesis h : wh)
 			if (h.getWord().equals(w))
 				return true;
-
 		return false;
 	}
 
 	private void performLocalEM(int n) {
-
 		for (int i = 0; i < n; i++) {
 			Map<HasWord, Map<WordHypothesis, Double>> newDist = new HashMap<HasWord, Map<WordHypothesis, Double>>();
 			for (HasWord w : curDist.keySet()) {
-
 				double logZ = logZ(w);
 				Map<WordHypothesis, Double> thisWordDist = new HashMap<WordHypothesis, Double>();
 				for (WordHypothesis wh : curDist.get(w).keySet()) {
 					thisWordDist.put(wh, getLogProb(wh, logZ));
 				}
 				newDist.put(w, thisWordDist);
-
 			}
 			for (HasWord w : newDist.keySet()) {
 				curDist.get(w).clear();
 				curDist.get(w).putAll(newDist.get(w));
-
 			}
-
 		}
-
 	}
 
 	public String toString() {
@@ -445,11 +414,9 @@ public class WordHypothesisBase {
 	public void reset() {
 		this.forgetCurrentDist();
 		this.priorDist.clear();
-
 	}
 
 	public void exampleEnded() {
-
 	}
 
 	public void updateDistsEndOfExample(Collection<Word> sentence) {
@@ -480,17 +447,13 @@ public class WordHypothesisBase {
 		logger.info("After processing " + sentence + " PriorDist is " + priorDist);
 		this.numTrainingSoFar++;
 		System.out.println("done");
-
 	}
 
 	private void printHypNumbers(Collection<Word> sentence) {
 		System.out.println();
 		for(Word w:sentence)
-		{
 			System.out.print(w+"::"+this.priorDist.get(w).size()+" ");
-		}
 		System.out.println();
-		
 	}
 
 	private void discountPrior(Collection<Word> sentence) {
@@ -506,7 +469,6 @@ public class WordHypothesisBase {
 			WordLogProbDistribution priorDistW = priorDist.get(w);
 			priorDistW.discount(priorDistW.getWeight() / (priorDistW.getWeight() + 1));
 		}
-
 	}
 
 	private void initCurUniform(Collection<Word> sentence) {
@@ -518,28 +480,22 @@ public class WordHypothesisBase {
 			} else
 				throw new IllegalArgumentException("Word " + w + " not in cur");
 		}
-
 	}
 
 	
 	private void prune(double d) {
-		for (HasWord w : curDist.keySet()) {
+		for (HasWord w : curDist.keySet())
 			priorDist.get(w).prune(d);
-		}
-
 	}
-	private void prune(int topN)
-	{
-		for (HasWord w : curDist.keySet()) {
+
+	private void prune(int topN) {
+		for (HasWord w : curDist.keySet())
 			priorDist.get(w).prune(topN);
-		}
 	}
 
 	private void loadLogProbsIntoHyps(Collection<Word> sentence) {
-		for (Word w : sentence) {
+		for (Word w : sentence)
 			this.priorDist.get(w).loadLogProbs();
-		}
-
 	}
 
 	/**
@@ -557,7 +513,6 @@ public class WordHypothesisBase {
 				wPrior.put(wh, Math.log(newProb));
 			}
 		}
-
 	}
 
 	private void incrementPriorWeights(Collection<Word> sentence, double inc) {
@@ -566,7 +521,6 @@ public class WordHypothesisBase {
 		set.addAll(sentence);
 		for (Word w : set)
 			priorDist.get(w).incrementWeight(inc);
-
 	}
 
 }

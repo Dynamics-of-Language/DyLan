@@ -19,17 +19,9 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 
 	private static final long serialVersionUID = 1L;
 
-	
-	
-
-
-	
-
-	
 
 	public DAGInductionState(Tree start, List<UtteredWord> words) {
 		super(start, words);
-		
 	}
 
 	public DAGInductionState(Tree start) {
@@ -81,6 +73,7 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		return target;
 	}
 
+
 	public boolean addChild(Tree t, Action a, UtteredWord word) {
 		if (t == null)
 			return false;
@@ -98,6 +91,7 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		return addEdge(edge, cur, target);
 	}
 
+
 	@Override
 	public DAGInductionTuple getNewTuple(Tree t) {
 		long newID = idPoolNodes.size() + 1;
@@ -112,40 +106,27 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		DAGEdge result = new DAGEdge(a, w, newID);
 		idPoolEdges.add(newID);
 		return result;
-
 	}
 
 
 	@Override
 	public BacktrackingEdge getNewBacktrackingEdge(
 			List<GroundableEdge> backtrackedOver, String speaker) {
-		
 		throw new UnsupportedOperationException();
 	}
 
-	
-
-	
-
-
-	
 
 	@Override
-	public void groundToClauseRootFor(String speaker, DAGInductionTuple cur)
-	{
+	public void groundToClauseRootFor(String speaker, DAGInductionTuple cur) {
 		throw new UnsupportedOperationException();
 	}
-	
-	
 
 	
 	@Override
 	public void ungroundToClauseRootFor(String speaker, DAGTuple cur) {
 		throw new UnsupportedOperationException();
-		
 	}
 
-	
 
 	@Override
 	public DAGInductionTuple addAxiom(List<Action> list, UtteredWord word) {
@@ -153,20 +134,17 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 		DAGEdge edge=this.getNewEdge(list, word);
 		this.addChild(axiom, edge);
 		return axiom;
-		
 	}
 
 	@Override
 	public void resetToFirstTupleAfterLastWord() {
 		if (getFirstTupleAfterLastWord() != null) {
-
 			setCurrentTuple(getFirstTupleAfterLastWord());
 			setExhausted(false);
 			wordStack().clear();
 			resetLastN();// reset the loop detection list
 			// removeChildren();
 		}
-		
 	}
 
 	@Override
@@ -186,7 +164,5 @@ public class DAGInductionState extends DAG<DAGInductionTuple, DAGEdge> {
 	public boolean rollBack(int n) {
 		throw new UnsupportedOperationException();
 	}
-
-	
 	
 }

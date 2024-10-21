@@ -1,10 +1,6 @@
 package qmul.ds.learn;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +22,6 @@ import edu.stanford.nlp.util.Pair;
 public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializable {
 	private static Logger logger = Logger.getLogger(RecordTypeCorpus.class);
 
-	/**
-	 * 
-	 */
-
 	public final static String CORPUS_FOLDER = "corpus/CHILDES/eveTrainPairs/";
 	public final static String WORD_SEP_PATTERN = "\\s";
 	public ArrayList<String> sentenceIndices;
@@ -39,7 +31,6 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 		super();
 		sentenceIndices = new ArrayList<String>();
 	}
-
 	
 	
 	public void addIndex(String index){
@@ -48,19 +39,17 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 
 
 	public void loadCorpus(File fileName) throws IOException {
-		System.out.println("loading TTR corpus");
+		logger.info("Loading TTR corpus \"" + fileName + "\"...");
 	
 		BufferedReader reader=new BufferedReader(new FileReader(fileName));
 		int i=0;
 		String line=reader.readLine();
 		do{
-			
-			if (line.trim().isEmpty())
-			{
+			if (line.trim().isEmpty()) {
 				line=reader.readLine();
 				continue;
 			}
-			if(line.startsWith("//")){ // AA: Arash Eshghi suggested to add this to skip comments at the beginning of some files.
+			if(line.startsWith("//")) { // AA: Arash Eshghi suggested to add this to skip comments at the beginning of some files.
 				line = reader.readLine();
 				continue;
 			}
@@ -68,11 +57,7 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 			
 			if (line.trim().startsWith("END"))
 				break;
-				
-			
-			
-			while(line!=null&&!line.trim().isEmpty())
-			{
+			while(line!=null&&!line.trim().isEmpty()) {
 				//System.out.println("reading line:"+line);
 				lines.add(line);
 				line=reader.readLine();
@@ -83,15 +68,15 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 			TTRRecordType target=TTRRecordType.parse(lines.get(1).substring(lines.get(1).indexOf(":")+1, lines.get(1).length()).trim());
 			add(new Pair<Sentence<Word>, TTRRecordType>(sent, target));
 			i++;
-			
-		}
-		while(line!=null);
+		} while(line!=null);
 		
 		reader.close();
-		System.out.println("loaded TTR corpus with "+i+" entries");
+		logger.info("Successfully loaded TTR corpus with " + i + " entries.");
+	}
 
 	}
-	
+
+
 	public String getIndexNumber(int i){
 		/**
 		 * returns the index string from its position in the corpus

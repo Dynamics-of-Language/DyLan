@@ -30,12 +30,9 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	public static final int IN_CONTEXT = 3;
 	public static final int GROUNDED = 4;
 
-	/**
-	 * The edge's unique id. Hashcode just returns id. Equals method works based on this.
-	 */
-	protected Long id = 0L;
-	
-	
+
+	protected Long id = 0L;  // The edge's unique id. Hashcode just returns id. Equals method works based on this.
+
 	protected List<Action> actions = null;
 	protected UtteredWord word = null;
 	

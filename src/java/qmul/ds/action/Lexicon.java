@@ -79,7 +79,6 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         protected LexicalAction create(String word, List<String> metavals) { // TODO should work for all versions
             ArrayList<String> lines = new ArrayList<String>();
             logger.trace("metavars for word : " + word + " of type " + name);
-
             logger.info("creating lexical action for " + word + " using template " + name);
             for (String line : this.lines) {
                 for (int i = 0; i < metavals.size(); i++) {
@@ -87,13 +86,10 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                 }
                 lines.add(line);
             }
-
             lexiconsize++;
             // logger.info("lexicon size = " + lexiconsize);
-
             return new LexicalAction(word, lines, this.name, this.noLeftAdjustment);
         }
-
     }
 
     private static final long serialVersionUID = -470754367073236462L;
@@ -167,13 +163,15 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * Read a set of {@link LexicalAction}s from file
      */
     public Lexicon(String dirNameOrURL, int topN) {
-//        System.out.println(" dirNameOrURL = " + dirNameOrURL + "\n topN = " + topN);                            // Added by Arash A.
+        // System.out.println(" dirNameOrURL = " + dirNameOrURL + "\n topN = " + topN);     // Added by Arash A.
+        // TODO suggestion by AA: if both learned actions and rule-based action files were found, raise an error and
+        //  don't go with the rule-based actions by default (to avoid confusion).
         BufferedReader reader;
         try {
             // Adds support for initialising a lexicon object from the learnt lexical actions by
             // Eshghi et al. (2013b) instead of using macro files as templates.
             File f = new File(dirNameOrURL + File.separator + "lexicon.txt");
-            if (f.exists() && !f.isDirectory()) { // If lexicon.txt exists, load normally. Otherwise use learnt files.
+            if (f.exists() && !f.isDirectory()) { // If lexicon.txt exists, load normally. Otherwise, use learnt files.
                 if (dirNameOrURL.matches("(https?|file):.*")) {
                     reader = new BufferedReader(new InputStreamReader(
                             new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
@@ -201,8 +199,10 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                     reader = new BufferedReader(new FileReader(new File(dirNameOrURL, WORD_FILE_NAME), Charset.forName("utf-8")));
                 }
                 readWords(reader);
-            } else
+            } else {
+                logger.debug("Trying to load top-" + topN + " learned actions' files...");
                 loadLearntLexiconTxt(dirNameOrURL, topN);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,7 +287,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         // Modified by Arash A. to write the effects in file correctly.
         for (String word : keySet()) {
             for (LexicalAction la : get(word)) {
-                logger.info("word: " + word + " | la: " + la);
+                logger.info("word: " + word + " | la: " + la);  // AA this should be debug, not info.
                     out.write("[" + la.getProb() + "," + la.getRank() + "]");
                     out.newLine();
                     out.write(la.toString());
@@ -379,7 +379,6 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
             EffectFactory.clearMacroTemplates();
         else
             EffectFactory.initMacroTemplates(reader);
-
     }
 
     /**
@@ -401,7 +400,6 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                 if (actionTemplates.get(template) == null) {
                     logger.debug("No template " + template + ", skipping word " + word);
                 } else {
-
                     logger.debug("Using template " + template + " for word " + word);
                     try {
                         LexicalAction action = actionTemplates.get(template).create(word,
@@ -411,13 +409,11 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                         }
                         get(word).add(action);
                         logger.debug("Added lexical action " + action);
-
                     } catch (IllegalArgumentException e) {
                         // logger.warn(e);
-                        logger.warn("Macros used in lexical template could not be instatiated. Template:" + template
+                        logger.warn("Macros used in lexical template could not be instantiated. Template:" + template
                                 + "; Word:" + word + " Skipping this");
                         // e.printStackTrace();
-
                         continue;
                     }
                 }
@@ -715,8 +711,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      *
      * @param grammarPath path that contains lexicon.lex-top-N.txt files.
      * @param topN        the number of most probable lexical actions to be read from the learnt lexicon files.
-     * @author Arash Ash
-     * <p>
+     * @author Arash Ash & Arash Eshghi
      * TODO what's exactly in `prob`? add necessary logs/docs
      * TODO initLexicalTemplates add necessary try-catches
      */
@@ -755,13 +750,12 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                 } else
                     lines.add(line);
             }
-
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("Error reading lexical actions from " + reader);
         }
-        logger.info("Loaded lexicon with: " + this.keySet().size() + " words.");
+        logger.info("Successfully loaded top-" + topN + " learned lexicon with " + this.keySet().size() + " words.");
     }
 
     private static boolean commented = false;

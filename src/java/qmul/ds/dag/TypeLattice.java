@@ -12,7 +12,6 @@ import qmul.ds.formula.TTRField;
 import qmul.ds.formula.TTRLabel;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.TTRRelativePath;
-import qmul.ds.formula.Variable;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 import qmul.ds.type.DSType;
@@ -21,8 +20,7 @@ import edu.uci.ics.jung.graph.DelegateTree;
 public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 
 	/**
-	 * Given a record type, and a ds type, creates a lattice
-	 * 
+	 * Given a record type, and a ds type, creates a lattice.
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -31,14 +29,22 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 	// specifies the dsType of the head of all the types within this lattice.. one per lattice, e or t...
 	// DSType dsType;
 	TTRRecordType recType;
-	private List<Long> idPoolNodes = new ArrayList<Long>();
-	private List<Long> idPoolEdges = new ArrayList<Long>();
+	private List<Long> idPoolNodes = new ArrayList<>();
+	private List<Long> idPoolEdges = new ArrayList<>();
 	private int depth = 0;
-	private List<DSType> entityTypes = new ArrayList<DSType>();
-	TypeTuple cur;
+	private List<DSType> entityTypes = new ArrayList<>();
+	TypeTuple cur;  // AA current "active" node in the lattice.
 	// TTRRelativePath prefix;
 	//Stack<TTRLabel> incLabels=new Stack<TTRLabel>();
-	static List<TTRRecordType> priorityTemplates = new ArrayList<TTRRecordType>();
+
+	// this is because this graph isn't really a lattice it's a tree... so we might have been on the same
+	// recType before
+	Set<TTRRecordType> seenTypes = new HashSet<>();
+//	List<TypeLatticeIncrement> lastInc = null;  // COMMENTED OUT BY AA: no usage.
+	List<TTRField> priorityFields = new ArrayList<>();  // ASSUMPTION!!
+
+	static List<TTRRecordType> priorityTemplates = new ArrayList<>();
+
 
 	public TypeLattice() {
 		super();
@@ -53,25 +59,22 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		this.recType = to;
 		entityTypes.add(DSType.e);
 		entityTypes.add(DSType.es);
-		seenTypes = new HashSet<TTRRecordType>();
+		seenTypes = new HashSet<>();
 		this.priorityFields = getPriorityFields();
 		initialise(to);
-
 	}
+
 
 	public TypeLattice(TTRRecordType from, TTRRecordType to) {
 		this();
 		this.recType = to;
-
 		entityTypes.add(DSType.e);
 		entityTypes.add(DSType.es);
-		seenTypes = new HashSet<TTRRecordType>();
+		seenTypes = new HashSet<>();
 		this.priorityFields = getPriorityFields();
 		cur.setType(from);
 		cur.incrementSoFar = new TTRRecordType();
-
 		populate(cur);
-
 	}
 
 	
@@ -81,38 +84,34 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		priorityTemplates.add(TTRRecordType.parse("[e1:es|x1:e|x2:e|p1==subj(e1,x1):t|p2==obj(e1,x2):t]"));
 		priorityTemplates.add(TTRRecordType.parse("[e1:es|x1:e|p1==subj(e1,x1):t]"));
 		initPriorityFields();
-
 	}
 
+
 	private List<TTRField> getEntityFields(TTRRecordType t) {
-		ArrayList<TTRField> result = new ArrayList<TTRField>();
+		ArrayList<TTRField> result = new ArrayList<>();
 		for (TTRField f : t.getFields()) {
 			if ((f.getDSType() != null && entityTypes.contains(f.getDSType())) || f.getDSType() == null) {
 				// Suggested by IntelliJ: this is just equivalent to :
 				// (f.getDSType() == null || entityTypes.contains(f.getDSType()))
 				result.add(f);
 			}
-
 		}
 		return result;
 	}
 
+
 	public void init() {
-		seenTypes = new HashSet<TTRRecordType>();
+		seenTypes = new HashSet<>();
 		cur = getRoot();
 		init(cur);
 	}
 
 	private void init(TypeTuple tt) {
-
 		for (TypeLatticeIncrement edge : getOutEdges(tt)) {
 			edge.setSeen(false);
-
 			TypeTuple child = getDest(edge);
 			init(child);
-
 		}
-
 	}
 
 	// initialise the lattice to a set of starting points from the main clause
@@ -124,7 +123,6 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 	 * @return true if successful, false if we're at root without any more exploration possibilities
 	 */
 	public boolean attemptBacktrack() {
-
 		while (!moreUnseenEdges()) {
 			if (isRoot(cur))
 				return false;
@@ -133,12 +131,11 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 			backOver.setSeen(true);
 		}
 		logger.debug("Backtrack succeeded");
-
 		return true;
 	}
 
+
 	/**
-	 * 
 	 * @return true if successful, false if we're at root without any more exploration possibilities
 	 */
 	public boolean attemptBacktrack(TTRLabel l) {
@@ -150,10 +147,10 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 			// xSystem.out.println(backOver);
 			backOver.setSeen(true);
 		}
-		logger.debug("Backtrack succeeded");
-
+		logger.debug("Backtrack succeeded.");
 		return true;
 	}
+
 
 	public TTRRecordType nextIncrement() {
 		TypeLatticeIncrement edge;
@@ -170,42 +167,41 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		return null;
 	}
 
+
 	public void initialise(TTRRecordType rt) {
-		logger.debug("initialising from");
+		logger.debug("Initialising from " + rt);  // AA incomplete log message. I added `rt`.
 		TTRLabel headLabel = rt.getHeadField().getLabel();
-		TTRRecordType firstInc = rt.getMinimalIncrementWith(rt.getField(headLabel),headLabel);
-		
+		TTRRecordType firstInc = rt.getMinimalIncrementWith(rt.getField(headLabel), headLabel);
+		logger.debug("AA first increment: " + firstInc);
 		TypeLattice lattice = new TypeLattice(firstInc, rt);
 		//this.incLabels.push(headLabel);
-		logger.debug("initialised generic lattice with " + firstInc);
-		for (TTRRecordType template : priorityTemplates) {
-			logger.debug("looking for subtype of:" + template);
-			lattice.init();
-			TTRRecordType inc = lattice.nextIncrement(headLabel);
+		logger.debug("Initialised generic lattice with: " + firstInc);
+		for (TTRRecordType template: priorityTemplates) {
+			logger.debug("Looking for subtype of: " + template);
+			lattice.init();  // AA What does it do here?? We just made this 5 lines ago!
+			TTRRecordType inc = lattice.nextIncrement(headLabel);  // AA Call it "incLabel".
 			TTRRecordType curSubtype = lattice.getCurSubtype();
+			logger.trace("AA increment: " + inc);
+			logger.trace("AA curSubType: " + curSubtype);
 			while (inc != null) {
-				logger.debug("Testing " + template + " subsumes:\n" + curSubtype);
+				logger.debug("Testing if " + template + " subsumes:\n" + curSubtype);
 				if (template.subsumes(curSubtype)) {
-					logger.debug("found subtupe of template:" + template);
-					logger.debug("it was:" + curSubtype);
+					logger.debug("Found subtype of template: " + template);
+					logger.debug("It was: " + curSubtype);
 					// inc.deemHead(headLabel);
 					// TTRRecordType subtype = (TTRRecordType) cur.getType().asymmetricMerge(inc);
-
 					// TypeTuple child=this.addChild(cur, subtype, inc, headLabel);
-					TypeTuple belowRoot = TypeTuple.getNewTuple(curSubtype, idPoolNodes);
+					TypeTuple belowRoot = TypeTuple.getNewTuple(curSubtype, idPoolNodes);  // AA meaning this is a node that is going ot be added to the lattice, under root.
 					TypeLatticeIncrement edge = TypeLatticeIncrement.getNewEdge(curSubtype, headLabel, idPoolEdges);
 					belowRoot.incrementSoFar = curSubtype;
 					getRoot().incrementSoFar = new TTRRecordType();
 					addEdge(edge, getRoot(), belowRoot);
-
-					logger.debug("attachind sublattice:" + template);
+					logger.debug("Attaching sub-lattice: " + template);
 					mergeLatticeAt(belowRoot, lattice.cur, lattice);
 					return;
-
 				}
 				inc = lattice.nextIncrement(headLabel);
 				curSubtype = lattice.getCurSubtype();
-
 			}
 		}
 		// if we are here, none of the templates matched... just initialise this with lattice (minimal supertype with head)
@@ -216,21 +212,18 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		belowRoot.incrementSoFar = firstInc;
 		getRoot().incrementSoFar = new TTRRecordType();
 		addEdge(edge, getRoot(), belowRoot);
-
-		
 		mergeLatticeAt(belowRoot, lattice.cur, lattice);
-		
 	}
+
 
 	public TTRRecordType getCurSubtype() {
 		return cur.getType();
 	}
 
-	private void populate(TypeTuple curTuple) {
 
-		if (curTuple.getType().equalsIgnoreHeads(recType)) {
+	private void populate(TypeTuple curTuple) {
+		if (curTuple.getType().equalsIgnoreHeads(recType))
 			return;
-		}
 		if (curTuple.getType().isEmpty()) {
 			// initialisation
 			for (TTRField f : recType.getFields()) {
@@ -238,27 +231,21 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 					TTRRecordType increment = recType.getSuperTypeWithParents(f);
 					increment.deemHead(f.getLabel());
 					TTRRecordType subtype = (TTRRecordType) increment.asymmetricMerge(curTuple.getType());
-
 					populate(this.addChild(curTuple, subtype, increment, f.getLabel()));
-
 				}
 			}
 			return;
 		}
+
 		entities: for (TTRField entityField : getEntityFields(curTuple.getType())) {
 			if (!entityField.isHead() && (entityField.getDSType() == null || entityField.getDSType().equals(DSType.cn))) {
-				logger.debug("getting cur restrictor for:" + entityField);
+				logger.debug("getting cur restrictor for: " + entityField);
 				TTRRecordType targetRestr = (TTRRecordType) recType.get(entityField.getLabel());
 				TTRRecordType curRestr = (TTRRecordType) curTuple.getType().get(entityField.getLabel());
-
-				
 				TypeLattice lowerLattice = new TypeLattice(curRestr, targetRestr);
-
 				mergeLatticeAt(curTuple, lowerLattice, entityField.getLabel());
-
 			} else {
-
-				for (TTRField prior : priorityFields) {
+				for (TTRField prior: priorityFields) {
 					// System.out.println("checking for priority field:"+prior);
 					if (!curTuple.getType().hasField(prior) && prior.dependsOn(entityField)) {
 						// System.out.println("adding priority child:"+prior);
@@ -276,136 +263,106 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 						//}
 						populate(this.addChild(curTuple, subtype, increment, entityField.getLabel()));
 						continue entities;
-
 					}
-
 				}
-				for (TTRField f : recType.getFields()) {
+
+				for (TTRField f: recType.getFields()) {
 					if (f.getLabel().equals(TTRRecordType.HEAD))
 						continue;
-
 					if (!curTuple.getType().hasField(f) && f.dependsOn(entityField)) {
-						logger.debug("adding field:"+f);
-						
-						TTRRecordType increment = recType.getMinimalIncrementWith(f,entityField.getLabel());
-						
+						logger.debug("Adding field: " + f);
+						TTRRecordType increment = recType.getMinimalIncrementWith(f, entityField.getLabel());
 						increment.deemHead(entityField.getLabel());
 						TTRRecordType subtype = (TTRRecordType) curTuple.getType().asymmetricMerge(increment);
-
 						populate(this.addChild(curTuple, subtype, increment, entityField.getLabel()));
-
 					}
-
 				}
 			}
-
 		}
-
 	}
 
 
-
-	private TTRRecordType createEmbedding(TTRRelativePath prefix, TTRRecordType finalType, DSType type)
-	{
-		if (prefix.getLabels().size()==1)
-		{
+	private TTRRecordType createEmbedding(TTRRelativePath prefix, TTRRecordType finalType, DSType type) {
+		if (prefix.getLabels().size()==1) {
 			TTRRecordType result=new TTRRecordType();
 			result.add(new TTRField(prefix.getFirstLabel(), type, finalType));
-		
 			return result;
 		}
 		TTRRecordType result=new TTRRecordType();
 		result.add(new TTRField(prefix.getFirstLabel(), type, createEmbedding(prefix.removeFirst(), finalType, type)));
 		return result;
 	}
-	List<TTRField> priorityFields = new ArrayList<TTRField>();
+
 
 	public void initPriorityFields() {
 		priorityFields.add(TTRField.parse("p==subj(e,x):t"));
 		priorityFields.add(TTRField.parse("p==obj(e,x):t"));
 		priorityFields.add(TTRField.parse("p==ind_obj(e1,e2):t"));
-
 	}
 
 	public List<TTRField> getPriorityFields() {
 		List<TTRField> result = new ArrayList<TTRField>();
-		for (TTRField f : recType.getFields()) {
-			for (TTRField template : priorityFields) {
+		for (TTRField f: recType.getFields()) {
+			for (TTRField template: priorityFields) {
 				if (template.subsumes(f))
 					result.add(f);
-
 			}
 		}
-
 		return result;
 	}
 
-	private void go(TypeLatticeIncrement inc)
-	{
+	private void go(TypeLatticeIncrement inc) {
 		if (inc.positive&&getOutEdges().contains(inc)){
 			cur=getDest(inc);
 			return;
-		}
-		else if (!inc.positive&&getParentEdge().equals(inc))
-		{
+		} else if (!inc.positive&&getParentEdge().equals(inc)) {
 			cur=getParent(cur);
 			return;
 		}
 		throw new IllegalStateException("cannot traverse the edge "+inc+" at current tuple="+cur);
-		
-		
 	}
-	private void backtrack(TypeLatticeIncrement inc)
-	{
+
+
+	private void backtrack(TypeLatticeIncrement inc) {
 		if (!inc.positive&&getOutEdges().contains(inc)){
 			cur=getDest(inc);
 			return;
-		}
-		else if (inc.positive&&getParentEdge().equals(inc))
-		{
+		} else if (inc.positive&&getParentEdge().equals(inc)) {
 			cur=getParent(cur);
 			return;
 		}
 		throw new IllegalStateException("cannot traverse the edge "+inc+" at current tuple="+cur);
-		
 	}
+
+
 	public Set<List<TypeLatticeIncrement>> getIncrements(TTRLabel l) {
 		if(isRoot(cur))
 			return getIncrements(cur, l);
 		
 		TypeTuple current=cur;
 		seenTypes.clear();
-		
-		
+
 		List<TypeLatticeIncrement> negativeIncs=new ArrayList<TypeLatticeIncrement>();
 		while(!isRoot(current)){
-			if (current.getType().hasLabel(l)&&!getParentEdge(current).increment.isEmpty())
-			{
-				
+			if (current.getType().hasLabel(l) && !getParentEdge(current).increment.isEmpty()) {
 				Set<List<TypeLatticeIncrement>> result=addAtBegin(negativeIncs, getIncrements(current, l));
 				return result;
 			}
-			
 			TypeLatticeIncrement negative=new TypeLatticeIncrement(getParentEdge(current));
 			negative.positive=false;
 			negativeIncs.add(negative);
 			current=getParent(current);			
 		}
 		return new HashSet<List<TypeLatticeIncrement>>();
-		
-			
-		
-		
 	}
-	private Set<List<TypeLatticeIncrement>> addAtBegin(List<TypeLatticeIncrement> list, Set<List<TypeLatticeIncrement>> set)
-	{
-		
+
+
+	private Set<List<TypeLatticeIncrement>> addAtBegin(List<TypeLatticeIncrement> list, Set<List<TypeLatticeIncrement>> set) {
 		for(List<TypeLatticeIncrement> l:set)
-		{
 			l.addAll(0,list);
-		}
 		return set;
 	}
+
 
 	private Set<List<TypeLatticeIncrement>> getIncrements(TypeTuple cur, TTRLabel l) {
 		
@@ -416,9 +373,8 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		for (TypeLatticeIncrement edge1 : getOutEdges(cur)) {
 			TypeLatticeIncrement edge=new TypeLatticeIncrement(edge1);
 			if (!edge.incrementOn.equals(l))
-			{
 				continue;
-			}
+
 			if (seenTypes.contains(getDest(edge).getType()))
 				continue;
 			else
@@ -432,11 +388,9 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 				result.add(singleInc);
 			
 			for (List<TypeLatticeIncrement> childList : childInc) {
-				
 				childList.add(0, edge);
 				result.add(childList);
 			}
-
 		}
 		return result;
 	}
@@ -444,15 +398,12 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 
 	private Set<List<TypeLatticeIncrement>> getHeadIncrements(TypeTuple current) {
 		return getIncrements(current, current.getType().getHeadField().getLabel());
-		
-	}
-	public Set<List<TypeLatticeIncrement>> getHeadIncrements() {
-		
-		return getIncrements(cur.getType().getHeadField().getLabel());
-		
 	}
 
-	
+	public Set<List<TypeLatticeIncrement>> getHeadIncrements() {
+		return getIncrements(cur.getType().getHeadField().getLabel());
+	}
+
 
 	public boolean go(List<TypeLatticeIncrement> incs) {
 		for (TypeLatticeIncrement inc : incs) {
@@ -461,18 +412,20 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		return true;
 	}
 
+
 	public int getChildCount() {
 		return getChildCount(cur);
 	}
+
 
 	public TypeTuple getParent() {
 		return getParent(cur);
 	}
 
 	public TypeTuple addChild(TypeTuple curTuple, TTRRecordType rec, TTRRecordType increment, TTRLabel l) {
-		logger.debug("Adding child:" + rec);
-		logger.debug("inc:" + increment);
-		logger.debug("On:"+l);
+		logger.debug("Adding child: " + rec);
+		logger.debug("Inc: " + increment);
+		logger.debug("On: " + l);
 
 		TypeLatticeIncrement edge = TypeLatticeIncrement.getNewEdge(increment, l, idPoolEdges);
 		// edge.localIncrement=localInc;
@@ -483,9 +436,6 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		return target;
 	}
 
-	// this is because this graph isn't really a lattice it's a tree... so we might have been on the same
-	// rectype before
-	Set<TTRRecordType> seenTypes = new HashSet<TTRRecordType>();
 
 	public TypeLatticeIncrement goFirst() {
 		if (getChildCount(cur) == 0)
@@ -493,9 +443,7 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 
 		Collection<TypeLatticeIncrement> edges = getOutEdges(cur);
 		for (TypeLatticeIncrement e : edges) {
-
 			if (!e.hasBeenSeen()) {
-
 				TypeTuple child = getDest(e);
 				if (seenTypes.contains(child.getType())) {
 					e.setSeen(true);
@@ -507,12 +455,12 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 				this.cur = child;
 				seenTypes.add(child.getType());
 				depth++;
-
 				return e;
 			}
 		}
 		return null;
 	}
+
 
 	public TypeLatticeIncrement goFirst(TTRLabel l) {
 		if (getChildCount(cur) == 0)
@@ -520,9 +468,7 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 
 		Collection<TypeLatticeIncrement> edges = getOutEdges(cur);
 		for (TypeLatticeIncrement e : edges) {
-
 			if (!e.hasBeenSeen() && e.incrementOn.equals(l)) {
-
 				TypeTuple child = getDest(e);
 				if (seenTypes.contains(child.getType())) {
 					e.setSeen(true);
@@ -541,9 +487,11 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		return null;
 	}
 
+
 	public TypeLatticeIncrement getParentEdge() {
 		return getParentEdge(cur);
 	}
+
 
 	/**
 	 * 
@@ -559,24 +507,27 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		logger.debug("going back along: " + result.getIncrement());
 
 		this.cur = getParent();
-		logger.debug("Child Count" + getChildCount());
+		logger.debug("Child Count: " + getChildCount());
 		depth--;
 
 		return result;
 	}
 
+
 	public int getDepth() {
 		return getDepth(cur);
 	}
 
-	public TypeTuple getCurrentTuple() {
 
+	public TypeTuple getCurrentTuple() {
 		return cur;
 	}
+
 
 	public Collection<TypeLatticeIncrement> getOutEdges() {
 		return getOutEdges(cur);
 	}
+
 
 	public boolean moreUnseenEdges() {
 		for (TypeLatticeIncrement edge : this.getOutEdges()) {
@@ -585,6 +536,7 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 		}
 		return false;
 	}
+
 
 	public boolean moreUnseenEdges(TTRLabel l) {
 		for (TypeLatticeIncrement edge : this.getOutEdges()) {
@@ -597,29 +549,29 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 	
 	public void setCurrentTuple(TypeTuple result) {
 		this.cur = result;
-
 	}
+
 
 	public void removeChildren() {
-		for (TypeTuple t : getChildren(cur)) {
+		for (TypeTuple t : getChildren(cur))
 			removeChild(t);
-		}
 	}
-	public static void printIncs(Set<List<TypeLatticeIncrement>> list)
-	{
-		System.out.println("there are:"+list.size());
-		for(List<TypeLatticeIncrement> inc:list)
-		{
+
+
+	public static void printIncs(Set<List<TypeLatticeIncrement>> list) {
+		System.out.println("There are " + list.size() + " increments.");
+		for(List<TypeLatticeIncrement> inc: list) {
 			System.out.println(inc);
-			TTRRecordType flat=flatten(inc);
-			System.out.println("flat:"+flat);
-			System.out.println("trees:");
-			List<Tree> abs=flat.getFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
-			for(Tree t:abs)
+			TTRRecordType flat = flatten(inc);
+			System.out.println("Flattened: " + flat);
+			System.out.println("Trees: ");
+			List<Tree> abs = flat.getFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
+			for(Tree t: abs)
 				System.out.println(t);
 		}
-		
 	}
+
+
 	private static TTRRecordType flatten(List<TypeLatticeIncrement> incs) {
 		TTRRecordType result = new TTRRecordType();
 		for (TypeLatticeIncrement inc : incs) {
@@ -653,7 +605,6 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 //			System.out.println(inc);
 //			inc=lattice.nextIncrement();
 //		}
-	
 	}
 
 	public void mergeLatticeAt(TypeTuple node, TypeLattice lattice, TTRLabel l) {
@@ -681,7 +632,6 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 			mergeLatticeAt(childCopy, lattice.getDest(edge), lattice);
 
 		}
-
 	}
 
 	public TTRRecordType getIncrementSoFar() {
@@ -695,52 +645,45 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 			edge = goFirst(label);
 			if (edge != null)
 				break;
-
 		} while (attemptBacktrack(label));
 
 		if (edge != null)
 			return cur.getIncrementSoFar();
-
 		return null;
 	}
+
 
 	public void backtrack(List<TypeLatticeIncrement> increments) {
 		//System.out.println("backtracking lattice over:"+increments);
 		//System.out.println("lattice current:"+cur.getType());
-		
 		for (int i=increments.size()-1; i>-1;i--) {
 			TypeLatticeIncrement inc=increments.get(i);
 			backtrack(inc);
-
 		}
-		
 	}
 
 	
 	public TypeLatticeIncrement getFirstIncrement() {
 		cur = getRoot();
-		if (getChildCount() != 1)
-		{
+		if (getChildCount() != 1) {
 			logger.fatal("more than one child to root:");
 			System.out.println(getChildren(cur));
 			throw new IllegalStateException();
 		}
-
 		TypeLatticeIncrement firstInc = getOutEdges().iterator().next();
 		return firstInc;
 	}
+
+
 	public Set<List<TypeLatticeIncrement>> getFirstIncrements() {
 		cur = getRoot();
-		if (getChildCount() != 1)
-		{
+		if (getChildCount() != 1) {
 			logger.fatal("more than one child to root:");
 			System.out.println(getChildren(cur));
 			throw new IllegalStateException();
 		}
-
 		cur=getDest(getOutEdges().iterator().next());
 		return getHeadIncrements();
-		
 	}
 
 	List<TypeLatticeIncrement> lastInc=null;

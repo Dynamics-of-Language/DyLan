@@ -563,10 +563,8 @@ public class TTRField extends Formula{
 			return false;
 		if (getVariables().contains(f.getLabel()))
 			return true;
-
 		if (f.getType() == null || !(f.getType() instanceof TTRPath))
 			return false;
-
 		return getTTRPaths().contains((TTRPath) f.getType());
 	}
 

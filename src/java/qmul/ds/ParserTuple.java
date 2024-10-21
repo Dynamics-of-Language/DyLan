@@ -43,8 +43,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 	}
 	
 	public <T extends DAGTuple, E extends DAGEdge> TTRFormula getSemantics(Context<T,E> c) {
-		if (c==null)
-		{
+		if (c==null) {
 			logger.error("ERROR: null context when computing maximal semantics of :"+this);
 			logger.error("Computing semantics with new variables relative to tree, rather than context");
 			return getSemantics();
@@ -56,6 +55,7 @@ public class ParserTuple implements Comparable<ParserTuple>, Cloneable {
 		semantics = tree.getMaximalSemantics(c);
 		return semantics;
 	}
+
 
 	public void setMaximalSemantics(TTRFormula maximalSemantics) {
 		this.semantics = maximalSemantics;

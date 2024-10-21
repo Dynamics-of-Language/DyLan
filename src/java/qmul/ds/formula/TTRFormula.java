@@ -79,14 +79,11 @@ public abstract class TTRFormula extends Formula {
 	
 	public List<Tree> getAbstractions(DSType funcType, NodeAddress prefix) {
 		return getAbstractions(funcType, prefix, funcType.getFinalType());
-
 	}
 
 	protected List<Tree> getAbstractions(DSType funcType, NodeAddress root, DSType rootType) {
 		List<BasicType> list = funcType.getTypesSubjFirst();
-		
 		list.remove(0);
-		
 		return getAbstractions(list, root, rootType);
 	}
 
@@ -96,7 +93,6 @@ public abstract class TTRFormula extends Formula {
 		logger.debug("abstractions for:" + types);
 		logger.debug("on:" + this);
 		if (types.isEmpty()) {
-
 			Tree local = new Tree(root);
 			logger.debug("reached base.. returning one node tree");
 			local.getPointedNode().addLabel(new FormulaLabel(this));

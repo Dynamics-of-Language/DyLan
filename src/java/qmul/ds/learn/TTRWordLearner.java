@@ -135,6 +135,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		// System.out.println("All Done. Prior after "+sentence);
 		// System.out.println(hb.getPrior());
 		return true;
+		};
 	}
 
 	@Override
@@ -146,8 +147,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	}
 	
 	
-	public static void main(String args[])
-	{
+	public static void main(String[] args) {
 //		TTRWordLearner learner = new TTRWordLearner();  // Commented out by Arash A.
 		String babyDSPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // fix later
 		String corpusPath = babyDSPath + "CHILDES400.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";

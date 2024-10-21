@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import qmul.ds.ParserTuple;
 import qmul.ds.formula.TTRRecordType;
-import qmul.ds.tree.Tree;
 
 public class TypeTuple {
 
@@ -17,21 +15,22 @@ public class TypeTuple {
 	TTRRecordType type;
 	TTRRecordType incrementSoFar = new TTRRecordType();
 
-	public static TypeTuple getNewTuple(TTRRecordType type, List<Long> idPool) {
 
+	public static TypeTuple getNewTuple(TTRRecordType type, List<Long> idPool) {
 		long newID = idPool.size() + 1;
-		TypeTuple result = new TypeTuple(type, idPool.size() + 1);
+		TypeTuple result = new TypeTuple(type, idPool.size() + 1); // AA just use newID !
 		idPool.add(newID);
 		return result;
 	}
+
 
 	public static TypeTuple getNewTuple(List<Long> idPool) {
 		long newID = idPool.size() + 1;
 		TypeTuple result = new TypeTuple(new TTRRecordType(), idPool.size() + 1);
 		idPool.add(newID);
 		return result;
-
 	}
+
 
 	public static TypeTuple getNewTuple(TypeTuple dest, List<Long> idPool) {
 		long newID = idPool.size() + 1;
@@ -39,8 +38,8 @@ public class TypeTuple {
 		result.incrementSoFar = dest.incrementSoFar;
 		idPool.add(newID);
 		return result;
-
 	}
+
 
 	public TypeTuple(TTRRecordType t, long id) {
 		super();
@@ -48,9 +47,11 @@ public class TypeTuple {
 		this.id = id;
 	}
 
+
 	public TypeTuple() {
 		super();
 	}
+
 
 	public boolean equals(Object o) {
 		if (this == o)
@@ -62,6 +63,7 @@ public class TypeTuple {
 		return id == other.id;
 	}
 
+
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -69,26 +71,29 @@ public class TypeTuple {
 		return result;
 	}
 
+
 	public String toString() {
 		return type.toString();
-
 	}
+
 
 	public TTRRecordType getType() {
 		return type;
 	}
 
+
 	public TTRRecordType getIncrementSoFar() {
 		return incrementSoFar;
 	}
 
+
 	public void setType(TTRRecordType from) {
 		this.type = from;
-
 	}
 
+
 	public boolean twoWaySubsumes(TypeTuple tuple) {
-		return tuple.type.subsumesBasic(type)&&type.subsumesBasic(tuple.type);
+		return tuple.type.subsumesBasic(type) && type.subsumesBasic(tuple.type);
 	}
 
 }

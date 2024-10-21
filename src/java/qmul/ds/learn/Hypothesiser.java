@@ -64,7 +64,7 @@ public class Hypothesiser {
 	protected Grammar optionalGrammar;
 	protected Set<LexicalHypothesis> targetIndependentHyps;
 	protected DAGInductionState state;
-	protected Tree target;
+	protected Tree target;  // AA TODO add "tree" to the name of the var
 	protected String curUnknownSubstring = "";
 	protected LexicalHypothesis copyHyp;
 
@@ -86,12 +86,10 @@ public class Hypothesiser {
 		if (this.seedLexicon == null || this.optionalGrammar == null || this.nonoptionalGrammar == null) {
 			throw new IllegalStateException("Hypothesiser not initialised");
 		}
-
 		this.state = new DAGInductionState(UtteredWord.getAsUtteredWords(sentence));
 		this.target = target;
 		this.curUnknownSubstring = "";
 		this.hypotheses.clear();
-
 	}
 
 	public void loadTrainingExample(Sentence<Word> sentence, Tree target) {
@@ -137,8 +135,7 @@ public class Hypothesiser {
 	}
 
 	/**
-	 * @param resourceDir
-	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
+	 *  the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
 	 */
 	public Hypothesiser(String resourceDirOrURL, Tree start, Tree target, List<String> sent) {
 		this.seedLexicon = new Lexicon(resourceDirOrURL);
@@ -171,15 +168,11 @@ public class Hypothesiser {
 				s += a.getName() + "|";
 		}
 		return s;
-
 	}
 
 	public Collection<CandidateSequence> hypothesise() {
-		while (hypothesiseOnce())
-			;
-
+		while (hypothesiseOnce());
 		return this.hypotheses;
-
 	}
 
 	protected Collection<CandidateSequence> hypotheses = new ArrayList<CandidateSequence>();
@@ -194,17 +187,14 @@ public class Hypothesiser {
 				if (!curHypWords.equals("")) {
 					System.out.println("Adding new Candidate Sequence");
 					hypotheses.add(new CandidateSequence(current, new ArrayList<Action>(curHypActions), curHypWords));
-
 				}
 				curHypActions.clear();
 				curHypWords = "";
 			}
-
 			if ((state.getParentAction(current) instanceof ComputationalAction && !state.getPrevWord(current).word()
 					.equals("")) || (state.getParentAction(current) instanceof LexicalHypothesis)) {
 				curHypWords = state.getPrevWord(current).word();
 				curHypActions.add(0, state.getParentAction(current));
-
 			}
 			logger.debug("extracting:" + state.getParentAction(current) + ":"
 					+ state.getParentAction(current).getClass());
@@ -212,11 +202,9 @@ public class Hypothesiser {
 			// System.out.println("prev word was"+state.getPrevWord());
 			current = state.getParent(current);
 		}
-
 		if (!curHypWords.equals("")) {
 			hypotheses.add(new CandidateSequence(current, new ArrayList<Action>(curHypActions), curHypWords));
 		}
-
 	}
 
 	protected boolean hypothesiseOnce() {
@@ -226,14 +214,11 @@ public class Hypothesiser {
 				logger.info("got to complete tree:" + state.getCurrentTuple().getTree());
 				logger.info("no equality. target is:" + this.target);
 			}
-
 			if (!state.wordStack().isEmpty()) {
 				if (this.seedLexicon.containsKey(state.wordStack().peek())) {
 					// applying lexical actions for top(wordstack)
 					this.applyKnownLexical();
-
 				}
-
 				if (!this.seedLexicon.containsKey(state.wordStack().peek())) {
 					while (!state.wordStack().isEmpty() && !this.seedLexicon.containsKey(state.wordStack().peek())) {
 						this.curUnknownSubstring += state.wordStack().pop() + " ";
@@ -247,10 +232,8 @@ public class Hypothesiser {
 
 			} else if (!this.curUnknownSubstring.isEmpty())
 				this.applyLexicalHypotheses(target);
-
 			// optional grammar always applies
 			this.applyOptionalGrammar(target);
-
 		} else if (state.wordStack().isEmpty()) {
 			logger.info("Got to target tree with empty word stack");
 			logger.info("Successful sequence was:" + compactPrintSequence(state.getSequenceToRoot()));
@@ -274,7 +257,6 @@ public class Hypothesiser {
 						logger.debug("Unknown word boundary. Setting CurUnknown to:" + this.curUnknownSubstring);
 					}
 					this.curUnknownSubstring = this.curUnknownSubstring.trim();
-
 				}
 				// non-optional grammar always applies without branching to ANY
 				// new DAG tuple
@@ -300,7 +282,6 @@ public class Hypothesiser {
 
 			if (result == null) {
 				logger.debug("Action " + a + " failed at tree: " + cur.getTree());
-
 			} else if (!result.subsumes(target)) {
 				logger.debug("Action " + a + " to " + t);
 				logger.debug("failed subsumption result was:" + result);
@@ -311,7 +292,6 @@ public class Hypothesiser {
 				state.addChild(result, a.instantiate(), state.wordStack().peek());
 			}
 		}
-
 	}
 
 	/**
@@ -342,13 +322,11 @@ public class Hypothesiser {
 			} else if (backAlong instanceof ComputationalAction || backAlong instanceof LexicalHypothesis) {
 				// if backtracking into hypothesis space, set unknown words.
 				this.curUnknownSubstring = state.getParentEdge().word().word();
-
 			}
 
 			DAGEdge backOver = this.state.goUpOnce();
 			// mark edge that we're back over as seen (already explored)...
 			this.state.markEdgeAsSeenAndBelowItUnseen(backOver);
-
 		}
 		logger.info("Backtrack succeeded");
 
@@ -391,7 +369,6 @@ public class Hypothesiser {
 			if (a.backtrackOnSuccess()) {
 				results = a.execExhaustively(t.clone(), cur);
 				logger.debug("Action " + a + "(exhaustive) to " + t);
-
 			} else {
 				Tree result = a.execTupleContext(t.clone(), cur);
 				logger.debug("Action " + a + " to " + t);
@@ -399,25 +376,19 @@ public class Hypothesiser {
 					results = new ArrayList<Pair<? extends Action, Tree>>();
 					results.add(new Pair<LexicalHypothesis, Tree>(a.instantiate(), result));
 				}
-
 			}
 
 			if (results == null) {
 				logger.debug("Action " + a + " failed at tree: " + cur.getTree());
-
 			} else {
 				for (Pair<? extends Action, Tree> pair : results) {
-
 					if (!pair.second().subsumes(target)) {
-
 						logger.debug("failed subsumption result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first);
 					} else {
-
 						logger.debug("Success, result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first());
 						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
-
 					}
 				}
 			}
@@ -448,7 +419,6 @@ public class Hypothesiser {
 			if (a.backtrackOnSuccess()) {
 				results = a.execExhaustively(t.clone(), cur);
 				logger.debug("Action " + a + "(exhaustive) to " + t);
-
 			} else {
 				Tree result = a.execTupleContext(t.clone(), cur);
 				logger.debug("Action " + a + " to " + t);
@@ -460,20 +430,15 @@ public class Hypothesiser {
 
 			if (results == null) {
 				logger.debug("Action " + a + " failed at tree: " + cur.getTree());
-
 			} else {
 				for (Pair<? extends Action, Tree> pair : results) {
-
 					if (!pair.second().subsumes(target)) {
-
 						logger.debug("failed subsumption result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first);
 					} else {
-
 						logger.debug("Success, result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first());
 						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
-
 					}
 				}
 			}
@@ -545,7 +510,6 @@ public class Hypothesiser {
 		if (node.hasType() || !isTerminalIn(t, t.getPointer())) {
 			return set;
 		}
-
 		if (isTerminalIn(target, fixedOnTarget)) {
 
 			// only if terminal will we hypothesise copying action
@@ -565,10 +529,8 @@ public class Hypothesiser {
 					f = fl.getFormula();
 					manifest = f.hasManifestContent();
 				}
-
 				putList.add(EffectFactory.create(Put.FUNCTOR + "(" + l + ")"));
 			}
-
 			if (putList.isEmpty()) {
 				logger.info("no unification hyps");
 				// return new HashSet<LexicalHypothesis>();
@@ -576,20 +538,16 @@ public class Hypothesiser {
 				set.add(new LexicalHypothesis("hyp-sem(" + f + ")", putList, manifest));
 				// return set;
 			}
-
 		} else {
 			logger.debug("was not terminal in target " + target);
 		}
-
 		return set;
-
 	}
 
-	public static void main(String args[]) {
 
+	public static void main(String args[]) {
 		// Added by Arash A.
 		String resourceDir = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);
-
 		ContextParser parser = new ContextParser(resourceDir);
 				//"dsttr/resource/2009-english-test-induction"); // Commented out by Arash A.
 		parser.init();
@@ -603,7 +561,6 @@ public class Hypothesiser {
 		// String[] sentArrayL = {"a", "swearer", "who", "a", "swearer", "reflected", "reflected", "a", "swearer"};
 		String[] sentArrayL = { "a", "swearer", "reflected", "a", "swearer" };
 		List<String> sentLearn = Arrays.asList(sentArrayL);
-
 		Hypothesiser h = new Hypothesiser(resourceDir, complete, sentLearn);
 				//"dsttr/resource/2009-english-test-induction-seed", complete, sentLearn); // Commented out by Arash A.
 		Collection<CandidateSequence> hyps = h.hypothesise();
@@ -617,13 +574,11 @@ public class Hypothesiser {
 	}
 
 	public static void printHypMap(Collection<CandidateSequence> hyps) {
-
 		int num = 0;
 		for (CandidateSequence seq : hyps) {
 			System.out.println("Candidate Sequence " + (num++) + ":");
 			System.out.println(seq);
 		}
-
 	}
 
 }

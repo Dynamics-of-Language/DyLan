@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -40,27 +41,27 @@ import edu.stanford.nlp.util.Pair;
 
 public class TTRHypothesiser extends Hypothesiser {
 	/**
-	 * Hypthesiser to hypothesise action sequences that lead from the axiom tree
+	 * Hypothesiser to hypothesise action sequences that lead from the axiom tree
 	 * to the target semantics. difference from before: no target tree - there
 	 * are target treeS, which are hypothesised incrementally upon
 	 * link-adjunction, and of course at the very beginning.
-	 * 
 	 * NOTE: Unlike the Hypothesiser class this class assumes all words are
-	 * unknown... does not interleave parsing....
+	 * unknown... does not interleave parsing...
 	 * 
 	 * @author arash
 	 */
-	protected final static Logger logger = Logger
-			.getLogger(TTRHypothesiser.class);
+	protected final static Logger logger = Logger.getLogger(TTRHypothesiser.class);
+
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_RESET = "\u001B[0m";
 
 	TypeLattice lattice;
-	TTRRecordType targetType;
+	TTRRecordType targetType;  // AA Bad name, better be targetSemantics or sth!
 	int wordDepth = 0;
 
 	// Stack<ParserTuple> curTreeTargets=new Stack<ParserTuple>();
 
-	public TTRHypothesiser(String resourceDirOrURL, TTRRecordType rt,
-			String sent) {
+	public TTRHypothesiser(String resourceDirOrURL, TTRRecordType rt, String sent) {
 		super(resourceDirOrURL);
 		loadTrainingExample(sent, rt);
 	}
@@ -69,64 +70,54 @@ public class TTRHypothesiser extends Hypothesiser {
 		super(seedResourceDir);
 	}
 
+
 	public void loadTrainingExample(String sentence, TTRRecordType target) {
 		if (this.seedLexicon == null || this.optionalGrammar == null
 				|| this.nonoptionalGrammar == null) {
 			throw new IllegalStateException("Hypothesiser not initialised");
 		}
-		logger.info("loading example:" + sentence + "::" + target);
+		logger.info("Loading example: " + sentence + " <=> " + target);
 		String[] sent = sentence.trim().split("\\s");
 
 		this.state = new DAGInductionState(UtteredWord.getAsUtteredWords(sentence));
 		this.targetType = target;
 		lattice = new TypeLattice(target);
-
 		// logger.debug(targetType);
 		this.hypotheses.clear();
-
 		initialise();
 	}
 
+
 	public void initialise() {
-		Set<List<TypeLatticeIncrement>> incSet = lattice
-				.getIncrements(targetType.getHeadField().getLabel());
-		logger.info("incset is: "+incSet);
+		Set<List<TypeLatticeIncrement>> incSet = lattice.getIncrements(targetType.getHeadField().getLabel());
+		logger.info("incSet is: " + incSet);
 		wordDepth = 0;
-		logger.info("initialising state, with initial increments:");
-		for (List<TypeLatticeIncrement> inc : incSet) {
+		logger.info("Initialising state, with initial increments: ");
+		for (List<TypeLatticeIncrement> inc: incSet) {
 			TTRRecordType wholeInc = flatten(inc);
-			// filtering trees according to subj. obj, etc being in their right
-			// positions
-			// only if the head element is an event.....
-			boolean filtered = wholeInc.getHeadField().getDSType()
-					.equals(DSType.es);
-			logger.info("\nIncrement:" + wholeInc);
-			logger.info("Now the abstraction trees:");
+			// filtering trees according to subj, obj, etc. being in their right positions
+			// only if the head element is an event...
+			boolean filtered = wholeInc.getHeadField().getDSType().equals(DSType.es);
+			logger.info("Increment: " + wholeInc);
+			logger.info("Now the abstraction trees: ");
 			List<Tree> trees = wholeInc.getFilteredAbstractions(state
-					.getCurrentTuple().getTree().getPointer(), DSType.t,
-					filtered);
+					.getCurrentTuple().getTree().getPointer(), DSType.t, filtered);
 			for (Tree tree : trees) {
 				logger.info(tree);
 				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree);
-				logger.debug("adding tree hyp child " + treeHyp);
-				DAGInductionTuple child = new DAGInductionTuple(state
-						.getCurrentTuple().getTree().clone());
-				Tree mergedInc = state.getCurrentTuple().getTargetTree()
-						.merge(treeHyp.getTree());
-				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget()
-						.merge(treeHyp.getTree());
-				DAGInductionTuple childAdded = state.addChild(child, treeHyp,
-						null);
+				logger.debug("Adding tree hyp child: " + treeHyp); // Kind of an edge
+				DAGInductionTuple child = new DAGInductionTuple(state.getCurrentTuple().getTree().clone());
+				Tree mergedInc = state.getCurrentTuple().getTargetTree().merge(treeHyp.getTree());
+				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget().merge(treeHyp.getTree());  // AA
+				DAGInductionTuple childAdded = state.addChild(child, treeHyp, null);
 				childAdded.setTarget(mergedInc);
 				childAdded.setNonHeadTarget(mergedNonHead);
 			}
-
 		}
-
 	}
 
-	private void applyTreeHypothesesEntity() {
 
+	private void applyTreeHypothesesEntity() {
 		logger.debug("cur tree:" + state.getCurrentTuple().getTree());
 		logger.debug("target tree:" + state.getCurrentTuple().getTargetTree());
 		Node pointedOnTarget = state.getCurrentTuple().getTargetTree()
@@ -169,7 +160,6 @@ public class TTRHypothesiser extends Hypothesiser {
 						null);
 				childAdded.setTarget(mergedInc);
 				childAdded.setNonHeadTarget(mergedNonHead);
-
 			}
 
 		}
@@ -227,18 +217,15 @@ public class TTRHypothesiser extends Hypothesiser {
 						.merge(tree);
 				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget()
 						.merge(nonHeadTree);
-				DAGInductionTuple childAdded = state.addChild(child, treeHyp,
-						null);
+				DAGInductionTuple childAdded = state.addChild(child, treeHyp, null);
 				childAdded.setTarget(mergedInc);
 				childAdded.setNonHeadTarget(mergedNonHead);
-
 			}
-
 		}
 	}
 
-	protected Set<LexicalHypothesis> localLexicalHyps(Tree target,
-			NodeAddress fixedOnTarget) {
+
+	protected Set<LexicalHypothesis> localLexicalHyps(Tree target, NodeAddress fixedOnTarget) {
 		// Set<LexicalHypothesis> hyps = super.localLexicalHyps(target,
 		// fixedOnTarget);
 		Tree t = state.getCurrentTuple().getTree();
@@ -257,18 +244,14 @@ public class TTRHypothesiser extends Hypothesiser {
 		// ////////////////
 		NodeAddress pointer = t.getPointer();
 		Node node = t.get(pointer);
-
 		Node targetNode = target.get(fixedOnTarget);
-		Set<LexicalHypothesis> set = new HashSet<LexicalHypothesis>(
-				targetIndependentHyps);
+		Set<LexicalHypothesis> set = new HashSet<LexicalHypothesis>(targetIndependentHyps);
 		// logger.info("Supposedly fixed pointer address on target:"+fixedOnTarget);
 		if (node.hasType() || !isTerminalIn(t, t.getPointer())) {
-
 			return set;
 		}
 
 		if (isTerminalIn(target, fixedOnTarget)) {
-
 			// only if terminal will we hypothesise copying action
 			if (copyHyp != null) {
 				logger.debug("terminal in target, adding copy_hyp");
@@ -287,8 +270,7 @@ public class TTRHypothesiser extends Hypothesiser {
 					manifest = f.hasManifestContent();
 					putList.add(new TTRFreshPut((TTRFormula) f));
 				} else
-					putList.add(EffectFactory.create(Put.FUNCTOR + "(" + l
-							+ ")"));
+					putList.add(EffectFactory.create(Put.FUNCTOR + "(" + l + ")"));
 			}
 
 			if (putList.isEmpty()) {
@@ -299,17 +281,14 @@ public class TTRHypothesiser extends Hypothesiser {
 						.getTypeRequirement(), putList, manifest));
 				// return set;
 			}
-
 		} else {
 			logger.debug("was not terminal in target " + target);
 		}
-
 		return set;
-
 	}
 
-	private void applyTreeHypothesesCN() {
 
+	private void applyTreeHypothesesCN() {
 		// first extract restrictor label from the current target tree
 		logger.debug("incrementing cn. Current target tree:"
 				+ state.getCurrentTuple().getTargetTree());
@@ -356,7 +335,7 @@ public class TTRHypothesiser extends Hypothesiser {
 		// TypeLatticeIncrement
 		// transition=lattice.goFirst(rDotHead.getFirstLabel());
 
-		logger.debug("increments:");
+		logger.debug("Increments: ");
 		for (List<TypeLatticeIncrement> inc : incSet) {
 			TTRRecordType wholeInc = flatten(inc);
 			logger.debug(wholeInc);
@@ -366,12 +345,12 @@ public class TTRHypothesiser extends Hypothesiser {
 					false);
 			for (Tree tree : trees) {
 				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree);
-				logger.debug("adding tree hyp child" + treeHyp);
+				logger.debug("adding tree hyp child " + treeHyp);
 				DAGInductionTuple child = new DAGInductionTuple(state
 						.getCurrentTuple().getTree().clone());
 				Tree mergedInc = state.getCurrentTuple().getTargetTree()
 						.merge(treeHyp.getTree());
-				logger.info("merged:" + mergedInc);
+				logger.info("merged: " + mergedInc);
 				DAGInductionTuple childAdded = state.addChild(child, treeHyp,
 						null);
 				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget()
@@ -379,10 +358,10 @@ public class TTRHypothesiser extends Hypothesiser {
 				childAdded.setTarget(mergedInc);
 				childAdded.setNonHeadTarget(mergedNonHead);
 			}
-
 		}
 		logger.info("added " + state.getChildCount() + " tree hypothesis edges");
 	}
+
 
 	private static TTRRecordType flatten(List<TypeLatticeIncrement> incs) {
 		TTRRecordType result = new TTRRecordType();
@@ -393,6 +372,7 @@ public class TTRHypothesiser extends Hypothesiser {
 		}
 		return result;
 	}
+
 
 	public CandidateSequence extractSequence() {
 		logger.debug("extracting sequence");
@@ -412,31 +392,36 @@ public class TTRHypothesiser extends Hypothesiser {
 		return new CandidateSequence(new ParserTuple(), sequence, words);
 	}
 
+
 	protected boolean hypothesiseOnce() {
-		logger.info("Hypothesising once");
+		logger.info("Hypothesising once...");
 		TTRFormula maxSem = state.getCurrentTuple().getSemantics();
 		boolean doneWithBranch = false;
+		// AA Here are cases where hypothesising is done (successfully or not). After this if-else,
+		// hypothesising will continue (just before the do-while).
 		if (maxSem.subsumes(targetType) && targetType.subsumes(maxSem)) {
-			logger.info("GOT TO THE SEMANTICS and ...");
+			logger.info("GOT TO THE SEMANTICS! and...");
 
 			if (wordDepth < state.wordStack().size()) {
 				// logger.debug("got the semantics but didn't get to complete tree yet");
-				logger.warn("...too few semantics hyps. will continue hypothesising");
-				logger.warn("wordDepth=" + wordDepth);
-				logger.warn("words:" + state.wordStack());
+				logger.warn(ANSI_RED + "...too few semantics hyps. will continue hypothesising" + ANSI_RESET);
+				logger.warn("wordDepth = " + wordDepth);
+				logger.warn("words: " + state.wordStack());
 			} else {
 				logger.info("have seen enough semantic hyps");
 				logger.info("extracting candidate sequence now");
 				// System.out.print(".");
 				CandidateSequence result = this.extractSequence();
 				logger.info(ANSI_PURPLE + "got sequence:\n" + result + ANSI_RESET);
+				// GOT TO THE TARGET AT LEAST ONCE (if we are here).
 				// if (hypotheses.contains(result))
 				// logger.error("Sequence seen before:"+result);
 
 				this.hypotheses.add(result);
-				logger.info(this.hypotheses.size() + ":" + result);  // This is the same as the log above!!
+//				logger.info(this.hypotheses.size() + ": " + result);  // This is the same as the log above!! MODIFIED BY AA.
+				logger.info("Now going for seq number " + this.hypotheses.size() + 1);
 				if (this.hypotheses.size() > 300) {  // what is this hardcoded number?
-					System.out.println("sequences exceeded 500");  // Is this 300 or 500?
+					System.out.println("sequences exceeded 300");  // AA better log message needded
 					System.out.println("stopping");
 					return false;
 				}
@@ -445,8 +430,9 @@ public class TTRHypothesiser extends Hypothesiser {
 			}
 
 		} else if (state.getCurrentTuple().getTree().isComplete()) {  // TODO I think this is not efficient: getCurrentTuple() is called three times!
-			logger.warn("got to complete tree, but no subsumption: "
+			logger.warn(ANSI_RED + "got to complete tree, but no subsumption: " + ANSI_RESET
 					+ state.getCurrentTuple().getTree());
+			// AA: AE said potentially a BUG, SHOULDN'T BE HAPPENING
 			logger.warn("maxSem:" + maxSem);
 			logger.warn("Target sem:" + targetType);
 			logger.warn("current target tree is:"
@@ -454,13 +440,11 @@ public class TTRHypothesiser extends Hypothesiser {
 		}
 		else {
 			logger.debug("current tree is not complete and there was no two way subsumption");
-			logger.warn("maxSem:" + maxSem);
-			logger.warn("Target sem:" + targetType);
-
-
+			logger.warn("maxSem: " + maxSem);
+			logger.warn("Target sem: " + targetType);  // AA well I guess these should be debug, not warn
 		}
-		if (!state.atRoot()
-				&& !state.getPrevAction().getName()
+		// AA what does the below mean?
+		if (!state.atRoot() && !state.getPrevAction().getName()
 						.startsWith(HYP_ADJUNCTION_PREFIX) && !doneWithBranch) {
 			this.applyLexicalHypotheses(state.getCurrentTuple().getTargetTree());
 			this.applyOptionalGrammar(state.getCurrentTuple().getTargetTree());
@@ -470,14 +454,11 @@ public class TTRHypothesiser extends Hypothesiser {
 			DAGEdge traversed = state.goFirst();
 			logger.debug(traversed);
 			if (traversed != null) {
-				logger.debug("traversed:" + traversed.getAction());
+				logger.debug("Traversed: " + traversed.getAction());
 				// non-optional grammar always applies without branching to ANY
 				// new DAG tuple
-
 				if (traversed.getAction() instanceof TreeHypothesis) {
-
-					TreeHypothesis treeHyp = (TreeHypothesis) traversed
-							.getAction();
+					TreeHypothesis treeHyp = (TreeHypothesis) traversed.getAction();
 					if (!lattice.go(treeHyp.increments))
 						continue;
 				} else if (traversed.getAction().getName()
@@ -488,26 +469,25 @@ public class TTRHypothesiser extends Hypothesiser {
 
 					DAGTuple prev = state.getParent(state.getCurrentTuple());
 					Node pointed = prev.getTree().getPointedNode();
-					DSType nodeType = pointed.getType() == null ? pointed
-							.getRequiredType() : pointed.getType();
+					DSType nodeType = pointed.getType() == null ? pointed.getRequiredType() : pointed.getType();
 					if (nodeType.equals(DSType.cn)) {
 						applyTreeHypothesesCN();
 					} else if (nodeType.equals(DSType.e)) {
 						applyTreeHypothesesEntity();
-					} else
+					} else {
 						applyTreeHypothesesEvent();
+					}
 
 					return true;
 				} else if (traversed.getAction().getName()
 						.startsWith(HYP_SEM_PREFIX)) {
-					LexicalHypothesis semHyp = (LexicalHypothesis) traversed
-							.getAction();
+					LexicalHypothesis semHyp = (LexicalHypothesis) traversed.getAction();
 					if (semHyp.hasSemanticContent)
 						this.wordDepth++;
 
 					if (wordDepth > state.wordStack().size()) {
-						logger.debug("exceeding number of words.. backtracking");
-						logger.debug("the action sequence was:");
+						logger.debug("Exceeding number of words, backtracking...");
+						logger.debug("the action sequence was: ");
 						logger.debug(extractSequence().toString());
 						continue;
 					}
@@ -516,10 +496,10 @@ public class TTRHypothesiser extends Hypothesiser {
 				return true; // }
 			}
 		} while (attemptBacktrack());
-
-		logger.info(ANSI_RED + "DAG Exhausted." + ANSI_RESET);
-		return false;
+		logger.info(ANSI_CYAN + "DAG Exhausted." + ANSI_RESET);
+		return false;  // If reached here, everything has been checked.
 	}
+
 
 	public void applyNonOptionalGrammar(Tree target) {
 		DAGEdge traversed = null;
@@ -556,13 +536,11 @@ public class TTRHypothesiser extends Hypothesiser {
 			// no other computational possibilities
 			// on this node
 			DAGTuple cur = this.state.getCurrentTuple();
-
 			Tree t = cur.getTree();
 			Collection<Pair<? extends Action, Tree>> results = null;
 			if (a.backtrackOnSuccess()) {
 				results = a.execExhaustively(t.clone(), cur);
 				logger.debug("Action " + a + "(exhaustive) to " + t);
-
 			} else {
 				Tree result = a.execTupleContext(t.clone(), cur);
 				logger.debug("Action " + a + " to " + t);
@@ -571,25 +549,18 @@ public class TTRHypothesiser extends Hypothesiser {
 					results.add(new Pair<ComputationalAction, Tree>(a, result));
 				}
 			}
-
 			if (results == null) {
-				logger.debug("Action " + a + " failed at tree: "
-						+ cur.getTree());
-
+				logger.debug("Action " + a + " failed at tree: " + cur.getTree());
 			} else {
 				for (Pair<? extends Action, Tree> pair : results) {
-
-					if (!pair.second().getMaximalSemantics()
-							.subsumes(targetType)) {
-						logger.debug("failed subsumption result max sem was:"
-								+ pair.second().getMaximalSemantics());
+					if (!pair.second().getMaximalSemantics().subsumes(targetType)) {
+						logger.debug("failed subsumption result max sem was:" + pair.second().getMaximalSemantics());
 						logger.debug("target was:" + targetType);
 						logger.debug("Action instance was:" + pair.first);
 					} else {
 						logger.debug("Success, result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first());
-						state.addChild(pair.second(), pair.first(),
-								new UtteredWord(this.curUnknownSubstring));
+						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
 					}
 				}
 			}
@@ -621,11 +592,9 @@ public class TTRHypothesiser extends Hypothesiser {
 			logger.debug("now at:" + state.getCurrentTuple());
 			// mark edge that we're back over as seen (already explored)...
 			this.state.markEdgeAsSeenAndBelowItUnseen(backOver);
-
 		}
 		logger.info("Backtrack succeeded");
 		// logger.info("top of stack:"+curTreeTargets.peek());
-
 		return true;
 	}
 
@@ -641,7 +610,6 @@ public class TTRHypothesiser extends Hypothesiser {
 			if (a.backtrackOnSuccess()) {
 				results = a.execExhaustively(t.clone(), cur);
 				logger.debug("Action " + a + "(exhaustive) to " + t);
-
 			} else {
 				Tree result = a.execTupleContext(t.clone(), cur);
 				logger.debug("Action " + a + " to " + t);
@@ -649,51 +617,37 @@ public class TTRHypothesiser extends Hypothesiser {
 					results = new ArrayList<Pair<? extends Action, Tree>>();
 					results.add(new Pair<LexicalHypothesis, Tree>(a, result));
 				}
-
 			}
 
 			if (results == null) {
-				logger.debug("Action " + a + " failed at tree: "
-						+ cur.getTree());
-
+				logger.debug("Action " + a + " failed at tree: " + cur.getTree());
 			} else {
 				for (Pair<? extends Action, Tree> pair : results) {
 					// if it is adjunction just let it happen (don't check for
 					// subsumption), will fail if there are no
 					// more increments
-					if (pair.first().getName()
-							.startsWith(HYP_ADJUNCTION_PREFIX)) {
+					if (pair.first().getName().startsWith(HYP_ADJUNCTION_PREFIX)) {
 						logger.debug("Success, result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first());
-						if (pair.first().getName().startsWith(HYP_ADJ_T_PREFIX)
-								&& this.hypAdjT != null)
-							state.addChild(pair.second(), this.hypAdjT,
-									new UtteredWord(this.curUnknownSubstring));
+						if (pair.first().getName().startsWith(HYP_ADJ_T_PREFIX) && this.hypAdjT != null)
+							state.addChild(pair.second(), this.hypAdjT, new UtteredWord(this.curUnknownSubstring));
 						else
-							state.addChild(pair.second(), pair.first(),
-									new UtteredWord(this.curUnknownSubstring));
+							state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
 						continue;
 					}
 					TTRFormula maxSem = pair.second().getMaximalSemantics();
 					if (!maxSem.subsumes(targetType)) {
-
-						logger.debug("failed subsumption, resulting tree: "
-								+ pair.second());
+						logger.debug("failed subsumption, resulting tree: " + pair.second());
 						logger.debug("maxSem:" + maxSem);
 						logger.debug("target:" + targetType);
 					} else {
-
-						logger.debug("Success, result was:" + pair.second());
-						logger.debug("Action instance was:" + pair.first());
-						state.addChild(pair.second(), pair.first(),
-								new UtteredWord(this.curUnknownSubstring));
-
+						logger.debug("Success, result was: " + pair.second());
+						logger.debug("Action instance was: " + pair.first());
+						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
 					}
 				}
 			}
-
 		}
-
 	}
 
 	public static void main(String a[]) {
@@ -710,19 +664,16 @@ public class TTRHypothesiser extends Hypothesiser {
 		h.loadTrainingExample("you finish with your juice", target);
 		Collection<CandidateSequence> hyps = h.hypothesise();
 
-		for (CandidateSequence hyp : hyps) {
+		logger.info("There were " + hyps.size() + " sequences (printed below):");
+		for (CandidateSequence hyp : hyps)
 			System.out.println(hyp + "\n");
-		}
-		System.out.println("there were " + hyps.size() + " sequences");
 	}
 
-	public void loadTrainingExample(Sentence<Word> sentence,
-			TTRRecordType target) {
-		logger.info(ANSI_CYAN+ "loading Training Example: " + sentence + ANSI_RESET);
+	public void loadTrainingExample(Sentence<Word> sentence, TTRRecordType target) {
+		logger.info(ANSI_CYAN+ "Loading Training Example: " + sentence + ANSI_RESET);
 		String sent = "";
 		for (HasWord w : sentence)
 			sent += w.word() + " ";
-
 		loadTrainingExample(sent.trim(), target);
 	}
 

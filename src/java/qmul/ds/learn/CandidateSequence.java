@@ -163,6 +163,7 @@ public class CandidateSequence extends ArrayList<Action> {
 
 	}
 
+
 	public boolean equals(Object o) {
 		if (!(o instanceof CandidateSequence))
 			return false;
@@ -170,14 +171,16 @@ public class CandidateSequence extends ArrayList<Action> {
 		if (!this.start.equals(other.start))
 			return false;
 		// if ((this.words==null & other.words!=null)||(this.words!=null & other.words==null)) return false;
-
 		// if (!this.words.equals(other.words)) return false;
 		return super.equals(o);
 	}
 
+
 	public List<HasWord> getWords() {
 		return words;
 	}
+
+
 	//TODO: Check this...
 	private int numFormulaDecorations() {
 		int c = 0;
@@ -228,18 +231,18 @@ public class CandidateSequence extends ArrayList<Action> {
 	 */
 
 	private CandidateSequence removeComputationalFromRight() {
-
 		CandidateSequence result = new CandidateSequence(this);
 		int i = result.size() - 1;
 		while (result.get(i) instanceof ComputationalAction) {
 			result.remove(i);
-
 			i--;
 		}
 		return result;
 	}
 
+
 	/**
+	 * AA: Below, SUQUENCES better be called subsequences, because they are.
 	 * splits this sequence recursively into n sequences where n is {@code this.words.size()}. follows the constraint
 	 * that each of these sequences must contain exactly one lexical hypothesis with formula decoration(s). Accordingly,
 	 * it assumes that in this candidate sequence for n words there are exactly n Lex Hyps with formula decorations.
@@ -248,16 +251,15 @@ public class CandidateSequence extends ArrayList<Action> {
 	 * @return set of all possible splits of this sequence into subsequences corresponding to the words of this
 	 *         sequence.
 	 */
-
 	public Set<List<CandidateSequence>> split() {
 		int numFormulae = numFormulaDecorations();
-		logger.debug("Splitting:" + this);
-		logger.debug("words are " + this.words);
+		logger.debug("Splitting: " + this);
+		logger.debug("words are: " + this.words);
 
 		if (this.words.size() != numFormulae)
 			throw new IllegalStateException("Candidate Sequence must contain the same number of "
-					+ "lex hyps with formula decorations as the number of words in this sequence. But num words="
-					+ words.size() + "; num formulae=" + numFormulae);
+					+ "lex hyps with formula decorations as the number of words in this sequence. But here num words="
+					+ words.size() + ", and num formulae=" + numFormulae);
 		Set<List<CandidateSequence>> result = new HashSet<List<CandidateSequence>>();
 		// __________________________________
 		// base case for recursion:
@@ -277,13 +279,12 @@ public class CandidateSequence extends ArrayList<Action> {
 			logger.debug("applying " + a + " to:");
 			logger.debug(start);
 			Tree t = a.execTupleContext(start.getTree().clone(), start);
-			logger.debug("result was:" + t);
+			logger.debug("result was: " + t);
 			start = new ParserTuple(t);
 			if (a instanceof LexicalHypothesis) {
 				LexicalHypothesis lh = (LexicalHypothesis) a;
 				if (lh.containsContentDecoration())
 					break;
-
 			}
 		}
 		// i is now the index of the first Lex Hyp that contains a formula decoration
@@ -291,7 +292,6 @@ public class CandidateSequence extends ArrayList<Action> {
 		for (int j = i + 1; j < size() - 1; j++) {
 			if (get(j).getName().startsWith(TTRHypothesiser.HYP_ADJUNCTION_PREFIX))
 				continue;
-			
 			CandidateSequence chopLeft = new CandidateSequence(this.start, this.subList(0, j), this.words.subList(0, 1));
 			CandidateSequence rest = new CandidateSequence(start, this.subList(j, this.size()), this.words.subList(1,
 					this.words.size()));
@@ -308,7 +308,7 @@ public class CandidateSequence extends ArrayList<Action> {
 			while (j < size() && (get(j) instanceof ComputationalAction || get(j).getName().startsWith(TTRHypothesiser.HYP_ADJUNCTION_PREFIX))) {
 				Tree clone = start.getTree().clone();
 				logger.debug("applying " + get(j) + " to " + clone);
-				logger.debug("action: " + get(j) + " to " + clone);
+				logger.debug("action: " + get(j) + " to " + clone);  // AA: Unnecessary log, same as above.
 				Tree res = get(j).execTupleContext(clone, start);
 				logger.debug("result was:" + res);
 				if (res == null)
@@ -323,11 +323,10 @@ public class CandidateSequence extends ArrayList<Action> {
 				if (lh.containsContentDecoration())
 					break;
 			}
-
 		}
-
 		return result;
 	}
+
 
 	public int getFirstLexicalIndex() {
 

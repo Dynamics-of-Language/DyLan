@@ -171,12 +171,10 @@ public class DSType implements Serializable {
 	}
 
 	public int toUniqueInt() {
-
 		return 0;
 	}
 
 	public ArrayList<Meta<?>> getMetas() {
 		return new ArrayList<Meta<?>>();
-
 	}
 }
