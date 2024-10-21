@@ -125,7 +125,14 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 */
 	public DAGParser(File resourceDir) {
 		this(new Lexicon(resourceDir), new Grammar(resourceDir), new SpeechActInferenceGrammar(resourceDir));
-		
+	}
+
+
+	/**
+	 * Added by AA to support specifying parameter top-N for learned lexical actions.
+	 */
+	public DAGParser(String resourceDirNameOrURL, int topN) {
+		this(new Lexicon(resourceDirNameOrURL, topN), new Grammar(resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL));
 	}
 
 
@@ -134,7 +141,7 @@ public abstract class DAGParser<T extends DAGTuple, E extends DAGEdge>
 	 *            the dir containing computational-actions.txt, lexical-actions.txt, lexicon.txt
 	 */
 	public DAGParser(String resourceDirNameOrURL) {
-		this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL)); // TODO: did I have to copy and paste a computational-actions.txtx file in the directory? Because I did...
+		this(new Lexicon(resourceDirNameOrURL), new Grammar(resourceDirNameOrURL), new SpeechActInferenceGrammar(resourceDirNameOrURL));
 	}
 	
 	

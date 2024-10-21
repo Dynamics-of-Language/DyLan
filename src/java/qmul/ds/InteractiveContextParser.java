@@ -127,6 +127,17 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		context.setRepairProcessing(repairing);
 	}
 
+	/**
+	 * Added by AA to support specifying parameter top-N for learned lexical actions.
+	 */
+	public InteractiveContextParser(String resourceDirNameOrURL, boolean repairing, int topN,String... participants) {
+		super(resourceDirNameOrURL, topN);  // The difference is here (calls the constructor with topN).
+		if (participants.length > 0)
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, participants);
+		else
+			context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), this.sa_grammar, DEFAULT_NAME);
+
+		context.setRepairProcessing(repairing);
 	}
 
 	public InteractiveContextParser(String resourceDirOrURL, String... participants) {
@@ -137,9 +148,17 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		this(resourceDirOrURL, false);
 	}
 
+
+	/**
+	 * Added by AA to support specifying parameter top-N for learned lexical actions.
+	 */
+	public InteractiveContextParser(String resourceDirOrURL, int topN) {
+		this(resourceDirOrURL, false, topN);
+	}
+
+
 	public InteractiveContextParser(Lexicon lexicon, Grammar grammar) {
 		super(lexicon, grammar);
-
 		context = new Context<DAGTuple, GroundableEdge>(new WordLevelContextDAG(), DEFAULT_NAME);
 	}
 
