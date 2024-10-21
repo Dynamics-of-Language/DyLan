@@ -1,9 +1,9 @@
 DyLan QUICK START
 
-1. Clone the latest versions of dsttr and dylan_util from BitButcket into your workspace from:
+1. Clone the latest versions of dylan and dylan_util from github into your workspace from:
 
-https://bitbucket.org/dylandialoguesystem/dsttr.git
-https://bitbucket.org/dylandialoguesystem/dylan_util.git
+https://github.com/dynamics-of-language/dylan.git
+https://github.com/dynamics-of-language/dylan_util.git
 
 2. We recommend using Eclipse to work with DyLan. If using Eclipse, create two projects from the two folders dsttr and dylan_util. dsttr is the main repository you will be working from. In the build path make sure it depends on dylan_util (i.e. in Eclipse right-click on dsttr then go “Configure Build Path”, switch to the “Projects” tab, then if dylan_util is not there add it through “Add..” Remove any other projects in the Projects tab for now, which may be incorrect references to this folder.)
 
