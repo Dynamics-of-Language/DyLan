@@ -74,6 +74,35 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 		logger.info("Successfully loaded TTR corpus with " + i + " entries.");
 	}
 
+	/**
+	 * Saves the corpus to a file.
+	 * @param fileDir The directory to save the corpus to.
+	 * @author Arash A.
+	 */
+	public void saveCorpus(String fileDir) throws IOException {
+		logger.debug("Saving TTR corpus to \"" + fileDir + "\"...");
+		CorpusStats corpusStats = new CorpusStats();
+		// for all sentences in the corpus, add them to the stats.
+		// Then write the corpus to file, and write the stats at the end. copied from generation work.
+		PrintStream out = null;
+        FileOutputStream fileOpen;
+        try {
+            fileOpen = new FileOutputStream(fileDir);
+            out = new PrintStream(fileOpen);
+            for (Pair<Sentence<Word>, TTRRecordType> pair : this) {
+				Sentence<Word> sent = pair.first();
+				TTRRecordType target = pair.second();
+				out.print("GoldSent : " + sent + "\nSem : " + target + "\n\n");  // TODO add File-Level maybe?
+				corpusStats.addSentence(sent);
+				}
+            out.print(corpusStats.statReporter()); // If the corpus is empty, this will throw an error. Have to handle it properly.
+			logger.info("Successfully saved TTR corpus to \"" + fileDir + "\".");
+        } catch (Exception e) {
+            logger.error("Couldn't write to \"" + fileDir + "\"!");
+        } finally {
+            if (out != null)
+                out.close();
+        }
 	}
 
 
