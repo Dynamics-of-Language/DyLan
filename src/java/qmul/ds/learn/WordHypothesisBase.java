@@ -288,7 +288,8 @@ public class WordHypothesisBase {
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f+"-top-"+topN));
 		
 		Lexicon lex = this.getLearnedLexicon(topN);
-		logger.info(ANSI_BLUE + "Lexicon is:" + lex + ANSI_RESET);
+		logger.info(ANSI_BLUE + "Lexicon size: " + lex.size()+  ANSI_RESET);
+		logger.info(ANSI_BLUE + "Lexicon is: " + lex + ANSI_RESET);
 		out.writeObject(lex);
 //		out.writeObject();
 		out.close();

@@ -37,6 +37,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_RED = "\u001B[31m";
 
+
 	public TTRWordLearner(String seedResourceDir, RecordTypeCorpus c) {
 		hypothesiser = new TTRHypothesiser(seedResourceDir);
 		corpus = c;
@@ -67,7 +68,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		corpus = null;
 	}
 
-	
+
 	@Override
 	public boolean learnOnce() {
 		if (corpusIterator == null) {
@@ -81,7 +82,6 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 
 		Pair<Sentence<Word>, TTRRecordType> entry = corpusIterator.next();
 		logger.info("Hypothesising sequences for utterance: " + entry.first());
-
 		// logger.info("Hypothesising from training example: "+
 		// sentence+"->"+target);
 		long time = System.currentTimeMillis();
@@ -90,8 +90,8 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			((TTRHypothesiser)hypothesiser).loadTrainingExample(entry.first(), entry.second());
 			hyps = hypothesiser.hypothesise();
 			logger.info("\n");
-			if (hyps.size()==0) {
-				logger.warn("NO SEQUENCES RECEIVED from hypothesiser.. skipping... ");
+			if (hyps.size() == 0) {
+				logger.warn(ANSI_YELLOW + "NO SEQUENCES RECEIVED from hypothesiser! skipping... " + ANSI_RESET);
 //				System.out.println("no sequences returned, skipping this");
 				skipped.add(entry);
 				return true;
@@ -103,40 +103,38 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			skipped.add(entry);
 			return true;
 		}
-		logger.info(ANSI_GREEN +  "Got "+hyps.size()+" sequences from Hypothesiser for " + ANSI_RESET);
+		logger.info(ANSI_GREEN +  "Got " + hyps.size() + " sequences from Hypothesiser for "+ entry.second() + ANSI_RESET);
 		logger.info(ANSI_GREEN + "Now splitting the sequences..." + ANSI_RESET);
 		// DAGHypothesiser.printHypMap(hyps);
 		hb.forgetCurrentDist();
-		int totalSplit = 0;
-		int i=0;
+		int totalSplit = 0;  // AA: Better be called `totalSplits`!
+		int i = 0;
 		try {
-			for (CandidateSequence cs : hyps) {
+			for (CandidateSequence cs: hyps) {
 				i++;
-				logger.debug("Spliting: "+cs.toShortString());
+				logger.debug("Splitting: " + cs.toShortString());
 				Set<List<CandidateSequence>> splitSequences = cs.split();
-				for (List<CandidateSequence> seq:splitSequences)
-					logger.trace("Result: "+seq);
-
+				for (List<CandidateSequence> seq: splitSequences)
+					logger.trace("Result: " + seq);
 				totalSplit += splitSequences.size();
-				logger.trace(i+":"+splitSequences.size()+" ");
+				logger.trace(i + ":" + splitSequences.size()+ " ");
 				logger.debug("Adding split sequences to hypothesis base...");
 				hb.addSequenceTuples(splitSequences);
-			}	
+			}
 			logger.info("\n");
 			this.hb.updateDistsEndOfExample(entry.first());
-			logger.info("Processing took:"+ (System.currentTimeMillis()-time)/1000 + " seconds");
+			logger.info("Processing took:"+ (System.currentTimeMillis()-time)/1000 + " seconds");  // AA Not working correctly!
 		} catch (Exception e) {
 			logger.fatal("problem while updating distributions on sentence:" + entry);
 			logger.fatal("this is fatal :(");
 			e.printStackTrace();
-			
 			System.exit(1);
 		}
-		// System.out.println("All Done. Prior after "+sentence);
+		// System.out.println("All Done. Prior after " + sentence);
 		// System.out.println(hb.getPrior());
 		return true;
-		};
 	}
+
 
 	@Override
 	public void loadCorpus(File corpusFile) throws IOException, ClassNotFoundException {
@@ -145,16 +143,16 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		this.corpus=c;
 		this.corpusIterator=this.corpus.iterator();
 	}
-	
+
 	
 	public static void main(String[] args) {
 //		TTRWordLearner learner = new TTRWordLearner();  // Commented out by Arash A.
 		String babyDSPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // fix later
-		String corpusPath = babyDSPath + "CHILDES400.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
+		String corpusPath = babyDSPath + "babyds_train_86.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
 		String lexiconPath = babyDSPath + "lexicon.lex";
 		TTRWordLearner learner = new TTRWordLearner(babyDSPath);
 //		logger.info(ANSI_YELLOW + "learner initialized with seed resource dir: " + babyDSPath + ANSI_RESET);
-		try{
+		try {
 //			learner.loadCorpus(new File(args[2]));  // Commented out by Arash A.
 //			learner.learn();
 //			learner.getHypothesisBase().saveLearnedLexicon("resource/2013-ttr-learner-output/lexicon.lex", 2);
@@ -171,7 +169,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 3);
 			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 4);
 			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 5);
-		} catch( Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

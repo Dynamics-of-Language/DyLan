@@ -121,9 +121,6 @@ public class TreeWordLearner extends WordLearner<Tree> {
 	}
 
 
-		logger.warn("Skipped:" + skipped);
-	}
-
 	public boolean corpusLoaded() {
 		return corpus != null && !corpus.isEmpty();
 	}
