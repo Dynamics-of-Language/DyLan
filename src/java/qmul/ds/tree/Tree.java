@@ -611,7 +611,12 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	@Override
 	public String toString() {
 		String partiality = (isComplete() ? "(C)" : "(P)");
-		return "Tree " + partiality + " " + pointer + ":" + values() + "]";
+		String ashTree = "";  // Added by AA!
+		for (Node n : values()) {
+			ashTree += n.toString() + "\n";
+		}
+		return "Tree " + partiality + " " + pointer + ":\n" + ashTree + "]";
+//		return "Tree " + partiality + " " + pointer + ": " + values()+ "]";
 	}
 
 	public edu.stanford.nlp.trees.Tree toStanfordTree() {
@@ -1154,6 +1159,29 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public float getIncompletenessMeasure() {
 		float num_requirements = (float) countIncompleteNodes();
 		return num_requirements / values().size();
+	}
+
+	/*
+	Returns the depth of the tree. Worked based on the length of the node address string (easy!).
+	Author: AA
+	 */
+	public int getDepth() {
+		int maxDepth = 0;
+		for (Node n : values()) {
+			int depth = n.getAddress().toString().length();
+			if (depth > maxDepth) {
+				maxDepth = depth;
+			}
+		}
+		return maxDepth-1; // Subtract 1 because the root node has depth 0.
+	}
+
+	/*
+	Returns the number of nodes in the tree.
+	Author: AA
+	 */
+	public int getNumNodes() {
+		return values().size();
 	}
 
 }
