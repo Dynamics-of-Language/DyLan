@@ -93,8 +93,13 @@ public class TTRHypothesiser extends Hypothesiser {
 
 
 	public void initialise() {
+		logger.info("Initialising the lattice...");
+		logger.trace("Getting incSet on label: " + targetType.getHeadField().getLabel() + " for target type: " + targetType);
 		Set<List<TypeLatticeIncrement>> incSet = lattice.getIncrements(targetType.getHeadField().getLabel());
-		logger.info("incSet is: " + incSet);
+		logger.debug("incSet size: " + incSet.size());
+		logger.debug("incSet is: ");
+		incSet.forEach(logger::debug);
+//		logger.info("incSet is: " + incSet);  // By AE
 		wordDepth = 0;
 		logger.info("Initialising state, with initial increments: ");
 		for (List<TypeLatticeIncrement> inc: incSet) {
@@ -118,6 +123,8 @@ public class TTRHypothesiser extends Hypothesiser {
 				childAdded.setNonHeadTarget(mergedNonHead);
 			}
 		}
+		logger.info("Lattice initialisation finished.");
+//		logger.info("Lattice initialised with " + state.getChildCount() + " tree hypothesis edges");  // Suggested by copilot, to check if it makes sense
 	}
 
 
@@ -656,16 +663,46 @@ public class TTRHypothesiser extends Hypothesiser {
 
 	public static void main(String a[]) {
 
-		TTRRecordType target = TTRRecordType
-				.parse("[x2==you : e|r : [x : e|p4==juice(x) : t|head==x : e]|x1==your(r.head, r) : e|e1==finish : es|p3==with(e1, x1) : t|p9==subj(e1, x2) : t|head==e1 : es]");
+		// ALL COMMENTED OUT BY AA
+//		TTRRecordType target = TTRRecordType
+//				.parse("[x2==you : e|r : [x : e|p4==juice(x) : t|head==x : e]|x1==your(r.head, r) : e|e1==finish : es|p3==with(e1, x1) : t|p9==subj(e1, x2) : t|head==e1 : es]");
+//
+//		// TTRRecordType target = TTRRecordType
+//		// .parse("[head:es|p==there(head):t]");
+//		// System.out.println(target.getMatureFilteredAbstractions(new
+//		// NodeAddress("0"), DSType.t));
+//		TTRHypothesiser h = new TTRHypothesiser(
+//				"resource/2013-english-ttr-induction-seed/");
+//		h.loadTrainingExample("you finish with your juice", target);
+//		Collection<CandidateSequence> hyps = h.hypothesise();
 
-		// TTRRecordType target = TTRRecordType
-		// .parse("[head:es|p==there(head):t]");
-		// System.out.println(target.getFilteredAbstractions(new
-		// NodeAddress("0"), DSType.t));
-		TTRHypothesiser h = new TTRHypothesiser(
-				"resource/2013-english-ttr-induction-seed/");
-		h.loadTrainingExample("you finish with your juice", target);
+		//AA EXAMPLES
+		// ATTENTION: DSType of head and DSType of what it is pointing to has to be the same (was getting an error "null trees" previously).
+//		TTRRecordType tg = TTRRecordType.parse("[y==dylan : e|x1 : e|p1==obj_box(x1) : t|p3==state_beside(y, x1) : t|head==p3 : t]");
+//		TTRRecordType tg = TTRRecordType.parse("[x2==dylan : e|x1 : e|p1==obj_box(x1) : t|p2==col_red(x1) : t|e3==beside : es|head==e3 : es|p4==subj(e3, x2) : t|p5==obj(e3, x1) : t]");
+		TTRRecordType tg3 = TTRRecordType.parse("[x1 : e|y==dylan : e|" +
+				"p4==obj_box(x1) : t|p5==col_red(x1) : t|" +
+				"e1 == state_beside : es| p1 == subj(e1, y) : t|" +
+				"p2 == obj(e1, x1) : t| head == e1 : es]");
+		TTRRecordType tg4 = TTRRecordType.parse("[y==dylan : e|" +
+				"r : [x1 : e|head==x1 : e|p4==obj_box(x1) : t|p5==col_red(x1) : t]|x2==epsilon(r.head, r) : e|" +
+				"e1 == state_beside : es| p1 == subj(e1, y) : t|" +
+				"p2 == obj(e1, x2) : t|head == e1 : es]");
+//		String sntnc = "goto the red box";
+//		String seedResourceDir = "resource/2024-babyds-grammar2/";  // TODO Make sure this is correct!
+//		TTRRecordType tg = TTRRecordType.parse("[x4==london : e|e7==leave : es|x1==airplane : e|head==e7 : es|p4==past(e7) : t|p6==subj(e7, x1) : t|p5==obj(e7, x4) : t]");
+//		String sntnc = "airplanes left london";
+		String sntnc = "open a door";
+		TTRRecordType sem = TTRRecordType.parse("[r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]");
+//		String seedResourceDir = "resource/2013-english-ttr-induction-seed/"; // AA commented out
+		String seedResourceDir = "resource\\2023-babyds-induction-output\\";
+		TTRHypothesiser h = new TTRHypothesiser(seedResourceDir);
+//        try {
+//            TimeUnit.SECONDS.sleep(5);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+        h.loadTrainingExample(sntnc, sem);
 		Collection<CandidateSequence> hyps = h.hypothesise();
 
 		logger.info("There were " + hyps.size() + " sequences (printed below):");
