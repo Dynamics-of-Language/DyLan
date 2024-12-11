@@ -31,8 +31,7 @@ public class TTRField extends Formula{
 	// x1=formula:dstype
 
 	private TTRLabel label;
-	private Formula type; // can be PAFormula, Variable, TTRRecordType,
-							// LambdaAbstract ...
+	private Formula type; // can be PAFormula, Variable, TTRRecordType, LambdaAbstract, etc.
 	private DSType dsType;
 
 	public static TTRField parse(String s)

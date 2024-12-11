@@ -13,27 +13,40 @@
 
 
 //General tree building hyps (including modal copying)... 
-//Induction from rec types... 
+//Induction from rec types...
 
-hyp-adj-cn-es
-IF		ty(cn)
-		(</\0>?ty(es) || <\/0>ty(es))
-		¬<\/L>Ex.x
-		fo(X)		
-THEN	put(?+eval)
-		make(\/L)
-		go(\/L)
-		put(?ty(cn))
-		make(\/0)
-		go(\/0)
-		put(ty(es))
-		put(fo(X))
-		go(/\0)
-		make(\/1)
-		go(\/1)
-		put(?ty(es>cn))
-ELSE	abort
 
+// hyp-cn-decomp-0&1 below, added by AE and AA for BabyDS.
+
+hyp-cn-decomp-1
+IF          ?ty(cn)
+            ¬<\/0>Ex.x
+            ¬<\/1>Ex.x
+THEN        make(\/0)
+            go(\/0)
+            put(?ty(cn))
+            go(/\0)
+            make(\/1)
+            go(\/1)
+            put(?ty(cn>cn))
+ELSE        abort
+
+
+hyp-cn-decomp-0
+IF          ?ty(cn)
+            ¬<\/0>Ex.x
+            ¬<\/1>Ex.x
+THEN        make(\/1)
+            go(\/1)
+            put(?ty(cn>cn))
+            go(/\1)
+            make(\/0)
+            go(\/0)
+            put(?ty(cn))
+ELSE        abort
+
+
+//* We don't actually know what this is for (AE-AA BabyDS discussions)
 hyp-adj-cn-e
 IF		ty(cn)
 		(</\0>?ty(e) || <\/0>ty(e))
@@ -52,7 +65,7 @@ THEN	put(?+eval)
 		go(\/1)
 		put(?ty(e>cn))
 ELSE	abort
-
+*//
 
 hyp-adjunction-e
 IF      ?ty(e)
@@ -323,6 +336,7 @@ THEN	make(\/1)
 		make(\/0)
 		go(\/0)
 		put(?ty(e))
+		go(/\)
 ELSE	abort
 
 anticipation0

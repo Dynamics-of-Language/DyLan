@@ -270,8 +270,8 @@ public class CandidateSequence extends ArrayList<Action> {
 			return result;
 		}
 		// __________________________________
-		ParserTuple start = this.start;
-		Action a;
+		ParserTuple start = this.start;  // AA: What is this for?
+		Action a;  // AA: What is this for?
 		int i = 0;
 		// first find the first Lexical Hyp that contains a formula decoration.
 		for (; i < size(); i++) {
