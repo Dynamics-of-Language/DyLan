@@ -39,17 +39,21 @@ import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
 
+/**
+ * Hypothesiser to hypothesise action sequences that lead from the axiom tree
+ * to the target semantics. difference from before: no target tree - there
+ * are target treeS, which are hypothesised incrementally upon
+ * link-adjunction, and of course at the very beginning.
+ * NOTE: Unlike the Hypothesiser class this class assumes all words are
+ * unknown... does not interleave parsing...
+ * =============================================================================================================
+ *** UPDATE BY Arash A: All calls to getFilteredAbstractions have been replaced by getMatureFilteredAbstractions,
+ * in order to get the algorithm working with BabyDS semantics.
+ *
+ * @author arash E
+ */
 public class TTRHypothesiser extends Hypothesiser {
-	/**
-	 * Hypothesiser to hypothesise action sequences that lead from the axiom tree
-	 * to the target semantics. difference from before: no target tree - there
-	 * are target treeS, which are hypothesised incrementally upon
-	 * link-adjunction, and of course at the very beginning.
-	 * NOTE: Unlike the Hypothesiser class this class assumes all words are
-	 * unknown... does not interleave parsing...
-	 * 
-	 * @author arash
-	 */
+
 	protected final static Logger logger = Logger.getLogger(TTRHypothesiser.class);
 
 	public static final String ANSI_RED = "\u001B[31m";
@@ -100,7 +104,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			boolean filtered = wholeInc.getHeadField().getDSType().equals(DSType.es);
 			logger.info("Increment: " + wholeInc);
 			logger.info("Now the abstraction trees: ");
-			List<Tree> trees = wholeInc.getFilteredAbstractions(state
+			List<Tree> trees = wholeInc.getMatureFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer(), DSType.t, filtered);
 			for (Tree tree : trees) {
 				logger.info(tree);
@@ -142,7 +146,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			}
 			logger.debug("increment=" + headIncrement);
 			logger.debug(headIncrement.getRecord());
-			List<Tree> trees = headIncrement.getFilteredAbstractions(state
+			List<Tree> trees = headIncrement.getMatureFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer().up(), DSType.t,
 					false);
 			logger.debug("we get here");
@@ -192,7 +196,7 @@ public class TTRHypothesiser extends Hypothesiser {
 		logger.debug("increments on headLabel:" + headLabel);
 		for (List<TypeLatticeIncrement> inc : incSet) {
 			TTRRecordType wholeInc = flatten(inc);
-			List<Tree> nonHeadTrees = wholeInc.getFilteredAbstractions(state
+			List<Tree> nonHeadTrees = wholeInc.getMatureFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer(), DSType.t, false);
 			TTRLabel incHeadLabel = wholeInc.getHeadField().getLabel();
 			TTRRecordType headIncrement;
@@ -203,7 +207,7 @@ public class TTRHypothesiser extends Hypothesiser {
 						TTRRecordType.HEAD);
 			}
 			logger.debug(headIncrement);
-			List<Tree> trees = headIncrement.getFilteredAbstractions(state
+			List<Tree> trees = headIncrement.getMatureFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer(), DSType.t, false);
 
 			for (int i = 0; i < trees.size(); i++) {
@@ -340,7 +344,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			TTRRecordType wholeInc = flatten(inc);
 			logger.debug(wholeInc);
 
-			List<Tree> trees = wholeInc.getFilteredAbstractions(state
+			List<Tree> trees = wholeInc.getMatureFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer().up(), DSType.cn,
 					false);
 			for (Tree tree : trees) {
