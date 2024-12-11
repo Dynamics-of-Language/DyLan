@@ -14,14 +14,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.util.Pair;
-import org.apache.poi.hssf.record.formula.functions.T;
 import qmul.ds.Context;
 import qmul.ds.action.meta.Meta;
 import qmul.ds.action.meta.MetaElement;
@@ -41,7 +39,7 @@ import qmul.ds.type.DSType;
 /**
  * A TTR record type
  *
- * @author arash
+ * @author arash E
  */
 public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Comparable<TTRRecordType>{
 
@@ -50,6 +48,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	protected static Logger logger = Logger.getLogger(TTRRecordType.class);
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_CYAN = "\u001B[36m";
+	public static final String ANSI_RED = "\u001B[31m";
+
 	public static final String TTR_OPEN = "[";
 	public static final String TTR_LABEL_SEPARATOR = ":";
 	public static final String TTR_FIELD_SEPARATOR = "|";
@@ -235,6 +236,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		return null;
 	}
 
+
 	public void deemHead(TTRLabel label) {
 		if (label.equals(HEAD))
 			return;
@@ -246,52 +248,401 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		add(head);
 	}
 
+
+
+	/**
+	 * This method is in charge of an alpha conversion whereby something of type basicDSType is abstracted out of this
+	 * record type. It returns a list of pairs, containing all the ways in which the basicDSType can be abstracted out
+	 * of this record type. Each pair contains the abstracted type and the lambda abstract that does the abstraction.
+	 * TODO AE have to create a special case for abstracting out field of type t (same as cn?)
+	 * @param basicDSType the type of the field to be abstracted out
+	 * @return list of pairs of abstracted type and lambda abstract
+	 */
 	public List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(BasicType basicDSType, int newVarSuffix) {
-		List<Pair<TTRRecordType, TTRLambdaAbstract>> result = new ArrayList<Pair<TTRRecordType, TTRLambdaAbstract>>();
-		logger.debug("extracting " + basicDSType + " from" + this);
+		List<Pair<TTRRecordType, TTRLambdaAbstract>> result = new ArrayList<>();
+		// TODO AA Can be made more efficient: if an abstraction already exists in `result`, don't do it again; I could see
+			// lots of repetitions... It's already cached, so just check if it's in there before getting the abstraction!
+		logger.debug("extracting " + basicDSType + " from " + this);
 		TTRField head = getHeadField();
 
 		for (TTRField f : fields) {
-			if (basicDSType.equals(DSType.cn) && (f.getDSType() == null || f.getDSType().equals(DSType.cn))) {
-				// abstracting cn out of e
-				TTRRecordType argument = (TTRRecordType) f.getType();
-				Variable v = new Variable("R" + newVarSuffix);
-				TTRRecordType core = new TTRRecordType(this);
+			logger.trace("Current field: " + f);
+			if (basicDSType.equals(DSType.cn)) {  // AA in original:  && (f.getDSType() == null || f.getDSType().equals(DSType.cn))) {
+				if(f.getDSType() == null) {  // This is the case where f is a restrictor RT, hence the cast on line 266 // AA in original: this block didn't exist
+					// abstracting cn out of e
+					logger.trace(ANSI_PURPLE + "dealing with a restrictor RT and basictype cn..." + ANSI_RESET);
+					TTRRecordType argument = (TTRRecordType) f.getType();
+					Variable v = new Variable("R" + newVarSuffix);
+					TTRRecordType core = new TTRRecordType(this);
 
 					TTRRecordType coreSubst = core.substitute(argument, v);
 
-				TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreSubst);
-				Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<TTRRecordType, TTRLambdaAbstract>(argument,
-						lambdaAbs);
-				result.add(abs);
+					TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreSubst);
+					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
+					if(result.contains(abs)) {
+						logger.debug(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
+					} else {
+						result.add(abs);
+						logger.trace("added abs: " + abs);
+						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
+						logger.warn(ANSI_RED+"doing sth new and ridiculous here" + ANSI_RESET);
+						// do the cache thing
+						// one: t on left, then one e, then t on right as much as possible, then add all.
+						// Two: e on left, then t on right as much as possible, then add all.
+						List<Pair<TTRRecordType, TTRLambdaAbstract>> t_abs = argument.getAbstractions(DSType.t, 2);
+//						logger.warn(ANSI_RED+"are equal: " + t_abs.equals(argument.getAbstractions(DSType.cn, 2))+ANSI_RESET);
+//						logger.warn(ANSI_RED+"cn_abs: " + argument.getAbstractions(DSType.cn, 2)+ANSI_RESET);
+//						logger.warn(ANSI_RED+"t_abs: " + argument.getAbstractions(DSType.t, 2)+ANSI_RESET);
+						if (!t_abs.isEmpty()) {
+							result.addAll(t_abs);
+//							result.addAll(argument.getAbstractions(DSType.e, 2));  // todo
+						} else {
+//							result.addAll(argument.getAbstractions(DSType.e, 2));  // todo
+						}
 
-			} else if (f.getDSType() != null && f.getDSType().equals(basicDSType)) {
-				if (f.getLabel().equals(HEAD) && f.getType() != null)
-					continue;
-				logger.debug("extracting field:" + f);
-				TTRRecordType argument = getSuperTypeWithParents(f);
-				logger.debug("argument before adding dependents: " + argument);
-				logger.debug("head is:" + head);
-				for (int i = fields.indexOf(f) + 1; i < fields.size(); i++) {
-					TTRField cur = fields.get(i);
-
-					if (cur.dependsOn(f)) {
-						if (!cur.dependsOn(head) && !cur.getLabel().equals(HEAD)) {
-							argument.putAtEnd(new TTRField(cur));
+					}
+//					result.add(abs);
+				} else if (f.getDSType().equals(DSType.cn)) {  // AA in original: this block didn't exist.
+//					TODO here: SIMILAR TO THE CODE BELOW 281-294 + FIND the method that uses
+					logger.trace(ANSI_PURPLE + "AA non-restrictor cn - according to AE, to be fixed by me..." + ANSI_RESET);
+					if (f.getLabel().equals(HEAD) && f.getType() != null)
+						continue;
+					logger.debug("extracting field: " + f);
+					TTRRecordType argument = getSuperTypeWithParents(f);
+					logger.debug("argument before adding dependents: " + argument);
+					logger.debug("head is: " + head);
+					for (int i = fields.indexOf(f) + 1; i < fields.size(); i++) {
+						TTRField cur = fields.get(i);
+						if (cur.dependsOn(f)) {
+							if (!cur.getLabel().equals(head.getLabel()) && !cur.dependsOn(head) && !cur.getLabel().equals(HEAD)) {
+								// AA This is where an assumption was made that stopped BabyDS from learning, and AE found and fixed it.
+								argument.putAtEnd(new TTRField(cur));
+								logger.debug("Added dependent: " + cur);  // Added by AA, could be trace, IDK.
+							}
+						}
+						else {
+							logger.trace(ANSI_RED+"COULDN'T ADD DEPENDENT?"+ANSI_RESET);
 						}
 					}
+
+
+					// new
+					logger.warn(ANSI_RED+"AA: let's see if this works cn... " + argument+ANSI_RESET);
+					logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
+					Variable v = new Variable("R" + newVarSuffix);
+					TTRRecordType core = new TTRRecordType(this);  // AA This is the core of the lambda abstraction
+
+					core.removeFields(argument);
+					// argument.deemHead(f.getLabel());
+					if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
+						logger.debug("constructed empty core.");
+						continue;
+					}
+					logger.debug("core: " + core);
+					/*
+					 * if (core.head() == null) { // artificially head it with event label if
+					 * possible else leave it headless.... for (TTRField coref : core.fields) { if
+					 * (coref.getDSType() != null && coref.getDSType().equals(DSType.es)) {
+					 * core.deemHead(coref.getLabel()); } } }
+					 */
+					//  Below added by AA
+					Formula fType = f.getType();
+					logger.trace("field type: " + f.getType());
+					TTRRecordType substCore;
+					if (fType == null) {
+						logger.warn("AA fType is null. So to be safe, will do what was happening before.");
+						substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+					} else {
+						// AA in case of babyds semantics and the below
+						// substitution, this will return only one variable. But I'm not sure if this is a correct assumption
+						// to make or not. AE has to confirm, because this can have massive effects everywhere. TODO
+						// Although, I tried to keep it as it was, when there were multiple variables in the type of the field.
+						Set<Variable> subF = fType.getVariables();
+						logger.trace("Field variables: " + subF);
+						if (subF.size() != 1) {
+							logger.warn("AA More than one variable in the type of the field to be abstracted out. This is not supported. Will do what was happening before.");
+							substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+						} else {
+							Variable subFVar = subF.iterator().next();
+							substCore = core.substitute(subFVar, TTRPath.parse(v.getName() + ".head"));
+						}
+					}
+					logger.trace("subtCore: " + substCore);
+					TTRFormula coreFinal = new TTRInfixExpression(TTRInfixExpression.ASYM_MERGE_FUNCTOR, v, substCore);
+					logger.trace("coreFinal: " + coreFinal);
+					TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreFinal);
+					logger.trace("lambdaAbs: " + lambdaAbs);
+					logger.trace("argument before head being deemed: " + argument);
+					argument.deemHead(f.getLabel());
+					logger.trace("argument after head being deemed: " + argument);
+					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
+					if(result.contains(abs)) {
+						logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
+	//					continue;
+					} else {
+						result.add(abs);
+						logger.trace("added abs: " + abs);
+						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
+					}
+	//				result.add(abs);
+	//				logger.trace("added abs: " + abs);
+	//				logger.trace("Got " + result.size() + " abstractions so far.");
+
+
+
+
+				}  // AA TRYING SOMETHING THAT MIGHT BE THE ANSWER:...
+				else if (f.getDSType().equals(DSType.t)) {
+					logger.warn(ANSI_RED + "AA PROBABLY HAVE TO DELETE THIS PART!" + ANSI_RESET);
+					logger.trace(ANSI_PURPLE + "AA non-restrictor NEWEST T - according to AE, to be fixed by me..." + ANSI_RESET);
+					if (f.getLabel().equals(HEAD) && f.getType() != null)
+						continue;
+					logger.debug("extracting field: " + f);
+					TTRRecordType argument = getSuperTypeWithParents(f);
+					logger.debug("argument before adding dependents: " + argument);
+					logger.debug("head is: " + head);
+					for (int i = fields.indexOf(f) + 1; i < fields.size(); i++) {
+						TTRField cur = fields.get(i);
+						if (cur.dependsOn(f)) {
+							if (!cur.getLabel().equals(head.getLabel()) && !cur.dependsOn(head) && !cur.getLabel().equals(HEAD)) {
+								// AA This is where an assumption was made that stopped BabyDS from learning, and AE found and fixed it.
+								argument.putAtEnd(new TTRField(cur));
+								logger.debug("Added dependent: " + cur);  // Added by AA, could be trace, IDK.
+							}
+						}
+						else {
+							logger.trace(ANSI_RED+"COULDN'T ADD DEPENDENT?"+ANSI_RESET);
+						}
+					}
+
+					// new
+					logger.warn(ANSI_RED+"AA: let's see if this works cn... " + argument+ANSI_RESET);
+					logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
+					Variable v = new Variable("R" + newVarSuffix);
+					TTRRecordType core = new TTRRecordType(this);  // AA This is the core of the lambda abstraction
+
+					core.removeFields(argument);
+					// argument.deemHead(f.getLabel());
+					if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
+						logger.debug("constructed empty core.");
+						continue;
+					}
+					logger.debug("core: " + core);
+					/*
+					 * if (core.head() == null) { // artificially head it with event label if
+					 * possible else leave it headless.... for (TTRField coref : core.fields) { if
+					 * (coref.getDSType() != null && coref.getDSType().equals(DSType.es)) {
+					 * core.deemHead(coref.getLabel()); } } }
+					 */
+					//  Below added by AA
+					Formula fType = f.getType();
+					logger.trace("field type: " + f.getType());
+					TTRRecordType substCore;
+					if (fType == null) {
+						logger.warn("AA fType is null. So to be safe, will do what was happening before.");
+						substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+					} else {
+						// AA in case of babyds semantics and the below
+						// substitution, this will return only one variable. But I'm not sure if this is a correct assumption
+						// to make or not. AE has to confirm, because this can have massive effects everywhere. TODO
+						// Although, I tried to keep it as it was, when there were multiple variables in the type of the field.
+						Set<Variable> subF = fType.getVariables();
+						logger.trace("Field variables: " + subF);
+						if (subF.size() != 1) {
+							logger.warn("AA More than one variable in the type of the field to be abstracted out. This is not supported. Will do what was happening before.");
+							substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+						} else {
+							Variable subFVar = subF.iterator().next();
+							substCore = core.substitute(subFVar, TTRPath.parse(v.getName() + ".head"));
+						}
+					}
+					logger.trace("subtCore: " + substCore);
+					TTRFormula coreFinal = new TTRInfixExpression(TTRInfixExpression.ASYM_MERGE_FUNCTOR, v, substCore);
+					logger.trace("coreFinal: " + coreFinal);
+					TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreFinal);
+					logger.trace("lambdaAbs: " + lambdaAbs);
+					logger.trace("argument before head being deemed: " + argument);
+					argument.deemHead(f.getLabel());
+					logger.trace("argument after head being deemed: " + argument);
+					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
+					if(result.contains(abs)) {
+						logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
+	//					continue;
+					} else {
+						result.add(abs);
+						logger.trace("added abs: " + abs);
+						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
+					}
 				}
-				logger.debug("argument:" + argument);
+
+
+
+				else {
+					logger.trace(ANSI_YELLOW + "AA not possible to extract " + basicDSType + " from " + f + ANSI_RESET);
+				}
+			}
+
+			// AA NEWLY ADDED
+			else if (basicDSType.equals(DSType.t)) {  // AA in original:  && (f.getDSType() == null || f.getDSType().equals(DSType.cn))) {
+//				logger.info(ANSI_PURPLE+"same as previous"+ANSI_RESET);
+				if(f.getDSType() == null) {  // This is the case where f is a restrictor RT, hence the cast on line 266 // AA in original: this block didn't exist
+					logger.trace(ANSI_PURPLE + "dealing with a restrictor RT and basictype t..." + ANSI_RESET);
+					// abstracting cn out of e
+//					logger.info(ANSI_PURPLE+"--------------------------------"+ANSI_RESET);
+					TTRRecordType argument = (TTRRecordType) f.getType();
+					Variable v = new Variable("R" + newVarSuffix);
+					TTRRecordType core = new TTRRecordType(this);
+
+					TTRRecordType coreSubst = core.substitute(argument, v);
+
+					TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreSubst);
+					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
+					if(result.contains(abs)) {
+						logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
+//						continue;
+					} else {
+						result.add(abs);
+						logger.trace("added abs: " + abs);
+						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
+						logger.trace(ANSI_RED+"AA NOW also adding the abs on the argument, maybe this is missing..." + ANSI_RESET);
+						result.addAll(argument.getAbstractions(basicDSType, newVarSuffix));
+					}
+//					result.add(abs);
+				} else if (f.getDSType().equals(DSType.t)) {  // AA in original: this block didn't exist.
+					// AE suggested with t, and he said it's similar to `t`, so I changed it to t.
+//					TODO here: SIMILAR TO THE CODE BELOW 281-294 + FIND the method that uses
+					logger.trace(ANSI_PURPLE + "AA non-restrictor t - according to AE, to be fixed by me..." + ANSI_RESET);
+					if (f.getLabel().equals(HEAD) && f.getType() != null)
+						continue;
+					logger.debug("extracting field: " + f);
+					TTRRecordType argument = getSuperTypeWithParents(f);
+					logger.debug("argument before adding dependents: " + argument);
+					logger.debug("head is: " + head);
+					for (int i = fields.indexOf(f) + 1; i < fields.size(); i++) {
+						TTRField cur = fields.get(i);
+						if (cur.dependsOn(f)) {
+							if (!cur.getLabel().equals(head.getLabel()) && !cur.dependsOn(head) && !cur.getLabel().equals(HEAD)) {
+								// AA This is where an assumption was made that stopped BabyDS from learning, and AE found and fixed it.
+								argument.putAtEnd(new TTRField(cur));
+								logger.debug("Added dependent: " + cur);  // Added by AA, could be trace, IDK.
+							} else {
+								logger.trace("AA " + cur + " is HEAD or IDK, given f= " + f);
+							}
+						} else {
+							logger.trace("AA " + cur + " is not a dependent of  " + f);
+						}
+					}
+
+
+					logger.warn(ANSI_RED+"AA: let's see if this works t ... " + argument+ANSI_RESET);
+					logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
+					Variable v = new Variable("R" + newVarSuffix);
+					TTRRecordType core = new TTRRecordType(this);  // AA This is the core of the lambda abstraction
+					logger.trace("core before removing argument: " + core);
+					core.removeFields(argument);
+					logger.trace("core after removing argument: " + core);
+//					 argument.deemHead(f.getLabel());
+					if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
+						logger.debug("constructed empty core, so we skip this.]");
+						continue;
+					}
+					logger.debug("core: " + core);
+
+					/*
+					 * if (core.head() == null) { // artificially head it with event label if
+					 * possible else leave it headless.... for (TTRField coref : core.fields) { if
+					 * (coref.getDSType() != null && coref.getDSType().equals(DSType.es)) {
+					 * core.deemHead(coref.getLabel()); } } }
+					 */
+
+					//  Below added by AA
+					Formula fType = f.getType();
+					logger.trace("field type: " + f.getType());
+					TTRRecordType substCore;
+					if (fType == null) {
+						logger.warn("AA fType is null. So to be safe, will do what was happening before.");
+						substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+					} else {
+						// AA in case of babyds semantics and the below
+						// substitution, this will return only one variable. But I'm not sure if this is a correct assumption
+						// to make or not. AE has to confirm, because this can have massive effects everywhere. TODO
+						// Although, I tried to keep it as it was, when there were multiple variables in the type of the field.
+						Set<Variable> subF = fType.getVariables();
+						logger.trace("Field variables: " + subF);
+						if (subF.size() != 1) {
+							logger.warn("AA More than one variable in the type of the field to be abstracted out. This is not supported. Will do what was happening before.");
+							substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+						} else {
+							Variable subFVar = subF.iterator().next();
+							substCore = core.substitute(subFVar, TTRPath.parse(v.getName() + ".head"));
+						}
+					}
+					logger.trace("subtCore: " + substCore);
+					TTRFormula coreFinal = new TTRInfixExpression(TTRInfixExpression.ASYM_MERGE_FUNCTOR, v, substCore);
+					logger.trace("coreFinal: " + coreFinal);
+					TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreFinal);
+					logger.trace("lambdaAbs: " + lambdaAbs);
+					logger.trace("argument before head being deemed: " + argument);
+					argument.deemHead(f.getLabel());
+					logger.trace("argument after head being deemed: " + argument);
+					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
+					if(result.contains(abs)) {
+						logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
+	//					continue;
+					} else {
+						result.add(abs);
+						logger.trace("added abs: " + abs);
+						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
+					}
+	//				result.add(abs);
+	//				logger.trace("added abs: " + abs);
+	//				logger.trace("Got " + result.size() + " abstractions so far.");
+
+
+
+				} else {
+					logger.trace(ANSI_YELLOW + "AA not possible to extract " + basicDSType + " from " + f + ANSI_RESET);
+				}
+			}
+
+
+
+			else if (f.getDSType() != null && f.getDSType().equals(basicDSType)) {
+				logger.trace(ANSI_PURPLE + "not cn nor t..." + ANSI_RESET);
+				if (f.getLabel().equals(HEAD) && f.getType() != null) {
+					logger.trace("Have to skip field: " + f + " . It's head.");
+					continue;
+				}
+				logger.debug("extracting field: " + f);
+				TTRRecordType argument = getSuperTypeWithParents(f);
+				logger.debug("argument before adding dependents: " + argument);
+				logger.debug("head is: " + head);
+				for (int i = fields.indexOf(f) + 1; i < fields.size(); i++) {
+					TTRField cur = fields.get(i);
+					if (cur.dependsOn(f)) {
+						if (!cur.getLabel().equals(head.getLabel()) && !cur.dependsOn(head) && !cur.getLabel().equals(HEAD)) {
+							// AA This is where an assumption was made that stopped BabyDS from learning, and AE found and fixed it.
+							argument.putAtEnd(new TTRField(cur));
+							logger.debug("Added dependent: " + cur);  // Added by AA, could be trace, IDK.
+						} else {  // I think this is the case where the field is dependent but not head...
+							logger.trace("AA " + cur + " is I think a non-head dependent of " + f);
+
+						}
+					} else {
+						logger.trace("AA " + cur + " is not a dependent of  " + f);
+					}
+				}
+				logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
 				Variable v = new Variable("R" + newVarSuffix);
-				TTRRecordType core = new TTRRecordType(this);
+				TTRRecordType core = new TTRRecordType(this);  // AA This is the core of the lambda abstraction
 
 				core.removeFields(argument);
 				// argument.deemHead(f.getLabel());
 				if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
-					logger.debug("constructed empty core");
+					logger.debug("constructed empty core.");
 					continue;
 				}
-				logger.debug("core:" + core);
+				logger.debug("core: " + core);
 
 				/*
 				 * if (core.head() == null) { // artificially head it with event label if
@@ -300,20 +651,66 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				 * core.deemHead(coref.getLabel()); } } }
 				 */
 
-				TTRRecordType substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+				//  Below added by AA
+				Formula fType = f.getType();
+				logger.trace("field type: " + f.getType());
+				TTRRecordType substCore;
+				if (fType == null) {
+					logger.warn("AA fType is null. So to be safe, will do what was happening before.");
+					substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+				} else {
+					// AA in case of babyds semantics and the below
+					// substitution, this will return only one variable. But I'm not sure if this is a correct assumption
+					// to make or not. AE has to confirm, because this can have massive effects everywhere. TODO
+					// Although, I tried to keep it as it was, when there were multiple variables in the type of the field.
+					Set<Variable> subF = fType.getVariables();
+					logger.trace("Field variables: " + subF);
+					if (subF.size() != 1) {
+						logger.warn("AA More than one variable in the type of the field to be abstracted out. This is not supported. Will do what was happening before.");
+						substCore = core.substitute(f.getLabel(), TTRPath.parse(v.getName() + ".head"));
+					} else {
+						Variable subFVar = subF.iterator().next();
+						// Ad-hoc solution by AA to fix substitution of r (which has to be the corresponding x instead)
+						if (subFVar.getName().equals("r"))
+							subFVar = f.getLabel();
 
+						substCore = core.substitute(subFVar, TTRPath.parse(v.getName() + ".head"));
+					}
+				}
+				logger.trace("subtCore: " + substCore);
 				TTRFormula coreFinal = new TTRInfixExpression(TTRInfixExpression.ASYM_MERGE_FUNCTOR, v, substCore);
+				logger.trace("coreFinal: " + coreFinal);
 				TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreFinal);
+				logger.trace("lambdaAbs: " + lambdaAbs);
+				logger.trace("argument before head being deemed: " + argument);
 				argument.deemHead(f.getLabel());
-				Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<TTRRecordType, TTRLambdaAbstract>(argument,
-						lambdaAbs);
-				result.add(abs);
-
+				logger.trace("argument after head being deemed: " + argument);
+				Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
+				if(result.contains(abs)) {
+					logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
+//					continue;
+				} else {
+					result.add(abs);
+					logger.trace("added abs: " + abs);
+					logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
+				}
+//				result.add(abs);
+//				logger.trace("added abs: " + abs);
+//				logger.trace("Got " + result.size() + " abstractions so far.");
+			}
+			// AA ADDED BY ME
+			else {
+				logger.trace(ANSI_YELLOW + "AA not possible to extract " + basicDSType + " from " + f + ANSI_RESET);
 			}
 		}
-		logger.debug("result:" + result);
+		logger.trace("Total number of abstractions: " + result.size());
+		logger.debug("All abstractions: ");
+		for (Pair<TTRRecordType, TTRLambdaAbstract> abs: result){
+			logger.debug(abs);
+		}
 		return result;
 	}
+
 
 	public TTRRecordType removeSpecificField(TTRField _field) {
 		TTRRecordType rt = new TTRRecordType(this);
@@ -658,27 +1055,93 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		return result;
 	}
 
+
+	/**
+	 * Tests a given getAbstraction method on a set of RTs, and prints the results.
+	 * Output is comparison of the real and expected number of abstractions. todo extend to subsumption?
+	 */
+	public void testGetAbstractions(String methodName){
+		// have a list of childes RTs, complete t list below
+		// have a list of baby DS RTs
+		// loop through them, getAbstractions, compare the answer with real number of abstractions
+	}
+
 	public static void main(String[] a) {
 		TTRRecordType t = TTRRecordType.parse("[r : [x:e|p1==juice(x):t|head==x:e]|x1==more(r.head,r):e|head==x1:e]");
+		TTRRecordType t2 = TTRRecordType.parse("[x1 : e|y==dylan : e|" +
+				"p4==obj_box(x1) : t|" +
+				"e1 == state_beside : es| p1 == subj(e1, y) : t|" +
+				"p2 == obj(e1, x1) : t| head == e1 : es]");
+		TTRRecordType t3 = TTRRecordType.parse("[x1 : e|p4==box(x1) : t|p5==red(x1) : t|head==x1 : e]");
+		TTRRecordType t4 = TTRRecordType.parse("[r : [x19 : e|head==x19 : e|p28==obj_ball(x19) : t|p29==col_green(x19) : t]|x20==epsilon(r.head, r) : e|e10==state_facing : es|head==e10 : es|p29==subj(e10,x20) : t]");
+		TTRRecordType t5 = TTRRecordType.parse("[r : [x19 : e|p29==col_green(x19) : t|p28==obj_ball(x19) : t|head==x19 : e]|x20==epsilon(r.head, r) : e|head==x20 : e]");
+		TTRRecordType t6 = TTRRecordType.parse("[x3==dylan : e|r : [x19 : e|head==x19 : e|p28==obj_ball(x19) : t|p29==col_green(x19) : t]|x20==epsilon(r.head, r) : e|e10==state_facing : es|head==e10 : es|p41==subj(e10,x3) : t|p29==obj(e10,x20) : t]");
 
-		//TTRRecordType t = TTRRecordType.parse("[x1==john:e|e1==run:es|p==subj(e1,x1):t|head==e1:es]");
+		// AA: RTs to test the new versions of `getAbstractions`
+		// Definition of the below representation: the number after subj or obj is the number of adjectives that comes with the noun in that role.
 
-		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = t.getAbstractions(DSType.cn, 1);
+		// First playing with the subject
+		// subj-0, obj-0: "planes left london"
+		TTRRecordType t0 = TTRRecordType.parse("[x4==london : e|e6==leave : es|x1==planes : e|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-0, obj-0: "planes left london" but not as proper nouns.
+		TTRRecordType t1 = TTRRecordType.parse("[x4 : e|p1==london(x4) : t|e6==leave : es|x1 : e|p2==planes(x1) : t|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-1, obj-0: "a plane left london"
+		TTRRecordType t10 = TTRRecordType.parse("[r : [x2 : e|head==x2 : e|p7==plane(x2) :t]|x1==epsilon(r.head, r) : e|x4==london : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-2, obj-0: "a big plane left london" XXX
+		TTRRecordType t20 = TTRRecordType.parse("[r : [x2 : e|head==x2 : e|p7==plane(x2) :t|p8==big(x2) : t]|x1==epsilon(r.head, r) : e|x4==london : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-3, obj-0: "a big old plane left london"
+		TTRRecordType t30 = TTRRecordType.parse("[r : [x2 : e|head==x2 : e|p7==plane(x2) :t|p8==big(x2) : t|p9==old(x2) : t]|x1==epsilon(r.head, r) : e|x4==london : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 
-		for(Pair<TTRRecordType, TTRLambdaAbstract> pair:abstractions)
-		{
-			System.out.println("The argument:"+pair.first);
-			System.out.println("The function:"+pair.second);
-			System.out.println("-------");
+		// Now playing with the object
+		// subj-0, obj-1: "planes left the airport"
+		TTRRecordType t01 = TTRRecordType.parse("[r : [x2==airport : e|head==x2 : e]|x4==iota(r.head, r) : e|x1==planes : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-0, obj-2: "planes left the massive airport"
+		TTRRecordType t02 = TTRRecordType.parse("[r : [x2==airport : e|head==x2 : e|p9==massive(x2) : t]|x4==iota(r.head, r) : e|x1==planes : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-0, obj-3: "planes left the massive dirty airport"
+		TTRRecordType t03 = TTRRecordType.parse("[r : [x2==airport : e|head==x2 : e|p9==massive(x2) : t|p10==dirty(x2) : t]|x4==iota(r.head, r) : e|x1==planes : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+
+		// Now playing with both
+		// subj-1, obj-1: "a plane left the airport"
+		TTRRecordType t11 = TTRRecordType.parse("[r1 : [x2==plane : e|head==x2 : e]|x1==epsilon(r1.head, r1) : e|r2 : [x3==airport : e|head==x3 : e]|x4==iota(r2.head, r2) : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-3, obj-0: "a big old plane left the sad ugly airport"
+		TTRRecordType t33 = TTRRecordType.parse("[r1 : [x2 : e|p11==plane(x2) : t|p7==big(x2) : t|p8==old(x2) : t|head==x2 : e]|x1==epsilon(r1.head, r1) : e|r2 : [x3 : e|p12==airport(x3) : t|head==x3 : e|p9==sad(x3) :t|p10==ugly(x3) : t]|x4==iota(r2.head, r2) : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+
+		// Testing on BabyDS semantics
+		// Pickup a red box
+		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p14==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
+		// go to a door
+		TTRRecordType b0 = TTRRecordType.parse("[r : [x103 : e|head==x103 : e|p103==obj_door(x103) : t]|x104==epsilon(r.head, r) : e|e52==state_facing : es|head==e52 : es|p104==obj(e52, x104) : t]");
+//		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = t30.getAbstractions(DSType.t, 1);
+//		System.out.println("----------------------------------");
+//		for(Pair<TTRRecordType, TTRLambdaAbstract> pair:abstractions) {
+//			System.out.println("The argument: "+pair.first);
+//			System.out.println("The function: "+pair.second);
+//			System.out.println("-------");
+//		}
+
+
+		// same thing for getFilteredAbstractions
+//		List<Tree> trees = t30.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
+		List<Tree> trees = b1.getMatureFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
+		int i = 1;
+		String s = "Got " + trees.size() + " abstractions";
+		System.out.println(new String(new char[s.length()]).replace("\0", "="));
+		System.out.println(s);
+		System.out.println(new String(new char[s.length()]).replace("\0", "="));
+		for(Tree abs: trees) {
+			System.out.println("<Abstraction " + i + ">");
+			System.out.println(abs);
+			i++;
+			System.out.println(" ------------ ");
 		}
+
+
 	}
 
 	/**
 	 * Precondition: r is a supertype of this. Replaces r with replacement.
-	 *
-	 * Really this is equivalant to taking two lambda abstracts with st and syn as
+	 * Really this is equivalent to taking two lambda abstracts with st and syn as
 	 * bodies with variables in abstractedVars abstracted.
-	 *
 	 * Maybe the implementation should actually be done in these terms... yes....
 	 * TODO: later.
 	 *
@@ -1297,22 +1760,22 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		TTRRecordType othType = (TTRRecordType) other;
 		Set<Integer> all = new HashSet<Integer>();
 		for (int i = 0; i < othType.getFields().size(); i++) {
-			all.add(i);
+			all.add((Integer) i);  // AA MODIFIED THIS BECAUSE OF AN ERROR
 		}
 		return subsumesBasic((TTRRecordType) other, 0, all);
 	}
 
-	public boolean subsumesBasic(TTRRecordType other, int thisIndex, Set<Integer> remainingOtherIndeces) {
+	public boolean subsumesBasic(TTRRecordType other, int thisIndex, Set<Integer> remainingOtherIndices) {
 
 		if (thisIndex == fields.size())
 			return true;
 
-		for (Integer i : remainingOtherIndeces) {
+		for (Integer i : remainingOtherIndices) {
 			TTRField field = other.fields.get(i);
 			logger.trace(fields.get(thisIndex) + " subsumes " + field);
 			if (fields.get(thisIndex).subsumesBasic(field)) {
 				logger.trace("success");
-				Set<Integer> remaining = new HashSet<Integer>(remainingOtherIndeces);
+				Set<Integer> remaining = new HashSet<Integer>(remainingOtherIndices);
 				remaining.remove(i);
 				if (subsumesBasic(other, thisIndex + 1, remaining)) {
 					logger.trace("recursion succeeded");
@@ -1689,24 +2152,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 */
 	@Override
 	public TTRRecordType substitute(Formula f1, Formula f2) {
-		logger.trace("Substituting " + f2 + " for " + f1 + " in rec type:" + this);
-
-
-
+		logger.trace("Substituting " + f2 + " for " + f1 + " in rec type " + this);
 		TTRRecordType result = new TTRRecordType();
 		for (TTRField cur : fields) {
-
 			TTRField subst = cur.substitute(f1, f2);
-
+			logger.trace("Substituted " + f2 + " for " + f1 + " in field: " + cur + " to get: " + subst);
 			result.record.put(subst.getLabel(), subst);
 			result.fields.add(subst);
-
 		}
-
 		result.updateParentLinks();
-
 		return result;
 	}
+
 
 	public void updateParentLinks() {
 		// only root rec type updates its childern's parent links
@@ -1970,7 +2427,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 
 	public List<Tree> getFilteredAbstractions(NodeAddress prefix, DSType type, boolean filtering) {
-		logger.debug("Getting FILTERED abstractions for: " + this);
+		logger.debug("Getting FILTERED abstractions on: " + this);
+		logger.trace("Type: " + type + " Filtering: " + filtering);
 		ArrayList<Tree> result = new ArrayList<Tree>();  // AA: The abstractions of this record type, to be returned.
 		TreeFilter filter = new TreeFilter(this);
 		List<DSType> list = new ArrayList<DSType>();
@@ -1979,33 +2437,94 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			list.add(DSType.parse("es>(e>(e>t))"));
 			list.add(DSType.parse("e>(e>t)"));
 			list.add(DSType.parse("e>t"));
+
+			// BELOW ADDED BY AA
+//			logger.info(ANSI_RED + "AA HAS ADDED es>(e>t) to init templates! not verified by AE yet!" + ANSI_RESET);
+//			list.add(DSType.parse("es>(e>t)"));
+//			list.add(DSType.parse("e>(e>(es>t))"));
+//			list.add(DSType.parse("es>t"));
+
 		} else if (type.equals(DSType.cn)) {
-			list.add(DSType.parse("e>(es>cn)"));
-			list.add(DSType.parse("es>cn"));
-			list.add(DSType.parse("e>cn"));
+//			list.add(DSType.parse("e>(es>cn)"));
+//			list.add(DSType.parse("es>cn"));
+//			list.add(DSType.parse("e>cn"));
+
+			logger.warn(ANSI_RED + "AA has added cn>cn here! Confirmed by AE, for BabyDS." + ANSI_RESET);
+			list.add(DSType.parse("cn>cn")); // AAAE HAS TO HAPPEN ON THE ARGUMENT NODE...
+//			list.add(DSType.parse("cn>e"));
 		}
 
-		for (DSType dsType : list) {
+		for (DSType dsType: list) {
 			List<Tree> curTrees = getAbstractions(dsType, prefix);
-			// System.out.println("for " + dsType + ":" + curTrees);
 			// AA: Below checks for different cases of filtering (yes or no) and curTrees (isEmpty or not).
 			if (!filtering && !curTrees.isEmpty()) {
-				result.addAll(curTrees);
-				return result;
+				logger.info(ANSI_RED+"AA COMMENTED OUT CODE HERE BUT PROBABLY OK." + ANSI_RESET);
+//				result.addAll(curTrees);
+				for(Tree curTree: curTrees) {
+					if (result.contains(curTree)) {
+						logger.debug(ANSI_CYAN + "Tree already in results." + ANSI_RESET);
+						logger.trace(curTree);
+					} else {
+						result.add(curTree);
+						logger.debug(ANSI_GREEN + "Added new tree: " + ANSI_RESET + curTree);
+					}
+				}
+//				return result;
 			}
 
 			List<Tree> filtered = filter.filter(curTrees);
-
+			// subj/obj/ind-obj fields in the init method of a TreeFilter here.
 			if (!filtered.isEmpty()) {
-				result.addAll(filtered);
-				return result;
+				logger.info(ANSI_RED+"AA COMMENTED OUT CODE HERE BUT PROBABLY OK." + ANSI_RESET);
+//				result.addAll(filtered); // AA commented out
+				for(Tree curTree: curTrees) {
+					if (result.contains(curTree)) {
+						logger.debug(ANSI_YELLOW + "Tree already in results." + ANSI_RESET);
+						logger.trace(curTree);
+					} else {
+						result.add(curTree);
+						logger.trace(ANSI_GREEN + "Added new tree: " + ANSI_RESET + curTree);
+					}
+				}
+//				return result;
 			}
 		}
 		if (result.isEmpty())
 			return getEmptyAbstractions(prefix);
-
+		logger.debug(ANSI_CYAN + "Final number of tree abstractions: " + result.size() + ANSI_RESET);
 		return result;
 	}
+
+
+	/*
+	Returns tree abstractions with maximum number of nodes. It's like a filtering on top of getFilteredAbstractions, to make it work for babyDS.
+	Author: AA
+	 */
+	public List<Tree> getMatureFilteredAbstractions(NodeAddress prefix, DSType type, boolean filtering) {
+		List<Tree> matureFilteredAbstractions = new ArrayList<>();  // AA I define a mature abstraction as one with maximum number of nodes. (max depth is not a good measure for this)
+		List<Tree> filteredAbstractions = getFilteredAbstractions(prefix, type, filtering);
+		int maxDepth = 0;
+		int maxNumOfNodes = 0;
+		for (Tree t: filteredAbstractions) {
+			if (t.getDepth() > maxDepth) {
+				maxDepth = t.getDepth();
+			}
+			if (t.getNumNodes() > maxNumOfNodes) {
+				maxNumOfNodes = t.getNumNodes();
+			}
+		}
+		logger.trace("Maximum depth of tree abstractions: " + maxDepth);
+
+		logger.trace("Maximum number of nodes in tree abstractions: " + maxNumOfNodes);
+		for (Tree t: filteredAbstractions) {
+			if (t.getNumNodes() == maxNumOfNodes) {
+				matureFilteredAbstractions.add(t);
+			}
+		}
+		logger.debug(ANSI_CYAN + "Final number of tree abstractions with max num nodes: " + matureFilteredAbstractions.size() + ANSI_RESET);
+		return matureFilteredAbstractions;
+	}
+
 
 
 	private double maxFieldWidth(Graphics2D g) {
