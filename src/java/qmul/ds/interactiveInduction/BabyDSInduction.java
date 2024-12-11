@@ -28,9 +28,9 @@ public class BabyDSInduction {
 
     static final String corpusPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);
     static final String modelPath = "resource\\2024_babyds_induction\\".replace("\\", File.separator);
-    static final String datasetName = "babyds_noAdj.txt";
+    static final String datasetName = "babyds3.txt";
 
-    private static final long SEED = 42; // Set a constant seed for reproducibility
+    private static final long SEED = 45; // Set a constant seed for reproducibility
     private static final Random random = new Random(SEED);
     private static final int TOP_N = 4;  // topN learned actions to evaluate
     private static final double RATIO = 0.9;  // Train-Test split ratio
@@ -230,7 +230,7 @@ public class BabyDSInduction {
         if (saveToFile) {
             String train_set_name = "babyds_train_" + train_size + ".txt";
             String test_set_name = "babyds_test_" + test_size + ".txt";
-            try {
+            try {  // todo Filenames used to save the split data should be exactly the same as the original, plus  train/test and size. Currently it's just train/test and size. Same for when reading, and for kFold.
                 trainCorpus.saveCorpus(corpusPath + train_set_name);
                 testCorpus.saveCorpus(corpusPath + test_set_name);
             } catch (IOException e) {
@@ -392,8 +392,12 @@ public class BabyDSInduction {
 //        bbds.print_parsingCoverage_results(ttsResults.second(), null);
 
         // To run full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
-        BabyDSInduction testInduction = new BabyDSInduction();
-        testInduction.full_pipeline(FOLDS, SAVE_TO_FILE);
+//        BabyDSInduction testInduction = new BabyDSInduction();
+//        testInduction.full_pipeline(FOLDS, SAVE_TO_FILE);
+
+        // training only
+        BabyDSInduction bbds = new BabyDSInduction();
+        bbds.train_model(corpusPath + datasetName);
     }
 
 }
