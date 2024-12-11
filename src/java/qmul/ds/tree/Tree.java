@@ -768,7 +768,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		// typeMap.put(DSType.t, Formula.create("[p:t]"));
 		// for underspec VP
 		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
-		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));
+		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));  //TODO what is cnev?
 		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
 		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));
 		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
@@ -780,6 +780,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 		typeMap.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
 		typeMap.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
+		logger.warn("AA has added cn>cn here. Verified by AE.");
+		typeMap.put(DSType.parse("cn>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
 
 		// Label copula=LabelFactory.create("+BE");
 
