@@ -649,25 +649,61 @@ public class Evaluation {
 		Evaluation e = new Evaluation();
 		e.corpus = new RecordTypeCorpus();
 		
-		try {
-			e.corpus.loadCorpus(new File(corpusSourceFolder+ File.separator
-					+ "CHILDESconversion.txt"));
-			e.SplitForTesting();
-			e.precisionRecallMacro(e.testGoalPairs);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		//TTRRecordType r = TTRRecordType.parse("[r : [x : e|head==x : e|p4==letter(x) : t]|x2==epsilon(r.head, r) : e|x1==eve : e|e1==have : es|p3==obj(e1, x2) : t|p2==subj(e1, x1) : t]");
+//		try {
+//			e.corpus.loadCorpus(new File(corpusSourceFolder + File.separator + "CHILDESconversion.txt"));
+//			e.SplitForTesting();
+//			e.precisionRecallMacro(e.testGoalPairs);
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+
+		// TTRRecordType r = TTRRecordType.parse("[r : [x : e|head==x : e|p4==letter(x) : t]|x2==epsilon(r.head, r) : e|x1==eve : e|e1==have : es|p3==obj(e1, x2) : t|p2==subj(e1, x1) : t]");
 		//TTRRecordType r1 = TTRRecordType.parse("[x1==it : e|x==i : e|e1==get : es|p2==obj(e1, x1) : t|p1==subj(e1, x) : t]");
 		//TTRField headf = TTRField.parse("head==x1:e");
 		
 		//e.maximalMapping(r, r1, new HashMap<Variable,Variable>());
-		/*
+
 		TTRRecordType r = TTRRecordType.parse("[x2 : e|e2==eq : es|p4==obj(e2, x2) : t|x1==mommy : e|p3==subj(e2, x1) : t]");
 		TTRRecordType r1 = TTRRecordType.parse("[x==mommy : e|e1 : es|p2==subj(e1, x) : t|p1==busy(e1) : t]");
-		e.precisionRecall(r, r1);
-		*/
+
+		TTRRecordType r2 = TTRRecordType.parse("[x1==dylan : e|e8==state_facing : es|r2 : [x21 : e|p8==col_purple(x21) : t|p9==obj_door(x21) : t|head==x21 : e]|head==e8 : es|x14==epsilon(r2.head, r2) : e|p20==obj(e8, x14) : t|p21==subj(e8, x1) : t]");
+		TTRRecordType r3 = TTRRecordType.parse("[e29==state_holding : es|r : [x57 : e|p86==col_purple(x57) : t|p85==obj_key(x57) : t|head==x57 : e]|y==dylan : e|head==e29 : es|x58==epsilon(r.head, r) : e|p87==obj(e29, x58) : t|p86==subj(e29, y) : t]\n");
+
+		TTRRecordType r4 = TTRRecordType.parse("[x3==dylan : e|e8==state_opened : es|r2 : [x21 : e|p8==col_blue(x21) : t|p9==obj_box(x21) : t|head==x21 : e]|head==e8 : es|x14==epsilon(r2.head, r2) : e|p20==obj(e8, x14) : t|p21==subj(e8, x3) : t]");
+		TTRRecordType r5 = TTRRecordType.parse("[e24==state_opened : es|r : [x47 : e|p71==col_blue(x47) : t|p70==obj_door(x47) : t|head==x47 : e]|y==dylan : e|head==e24 : es|x48==epsilon(r.head, r) : e|p72==obj(e24, x48) : t|p71==subj(e24, y) : t]");
+
+		List<TTRRecordType[]> ls = new ArrayList<TTRRecordType[]>();
+//		ls.add(new TTRRecordType[] { r, r1 });
+		ls.add(new TTRRecordType[] { r2, r3 });
+		ls.add(new TTRRecordType[] { r4, r5 });
+		System.out.println("Micro:");
+		EvaluationResult res = e.precisionRecallMicro(ls);
+		System.out.println(res.getPrecision());
+		System.out.println(res.getRecall());
+		System.out.println(res.getFScore());
+		System.out.println();
+
+		System.out.println("Macro:");
+		List<Float> res2 = e.precisionRecallMacro(ls);
+		System.out.println(res2.get(0));
+		System.out.println(res2.get(1));
+		System.out.println(res2.get(2));
+		System.out.println();
+
+		System.out.println("Single:");
+		EvaluationResult res3 =  e.precisionRecall(r4, r5);
+		System.out.println(res3.getPrecision());
+		System.out.println(res3.getRecall());
+		System.out.println(res3.getFScore());
+
+
+//		EvaluationResult res =  e.precisionRecall(r, r1);
+//		System.out.println(res.getPrecision());
+//		System.out.println(res.getRecall());
+//		System.out.println(res.getFScore());
+
+
 	}
 
 }
