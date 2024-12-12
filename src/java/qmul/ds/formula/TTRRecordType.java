@@ -1058,7 +1058,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 	/**
 	 * Tests a given getAbstraction method on a set of RTs, and prints the results.
-	 * Output is comparison of the real and expected number of abstractions. todo extend to subsumption?
+	 * Output is comparison of the real and expected number of abstractions. todo
 	 */
 	public void testGetAbstractions(String methodName){
 		// have a list of childes RTs, complete t list below
@@ -1080,11 +1080,11 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		// AA: RTs to test the new versions of `getAbstractions`
 		// Definition of the below representation: the number after subj or obj is the number of adjectives that comes with the noun in that role.
 
-		// First playing with the subject
+		// First playing with the subject (from CHILDES semantics):
 		// subj-0, obj-0: "planes left london"
 		TTRRecordType t0 = TTRRecordType.parse("[x4==london : e|e6==leave : es|x1==planes : e|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
-		// subj-0, obj-0: "planes left london" but not as proper nouns.
-		TTRRecordType t1 = TTRRecordType.parse("[x4 : e|p1==london(x4) : t|e6==leave : es|x1 : e|p2==planes(x1) : t|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-0, obj-0: "planes left london" but not using proper noun for "planes".
+		TTRRecordType t1 = TTRRecordType.parse("[x4==london : e|e6==leave : es|x1 : e|p2==planes(x1) : t|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 		// subj-1, obj-0: "a plane left london"
 		TTRRecordType t10 = TTRRecordType.parse("[r : [x2 : e|head==x2 : e|p7==plane(x2) :t]|x1==epsilon(r.head, r) : e|x4==london : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 		// subj-2, obj-0: "a big plane left london" XXX
@@ -1092,25 +1092,30 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		// subj-3, obj-0: "a big old plane left london"
 		TTRRecordType t30 = TTRRecordType.parse("[r : [x2 : e|head==x2 : e|p7==plane(x2) :t|p8==big(x2) : t|p9==old(x2) : t]|x1==epsilon(r.head, r) : e|x4==london : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 
-		// Now playing with the object
+		// Now playing with the object:
 		// subj-0, obj-1: "planes left the airport"
-		TTRRecordType t01 = TTRRecordType.parse("[r : [x2==airport : e|head==x2 : e]|x4==iota(r.head, r) : e|x1==planes : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		TTRRecordType t01 = TTRRecordType.parse("[r : [x2 : e|p7==airport(x2) : t|head==x2 : e]|x4==iota(r.head, r) : e|x1 : e|p8==planes(x1) : t|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 		// subj-0, obj-2: "planes left the massive airport"
-		TTRRecordType t02 = TTRRecordType.parse("[r : [x2==airport : e|head==x2 : e|p9==massive(x2) : t]|x4==iota(r.head, r) : e|x1==planes : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		TTRRecordType t02 = TTRRecordType.parse("[r : [x2 : e|p7==airport(x2) : t|head==x2 : e|p9==massive(x2) : t]|x4==iota(r.head, r) : e|x1 : e|p8==planes(x1) : t|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 		// subj-0, obj-3: "planes left the massive dirty airport"
-		TTRRecordType t03 = TTRRecordType.parse("[r : [x2==airport : e|head==x2 : e|p9==massive(x2) : t|p10==dirty(x2) : t]|x4==iota(r.head, r) : e|x1==planes : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		TTRRecordType t03 = TTRRecordType.parse("[r : [x2 : e|p7==airport(x2) : t|head==x2 : e|p9==massive(x2) : t|p10==dirty(x2) : t]|x4==iota(r.head, r) : e|x1 : e|p8==planes(x1) : t|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 
-		// Now playing with both
+		// Now playing with both subject and object:
 		// subj-1, obj-1: "a plane left the airport"
-		TTRRecordType t11 = TTRRecordType.parse("[r1 : [x2==plane : e|head==x2 : e]|x1==epsilon(r1.head, r1) : e|r2 : [x3==airport : e|head==x3 : e]|x4==iota(r2.head, r2) : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
-		// subj-3, obj-0: "a big old plane left the sad ugly airport"
+		TTRRecordType t11 = TTRRecordType.parse("[r1 : [x2 : e|p7==plane(x2) :t|head==x2 : e]|x1==epsilon(r1.head, r1) : e|r2 : [x3 : e|p8==airport(x3) : t|head==x3 : e]|x4==iota(r2.head, r2) : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		// subj-3, obj-3: "a big old plane left the sad ugly airport"
 		TTRRecordType t33 = TTRRecordType.parse("[r1 : [x2 : e|p11==plane(x2) : t|p7==big(x2) : t|p8==old(x2) : t|head==x2 : e]|x1==epsilon(r1.head, r1) : e|r2 : [x3 : e|p12==airport(x3) : t|head==x3 : e|p9==sad(x3) :t|p10==ugly(x3) : t]|x4==iota(r2.head, r2) : e|e6==leave : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
 
-		// Testing on BabyDS semantics
+		// subj-4, obj-4: "the good old ds parsed the long complex funny utterance"
+		TTRRecordType t44 = TTRRecordType.parse("[r1 : [x2==ds : e|p11==good(x2) : t|p7==old(x2) : t|head==x2 : e]|x1==iota(r1.head, r1) : e|r2 : [x3 : e|p14==utterance(x3) : t|head==x3 : e|p12==long(x3) : t|p9==complex(x3) :t|p10==funny(x3) : t]|x4==iota(r2.head, r2) : e|e6==parse : es|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+
+		// Testing on BabyDS semantics:
 		// Pickup a red box
 		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p14==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
 		// go to a door
 		TTRRecordType b0 = TTRRecordType.parse("[r : [x103 : e|head==x103 : e|p103==obj_door(x103) : t]|x104==epsilon(r.head, r) : e|e52==state_facing : es|head==e52 : es|p104==obj(e52, x104) : t]");
+
+		//Testing getAbstractions
 //		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = t30.getAbstractions(DSType.t, 1);
 //		System.out.println("----------------------------------");
 //		for(Pair<TTRRecordType, TTRLambdaAbstract> pair:abstractions) {
@@ -1119,10 +1124,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 //			System.out.println("-------");
 //		}
 
-
-		// same thing for getFilteredAbstractions
+		// Testing getFilteredAbstractions
 //		List<Tree> trees = t30.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
-		List<Tree> trees = b1.getMatureFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
+		List<Tree> trees = t44.getMatureFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
 		int i = 1;
 		String s = "Got " + trees.size() + " abstractions";
 		System.out.println(new String(new char[s.length()]).replace("\0", "="));
