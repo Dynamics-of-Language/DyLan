@@ -2429,41 +2429,52 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		return s;
 	}
 
-
+	/**
+	 * Docs added by AA.
+	 * This method, as the name suggests, filters the tree abstractions of a record type (`this`) received from
+	 * `getAbstractions` method (see {@link TTRFormula}). So the core of it is actually the `getAbstractions` method.
+	 * A bit of story to [hopefully] clarify how this works:
+	 * AFAIK, the main usage of this method is for grammar induction, meaning in {@link qmul.ds.learn.TTRHypothesiser}
+	 * and {@link qmul.ds.learn.TTRWordLearner}.
+	 * There are two recursive sets of methods for getting abstractions that call each other: One works at an RT-level,
+	 * and the other at a tree-level using the RT level methods. The RT-level method is here in this class, and the
+	 * tree-level one is in {@link TTRFormula}. So the order of calling is:
+	 * first getFilteredAbstractions (or getMaximalAbstractions in the case of BabyDS),
+	 * which calls getAbstractions in TTRFormula (builds tree abstractions),
+	 * which calls getAbstractions in this class (builds RT abstractions).
+	 * @param prefix  //TODO
+	 * @param type  //TODO
+	 * @param filtering - if true, then the filtering is done, otherwise not.
+	 * @return a list of tree abstractions of the record type, filtered based on the given parameters.
+	 */
 	public List<Tree> getFilteredAbstractions(NodeAddress prefix, DSType type, boolean filtering) {
 		logger.debug("Getting FILTERED abstractions on: " + this);
 		logger.trace("Type: " + type + " Filtering: " + filtering);
-		ArrayList<Tree> result = new ArrayList<Tree>();  // AA: The abstractions of this record type, to be returned.
-		TreeFilter filter = new TreeFilter(this);
-		List<DSType> list = new ArrayList<DSType>();
+		ArrayList<Tree> result = new ArrayList<Tree>();  // AA: The filtered abstractions of this record type, to be returned.
+		TreeFilter filter = new TreeFilter(this);  // AA TODO currently haven't investigated how the filtering works...
+		List<DSType> list = new ArrayList<DSType>();  // AA: A list of DSTypes as starting templates to be abstracted/extracted
+		// out of the record type. This is built based on a given DSType.
 		if (type.equals(DSType.t)) {
 			list.add(DSType.parse("e>(e>(e>t))"));
 			list.add(DSType.parse("es>(e>(e>t))"));
 			list.add(DSType.parse("e>(e>t)"));
 			list.add(DSType.parse("e>t"));
 
-			// BELOW ADDED BY AA
-//			logger.info(ANSI_RED + "AA HAS ADDED es>(e>t) to init templates! not verified by AE yet!" + ANSI_RESET);
-//			list.add(DSType.parse("es>(e>t)"));
-//			list.add(DSType.parse("e>(e>(es>t))"));
-//			list.add(DSType.parse("es>t"));
-
 		} else if (type.equals(DSType.cn)) {
+			// AA: These were previously here, but now not necessary for BabyDS.
 //			list.add(DSType.parse("e>(es>cn)"));
 //			list.add(DSType.parse("es>cn"));
 //			list.add(DSType.parse("e>cn"));
-
-			logger.warn(ANSI_RED + "AA has added cn>cn here! Confirmed by AE, for BabyDS." + ANSI_RESET);
-			list.add(DSType.parse("cn>cn")); // AAAE HAS TO HAPPEN ON THE ARGUMENT NODE...
-//			list.add(DSType.parse("cn>e"));
+			logger.warn("AA has added cn>cn here! Verified by AE, for BabyDS.");
+			list.add(DSType.parse("cn>cn"));
 		}
 
 		for (DSType dsType: list) {
+			// AA: Here is where the TTRFormula getAbstractions method is called:
 			List<Tree> curTrees = getAbstractions(dsType, prefix);
-			// AA: Below checks for different cases of filtering (yes or no) and curTrees (isEmpty or not).
+			// AA: And this is where the filtering happens.
 			if (!filtering && !curTrees.isEmpty()) {
-				logger.info(ANSI_RED+"AA COMMENTED OUT CODE HERE BUT PROBABLY OK." + ANSI_RESET);
-//				result.addAll(curTrees);
+//				result.addAll(curTrees);  // AA commented out to avoid duplicates.
 				for(Tree curTree: curTrees) {
 					if (result.contains(curTree)) {
 						logger.debug(ANSI_CYAN + "Tree already in results." + ANSI_RESET);
@@ -2477,10 +2488,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			}
 
 			List<Tree> filtered = filter.filter(curTrees);
-			// subj/obj/ind-obj fields in the init method of a TreeFilter here.
+			// subj/obj/ind-obj fields are in the init method of a TreeFilter here.
 			if (!filtered.isEmpty()) {
-				logger.info(ANSI_RED+"AA COMMENTED OUT CODE HERE BUT PROBABLY OK." + ANSI_RESET);
-//				result.addAll(filtered); // AA commented out
+//				result.addAll(filtered); // AA commented out to avoid duplicates.
 				for(Tree curTree: curTrees) {
 					if (result.contains(curTree)) {
 						logger.debug(ANSI_YELLOW + "Tree already in results." + ANSI_RESET);
