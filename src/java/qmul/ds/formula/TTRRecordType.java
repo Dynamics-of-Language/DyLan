@@ -1083,7 +1083,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 		// Testing getFilteredAbstractions
 //		List<Tree> trees = t30.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
-		List<Tree> trees = t44.getMatureFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
+		List<Tree> trees = t44.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
 		int i = 1;
 		String s = "Got " + trees.size() + " abstractions";
 		System.out.println(new String(new char[s.length()]).replace("\0", "="));
@@ -2467,12 +2467,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 
-	/*
-	Returns tree abstractions with maximum number of nodes. It's like a filtering on top of getFilteredAbstractions, to make it work for babyDS.
-	Author: AA
+	/**
+	 * 	Returns tree abstractions with maximum number of nodes. It's like a filtering on top of getFilteredAbstractions,
+	 * 	to make it work for babyDS (the new version of getAbstractions returns a list with some extra, "pre-mature" trees).
+	 * 	That's why!
+	@author: AA
 	 */
-	public List<Tree> getMatureFilteredAbstractions(NodeAddress prefix, DSType type, boolean filtering) {
-		List<Tree> matureFilteredAbstractions = new ArrayList<>();  // AA I define a mature abstraction as one with maximum number of nodes. (max depth is not a good measure for this)
+	public List<Tree> getMaximalFilteredAbstractions(NodeAddress prefix, DSType type, boolean filtering) {
+		List<Tree> MaximalFilteredAbstractions = new ArrayList<>();  // AA I define a Maximal abstraction as one with maximum number of nodes. (max depth is not a good measure for this)
 		List<Tree> filteredAbstractions = getFilteredAbstractions(prefix, type, filtering);
 		int maxDepth = 0;
 		int maxNumOfNodes = 0;
@@ -2489,13 +2491,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		logger.trace("Maximum number of nodes in tree abstractions: " + maxNumOfNodes);
 		for (Tree t: filteredAbstractions) {
 			if (t.getNumNodes() == maxNumOfNodes) {
-				matureFilteredAbstractions.add(t);
+				MaximalFilteredAbstractions.add(t);
 			}
 		}
-		logger.debug(ANSI_CYAN + "Final number of tree abstractions with max num nodes: " + matureFilteredAbstractions.size() + ANSI_RESET);
-		return matureFilteredAbstractions;
+		logger.debug(ANSI_CYAN + "Final number of tree abstractions with max num nodes: " + MaximalFilteredAbstractions.size() + ANSI_RESET);
+		return MaximalFilteredAbstractions;
 	}
-
 
 
 	private double maxFieldWidth(Graphics2D g) {

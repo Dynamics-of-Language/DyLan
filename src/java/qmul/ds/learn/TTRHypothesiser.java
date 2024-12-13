@@ -47,7 +47,7 @@ import edu.stanford.nlp.util.Pair;
  * NOTE: Unlike the Hypothesiser class this class assumes all words are
  * unknown... does not interleave parsing...
  * =============================================================================================================
- *** UPDATE BY Arash A: All calls to getFilteredAbstractions have been replaced by getMatureFilteredAbstractions,
+ *** UPDATE BY Arash A: All calls to getFilteredAbstractions have been replaced by getMaximalFilteredAbstractions,
  * in order to get the algorithm working with BabyDS semantics.
  *
  * @author arash E
@@ -95,7 +95,7 @@ public class TTRHypothesiser extends Hypothesiser {
 	public void initialise() {
 		logger.info("Initialising the lattice...");
 		logger.trace("Getting incSet on label: " + targetType.getHeadField().getLabel() + " for target type: " + targetType);
-		Set<List<TypeLatticeIncrement>> incSet = lattice.getIncrements(targetType.getHeadField().getLabel());
+		Set<List<TypeLatticeIncrement>> incSet = lattice.getIncrements(targetType.getHeadField().getLabel());  //TODO I currently don't know how this works...
 		logger.debug("incSet size: " + incSet.size());
 		logger.debug("incSet is: ");
 		incSet.forEach(logger::debug);
@@ -109,12 +109,12 @@ public class TTRHypothesiser extends Hypothesiser {
 			boolean filtered = wholeInc.getHeadField().getDSType().equals(DSType.es);
 			logger.info("Increment: " + wholeInc);
 			logger.info("Now the abstraction trees: ");
-			List<Tree> trees = wholeInc.getMatureFilteredAbstractions(state
+			List<Tree> trees = wholeInc.getMaximalFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer(), DSType.t, filtered);
 			for (Tree tree : trees) {
 				logger.info(tree);
 				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree);
-				logger.debug("Adding tree hyp child: " + treeHyp); // Kind of an edge
+				logger.debug("Adding tree hyp child: " + treeHyp); // AA Kind of an edge
 				DAGInductionTuple child = new DAGInductionTuple(state.getCurrentTuple().getTree().clone());
 				Tree mergedInc = state.getCurrentTuple().getTargetTree().merge(treeHyp.getTree());
 				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget().merge(treeHyp.getTree());  // AA
@@ -153,7 +153,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			}
 			logger.debug("increment=" + headIncrement);
 			logger.debug(headIncrement.getRecord());
-			List<Tree> trees = headIncrement.getMatureFilteredAbstractions(state
+			List<Tree> trees = headIncrement.getMaximalFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer().up(), DSType.t,
 					false);
 			logger.debug("we get here");
@@ -203,7 +203,7 @@ public class TTRHypothesiser extends Hypothesiser {
 		logger.debug("increments on headLabel:" + headLabel);
 		for (List<TypeLatticeIncrement> inc : incSet) {
 			TTRRecordType wholeInc = flatten(inc);
-			List<Tree> nonHeadTrees = wholeInc.getMatureFilteredAbstractions(state
+			List<Tree> nonHeadTrees = wholeInc.getMaximalFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer(), DSType.t, false);
 			TTRLabel incHeadLabel = wholeInc.getHeadField().getLabel();
 			TTRRecordType headIncrement;
@@ -214,7 +214,7 @@ public class TTRHypothesiser extends Hypothesiser {
 						TTRRecordType.HEAD);
 			}
 			logger.debug(headIncrement);
-			List<Tree> trees = headIncrement.getMatureFilteredAbstractions(state
+			List<Tree> trees = headIncrement.getMaximalFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer(), DSType.t, false);
 
 			for (int i = 0; i < trees.size(); i++) {
@@ -351,7 +351,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			TTRRecordType wholeInc = flatten(inc);
 			logger.debug(wholeInc);
 
-			List<Tree> trees = wholeInc.getMatureFilteredAbstractions(state
+			List<Tree> trees = wholeInc.getMaximalFilteredAbstractions(state
 					.getCurrentTuple().getTree().getPointer().up(), DSType.cn,
 					false);
 			for (Tree tree : trees) {
@@ -415,11 +415,11 @@ public class TTRHypothesiser extends Hypothesiser {
 
 			if (wordDepth < state.wordStack().size()) {
 				// logger.debug("got the semantics but didn't get to complete tree yet");
-				logger.warn(ANSI_RED + "...too few semantics hyps. will continue hypothesising" + ANSI_RESET);
+				logger.warn(ANSI_RED + "Too few semantic hyps. Will continue hypothesising..." + ANSI_RESET);
 				logger.warn("wordDepth = " + wordDepth);
 				logger.warn("words: " + state.wordStack());
 			} else {
-				logger.info("have seen enough semantic hyps");
+				logger.info("Have seen enough semantic hyps!");
 				logger.info("extracting candidate sequence now");
 				// System.out.print(".");
 				CandidateSequence result = this.extractSequence();
@@ -448,8 +448,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			logger.warn("Target sem:" + targetType);
 			logger.warn("current target tree is:"
 					+ state.getCurrentTuple().getTargetTree());
-		}
-		else {
+		} else {
 			logger.debug("current tree is not complete and there was no two way subsumption");
 			logger.warn("maxSem: " + maxSem);
 			logger.warn("Target sem: " + targetType);  // AA well I guess these should be debug, not warn
@@ -669,7 +668,7 @@ public class TTRHypothesiser extends Hypothesiser {
 //
 //		// TTRRecordType target = TTRRecordType
 //		// .parse("[head:es|p==there(head):t]");
-//		// System.out.println(target.getMatureFilteredAbstractions(new
+//		// System.out.println(target.getMaximalFilteredAbstractions(new
 //		// NodeAddress("0"), DSType.t));
 //		TTRHypothesiser h = new TTRHypothesiser(
 //				"resource/2013-english-ttr-induction-seed/");
