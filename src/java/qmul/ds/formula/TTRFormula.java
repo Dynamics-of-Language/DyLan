@@ -22,16 +22,9 @@ import qmul.ds.type.DSType;
 
 /**
  * an interface where TTR specific methods could go
- * 
- * @author arash
- * 
+ * @author arash E and Arash A
  */
 public abstract class TTRFormula extends Formula {
-
-	/**
-	 * 
-	 * 
-	 */
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,8 +37,9 @@ public abstract class TTRFormula extends Formula {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_RED = "\u001B[31m";
-	public HashMap<Pair<TTRRecordType, BasicType>, List<Pair<TTRRecordType, TTRLambdaAbstract>>> abstractsCache = new HashMap<>();  // TODO
-	// Above added by AA for efficiency. To be integrated later- > a global cache for previous abstractions, so that we don't have to compute them again and again.
+	// Below added by AA for efficiency and is a global cache for previous abstractions, so that we don't have to
+	// compute them again and again. Once computed, they are stored in this cache for future use.
+	public HashMap<Pair<TTRRecordType, BasicType>, List<Pair<TTRRecordType, TTRLambdaAbstract>>> abstractsCache = new HashMap<>();
 
 	public abstract TTRFormula freshenVars(Tree t);
 	
@@ -66,19 +60,17 @@ public abstract class TTRFormula extends Formula {
 	public abstract TTRFormula asymmetricMerge(TTRFormula rt);
 
 	
-	public void collapseIsomorphicSuperTypes(HashMap<Variable, Variable> map)
-	{
+	public void collapseIsomorphicSuperTypes(HashMap<Variable, Variable> map) {
 		throw new UnsupportedOperationException();
-	
 	}
+
+
 	@Override
 	public TTRFormula conjoin(Formula f) {
 		if (f == null)
 			return this;
-		
 		if (f instanceof TTRFormula)
 			return ((TTRFormula) f).asymmetricMerge(this);
-		
 		throw new IllegalArgumentException("Can only conjoin a TTRFormula with TTRFormula, got a:" + f + ": "
 				+ f.getClass());
 	}
@@ -86,37 +78,70 @@ public abstract class TTRFormula extends Formula {
 	public abstract TTRFormula clone();
 
 	public abstract TTRFormula asymmetricMergeSameType(TTRFormula f);
-	
+
+	/**
+	 * Docs by AA.
+	 * The first and most general getAbstractions method, which is an interface for the next ones.
+	 * So go below to find the main one!
+	 * These are the ones that build the tree abstractions of a RT, and call the {@link TTRRecordType}'s
+	 * getAbstractions method that works at a RT level.
+	 * @param funcType
+	 * @param prefix
+	 * @return
+	 */
 	public List<Tree> getAbstractions(DSType funcType, NodeAddress prefix) {
 		return getAbstractions(funcType, prefix, funcType.getFinalType());
 	}
 
+
+	/**
+	 * Docs by AA.
+	 * The second getAbstractions method, which is an interface for the main one, coming next.
+	 * @param funcType
+	 * @param root
+	 * @param rootType
+	 * @return
+	 */
 	protected List<Tree> getAbstractions(DSType funcType, NodeAddress root, DSType rootType) {
 		List<BasicType> list = funcType.getTypesSubjFirst();
-		logger.trace("list of basic types on funcType " + funcType + " is: " + list);  // added by AA.
+		logger.trace("list of basic types on funcType " + funcType + " is: " + list);
 		list.remove(0);
 		return getAbstractions(list, root, rootType);
 	}
 
-	
+
+	/**
+	 * Docs by AA.
+	 * The main method for computing tree abstractions of a RT. The ones above it are calling this one.
+	 * This builds an abstraction tree, and annotates it with outputs of the {@link TTRRecordType}'s getAbstractions
+	 * method (the RT-level one).
+	 * How it works [roughly]: First we get some basic abstractions to begin building the tree with. Then we continue
+	 * by recursively getting abstractions on the right node and the left node, and then merging them.
+	 *
+	 * @param types
+	 * @param root
+	 * @param rootType
+	 * @return
+	 */
 	protected List<Tree> getAbstractions(List<BasicType> types, NodeAddress root, DSType rootType) {
 		List<Tree> result = new ArrayList<Tree>();
-		logger.debug("abstractions for: " + types);
+		logger.debug("Abstractions for: " + types);
 		logger.debug("on: " + this);
 		if (types.isEmpty()) {
 			Tree local = new Tree(root);
-			logger.debug("reached base.. returning one node tree");
+			logger.debug("Reached base! returning one node tree...");
 			local.getPointedNode().addLabel(new FormulaLabel(this));
 			local.getPointedNode().addLabel(new TypeLabel(rootType));
 			local.getPointedNode().remove(new Requirement(new TypeLabel(DSType.t)));
-			logger.debug("constructed: " + local);
+			logger.debug("Constructed: " + local);
 			result.add(local);
 			return result;
 		}
 
 		BasicType basic = (BasicType) types.getFirst();
 		List<Pair<TTRRecordType, TTRLambdaAbstract>> basicAbstracts = getAbstractions(basic, 1);
-		// AA NEWLY ADDED before getting abstractions, check if it is already computed and stored in the cache:
+		// AA before getting abstractions, check if it is already computed and stored in the cache
+		// TODO: for lambdaAbstracts it doesn't work (as it is not the class/type of the key for my cache) so has to be fixed.
 //		List<Pair<TTRRecordType, TTRLambdaAbstract>> basicAbstracts;
 //		boolean isTTRRT = this instanceof TTRRecordType;
 //		if (!isTTRRT)
@@ -132,8 +157,7 @@ public abstract class TTRFormula extends Formula {
 //			logger.trace("Updated cache with abstraction of " + basic + " on " + this + " .");
 //		}
 
-//		List<Pair<TTRRecordType, TTRLambdaAbstract>> basicAbstracts = getAbstractions(basic, 1);
-		logger.trace(ANSI_BLUE+"AA got " + basicAbstracts.size()+  " basic abstractions with " + basic + ANSI_RESET);
+		logger.trace(ANSI_BLUE+"Got " + basicAbstracts.size()+  " basic abstractions with " + basic + ANSI_RESET);
 		logger.trace(basicAbstracts);
 		for (Pair<TTRRecordType, TTRLambdaAbstract> pair : basicAbstracts) {
 			Tree local = new Tree(root);
@@ -145,7 +169,6 @@ public abstract class TTRFormula extends Formula {
 
 			logger.trace("AA now trying to get cn abstracts on " + pair.first());
 			List<Pair<TTRRecordType, TTRLambdaAbstract>> argumentAbstracts;
-			// AA Same as above, check if it is already computed and stored in the cache:
 			if (abstractsCache.containsKey(new Pair<>(pair.first(), DSType.cn))) {
 				logger.trace("Already in cache: Abstraction of " + DSType.cn + " on " + pair.first() + " .");
 				argumentAbstracts = abstractsCache.get(new Pair<>(pair.first(), DSType.cn));
@@ -155,15 +178,15 @@ public abstract class TTRFormula extends Formula {
 				abstractsCache.put(new Pair<>(pair.first(), DSType.cn), argumentAbstracts);
 				logger.trace("Updated cache with abstraction of " + DSType.cn + " on " + pair.first() + " .");
 			}
-//			List<Pair<TTRRecordType, TTRLambdaAbstract>> argumentAbstracts = pair.first().getAbstractions(DSType.cn, 1); // AA THIS LOOKS SUSPICIOUS
-			logger.trace(ANSI_PURPLE+"cn abs size:  "+argumentAbstracts.size()+ANSI_RESET);
-			logger.warn(ANSI_RED+"AA changed by me from size=1 to more sizes..." + ANSI_RESET);
+			logger.trace("cn abstracts size:  "+argumentAbstracts.size());
+			logger.warn("AA changed by me from size=1 to more sizes...");
 
 			List<Tree> prematureTreeCopies = new ArrayList<>();
 			if (!argumentAbstracts.isEmpty()) {
 				logger.warn(ANSI_RED+"AA DANGEROUS test going on!"+ANSI_RESET);
 //				for (Pair<TTRRecordType, TTRLambdaAbstract> argumentAbstract : argumentAbstracts) {  // AA Replace this with "only the first one"
-				// AA First, make the right node for the first one (here), and then put the rest under it (below).
+				// AA First, make the right node for the first one (here), and then put the rest under it (below). This
+				// is an assumption I made in the way I am getting the abstractions from the RTs, in this specific case.
 				Pair<TTRRecordType, TTRLambdaAbstract> argumentAbstract = argumentAbstracts.getFirst();
 				local.make(BasicOperator.DOWN_1);
 				local.go(BasicOperator.DOWN_1);
@@ -177,12 +200,10 @@ public abstract class TTRFormula extends Formula {
 				local.put(new FormulaLabel(argumentAbstract.first()));
 				local.go(BasicOperator.UP_0);
 
-
 				// AA Now the rest of the argumentAbstracts are supposed to go under this one:
 				for (int i=1; i<argumentAbstracts.size(); i++) {
 					Tree copyLocal = local.clone();
 					Pair<TTRRecordType, TTRLambdaAbstract> argumentAbstractionChildren = argumentAbstracts.get(i);  // AA These should be added under argumentAbstracts.get(0).
-//					local.make(BasicOperator.DOWN_1);
 					copyLocal.go(BasicOperator.DOWN_0);
 					copyLocal.make(BasicOperator.DOWN_1);
 					copyLocal.go(BasicOperator.DOWN_1);
@@ -194,51 +215,12 @@ public abstract class TTRFormula extends Formula {
 					copyLocal.go(BasicOperator.DOWN_0);
 					copyLocal.put(new TypeLabel(DSType.cn));
 					copyLocal.put(new FormulaLabel(argumentAbstractionChildren.first()));
-					// Here I have to get e abstractions on this NEWWWWW -> I think not just e, but generally lower abstracts... that should include e, and cn hopefully.
-					// update: not anymore, so I will comment it out.
+
 					copyLocal.go(BasicOperator.UP_0);
 					logger.debug("constructed: " + copyLocal);
 					result.add(copyLocal); // AA I think it's correct.
-//					List<Pair<TTRRecordType, TTRLambdaAbstract>> eAbstracts;
-//					// AA Same as above, check if it is already computed and stored in the cache:
-//					if (abstractsCache.containsKey(new Pair<>(argumentAbstractionChildren.first(), DSType.e))) {
-//						logger.trace("Already in cache: Abstraction of " + DSType.e + " on " + argumentAbstractionChildren.first() + " .");
-//						eAbstracts = abstractsCache.get(new Pair<>(argumentAbstractionChildren.first(), DSType.e));
-//						logger.trace("it is: " + eAbstracts);
-//					} else {
-//						logger.warn(ANSI_RED+"AA newVarSuffix might be wrong here. Please double-check!"+ANSI_RESET);
-//						eAbstracts = argumentAbstractionChildren.first().getAbstractions(DSType.e, 3); // AA THIS LOOKS SUSPICIOUS
-//						abstractsCache.put(new Pair<>(argumentAbstractionChildren.first(), DSType.e), eAbstracts);
-//						logger.trace("Updated cache with abstraction of " + DSType.e + " on " + argumentAbstractionChildren.first() + " .");
-//					}
-////					List<Pair<TTRRecordType, TTRLambdaAbstract>> eAbstractsOnArg = argumentAbstractionChildren.first().getAbstractions(DSType.e, 3);
-//					logger.trace(ANSI_PURPLE + "e abs size: " + eAbstracts.size() + ANSI_RESET);
-//					if (eAbstracts.size() == 1) {
-//							copyLocal.make(BasicOperator.DOWN_1);
-//							copyLocal.go(BasicOperator.DOWN_1);
-//							copyLocal.put(new FormulaLabel(eAbstracts.getFirst().second()));
-//							DSType abstractedTypeE = DSType.create(DSType.e, DSType.cn);
-//							copyLocal.put(new TypeLabel(abstractedTypeE));
-//							copyLocal.go(BasicOperator.UP_1);
-//							copyLocal.make(BasicOperator.DOWN_0);
-//							copyLocal.go(BasicOperator.DOWN_0);
-//							copyLocal.put(new TypeLabel(DSType.e));
-//							copyLocal.put(new FormulaLabel(eAbstracts.getFirst().first()));
-//							copyLocal.go(BasicOperator.UP_0);
-//							logger.debug("constructed: " + copyLocal);
-//							result.add(copyLocal); // AA I think it's correct.
-////							logger.info(ANSI_GREEN+"abstraction order " + abstractionOrder + ANSI_RESET);
-////							abstractionOrder++;
-////							logger.info("added: " + copyLocal);
-//					} else {
-//						logger.warn(ANSI_RED+"e abs size is not 1 and this is the [e-ttt] case. So I'm going to try sth super nasty: "+ANSI_RESET);
-////						result.add(copyLocal);  // todo
-//
-//					}
-//					copyLocal.go(BasicOperator.UP_0);
 					copyLocal.go(BasicOperator.UP_0);
 
-					// This used to happen outside argument == 1, why does it have to be here now?  // todo this shouldn't be pair, but should be eAbs?
 					logger.warn(ANSI_RED+"AA DANGEROUS test!"+ANSI_RESET);
 					copyLocal.put(new TypeLabel(basic));
 					copyLocal.put(new FormulaLabel(pair.first()));
@@ -261,7 +243,7 @@ public abstract class TTRFormula extends Formula {
 						logger.warn(ANSI_RED + "AA lower abstractions is empty." + ANSI_RESET);
 						lowerAbstracts = new ArrayList<>();
 					}
-					logger.trace("Ashraf lower abstracts are: " + lowerAbstracts);
+					logger.trace("lower abstracts are: " + lowerAbstracts);
 					logger.debug("now merging: " + copyLocal);
 					for (Tree lower : lowerAbstracts) {
 						logger.debug("with root= " + lower.getRootNode().getAddress());
@@ -271,30 +253,14 @@ public abstract class TTRFormula extends Formula {
 							merged.go(BasicOperator.DOWN_1);
 						logger.warn(ANSI_RED+"AA very dangerous test here!"+ANSI_RESET);
 						prematureTreeCopies.add(merged);
-//						logger.trace("ashraf size prematureTreeCopies size: " + prematureTreeCopies.size());
-//						logger.trace("prematureTreeCopies: " + prematureTreeCopies);
-						// TODO do I have to add to result here?
-//						local.merge(merged);
-//						result.add(local);
-//						result.add(merged);
 					}
 					if (lowerAbstracts.isEmpty()) {
-//						logger.warn(ANSI_RED+"AA lower abstractions is empty. doing sth dodgy"+ANSI_RESET);
-						prematureTreeCopies.add(copyLocal); // donno if this is correct.
-						// I think merging and adding to result should be done here to make it work...
+						prematureTreeCopies.add(copyLocal); // todo donno if this is correct...
 					}
-					logger.trace("ash prematureTreeCopies size: " + prematureTreeCopies.size());
-
-//					else {
-//						logger.warn(ANSI_RED + "AA lower abstractions is empty. doing sth dodgy" + ANSI_RESET);
-//						result.add(copyLocal); // donno if this is correct.
-						// I think merging and adding to result should be done here to make it work...
-//					}
 				}
 			}
 
 			logger.debug("len of prematureTreeCopies: " + prematureTreeCopies.size());
-//			logger.warn(ANSI_RED+"AA DANGEROUS commented out by AA below here!"+ANSI_RESET);
 			local.put(new TypeLabel(basic));
 			local.put(new FormulaLabel(pair.first()));
 			local.go(BasicOperator.UP_0);
@@ -315,32 +281,17 @@ public abstract class TTRFormula extends Formula {
 				Tree merged = local.merge(lower);
 				if (merged.keySet().contains(merged.getPointer().down1()))
 					merged.go(BasicOperator.DOWN_1);
-//				logger.warn(ANSI_RED+"AA DANGEROUS test new ashraf!"+ANSI_RESET);
-				// AA for all trees in prematureTreeCopies, merge them with local and also with lower, and add to result.
 				for (Tree prematureTreeCopy : prematureTreeCopies) {
 					Tree merged2 = prematureTreeCopy.merge(merged);
 					if (merged2.keySet().contains(merged2.getPointer().down1()))
 						merged2.go(BasicOperator.DOWN_1);
 					result.add(merged2);
 				}
-//				logger.warn(ANSI_RED+"AA ashraf commented out below!"+ANSI_RESET);
-//				logger.trace("merged is: " + merged);
-				result.add(merged); // todo commented out just now!!!!!
-//				result.add(merged.merge(cop))
-//					Tree merged2 = prematureTreeCopy.merge(merged);
-//					if (merged2.keySet().contains(merged2.getPointer().down1()))
-//						merged2.go(BasicOperator.DOWN_1);
-//					result.add(merged2);
-//				logger.info(ANSI_GREEN+"abstraction order " + abstractionOrder + ANSI_RESET);
-//				abstractionOrder++;
-//				logger.info("added: " + merged);
-//				logger.trace("ashraf size result size: " + result.size());
+				result.add(merged);
 			}
 		}
-
 		return result;
 	}
-
 
 
 	/**
