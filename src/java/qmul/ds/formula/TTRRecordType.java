@@ -254,21 +254,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * This method is in charge of an alpha conversion whereby something of type basicDSType is abstracted out of this
 	 * record type. It returns a list of pairs, containing all the ways in which the basicDSType can be abstracted out
 	 * of this record type. Each pair contains the abstracted type and the lambda abstract that does the abstraction.
-	 * TODO AE have to create a special case for abstracting out field of type t (same as cn?)
 	 * @param basicDSType the type of the field to be abstracted out
 	 * @return list of pairs of abstracted type and lambda abstract
 	 */
 	public List<Pair<TTRRecordType, TTRLambdaAbstract>> getAbstractions(BasicType basicDSType, int newVarSuffix) {
 		List<Pair<TTRRecordType, TTRLambdaAbstract>> result = new ArrayList<>();
-		// TODO AA Can be made more efficient: if an abstraction already exists in `result`, don't do it again; I could see
-			// lots of repetitions... It's already cached, so just check if it's in there before getting the abstraction!
 		logger.debug("extracting " + basicDSType + " from " + this);
 		TTRField head = getHeadField();
 
 		for (TTRField f : fields) {
 			logger.trace("Current field: " + f);
-			if (basicDSType.equals(DSType.cn)) {  // AA in original:  && (f.getDSType() == null || f.getDSType().equals(DSType.cn))) {
-				if(f.getDSType() == null) {  // This is the case where f is a restrictor RT, hence the cast on line 266 // AA in original: this block didn't exist
+			if (basicDSType.equals(DSType.cn)) {
+				if(f.getDSType() == null) {  // This is the case where f is a restrictor RT, hence the cast on the third line after this
 					// abstracting cn out of e
 					logger.trace(ANSI_PURPLE + "dealing with a restrictor RT and basictype cn..." + ANSI_RESET);
 					TTRRecordType argument = (TTRRecordType) f.getType();
@@ -286,24 +283,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 						logger.trace("added abs: " + abs);
 						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
 						logger.warn(ANSI_RED+"doing sth new and ridiculous here" + ANSI_RESET);
-						// do the cache thing
-						// one: t on left, then one e, then t on right as much as possible, then add all.
-						// Two: e on left, then t on right as much as possible, then add all.
 						List<Pair<TTRRecordType, TTRLambdaAbstract>> t_abs = argument.getAbstractions(DSType.t, 2);
-//						logger.warn(ANSI_RED+"are equal: " + t_abs.equals(argument.getAbstractions(DSType.cn, 2))+ANSI_RESET);
-//						logger.warn(ANSI_RED+"cn_abs: " + argument.getAbstractions(DSType.cn, 2)+ANSI_RESET);
-//						logger.warn(ANSI_RED+"t_abs: " + argument.getAbstractions(DSType.t, 2)+ANSI_RESET);
 						if (!t_abs.isEmpty()) {
 							result.addAll(t_abs);
-//							result.addAll(argument.getAbstractions(DSType.e, 2));  // todo
-						} else {
-//							result.addAll(argument.getAbstractions(DSType.e, 2));  // todo
 						}
-
 					}
 //					result.add(abs);
-				} else if (f.getDSType().equals(DSType.cn)) {  // AA in original: this block didn't exist.
-//					TODO here: SIMILAR TO THE CODE BELOW 281-294 + FIND the method that uses
+				} else if (f.getDSType().equals(DSType.cn)) {
 					logger.trace(ANSI_PURPLE + "AA non-restrictor cn - according to AE, to be fixed by me..." + ANSI_RESET);
 					if (f.getLabel().equals(HEAD) && f.getType() != null)
 						continue;
@@ -317,7 +303,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 							if (!cur.getLabel().equals(head.getLabel()) && !cur.dependsOn(head) && !cur.getLabel().equals(HEAD)) {
 								// AA This is where an assumption was made that stopped BabyDS from learning, and AE found and fixed it.
 								argument.putAtEnd(new TTRField(cur));
-								logger.debug("Added dependent: " + cur);  // Added by AA, could be trace, IDK.
+								logger.debug("Added dependent: " + cur);
 							}
 						}
 						else {
@@ -325,15 +311,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 						}
 					}
 
-
 					// new
 					logger.warn(ANSI_RED+"AA: let's see if this works cn... " + argument+ANSI_RESET);
-					logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
+					logger.debug("argument: " + argument);
 					Variable v = new Variable("R" + newVarSuffix);
 					TTRRecordType core = new TTRRecordType(this);  // AA This is the core of the lambda abstraction
-
 					core.removeFields(argument);
-					// argument.deemHead(f.getLabel());
 					if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
 						logger.debug("constructed empty core.");
 						continue;
@@ -378,23 +361,15 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
 					if(result.contains(abs)) {
 						logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
-	//					continue;
 					} else {
 						result.add(abs);
 						logger.trace("added abs: " + abs);
 						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
 					}
-	//				result.add(abs);
-	//				logger.trace("added abs: " + abs);
-	//				logger.trace("Got " + result.size() + " abstractions so far.");
-
-
-
-
 				}  // AA TRYING SOMETHING THAT MIGHT BE THE ANSWER:...
 				else if (f.getDSType().equals(DSType.t)) {
-					logger.warn(ANSI_RED + "AA PROBABLY HAVE TO DELETE THIS PART!" + ANSI_RESET);
-					logger.trace(ANSI_PURPLE + "AA non-restrictor NEWEST T - according to AE, to be fixed by me..." + ANSI_RESET);
+					logger.warn(ANSI_RED + "AA not sure about THIS PART!" + ANSI_RESET);
+					logger.trace(ANSI_PURPLE + "AA non-restrictor T - according to AE, to be fixed by me..." + ANSI_RESET);
 					if (f.getLabel().equals(HEAD) && f.getType() != null)
 						continue;
 					logger.debug("extracting field: " + f);
@@ -504,13 +479,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 						result.add(abs);
 						logger.trace("added abs: " + abs);
 						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
-						logger.trace(ANSI_RED+"AA NOW also adding the abs on the argument, maybe this is missing..." + ANSI_RESET);
+						logger.warn(ANSI_RED+"AA NOW also adding the abs on the argument, maybe this is missing..." + ANSI_RESET);
 						result.addAll(argument.getAbstractions(basicDSType, newVarSuffix));
 					}
 //					result.add(abs);
 				} else if (f.getDSType().equals(DSType.t)) {  // AA in original: this block didn't exist.
 					// AE suggested with t, and he said it's similar to `t`, so I changed it to t.
-//					TODO here: SIMILAR TO THE CODE BELOW 281-294 + FIND the method that uses
 					logger.trace(ANSI_PURPLE + "AA non-restrictor t - according to AE, to be fixed by me..." + ANSI_RESET);
 					if (f.getLabel().equals(HEAD) && f.getType() != null)
 						continue;
@@ -533,7 +507,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 						}
 					}
 
-
 					logger.warn(ANSI_RED+"AA: let's see if this works t ... " + argument+ANSI_RESET);
 					logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
 					Variable v = new Variable("R" + newVarSuffix);
@@ -541,7 +514,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					logger.trace("core before removing argument: " + core);
 					core.removeFields(argument);
 					logger.trace("core after removing argument: " + core);
-//					 argument.deemHead(f.getLabel());
 					if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
 						logger.debug("constructed empty core, so we skip this.]");
 						continue;
@@ -588,24 +560,15 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
 					if(result.contains(abs)) {
 						logger.warn(ANSI_CYAN+"AA: This abstraction already exists in the list of abstractions. Skipping."+ANSI_RESET);
-	//					continue;
 					} else {
 						result.add(abs);
 						logger.trace("added abs: " + abs);
 						logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
 					}
-	//				result.add(abs);
-	//				logger.trace("added abs: " + abs);
-	//				logger.trace("Got " + result.size() + " abstractions so far.");
-
-
-
 				} else {
 					logger.trace(ANSI_YELLOW + "AA not possible to extract " + basicDSType + " from " + f + ANSI_RESET);
 				}
 			}
-
-
 
 			else if (f.getDSType() != null && f.getDSType().equals(basicDSType)) {
 				logger.trace(ANSI_PURPLE + "not cn nor t..." + ANSI_RESET);
@@ -626,18 +589,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 							logger.debug("Added dependent: " + cur);  // Added by AA, could be trace, IDK.
 						} else {  // I think this is the case where the field is dependent but not head...
 							logger.trace("AA " + cur + " is I think a non-head dependent of " + f);
-
 						}
 					} else {
 						logger.trace("AA " + cur + " is not a dependent of  " + f);
 					}
 				}
-				logger.debug("argument: " + argument); // AA So this is after the dependents have been added to the argument?
+				logger.debug("argument: " + argument);
 				Variable v = new Variable("R" + newVarSuffix);
 				TTRRecordType core = new TTRRecordType(this);  // AA This is the core of the lambda abstraction
 
 				core.removeFields(argument);
-				// argument.deemHead(f.getLabel());
 				if (core.isEmpty() || (core.numFields() == 1 && core.hasLabel(HEAD))) {
 					logger.debug("constructed empty core.");
 					continue;
@@ -694,11 +655,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					logger.trace("added abs: " + abs);
 					logger.trace(ANSI_GREEN+"Got " + result.size() + " abstractions so far."+ANSI_RESET);
 				}
-//				result.add(abs);
-//				logger.trace("added abs: " + abs);
-//				logger.trace("Got " + result.size() + " abstractions so far.");
 			}
-			// AA ADDED BY ME
 			else {
 				logger.trace(ANSI_YELLOW + "AA not possible to extract " + basicDSType + " from " + f + ANSI_RESET);
 			}
@@ -2364,7 +2321,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		if (this.head().getDSType().equals(DSType.es)) {
 			if (!this.hasDependent(this.getHeadField())) {
 				Tree local = new Tree(prefix);
-				logger.debug("reached base.. returning one node tree");
+				logger.debug("Reached base! Returning one node tree...");
 				local.put(new Requirement(new TypeLabel(DSType.t)));
 				logger.debug("constructed:" + local);
 				result.add(local);
