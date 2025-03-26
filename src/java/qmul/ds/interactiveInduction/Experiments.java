@@ -10,10 +10,7 @@ import static qmul.ds.interactiveInduction.BabyDSInduction.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Experiments {
     private static final Logger logger = Logger.getLogger(Experiments.class);
@@ -27,6 +24,9 @@ public class Experiments {
 
     static final String rq2path = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
     String forgettingPath = "resource\\2025-babyds-RQ2\\forgetting\\".replace("\\", File.separator);
+    String generalisationPath = "resource\\2025-babyds-RQ2\\generalisation\\".replace("\\", File.separator);
+    public static final int SEED = 45; // Set a constant seed for reproducibility
+
 
     /**
      * todo fix doc
@@ -35,7 +35,7 @@ public class Experiments {
      * @param endClass
      */
     public void test_generalisation(int startClass, int endClass) {
-        BabyDSInduction bds = new BabyDSInduction();
+        BabyDSInduction bds = new BabyDSInduction(generalisationPath);
         File data1 = new File(seedGrammarPath + "class" + startClass + ".txt");
         File data2 = new File(seedGrammarPath + "class" + endClass + ".txt");
         RecordTypeCorpus corpus1 = new RecordTypeCorpus();
@@ -57,6 +57,7 @@ public class Experiments {
         // of class 1, and also a mix of these), and train a model on it:
 //        RecordTypeCorpus class1_minimum_data = new RecordTypeCorpus();  //TODO and more because I want to add batches
         // First shuffle class 1 data
+        Random random = new Random(SEED);
         Collections.shuffle(corpus1, random);
         List<RecordTypeCorpus> training_batches_class1 = bds.prepare_batches(corpus1);
         int minimum_data_class1_index = 6;  // TODO fix
@@ -66,7 +67,7 @@ public class Experiments {
         // Select the minimum data of class 1 (based on previous experiments - using indices) and add keep the rest as batches to be added later.
 
         // train test split class 2
-        Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_pair_class2 = bds.train_test_split("class" + endClass, TRAIN_TEST_RATIO, SAVE_TO_FILE, "");
+        Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_pair_class2 = bds.train_test_split("class" + endClass, TRAIN_TEST_RATIO, SAVE_TO_FILE, "", SEED);
         RecordTypeCorpus test_data = train_test_pair_class2.second();
         List<RecordTypeCorpus> training_batches_class2 = bds.prepare_batches(train_test_pair_class2.first());
 
@@ -110,7 +111,7 @@ public class Experiments {
      */
     public void test_forgetting(int startClass, int endClass, String format) {
         logger.info("Initiating forgetting experiments...");
-        BabyDSInduction ds = new BabyDSInduction();
+        BabyDSInduction ds = new BabyDSInduction(forgettingPath);
         ds.verify_model_path(forgettingPath);
         logger.debug("BabyDSInduction instance created.");
         File data1 = new File(rq2path + "class" + startClass + ".txt");
@@ -135,6 +136,7 @@ public class Experiments {
         // of class 1, and also a mix of these), and train a model on it:
 //        RecordTypeCorpus class1_minimum_data = new RecordTypeCorpus();  //TODO and more because I want to add batches
         // First shuffle class 1 data
+        Random random = new Random(SEED);
         Collections.shuffle(corpus1, random);
         List<RecordTypeCorpus> class1_batches = ds.prepare_batches(corpus1);
         // get the test data
