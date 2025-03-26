@@ -255,7 +255,7 @@ public class WordHypothesisBase {
 	}
 
 	public Lexicon getLearnedLexicon(int topN) {
-		logger.info("Getting learned lexicon with topN=" + topN);
+		logger.info("Getting learned lexicon with topN=" + topN + " from the model...");
 		Lexicon l = new Lexicon();
 		for (HasWord w : priorDist.keySet()) {
 			l.put(w.word(), new ArrayList<LexicalAction>());
@@ -284,12 +284,52 @@ public class WordHypothesisBase {
 		return l;
 	}
 
+	/**
+	 * Copilot-generated fix for the getLearnedLexicon method (for correct rank assignment).
+	 * @param topN top-N actions
+	 * @return Lexicon object containing the top-N actions for each word in the lexicon
+	 * @author: AA + Copilot
+	 */
+	public Lexicon getLearnedLexiconAA(int topN) {
+		logger.info("Getting learned lexicon with topN=" + topN + " from the model...");
+		Lexicon l = new Lexicon();
+		for (HasWord w : priorDist.keySet()) {
+			l.put(w.word(), new ArrayList<LexicalAction>());
+			List<WordHypothesis> sortedHyps = getWordHyps(w);
+			double lastProb = Double.POSITIVE_INFINITY;
+			int currentRank = -1;
+
+			for (int i = 0; i < Math.min(topN, sortedHyps.size()); i++) {
+				WordHypothesis h = sortedHyps.get(i);
+				if (h.getProb() < lastProb) {
+					currentRank = i;
+					lastProb = h.getProb();
+				}
+
+				LexicalAction act = h.getCoreAction();
+				act.setProb(h.getProb());
+				act.setRank(currentRank);
+				logger.info(ANSI_GREEN+ "Adding action \"" + act + "\" to lexicon for word: " + w + " with prob:" + h.getProb() + " and rank: " + currentRank + ANSI_RESET);
+				logger.debug("[ACTION INFO]  word: " + act.getWord() + " | lexical action type: " + act.getLexicalActionType() + " | semantics: " + act.getSemantics());
+				logger.debug("Action effect is: \n" + act.getEffects()[0]);
+				logger.debug("Hyp was:" + h);
+				l.get(w.word()).add(act);
+			}
+		}
+		return l;
+	}
+
+	/**
+	 * @param f file name
+	 * @param topN top-N actions
+	 * @throws IOException
+	 */
 	public void saveLearnedLexicon(String f, int topN) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f+"-top-"+topN));
 		
-		Lexicon lex = this.getLearnedLexicon(topN);
+		Lexicon lex = this.getLearnedLexiconAA(topN);  // AA NEW dangerous...
 		logger.info(ANSI_BLUE + "Lexicon size: " + lex.size()+  ANSI_RESET);
-		logger.info(ANSI_BLUE + "Lexicon is: " + lex + ANSI_RESET);
+		logger.debug(ANSI_BLUE + "Lexicon is: " + lex + ANSI_RESET);
 		out.writeObject(lex);
 //		out.writeObject();
 		out.close();
@@ -447,14 +487,14 @@ public class WordHypothesisBase {
 		loadLogProbsIntoHyps(sentence);
 		logger.info("After processing " + sentence + " PriorDist is " + priorDist);
 		this.numTrainingSoFar++;
-		System.out.println("done");
+		logger.info("done");
 	}
 
 	private void printHypNumbers(Collection<Word> sentence) {
-		System.out.println();
+		logger.info("\n");
 		for(Word w:sentence)
-			System.out.print(w+"::"+this.priorDist.get(w).size()+" ");
-		System.out.println();
+			logger.info(w+"::"+this.priorDist.get(w).size()+" ");
+		logger.info("\n");
 	}
 
 	private void discountPrior(Collection<Word> sentence) {
