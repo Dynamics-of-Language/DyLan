@@ -75,18 +75,18 @@ public class Experiments {
         // Merging here probably has to happen inside a loop, as I need to combine batches of class 1 and 2.
         String mergedCorpusName = "merged_" + startClass + "_" + endClass;  // TODO come up with a better name convention, as I will need a reflection of the batch sizes in the name.
         try {
-            mergeFiles(new File(seedGrammarPath + train_test_pair_class2.first.corpusName), data2, new File(seedGrammarPath + mergedCorpusName + ".txt"));
+            mergeFiles(new File(seedGrammarPath + train_test_pair_class2.first.corpusName), data2, new File(seedGrammarPath + mergedCorpusName + ".txt")); //todo fix
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         RecordTypeCorpus merged_corpus = new RecordTypeCorpus();
         try {
-            merged_corpus.loadCorpus(new File(seedGrammarPath + mergedCorpusName + ".txt"));
+            merged_corpus.loadCorpus(new File(seedGrammarPath + mergedCorpusName + ".txt")); //todo fix
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         // TODO shuffle training data here (so that later on I can show the effect of curriculum learning).
-        bds.train_model(seedGrammarPath + mergedCorpusName + ".txt", "model_" + startClass + "_" + endClass);
+        bds.train_model(seedGrammarPath + mergedCorpusName + ".txt", "model_" + startClass + "_" + endClass, seedGrammarPath);  //todo fix
         // Now that we have both models, evaluate them on the test set of class 1:
         Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = bds.evaluate_model(0);
 
@@ -94,7 +94,7 @@ public class Experiments {
         // Now time to train on the batches of class 2 only, and evaluate on the same test set.
         // for batch in training_batches_class2
         for(RecordTypeCorpus batch : training_batches_class2) {
-            bds.train_model(batch.corpusName, "");
+            bds.train_model(batch.corpusName, "", seedGrammarPath);  //todo fix
             Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults2 = bds.evaluate_model(0);
             // write to file the model.
 //            bds.evaluate_model(test_data);
@@ -177,7 +177,7 @@ public class Experiments {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                ds.train_model(mergedCorpusS, forgettingPath);
+                ds.train_model(mergedCorpusS, forgettingPath, seedGrammarPath);
                 Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = ds.evaluate_model(0, forgettingPath, "babyds");
                 EvalResult ev = new EvalResult(ttsResults.first, ttsResults.second);
                 System.out.println("Eval for batch number: " + training_batches_class2.indexOf(batch));
@@ -197,7 +197,7 @@ public class Experiments {
                 mergedCorpusF.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // maybe add and use a setName method? //todo fix
                 // todo save in forgetting dir - later add batch number to the name
                 Collections.shuffle(mergedCorpusF, random);
-                ds.train_model(mergedCorpusF, forgettingPath); //
+                ds.train_model(mergedCorpusF, forgettingPath, seedGrammarPath); //
                 Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = ds.evaluate_model(0, forgettingPath, "babyds");
                 EvalResult ev = new EvalResult(ttsResults.first, ttsResults.second);
                 System.out.println(ev.getParsingCoverageResultsTable(""));

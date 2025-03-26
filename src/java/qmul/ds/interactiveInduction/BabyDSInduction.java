@@ -432,8 +432,8 @@ public class BabyDSInduction {
                     trainCorpus.add(pair);
             }
             if (saveToFile) {
-                String train_set_name = "babyds_kfcv_" + i + "_train_" + trainCorpus.size() + ".txt";
-                String test_set_name = "babyds_kfcv_" + i + "_test_" + testCorpus.size() + ".txt";
+                String train_set_name = datasetName + "_kfcv_" + i + "_train_" + trainCorpus.size() + ".txt";
+                String test_set_name = datasetName + "_kfcv_" + i + "_test_" + testCorpus.size() + ".txt";
                 trainCorpus.saveCorpus(modelAddress + train_set_name);
                 testCorpus.saveCorpus(modelAddress + test_set_name);
             }
@@ -447,14 +447,14 @@ public class BabyDSInduction {
      * Overloads the below method, so training corpus can be passed as both a RecordTypeCorpus and a path to the corpus file.
      * @param trainingCorpusFileName The path to the training data file.
      */
-    public void train_model(String trainingCorpusFileName, String userDir) {
+    public void train_model(String trainingCorpusFileName, String userDir, String seedGrammarAddress) {
         RecordTypeCorpus trainingCorpus = new RecordTypeCorpus();
         try {
             trainingCorpus.loadCorpus(new File(userDir + trainingCorpusFileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        train_model(trainingCorpus, userDir);
+        train_model(trainingCorpus, userDir, seedGrammarAddress);
     }
 
 
@@ -463,7 +463,7 @@ public class BabyDSInduction {
      * @param trainingCorpus The training data to train the model on.
      * @param modelDir The directory to save the learned lexicon to.
      */
-    public void train_model(RecordTypeCorpus trainingCorpus, String modelDir) {  //todo add seed + shuffle capabilities here!
+    public void train_model(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress) {
         logger.info("Training BabyDS model...");
         // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
         String[] files = new File(modelDir).list();
@@ -492,7 +492,7 @@ public class BabyDSInduction {
             }
         }
 
-        TTRWordLearner babyDS = new TTRWordLearner(seedGrammarPath);
+        TTRWordLearner babyDS = new TTRWordLearner(seedGrammarAddress);
         try {
             babyDS.setTrainingCorpus(trainingCorpus);
             logger.info("BabyDS training starting...");
@@ -515,7 +515,7 @@ public class BabyDSInduction {
      * @param kFold The number of folds for k-fold cross validation. If 0, a train-test split is performed.
      * @param saveToFile A boolean to save the training and testing sets to file.
      */
-    public void full_pipeline(int kFold, Double train_test_ratio, boolean saveToFile, String modelAddress, String datasetName, int seed) {
+    public void full_pipeline(int kFold, Double train_test_ratio, boolean saveToFile, String modelAddress, String datasetName, int seed, String seedGrammarAddress) {
         if (kFold != 0) {  // The k-fold cross validation scenario.
             logger.info("Performing " + kFold + "-fold Cross Validation...");
             List<HashMap<Integer, HashMap<String, HashMap<String, Double>>>> kfSemAccResults = new ArrayList<>();
@@ -525,8 +525,7 @@ public class BabyDSInduction {
                 int i = 0;  // fold index, aka kfcv counter.
                 for (Pair<RecordTypeCorpus, RecordTypeCorpus> pair : train_test_pairs) {
                     int train_size = pair.first().size();
-                    // TODO all "babyds_"s to be replaced with datasetName, as I previously did for the train_test_split version.
-                    train_model(modelAddress + datasetName+"_kfcv_"+i+"_train_"+train_size+".txt", "");  // currently it doesn't save the kfcv models separately, just overwrites. TODO fix hard-coded.
+                    train_model(modelAddress + datasetName+"_kfcv_"+i+"_train_"+train_size+".txt", modelAddress, seedGrammarAddress);  // currently it doesn't save the kfcv models separately, just overwrites. TODO fix inputs.
                     Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfResultsPair = evaluate_model(i+1);
                     kfSemAccResults.add(kfResultsPair.first());  // Maybe refactor so testing data can be specified...
                     kfParsCvgResults.add(kfResultsPair.second());
@@ -572,7 +571,7 @@ public class BabyDSInduction {
                 }
                 // Here I better print file names, and seed value.
                 System.out.println();
-                System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + SEED + " | Folds: " + kFold);
+                System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + seed + " | Folds: " + kFold);
                 print_semanticAcc_results(avgSemAccResults, String.format("%d-fold Cross Validation averaged results", kFold));
                 System.out.println();
                 System.out.println(get_parsingCoverage_results(avgParsCvgResults, null));
@@ -584,17 +583,16 @@ public class BabyDSInduction {
             Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_pair = train_test_split(modelAddress+datasetName+".txt", train_test_ratio, saveToFile, modelAddress, seed);
             int train_size = train_test_pair.first().size();
             int test_size = train_test_pair.second().size();
-            train_model(datasetName + "_train_" + train_size + ".txt", modelAddress);
+            train_model(datasetName + "_train_" + train_size + ".txt", modelAddress, seedGrammarAddress);
             Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = evaluate_model(0);
             System.out.println();
-            System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + SEED + " | Folds: " + kFold);
+            System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + seed + " | Folds: " + kFold);
             System.out.println();
             print_semanticAcc_results(ttsResults.first(), String.format("Train-Test Split | Ratio: %.2f | Data Sizes: train=%d - test=%d",
                     train_test_ratio, train_size, test_size));  //todo refactor
             System.out.println();
             System.out.println(get_parsingCoverage_results(ttsResults.second(), ""));  //todo refactor
         }
-
         if (PRINT_DIAG)
             print_diagnostics();
     }
@@ -690,7 +688,7 @@ public void verify_model_path(String modelAddress) {
 
         // To run full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
         BabyDSInduction testInduction = new BabyDSInduction(modelPath);
-        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED);
+        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED, seedGrammarPath);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
