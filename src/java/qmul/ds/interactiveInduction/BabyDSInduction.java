@@ -189,7 +189,7 @@ public class BabyDSInduction {
                 logger.info("Parsing coverage for " + dataset_name + ": " + parsedCount + " out of " + corpus.size());  // AA MODIFIED FROM parsedCount
             }
         }
-        evalResult.writeResutlsToFile(modelAddress);
+        evalResult.writeResutlsToFile(modelAddress); //TODO add proper text info after each table is created: use old table way of doing stuff.
         return new Pair<>(semanticAccuracy, parsingCoverage);
     }
 
@@ -385,8 +385,7 @@ public class BabyDSInduction {
         RecordTypeCorpus testCorpus = new RecordTypeCorpus(test_set_name);
         int i = 0;
         // random
-        Random random = new Random(seed);
-        Collections.shuffle(corpus, random);
+        Collections.shuffle(corpus, new Random(seed));
         for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
             if (i < train_size)
                 trainCorpus.add(pair);
@@ -419,8 +418,7 @@ public class BabyDSInduction {
         corpus.loadCorpus(new File(modelAddress + datasetName + ".txt"));
         int corpus_size = corpus.size();
         int fold_size = corpus_size / folds;
-        Random random = new Random(seed);
-        Collections.shuffle(corpus, random);
+        Collections.shuffle(corpus, new Random(seed));
         for (int i = 0; i < folds; i++) {
             RecordTypeCorpus trainCorpus = new RecordTypeCorpus();
             RecordTypeCorpus testCorpus = new RecordTypeCorpus();
@@ -460,6 +458,7 @@ public class BabyDSInduction {
 
     /**
      * Trains the BabyDS model on a given training data, and saves the top-5 learned lexicon to files.
+     * Assumes the data is shuffled already (in the train_test_split method).
      * @param trainingCorpus The training data to train the model on.
      * @param modelDir The directory to save the learned lexicon to.
      */
@@ -643,7 +642,6 @@ public class BabyDSInduction {
             }
         }
         if (!inc_batch.isEmpty()) {  // If there are any remaining elements in the last batch, add it to the list.
-//            batches.getLast().add(inc_batch);
             // add remaining elements to the last existing batch and not create a new one.
             batches.getLast().addAll(inc_batch);
             logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.getLast().size());
