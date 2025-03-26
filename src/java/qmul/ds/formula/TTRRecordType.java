@@ -1085,18 +1085,20 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 		// Testing getFilteredAbstractions
 //		List<Tree> trees = t30.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
-		List<Tree> trees = t44.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
-		int i = 1;
-		String s = "Got " + trees.size() + " abstractions";
-		System.out.println(new String(new char[s.length()]).replace("\0", "="));
-		System.out.println(s);
-		System.out.println(new String(new char[s.length()]).replace("\0", "="));
-		for(Tree abs: trees) {
-			System.out.println("<Abstraction " + i + ">");
-			System.out.println(abs);
-			i++;
-			System.out.println(" ------------ ");
-		}
+//		List<Tree> trees = b1.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
+//		int i = 1;
+//		String s = "Got " + trees.size() + " abstractions";
+//		System.out.println(new String(new char[s.length()]).replace("\0", "="));
+//		System.out.println(s);
+//		System.out.println(new String(new char[s.length()]).replace("\0", "="));
+//		for(Tree abs: trees) {
+//			System.out.println("<Abstraction " + i + ">");
+//			System.out.println(abs);
+//			i++;
+//			System.out.println(" ------------ ");
+//		}
+
+		System.out.println(b1.toPythonDictString());
 
 
 	}
@@ -2361,6 +2363,93 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			return result;
 		}
 		return null;
+	}
+
+
+	/**
+	 * Builds a string as the body of a python dictionary (without the curly braces). To be used in ttr2state
+	 * in BabyDS.
+	 * @author: AA
+	 * TODO lots to be added: direction, before, etc.
+	 * @return s: a string representing the body of a python dictionary.
+	 */
+	public String toPythonDictString() {
+		logger.trace("Building python dictionary string for: " + this);
+		TTRRecordType rtCopy = this.clone();
+		String s = "";
+		Set<TTRLabel> processedLabels = new HashSet<>();
+//		Set<TTRLabel> labels = this.getLabels();
+		List<TTRField> fields = rtCopy.getFields();
+		boolean hasBefore = false;
+		for (TTRField field: fields) {  // Reminder: has label, type, and dsType
+			TTRLabel label = field.getLabel();
+			logger.trace("Label: " + label);
+			if (label.toString().startsWith("head")) {
+				continue;
+			} else if (label.toString().startsWith("r")) {
+				continue;  //todo
+			} else if (label.toString().startsWith("e")) {
+				// for babyDS has the event term in it.
+				String type = field.getType().toString();
+				if (type.startsWith("state_")) {
+					String state = type.substring(6);
+					logger.trace("State: " + state);
+					s += "'state': '" + state + "', ";
+					rtCopy = rtCopy.removeField(field);
+				} else {
+					logger.warn("Unhandled type for e: " + type);
+				}
+			} else if (label.toString().startsWith("p")) {
+				String type = field.getType().toString();
+				if (type.startsWith("obj(")) {
+					String objectEpsilonIndex = type.substring(type.indexOf(",") + 1, type.indexOf(")")).trim();
+//					System.out.println(rtCopy.getDependents(label));
+					logger.trace("Object epsilon index: " + objectEpsilonIndex);
+					rtCopy = rtCopy.removeField(field);
+					String correspondingEpsilonType = rtCopy.getType(new TTRLabel(objectEpsilonIndex)).toString();
+					String correspondingR = correspondingEpsilonType.substring(correspondingEpsilonType.indexOf(",") + 1, correspondingEpsilonType.indexOf(")")).trim();
+					logger.trace("Corresponding r: " + correspondingR);
+//					rtCopy = rtCopy.removeField(field); //todo fix which field to remove!
+					String objectAttributesRT = rtCopy.getField(new TTRLabel(correspondingR)).getType().toString();
+					logger.trace("Object attributes RT: " + objectAttributesRT);
+//					rtCopy = rtCopy.removeField(field); //todo fix which field to remove
+					// Now have to get the attributes of the object
+					String objAttributes = TTRRecordType.parse(objectAttributesRT).toPythonDictString();
+					logger.trace("Attributes of object: " + objAttributes);
+					s += objAttributes;
+
+				} else if (type.startsWith("before")) {
+					hasBefore = true;
+					continue; // TODO
+				} else if (type.startsWith("col_")) {
+					String color = type.substring(4, type.indexOf("("));
+					logger.trace("Object Color: " + color);
+					s += "'color': '" + color + "', ";
+				} else if (type.startsWith("obj_")) {
+					String shape = type.substring(4, type.indexOf("("));
+					logger.trace("Object shape: " + shape);
+					s += "'type': '" + shape + "', ";
+				} else {
+					logger.warn("Unhandled type for p: " + type);
+				}
+			} else if (label.toString().startsWith("x")) {
+				continue;  //todo
+			} else {
+				logger.warn("Unhandled label: " + label);
+			}
+		}
+		if (hasBefore) {
+			s += "'is_before': " + "None";
+		}
+//		for (TTRField f : fields) {
+//			if (f.isHead())
+//				continue;
+//			else if (f.isManifest()) {  // deal with embedded recursively
+//				continue; // todo
+//			}
+//			s += f.getType() + ", ";
+//		}
+		return s;//s.substring(0, s.length() - 2) + "}"; //todo maybe no curly braces?
 	}
 
 
