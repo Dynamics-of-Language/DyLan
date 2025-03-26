@@ -40,8 +40,8 @@ public class BabyDSInduction {
 //    static String modelDirUser ="2025_babyds_RQ2" ;//"2024_babyds_induction";//"2025_babyds_RQ2";  // User has to modify every time!
     static final String modelPath = "resource\\2024_babyds_induction\\".replace("\\", File.separator);  //the dir that works!
 //    static final String modelPath = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
-
     static final String DATASET_NAME = "class1";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
+
     public static final int SEED = 45; // Set a constant seed for reproducibility
     public static final int TOP_N = 5;  // topN learned actions to evaluate
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
@@ -98,11 +98,7 @@ public class BabyDSInduction {
         for (int n = 1; n <= TOP_N; n++) {
             logger.info("Loading parser with top-" + n + " learned actions...");
             InteractiveContextParser parser;
-            if (modelAddress.isEmpty()) {
-                parser = new InteractiveContextParser(modelPath, n);
-            } else {
-                parser = new InteractiveContextParser(modelAddress, n);
-            }
+            parser = new InteractiveContextParser(modelAddress, n);
             File[] train_test_files = get_corpus_files(kfcv, modelAddress, datasetName);
             for (int i = 0; i < train_test_files.length; i++) {
                 int parsedCount = 0;
@@ -285,15 +281,9 @@ public class BabyDSInduction {
     public File[] get_corpus_files(int kfcv, String modelAddress, String datasetName) {
         File[] train_test_files = new File[2];
         File folder;
-        if (modelAddress.isEmpty()) {
-            folder = new File(modelPath);
-        } else {
-            folder = new File(modelAddress);
-        }
+        folder = new File(modelAddress);
         File[] listOfFiles = folder.listFiles();
-        if (datasetName.isEmpty()) {
-            datasetName = DATASET_NAME;
-        }
+
         logger.trace("Trying to load train-test split files...");
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
@@ -406,13 +396,8 @@ public class BabyDSInduction {
         }
         if (saveToFile) {
             try {  // todo Filenames used to save the split data should be exactly the same as the original, plus  train/test and size. Currently it's just train/test and size. Same for when reading, and for kFold.
-                if (saveAddress.isEmpty()) {
-                    trainCorpus.saveCorpus(modelPath + train_set_name);
-                    testCorpus.saveCorpus(modelPath + test_set_name);
-                } else {
-                    trainCorpus.saveCorpus(saveAddress + train_set_name);
-                    testCorpus.saveCorpus(saveAddress + test_set_name);
-                }
+                trainCorpus.saveCorpus(saveAddress + train_set_name);
+                testCorpus.saveCorpus(saveAddress + test_set_name);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -428,14 +413,10 @@ public class BabyDSInduction {
      * @return A list of pairs of training and testing datasets for each fold.
      * @throws IOException If an I/O error occurs.
      */
-    public List<Pair<RecordTypeCorpus, RecordTypeCorpus>> kFoldCrossValidation(int folds, boolean saveToFile, String modelAddress, int seed) throws IOException {
+    public List<Pair<RecordTypeCorpus, RecordTypeCorpus>> kFoldCrossValidation(int folds, boolean saveToFile, String modelAddress, String datasetName, int seed) throws IOException {
         List<Pair<RecordTypeCorpus, RecordTypeCorpus>> train_test_pairs = new ArrayList<>();
         RecordTypeCorpus corpus = new RecordTypeCorpus();
-        if (modelAddress.isEmpty()) {
-            corpus.loadCorpus(new File(modelPath + DATASET_NAME + ".txt"));
-        } else {
-            corpus.loadCorpus(new File(modelAddress + DATASET_NAME + ".txt"));
-        }
+        corpus.loadCorpus(new File(modelAddress + datasetName + ".txt"));
         int corpus_size = corpus.size();
         int fold_size = corpus_size / folds;
         Random random = new Random(seed);
@@ -540,7 +521,7 @@ public class BabyDSInduction {
             List<HashMap<Integer, HashMap<String, HashMap<String, Double>>>> kfSemAccResults = new ArrayList<>();
             List<HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfParsCvgResults = new ArrayList<>();
             try {
-                List<Pair<RecordTypeCorpus, RecordTypeCorpus>> train_test_pairs = kFoldCrossValidation(kFold, saveToFile, modelAddress, seed);
+                List<Pair<RecordTypeCorpus, RecordTypeCorpus>> train_test_pairs = kFoldCrossValidation(kFold, saveToFile, modelAddress, datasetName, seed);  //todo later follow the same order as train_test_split.
                 int i = 0;  // fold index, aka kfcv counter.
                 for (Pair<RecordTypeCorpus, RecordTypeCorpus> pair : train_test_pairs) {
                     int train_size = pair.first().size();
