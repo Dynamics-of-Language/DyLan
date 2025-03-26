@@ -440,8 +440,8 @@ public class TTRHypothesiser extends Hypothesiser {
 				doneWithBranch = true;
 			}
 
-		} else if (state.getCurrentTuple().getTree().isComplete()) {  // TODO I think this is not efficient: getCurrentTuple() is called three times!
-			logger.warn(ANSI_RED + "got to complete tree, but no subsumption: " + ANSI_RESET
+		} else if (state.getCurrentTuple().getTree().isComplete()) {
+			logger.warn(ANSI_RED + "got to complete tree, but no two-way subsumption: " + ANSI_RESET
 					+ state.getCurrentTuple().getTree());
 			// AA: AE said potentially a BUG, SHOULDN'T BE HAPPENING
 			logger.warn("maxSem:" + maxSem);
@@ -691,9 +691,21 @@ public class TTRHypothesiser extends Hypothesiser {
 //		String seedResourceDir = "resource/2024-babyds-grammar2/";  // TODO Make sure this is correct!
 //		TTRRecordType tg = TTRRecordType.parse("[x4==london : e|e7==leave : es|x1==airplane : e|head==e7 : es|p4==past(e7) : t|p6==subj(e7, x1) : t|p5==obj(e7, x4) : t]");
 //		String sntnc = "airplanes left london";
-		String sntnc = "open a door";
+		String sent1 = "open a door";
 		TTRRecordType sem = TTRRecordType.parse("[r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]");
-//		String seedResourceDir = "resource/2013-english-ttr-induction-seed/"; // AA commented out
+		TTRRecordType sem1 = TTRRecordType.parse("[r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]");
+
+		String sent2 = "dylan open a door";
+		TTRRecordType sem2 = TTRRecordType.parse("[r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t|x7==dylan : e|p1==subj(e112, x7) : t]");
+
+
+		TTRRecordType t0 = TTRRecordType.parse("[x4==london : e|e6==leave : es|x1==planes : e|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+		String s0 = "planes left london";
+		TTRRecordType t1 = TTRRecordType.parse("[x4 : e|p1==london(x4) : t|e6==leave : es|x1 : e|p2==plane(x1) : t|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t|p5==obj(e6, x4) : t]");
+
+		TTRRecordType t2 = TTRRecordType.parse("[e6==leave : es|x1 : e|p1==planes(x1) : t|head==e6 : es|p4==past(e6) : t|p6==subj(e6, x1) : t]");
+		String s2 = "planes left";
+		//		String seedResourceDir = "resource/2013-english-ttr-induction-seed/"; // AA commented out
 		String seedResourceDir = "resource\\2023-babyds-induction-output\\";
 		TTRHypothesiser h = new TTRHypothesiser(seedResourceDir);
 //        try {
@@ -701,12 +713,13 @@ public class TTRHypothesiser extends Hypothesiser {
 //        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
-        h.loadTrainingExample(sntnc, sem);
+        h.loadTrainingExample(sent1, sem1);
 		Collection<CandidateSequence> hyps = h.hypothesise();
 
-		logger.info("There were " + hyps.size() + " sequences (printed below):");
 		for (CandidateSequence hyp : hyps)
-			System.out.println(hyp + "\n");
+			logger.info(hyp + "\n");
+		logger.info("There were " + hyps.size() + " sequences (printed above).");
+
 	}
 
 	public void loadTrainingExample(Sentence<Word> sentence, TTRRecordType target) {
