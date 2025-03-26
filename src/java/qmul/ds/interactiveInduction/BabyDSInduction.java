@@ -36,20 +36,13 @@ public class BabyDSInduction {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_RED = "\u001B[31m";
 
-    //TODO fml, i have used this all wrong. THis is only the seed grammar path and nothing more. To fix. Everywhere else, it's modelPath.
     static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
 //    static String modelDirUser ="2025_babyds_RQ2" ;//"2024_babyds_induction";//"2025_babyds_RQ2";  // User has to modify every time!
     static final String modelPath = "resource\\2024_babyds_induction\\".replace("\\", File.separator);  //the dir that works!
-// ("resource\\" + modelDirUser + "\\").replace("\\", File.separator);  // Wherever modelPath was needed, verify_model_path() has to be called!
 //    static final String modelPath = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
 
-//        static final String corpusPath = modelPath;//"resource\\2023-babyds-induction-output\\".replace("\\", File.separator);
-
-    static final String dataset = "class1";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
-//    static final String resultsFileName = "";
-
-    public static final long SEED = 45; // Set a constant seed for reproducibility
-    public static final Random random = new Random(SEED);
+    static final String DATASET_NAME = "class1";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
+    public static final int SEED = 45; // Set a constant seed for reproducibility
     public static final int TOP_N = 5;  // topN learned actions to evaluate
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
     public static final double INIT_BATCH_RATIO = 0.1;  // Size of the initial data batch for evaluation - used in prepare_batch().
@@ -62,27 +55,20 @@ public class BabyDSInduction {
     // Two hashmaps for diagnostics, one for failed parses, and one for failed exact matches, for each topN and dataset.
     // Helps to see which sentences are not parsed, and which ones are parsed but not exactly matched, and this makes
     // "mis-learned" patterns more visible.
+    // TODO test EvalResult class usage here, and remove all of these.
     HashMap<Pair<String, Integer> , List<String>> failedParses = new HashMap<>();
     HashMap<Pair<String, Integer> , List<String>> failedExactMatches = new HashMap<>();
 
-
-    BabyDSInduction () {
+// --------------------------- Constructor ---------------------------
+    BabyDSInduction (String modelDir) {
         logger.warn("Make sure (at least in IntelliJ) your working directory is set to /DyLan to prevent errors with dirs.");
         try{
-            verify_model_path(modelPath);
+            verify_model_path(modelDir);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-        /**
-     * Overloads the below method, with default values for modelAddress and datasetName and kfcv.
-     * @return A pair of semantic accuracy and parsing coverage results.
-     * @author: AA
-     */
-    public Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> evaluate_model() {
-        return evaluate_model(0, "", "");
-    }
 
     /**
      * Overloads the below method, with default values for modelAddress and datasetName.
@@ -103,7 +89,7 @@ public class BabyDSInduction {
      * 3. Evaluates the parsing model on both sets.
      * 4. Returns the calculated results: mainly semantic accuracy and parsing coverage.
      */
-    public Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> evaluate_model(int kfcv, String modelAddress, String datasetName) {  // TODO take mode as input...
+    public Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> evaluate_model(int kfcv, String modelAddress, String datasetName) {
         logger.info("Evaluating BabyDS model...");
         EvalResult evalResult = new EvalResult();
         HashMap<Integer, HashMap<String, HashMap<String, Double>>> semanticAccuracy = new HashMap<>();
@@ -186,7 +172,6 @@ public class BabyDSInduction {
                         failedParses.get(new Pair<>(dataset_name, n)).add(sentence.toString());
                         evalResult.addFailedParse(dataset_name, n, sentence.toString());
                     }
-//                    System.out.print("\u001b[1A");
                 }
                 List<Float> scores = eval.precisionRecallMacro(evalList);
                 HashMap<String, HashMap <String, Double>> datasetMap = semanticAccuracy.getOrDefault(n, new HashMap<>());
@@ -205,8 +190,6 @@ public class BabyDSInduction {
 
                 evalResult.addSemanticAccuracy( n, dataset_name, scores.get(0)*100, scores.get(1)*100, scores.get(2)*100);
                 evalResult.addParsingCoverage(n, dataset_name, (double) parsedCount / corpus.size() * 100, (double) exactMatchCount / corpus.size() * 100);
-
-//                parsingCoverage.get(n).put(dataset_name, (double) parsedCount / corpus.size() * 100);  // AA MODIFIED FROM parsedCount
                 logger.info("Parsing coverage for " + dataset_name + ": " + parsedCount + " out of " + corpus.size());  // AA MODIFIED FROM parsedCount
             }
         }
@@ -294,43 +277,10 @@ public class BabyDSInduction {
 
     /**
      * Returns the training and testing files from the corpus directory.
-     * @return train_test_files An array of two files: training and testing files.
-     */
-//    public File load_data(String filename) {
-//        File data_file = new File(corpusPath + filename);
-//        File[] train_test_files = new File[2];
-//        File folder = new File(corpusPath);
-//        File[] listOfFiles = folder.listFiles();
-//        logger.trace("Trying to load train-test split files...");
-//        if (listOfFiles != null) {
-//            for (File file : listOfFiles) {
-////                logger.trace(file.getName());
-//                 {
-//                    logger.trace("Trying to load k-fold cross validation files...");
-//                    if (file.isFile() && file.getName().startsWith("babyds_kfcv_" + (kfcv-1) + "_train")) {
-//                        train_test_files[0] = file;
-//                        continue;
-//                    }
-//                    if (file.isFile() && file.getName().startsWith("babyds_kfcv_" + (kfcv-1) + "_test"))
-//                        train_test_files[1] = file;
-//                }
-//            }
-//            if (train_test_files[0] == null || train_test_files[1] == null)
-//                logger.warn(ANSI_RED + "Couldn't find either training or testing file." + ANSI_RESET);
-//        } else {
-//            logger.error(ANSI_RED + "No files found in the corpus directory." + ANSI_RESET);
-//        }
-//        return train_test_files;
-//    }
-
-
-    /**
-     * Returns the training and testing files from the corpus directory.
      * @param kfcv The k-fold cross validation index. If 0, a train-test data is returned.
      * @param modelAddress The address of the model directory.
      * @param datasetName The dataset name.     *
      * @return train_test_files An array of two files: training and testing files.
-     * TODO rename
      */
     public File[] get_corpus_files(int kfcv, String modelAddress, String datasetName) {
         File[] train_test_files = new File[2];
@@ -342,12 +292,11 @@ public class BabyDSInduction {
         }
         File[] listOfFiles = folder.listFiles();
         if (datasetName.isEmpty()) {
-            datasetName = dataset;
+            datasetName = DATASET_NAME;
         }
         logger.trace("Trying to load train-test split files...");
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
-//                logger.trace(file.getName());
                 if (kfcv == 0) {
                     if (file.isFile() && file.getName().startsWith(datasetName+"_train")) {
                         train_test_files[0] = file;
@@ -376,7 +325,12 @@ public class BabyDSInduction {
         return train_test_files;
     }
 
-    // Used in the mergeFiles method below.
+
+    /** Used in the mergeFiles method below.
+     * @param file The file to read from.
+     * @param writer The writer to write to.
+     * @throws IOException If an I/O error occurs.
+     */
     private static void writeContent(File file, BufferedWriter writer) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -406,21 +360,19 @@ public class BabyDSInduction {
 
     /**
      * overload of the below method, with default values for filename.
-     * @param corpusAddress
-     * @param ratio
-     * @param saveToFile
-     * @return
+     * @param corpusAddress The address of the corpus file.
+     * @param ratio The ratio of training to testing data.
+     * @param saveToFile A boolean to save the training and testing sets to file.
+     * @return A pair of training and testing datasets.
      */
-   public Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_split(String corpusAddress, double ratio, boolean saveToFile, String saveAddress) {
+   public Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_split(String corpusAddress, double ratio, boolean saveToFile, String saveAddress, int seed) {
                RecordTypeCorpus corpus = new RecordTypeCorpus();
         try {
-//            corpus.loadCorpus(new File(modelPath + filename + ".txt"));
             corpus.loadCorpus(new File(corpusAddress));
-//            corpus.loadCorpus(new File(corpusPath + datasetName));  // TODO modified by me. Need to make sure it's compatible with elsewhere.
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return train_test_split(corpus, ratio, saveToFile, saveAddress);
+        return train_test_split(corpus, ratio, saveToFile, saveAddress, seed);
    }
 
 
@@ -431,7 +383,7 @@ public class BabyDSInduction {
      * @return A pair of training and testing datasets.
      * @author Arash A.
      */
-    public Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_split(RecordTypeCorpus corpus, double ratio, boolean saveToFile, String saveAddress) {
+    public Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_split(RecordTypeCorpus corpus, double ratio, boolean saveToFile, String saveAddress, int seed) {
         logger.info("Splitting the dataset into training and testing sets...");
         int size = corpus.size();
         int train_size = (int) (size * ratio);
@@ -442,6 +394,8 @@ public class BabyDSInduction {
         RecordTypeCorpus trainCorpus = new RecordTypeCorpus(train_set_name);
         RecordTypeCorpus testCorpus = new RecordTypeCorpus(test_set_name);
         int i = 0;
+        // random
+        Random random = new Random(seed);
         Collections.shuffle(corpus, random);
         for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
             if (i < train_size)
@@ -451,9 +405,6 @@ public class BabyDSInduction {
             i++;
         }
         if (saveToFile) {
-//            String train_set_name = "babyds_train_" + train_size + ".txt";
-//            String test_set_name = "babyds_test_" + test_size + ".txt";
-
             try {  // todo Filenames used to save the split data should be exactly the same as the original, plus  train/test and size. Currently it's just train/test and size. Same for when reading, and for kFold.
                 if (saveAddress.isEmpty()) {
                     trainCorpus.saveCorpus(modelPath + train_set_name);
@@ -477,16 +428,17 @@ public class BabyDSInduction {
      * @return A list of pairs of training and testing datasets for each fold.
      * @throws IOException If an I/O error occurs.
      */
-    public List<Pair<RecordTypeCorpus, RecordTypeCorpus>> kFoldCrossValidation(int folds, boolean saveToFile, String modelAddress) throws IOException {
+    public List<Pair<RecordTypeCorpus, RecordTypeCorpus>> kFoldCrossValidation(int folds, boolean saveToFile, String modelAddress, int seed) throws IOException {
         List<Pair<RecordTypeCorpus, RecordTypeCorpus>> train_test_pairs = new ArrayList<>();
         RecordTypeCorpus corpus = new RecordTypeCorpus();
         if (modelAddress.isEmpty()) {
-            corpus.loadCorpus(new File(modelPath + dataset + ".txt"));
+            corpus.loadCorpus(new File(modelPath + DATASET_NAME + ".txt"));
         } else {
-            corpus.loadCorpus(new File(modelAddress + dataset + ".txt"));
+            corpus.loadCorpus(new File(modelAddress + DATASET_NAME + ".txt"));
         }
         int corpus_size = corpus.size();
         int fold_size = corpus_size / folds;
+        Random random = new Random(seed);
         Collections.shuffle(corpus, random);
         for (int i = 0; i < folds; i++) {
             RecordTypeCorpus trainCorpus = new RecordTypeCorpus();
@@ -501,8 +453,8 @@ public class BabyDSInduction {
             if (saveToFile) {
                 String train_set_name = "babyds_kfcv_" + i + "_train_" + trainCorpus.size() + ".txt";
                 String test_set_name = "babyds_kfcv_" + i + "_test_" + testCorpus.size() + ".txt";
-                trainCorpus.saveCorpus(modelPath + train_set_name);
-                testCorpus.saveCorpus(modelPath + test_set_name);
+                trainCorpus.saveCorpus(modelAddress + train_set_name);
+                testCorpus.saveCorpus(modelAddress + test_set_name);
             }
             train_test_pairs.add(new Pair<>(trainCorpus, testCorpus));
         }
@@ -515,7 +467,6 @@ public class BabyDSInduction {
      * @param trainingCorpusFileName The path to the training data file.
      */
     public void train_model(String trainingCorpusFileName, String userDir) {
-
         RecordTypeCorpus trainingCorpus = new RecordTypeCorpus();
         try {
             trainingCorpus.loadCorpus(new File(userDir + trainingCorpusFileName));
@@ -523,58 +474,29 @@ public class BabyDSInduction {
             throw new RuntimeException(e);
         }
         train_model(trainingCorpus, userDir);
-
-//        logger.info("Training BabyDS model...");
-//        // todo fix now: has to be the same name for lexicon, therefore have to create new dirs...
-//        TTRWordLearner babyDSLearner = new TTRWordLearner(corpusPath);  //todo maybe change the name of this to only computational actions file path
-//        TTRWordLearner babyDSLearner = new TTRWordLearner(trainingDataPath);  // new
-//
-//        String lexiconPath = modelPath + userDir + "lexicon.lex";
-//        if (modelName.isEmpty()){
-//            lexiconPath = modelPath + "lexicon.lex";
-//        } else {
-//            lexiconPath = modelPath + modelName;
-//        }
-//
-//        try {
-//            File corpusFile = new File(trainingDataPath);
-//            babyDSLearner.loadCorpus(corpusFile);
-//            logger.info("BabyDS training starting...");
-//            babyDSLearner.learn();
-//
-//            babyDSLearner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 1);  // Testing if top-1 can be a thing here:
-//            babyDSLearner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 2);
-//            babyDSLearner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 3);
-//            babyDSLearner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 4);
-//            babyDSLearner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 5);
-//
-//        } catch(Exception e) {
-//			e.printStackTrace();
-//		}
     }
 
 
     /**
      * Trains the BabyDS model on a given training data, and saves the top-5 learned lexicon to files.
      * @param trainingCorpus The training data to train the model on.
-     * @param userDir
+     * @param modelDir The directory to save the learned lexicon to.
      */
-    public void train_model(RecordTypeCorpus trainingCorpus, String userDir) {
+    public void train_model(RecordTypeCorpus trainingCorpus, String modelDir) {  //todo add seed + shuffle capabilities here!
         logger.info("Training BabyDS model...");
-//        String userDir = modelPath + userDir;
         // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
-        String[] files = new File(userDir).list();
-        String x = userDir + "lexicon.lex";
+        String[] files = new File(modelDir).list();
+        String x = modelDir + "lexicon.lex";
         if (files != null) {
             for (String file : files) {
                 if (file.startsWith("lexicon.lex")) {
                     logger.info("Previously trained model found in the given directory with name: " + file);
-                    x = userDir + file;
+                    x = modelDir + file;
                 }
             }
         }
         if (new File(x).exists()) {
-            System.out.println("A trained model already exists at: " + userDir);
+            System.out.println("A trained model already exists at: " + modelDir);
             Scanner scanner = new Scanner(System.in);
             System.out.println("Do you want to load this model instead of training from scratch? (y/n)");
             String answer = scanner.nextLine();
@@ -589,25 +511,18 @@ public class BabyDSInduction {
             }
         }
 
-        TTRWordLearner babyDS = new TTRWordLearner(seedGrammarPath);  //todo maybe change the name of this to only computational actions file path
-//        TTRWordLearner babyDS = new TTRWordLearner(trainingDataPath);  // new
-
-//        if (modelName.isEmpty()){
-//            lexiconPath = modelPath + "lexicon.lex";
-//        } else {
-//            lexiconPath = modelPath + modelName;
-//        }
+        TTRWordLearner babyDS = new TTRWordLearner(seedGrammarPath);
         try {
             babyDS.setTrainingCorpus(trainingCorpus);
             logger.info("BabyDS training starting...");
             babyDS.learn();
-            String modelName = userDir + "lexicon.lex";
+            String saveModelDir = modelDir + "lexicon.lex";
 
-            babyDS.getHypothesisBase().saveLearnedLexicon(modelName, 1);
-            babyDS.getHypothesisBase().saveLearnedLexicon(modelName, 2);
-            babyDS.getHypothesisBase().saveLearnedLexicon(modelName, 3);
-            babyDS.getHypothesisBase().saveLearnedLexicon(modelName, 4);
-            babyDS.getHypothesisBase().saveLearnedLexicon(modelName, 5);
+            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 1);
+            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 2);
+            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 3);
+            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 4);
+            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 5);
         } catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -619,18 +534,18 @@ public class BabyDSInduction {
      * @param kFold The number of folds for k-fold cross validation. If 0, a train-test split is performed.
      * @param saveToFile A boolean to save the training and testing sets to file.
      */
-    public void full_pipeline(int kFold, boolean saveToFile, String modelAddress) {
+    public void full_pipeline(int kFold, Double train_test_ratio, boolean saveToFile, String modelAddress, String datasetName, int seed) {
         if (kFold != 0) {  // The k-fold cross validation scenario.
             logger.info("Performing " + kFold + "-fold Cross Validation...");
             List<HashMap<Integer, HashMap<String, HashMap<String, Double>>>> kfSemAccResults = new ArrayList<>();
             List<HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfParsCvgResults = new ArrayList<>();
             try {
-                List<Pair<RecordTypeCorpus, RecordTypeCorpus>> train_test_pairs = kFoldCrossValidation(kFold, saveToFile, modelAddress);
+                List<Pair<RecordTypeCorpus, RecordTypeCorpus>> train_test_pairs = kFoldCrossValidation(kFold, saveToFile, modelAddress, seed);
                 int i = 0;  // fold index, aka kfcv counter.
                 for (Pair<RecordTypeCorpus, RecordTypeCorpus> pair : train_test_pairs) {
                     int train_size = pair.first().size();
                     // TODO all "babyds_"s to be replaced with datasetName, as I previously did for the train_test_split version.
-                    train_model(modelAddress + "babyds_kfcv_"+i+"_train_"+train_size+".txt", "");  // currently it doesn't save the kfcv models separately, just overwrites. TODO
+                    train_model(modelAddress + datasetName+"_kfcv_"+i+"_train_"+train_size+".txt", "");  // currently it doesn't save the kfcv models separately, just overwrites. TODO fix hard-coded.
                     Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfResultsPair = evaluate_model(i+1);
                     kfSemAccResults.add(kfResultsPair.first());  // Maybe refactor so testing data can be specified...
                     kfParsCvgResults.add(kfResultsPair.second());
@@ -676,7 +591,7 @@ public class BabyDSInduction {
                 }
                 // Here I better print file names, and seed value.
                 System.out.println();
-                System.out.println("Results on:  Dataset: " + dataset + " | Seed: " + SEED + " | Folds: " + kFold);
+                System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + SEED + " | Folds: " + kFold);
                 print_semanticAcc_results(avgSemAccResults, String.format("%d-fold Cross Validation averaged results", kFold));
                 System.out.println();
                 System.out.println(get_parsingCoverage_results(avgParsCvgResults, null));
@@ -684,29 +599,30 @@ public class BabyDSInduction {
                 throw new RuntimeException(e);
             }
         } else { // The simply train-test split scenario.
-            logger.info("Performing Train-Test Split training with ratio " + TRAIN_TEST_RATIO + " now...");
-            Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_pair = train_test_split(modelPath+ dataset +".txt", TRAIN_TEST_RATIO, saveToFile, modelPath);  //TODO fix hard-coded name here
+            logger.info("Performing Train-Test Split training with ratio " + train_test_ratio + " now...");
+            Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_pair = train_test_split(modelAddress+datasetName+".txt", train_test_ratio, saveToFile, modelAddress, seed);
             int train_size = train_test_pair.first().size();
             int test_size = train_test_pair.second().size();
-            train_model(dataset + "_train_" + train_size + ".txt", modelPath);
+            train_model(datasetName + "_train_" + train_size + ".txt", modelAddress);
             Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = evaluate_model(0);
             System.out.println();
-            System.out.println("Results on:  Dataset: " + dataset + " | Seed: " + SEED + " | Folds: " + kFold);
+            System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + SEED + " | Folds: " + kFold);
             System.out.println();
             print_semanticAcc_results(ttsResults.first(), String.format("Train-Test Split | Ratio: %.2f | Data Sizes: train=%d - test=%d",
-                    TRAIN_TEST_RATIO, train_size, test_size));
+                    train_test_ratio, train_size, test_size));  //todo refactor
             System.out.println();
-            System.out.println(get_parsingCoverage_results(ttsResults.second(), ""));
+            System.out.println(get_parsingCoverage_results(ttsResults.second(), ""));  //todo refactor
         }
 
         if (PRINT_DIAG)
             print_diagnostics();
     }
 
+
     /**
      * overloads the method below, with default values for INIT_BATCH_RATIO and INC_BATCH_RATIO.
-     * @param corpus
-     * @return
+     * @param corpus The corpus to split into batches.
+     * @return A list of data batches.
      */
     public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus) {
         return prepare_batches(corpus,
@@ -720,13 +636,13 @@ public class BabyDSInduction {
      * @return A list of data batches.
      * @author: AA
      */
-    public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, double init_batch_size, double inc_batch_size) {
-        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_RATIO: " + INIT_BATCH_RATIO + " | INC_BATCH_RATIO: " + INC_BATCH_RATIO);
+    public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, double init_batch_ratio, double inc_batch_ratio) {
+        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_RATIO: " + init_batch_ratio + " | INC_BATCH_RATIO: " + inc_batch_ratio);
         List<RecordTypeCorpus> batches = new ArrayList<>();
         int corpus_size = corpus.size();
         int batch_count = 1;
-        int init_size = (int) (corpus_size * init_batch_size);
-        int inc_size = (int) (corpus_size * inc_batch_size);
+        int init_size = (int) (corpus_size * init_batch_ratio);
+        int inc_size = (int) (corpus_size * inc_batch_ratio);
         // The first init_size elements of corpus go to the first batch. The rest are divided into inc_size batches
         // and added to the list.
         RecordTypeCorpus init_batch = new RecordTypeCorpus();
@@ -792,8 +708,8 @@ public void verify_model_path(String modelAddress) {
 //        System.out.println(bbds.get_parsingCoverage_results(ttsResults.second(), null));
 
         // To run full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
-        BabyDSInduction testInduction = new BabyDSInduction();
-        testInduction.full_pipeline(FOLDS, SAVE_TO_FILE, modelPath);
+        BabyDSInduction testInduction = new BabyDSInduction(modelPath);
+        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
