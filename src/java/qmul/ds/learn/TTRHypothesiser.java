@@ -432,7 +432,7 @@ public class TTRHypothesiser extends Hypothesiser {
 //				logger.info(this.hypotheses.size() + ": " + result);  // This is the same as the log above!! MODIFIED BY AA.
 				logger.info("Now going for seq number " + this.hypotheses.size() + 1);
 				if (this.hypotheses.size() > 300) {  // what is this hardcoded number?
-					System.out.println("sequences exceeded 300");  // AA better log message needded
+					System.out.println("sequences exceeded 300");  // AA better log message needed
 					System.out.println("stopping");
 					return false;
 				}

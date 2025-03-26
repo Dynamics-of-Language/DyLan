@@ -708,6 +708,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 	/**
+	 * AA: This does NOT return the labels in the embedded RTs.
 	 * @return the labels
 	 */
 	public Set<TTRLabel> getLabels() {
@@ -733,6 +734,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 	/**
+	 * AA: How is this different from getType()?
 	 * @param label
 	 * @return the type associated with label
 	 */

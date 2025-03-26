@@ -382,7 +382,7 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 
 		Set<List<TypeLatticeIncrement>> result = new HashSet<List<TypeLatticeIncrement>>();
 		for (TypeLatticeIncrement edge1 : getOutEdges(cur)) {
-			TypeLatticeIncrement edge=new TypeLatticeIncrement(edge1);
+			TypeLatticeIncrement edge = new TypeLatticeIncrement(edge1); // AA I think this is to make a copy of the edge. Why not use clone()?
 			if (!edge.incrementOn.equals(l))
 				continue;
 
@@ -395,7 +395,7 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 					: getIncrements(getDest(edge), l);
 			List<TypeLatticeIncrement> singleInc = new ArrayList<TypeLatticeIncrement>();
 			singleInc.add(edge);
-			if (!edge.getIncrement().isEmpty())// if not a transition edge, add it...
+			if (!edge.getIncrement().isEmpty())  // if not a transition edge, add it...
 				result.add(singleInc);
 			
 			for (List<TypeLatticeIncrement> childList : childInc) {

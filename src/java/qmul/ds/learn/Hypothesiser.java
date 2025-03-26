@@ -219,8 +219,8 @@ public class Hypothesiser {
 					// applying lexical actions for top(wordstack)
 					this.applyKnownLexical();
 				}
-				if (!this.seedLexicon.containsKey(state.wordStack().peek())) {
-					while (!state.wordStack().isEmpty() && !this.seedLexicon.containsKey(state.wordStack().peek())) {
+				if (!this.seedLexicon.containsKey(state.wordStack().peek())) {  // AA Why this is not an ELSE for the previous IF?
+					while (!state.wordStack().isEmpty() && !this.seedLexicon.containsKey(state.wordStack().peek())) {  // AA also here, why the repeated condition?
 						this.curUnknownSubstring += state.wordStack().pop() + " ";
 						logger.debug("Unknown word boundary. Setting CurUnknown to:" + this.curUnknownSubstring);
 					}

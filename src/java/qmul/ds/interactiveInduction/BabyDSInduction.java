@@ -14,10 +14,19 @@ import qmul.ds.learn.TTRWordLearner;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.io.*;
 
 
+/**
+ * A class to train and evaluate the BabyDS model on OUR BabyAI dataset ((instruction, TTR semantics) pairs).
+ * @author: Arash A.
+ */
 public class BabyDSInduction {
     private static final Logger logger = Logger.getLogger(BabyDSInduction.class);
+//    ProgressBarBuilder pbb = ProgressBar.builder()  // To fix later: this is not effective, because it's not used in the code.
+//            .setStyle(ProgressBarStyle.builder()
+//            .colorCode((byte) 37).build());
+
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";

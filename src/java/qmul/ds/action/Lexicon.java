@@ -216,7 +216,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      *
      * @param dirNameOrURL containing at least the lexical-actions.txt file, not the
      *                     lexicon.txt
-     * @param distribution a list of String-int pairs which is the POS and the
+//     * @param distribution a list of String-int pairs which is the POS and the
      *                     target number of instances of each corresponding lexical
      *                     action in the lexicon
      * @param lexiconSize  will stop when lexicon has this many entries
@@ -431,7 +431,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * Read a set of {@link LexicalAction}s from file
      *
      * @param reader       containing the lexiconComplete.txt file
-     * @param distribution a list of String-int pairs which is the POS and the
+//     * @param distribution a list of String-int pairs which is the POS and the
      *                     target number of instances of each corresponding lexical
      *                     action in the lexicon
      * @param lexiconSize  will stop when lexicon has this many entries
@@ -716,7 +716,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * TODO initLexicalTemplates add necessary try-catches
      */
     public void loadLearntLexiconTxt(String grammarPath, int topN) {
-
+        //AA: THIS SHOULD BE FIXED LATER: any name should be possible!
         File lexFile = new File(grammarPath + File.separator + "lexicon.lex-top-" + topN + ".txt");
         BufferedReader reader = readLexText(lexFile, topN);
 
