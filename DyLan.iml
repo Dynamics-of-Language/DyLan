@@ -466,5 +466,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="me.tongfei.progressbar" level="project" />
   </component>
 </module>

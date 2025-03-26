@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import me.tongfei.progressbar.ProgressBar;
 import org.apache.log4j.Logger;
 
 import qmul.ds.formula.TTRRecordType;
@@ -96,9 +97,13 @@ public abstract class WordLearner<T> {
 			throw new IllegalStateException("Corpus not loaded or is empty");
 		}
 		int i=0;
-		while (learnOnce()) {
-			i++;
-			logger.info("So far processed: "+i+" of " + corpus.size() + "\n");
+		int totalSize = corpus.size();
+		try (ProgressBar pb = new ProgressBar("Learning progress", totalSize)) {
+			while (learnOnce()) {
+				i++;
+				pb.step();
+				logger.info("So far processed: " + i + " of " + corpus.size() + "\n");
+			}
 		}
 	}
 
