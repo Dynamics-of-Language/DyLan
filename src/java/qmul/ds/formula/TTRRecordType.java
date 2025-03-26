@@ -555,7 +555,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					TTRLambdaAbstract lambdaAbs = new TTRLambdaAbstract(v, coreFinal);
 					logger.trace("lambdaAbs: " + lambdaAbs);
 					logger.trace("argument before head being deemed: " + argument);
-					argument.deemHead(f.getLabel());
+//					argument.deemHead(f.getLabel());
+					logger.warn("Hack here! See comment on the next line!");
+					argument.deemHead(this.getHeadField().getLabel());  // ATTENTION: This is going to cause a problem in the future, because this is a special case that only applies
+					// when we are abstraction a cn from a cn. i.e. we need to ultimately distinguish abstracting out a t from a t, and a cn from a cn.
 					logger.trace("argument after head being deemed: " + argument);
 					Pair<TTRRecordType, TTRLambdaAbstract> abs = new Pair<>(argument, lambdaAbs);
 					if(result.contains(abs)) {
@@ -1070,10 +1073,11 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 		// Testing on BabyDS semantics:
 		// Pickup a red box
-		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p14==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
+		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p2==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
 		// go to a door
-		TTRRecordType b0 = TTRRecordType.parse("[r : [x103 : e|head==x103 : e|p103==obj_door(x103) : t]|x104==epsilon(r.head, r) : e|e52==state_facing : es|head==e52 : es|p104==obj(e52, x104) : t]");
 
+		TTRRecordType b4 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]");
+// [r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]
 		//Testing getAbstractions
 //		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = t30.getAbstractions(DSType.t, 1);
 //		System.out.println("----------------------------------");
@@ -2708,7 +2712,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					if (!result.contains(_parent))
 						result.add(_parent);
 				}
-
 				if (!result.contains(f))
 					result.add(f);
 			}

@@ -70,6 +70,8 @@ public class TreeFilter {
 		nodeFieldMap.put(new NodeAddress("00"), TTRField.parse("p==subj(e,x):t"));
 		nodeFieldMap.put(new NodeAddress("010"), TTRField.parse("p==obj(e,x):t"));
 		nodeFieldMap.put(new NodeAddress("0110"), TTRField.parse("p==ind_obj(e1,e2):t"));
+		// Added by AE for babyDS.
+		nodeFieldMap.put(new NodeAddress("00"), TTRField.parse("p==obj(e,x):t"));
 	}
 
 

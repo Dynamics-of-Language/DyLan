@@ -687,7 +687,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	public static Map<DSType, Formula> typeMap;
 	
 	static{
-		Map<DSType, Formula> map=new HashMap<DSType, Formula>();
+		Map<DSType, Formula> map = new HashMap<DSType, Formula>();
 		map.put(DSType.cnev, Formula.create("[e1:es|head==e1:es]"));
 		map.put(DSType.e, Formula.create("[x:e|head==x:e]"));
 		map.put(DSType.es, Formula.create("[e1:es|head==e1:es]"));
@@ -709,14 +709,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 		map.put(DSType.parse("cn>e"), Formula.create("R1^[r:R1|x:e|head==x:e]"));
 		map.put(DSType.parse("cn>es"), Formula.create("R1^[r:R1|e1:es|head==e1:es]"));
-		typeMap=Collections.unmodifiableMap(map);
-		
+		logger.warn("AA has added cn>cn here. Verified by AE.");
+		map.put(DSType.parse("cn>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
+		typeMap = Collections.unmodifiableMap(map);
 	}
-	
+
+
 	/**
-	 * 
 	 * Assumes grammar with event terms... @see{resource/2013-english-ttr}
-	 * 
 	 * Should make sure that, when doing induction, the getMaximalSemantics
 	 * method is only called after decorating a new node with a new hypothesis,
 	 * and not immediately after the node is created.... (?) maybe not TODO
@@ -770,7 +770,8 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		typeMap.put(DSType.parse("e>(es>cn)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head==R1.head:es]))"));
 		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));  //TODO what is cnev?
 		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
-		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));
+		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));  // "head:es" was added to get the NLG working.
+//		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
 		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
 		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
 		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
@@ -795,20 +796,19 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 				if (typeMap.containsKey(dsType)) {
 					Node mother = this.get(n.getAddress().go(Modality.parse("/\\")));
 
-					// TODO: this is a hack. Checking for type of mother to
-					// determine the underspecified formula to be put on a ?cn
-					// node.
-					// I don't like this. ..... later.....
+
 					// another exception: if an e>t node is decorated with
-					// Copula (having parsed 'to be'), then we want a differnet
+					// Copula (having parsed 'to be'), then we want a different
 					// underspecification for this node, not involving event
 					// type
 
 					DSType motherType = mother.getType() == null ? mother.getRequiredType() : mother.getType();
-					if (dsType.equals(BasicType.cn)
-							&& (motherType.equals(DSType.parse("e>t")) || motherType.equals(DSType.cn)))
-						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
-					else if (dsType.equals(DSType.parse("e>t")) && n.contains(formReq))
+//					if (dsType.equals(BasicType.cn)
+//							&& (motherType.equals(DSType.parse("e>t")) || motherType.equals(DSType.cn)))
+//						n.addLabel(new FormulaLabel(TTRRecordType.parse("[pred:cn|head==pred:cn]").freshenVars(this)));
+					// AE: Commented out the above if statement, as it was hacky specific to semantics of colors in the babble project.
+					logger.warn("This will not work with babble code. See comments above.");
+					if (dsType.equals(DSType.parse("e>t")) && n.contains(formReq))
 						n.addLabel(new FormulaLabel(Formula
 								.create("R1^(R1 ++ [e1:es|head==e1:es|p==subj(e1,R1.head):t])").freshenVars(this)));
 					else
@@ -1056,11 +1056,10 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			// unfixed nodes
 			if (unfixedReduced != null && localUnfixedReduced != null)
 				rootReduced = rootReduced.conjoin(unfixedReduced.removeHead().conjoin(localUnfixedReduced.removeHead()));
-
 			else if (unfixedReduced != null && localUnfixedReduced == null)
-				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced);
+				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced);  //.removeHead() was removed by AE to get the NLG working.
 			else if (localUnfixedReduced != null)
-				rootReduced = unfixedFunctor ? localUnfixedReduced : rootReduced.conjoin(localUnfixedReduced);
+				rootReduced = unfixedFunctor ? localUnfixedReduced : rootReduced.conjoin(localUnfixedReduced);  //.removeHead() was removed by AE to get the NLG working.
 		}
 		
 		if (!getDaughters(root, "L").isEmpty()) {
