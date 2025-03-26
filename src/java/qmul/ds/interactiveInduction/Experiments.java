@@ -3,14 +3,12 @@ package qmul.ds.interactiveInduction;
 import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
 import qmul.ds.learn.RecordTypeCorpus;
-//import qmul.ds.interactiveInduction.BabyDSInduction.*;
-import static qmul.ds.interactiveInduction.BabyDSInduction.*;
-
-
+import static qmul.ds.interactiveInduction.BabyDSInduction.mergeFiles;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
 
 public class Experiments {
     private static final Logger logger = Logger.getLogger(Experiments.class);
@@ -22,10 +20,13 @@ public class Experiments {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_RED = "\u001B[31m";
 
+    static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
     static final String rq2path = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
     String forgettingPath = "resource\\2025-babyds-RQ2\\forgetting\\".replace("\\", File.separator);
     String generalisationPath = "resource\\2025-babyds-RQ2\\generalisation\\".replace("\\", File.separator);
     public static final int SEED = 45; // Set a constant seed for reproducibility
+    public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
+    public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
 
 
     /**
