@@ -90,7 +90,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			((TTRHypothesiser)hypothesiser).loadTrainingExample(entry.first(), entry.second());
 			hyps = hypothesiser.hypothesise();
 			logger.info("\n");
-			if (hyps.size() == 0) {
+			if (hyps.isEmpty()) {
 				logger.warn(ANSI_YELLOW + "NO SEQUENCES RECEIVED from hypothesiser! skipping... " + ANSI_RESET);
 //				System.out.println("no sequences returned, skipping this");
 				skipped.add(entry);
@@ -141,6 +141,14 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		RecordTypeCorpus c=new RecordTypeCorpus();
 		c.loadCorpus(corpusFile);
 		this.corpus=c;
+		this.corpusIterator=this.corpus.iterator();
+	}
+
+
+	public void setTrainingCorpus(RecordTypeCorpus corpus) {
+//		RecordTypeCorpus c=new RecordTypeCorpus();
+//		c.loadCorpus(corpusFile);
+		this.corpus=corpus;
 		this.corpusIterator=this.corpus.iterator();
 	}
 
