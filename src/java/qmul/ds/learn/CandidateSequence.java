@@ -71,7 +71,7 @@ public class CandidateSequence extends ArrayList<Action> {
 			if (a instanceof LexicalHypothesis)
 				s += a + " | ";
 			else
-				s += a.getName() + "|";
+				s += a.getName() + " | ";
 		}
 		return s;
 	}
