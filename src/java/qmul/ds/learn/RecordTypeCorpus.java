@@ -26,9 +26,20 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 	public final static String WORD_SEP_PATTERN = "\\s";
 	public ArrayList<String> sentenceIndices;
 	private static final long serialVersionUID = 4914176393669845762L;
+	public String corpusName = "";  // Added by Arash A.
 
 	public RecordTypeCorpus() {
 		super();
+		sentenceIndices = new ArrayList<String>();
+	}
+
+	/**
+	 * Added by Arash A. for BabyDS
+	 * @param corpusName the name of the corpus (for reading and writing purposes, I hope)
+	 */
+	public RecordTypeCorpus(String corpusName) {
+		super();
+		this.corpusName = corpusName;
 		sentenceIndices = new ArrayList<String>();
 	}
 	
@@ -40,7 +51,12 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 
 	public void loadCorpus(File fileName) throws IOException {
 		logger.info("Loading TTR corpus \"" + fileName + "\"...");
-	
+		try {
+		this.corpusName = fileName.getName().substring(0, fileName.getName().lastIndexOf('.'));  // Added by Arash A.
+		} catch (Exception e) {
+			logger.error("Couldn't extract corpus name from the file name! forcing name `default`");
+			this.corpusName = "default";
+		}
 		BufferedReader reader=new BufferedReader(new FileReader(fileName));
 		int i=0;
 		String line=reader.readLine();
@@ -152,6 +168,45 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 		reader.close();
 		System.out.println("loaded TTR corpus with "+i+" entries and all empty RTs");
 
+	}
+
+
+	/**
+	 * Merges two corpora into one.
+	 * @param other The other corpus to merge with this one.
+	 * @return The merged corpus.
+	 */
+	public RecordTypeCorpus mergeCorpora(RecordTypeCorpus other){
+		RecordTypeCorpus merged = new RecordTypeCorpus();
+		merged.addAll(this);
+		merged.addAll(other);
+		return merged;
+	}
+
+
+	/**
+	 * Merges a list of corpora into one.
+	 * @param corpora The list of corpora to merge.
+	 * @return The merged corpus.
+	 */
+	public static RecordTypeCorpus mergeAllCorpora(List<RecordTypeCorpus> corpora) {
+    RecordTypeCorpus merged = new RecordTypeCorpus();
+    for (RecordTypeCorpus corpus : corpora)
+        merged = merged.mergeCorpora(corpus);
+	return merged;
+	}
+
+
+	/**
+	 * Returns a subset of the corpus, from a start index to an end index.
+	 * @param start The start index.
+	 * @param end The end index.
+	 * @return The subset of the corpus specified by the start and end indices.
+	 */
+	public RecordTypeCorpus getSubCorpus(int start, int end){
+		RecordTypeCorpus subset = new RecordTypeCorpus();
+		subset.addAll(this.subList(start, end));
+		return subset;
 	}
 
 
