@@ -526,7 +526,7 @@ public class BabyDSInduction {
                 for (Pair<RecordTypeCorpus, RecordTypeCorpus> pair : train_test_pairs) {
                     int train_size = pair.first().size();
                     train_model(modelAddress + datasetName+"_kfcv_"+i+"_train_"+train_size+".txt", modelAddress, seedGrammarAddress);  // currently it doesn't save the kfcv models separately, just overwrites. TODO fix inputs.
-                    Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfResultsPair = evaluate_model(i+1);
+                    Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfResultsPair = evaluate_model(i+1, modelAddress, datasetName);
                     kfSemAccResults.add(kfResultsPair.first());  // Maybe refactor so testing data can be specified...
                     kfParsCvgResults.add(kfResultsPair.second());
                 }
@@ -584,7 +584,7 @@ public class BabyDSInduction {
             int train_size = train_test_pair.first().size();
             int test_size = train_test_pair.second().size();
             train_model(datasetName + "_train_" + train_size + ".txt", modelAddress, seedGrammarAddress);
-            Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = evaluate_model(0);
+            Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = evaluate_model(0, modelAddress, datasetName);
             System.out.println();
             System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + seed + " | Folds: " + kFold);
             System.out.println();
