@@ -1,5 +1,5 @@
-// Computational actions for induction
-// as per RISER project, 2012
+// Computational actions for induction, as per RISER project, 2012, but
+// updated in 2024 for BabyDS.
 
 // Rules prefixed with * are non-optional
 // Rules prefixed with + will be applied exhaustively (will backtrack on metas even if successful on first application)
@@ -11,6 +11,23 @@
 //public static final String HYP_ADJUNCTION_PREFIX = "hyp-adj";
 //public static final String HYP_SEM_PREFIX = "hyp-sem";
 
+// AA Meta Comment: To comment out an action, surround it with //* and *//.
+
+// List of the general tree building hyp actions here:
+// hyp-cn-decomp X2: cn -> cn, cn>cn
+// hyp-adjunction-e X1: t -> e, e>t with L
+// hyp-build-t X2: t -> e, e>t
+// hyp-build-et X2: e>t -> e, e>(e>t)
+// hyp-build-es-cn X2: es>cn -> e, e>(cn>es)
+// hyp-build-eet X2: e>(e>t) -> e, e>(e>(e>t))
+// hyp-build-es-t X2: e>(e>t) -> es, es>(e>(e>t))
+// ??? hyp-build-cn-es X1: es -> cn, cn>es
+// hyp-build-cn-e X2: e -> cn, cn>e      -------> WRONG NAME, BETTER BE e-cn
+// hyp-adj-t-generic X1: t -> e, e>t
+// hyp-adj-t X1: t -> ?t with L
+// hyp-adj-t-init X1: t -> ?t with L
+// hyp-adj-t-req-et X1: e>t -> ?t with L
+// commented out: hyp-adj-cn-e: cn -> e, e>cn
 
 //General tree building hyps (including modal copying)... 
 //Induction from rec types...
@@ -317,12 +334,13 @@ ELSE	abort
 
 
 
-//////END OF GENERAL TREE BUILDING HYPS
+/////////////////////// END OF GENERAL TREE BUILDING HYPS
 
 //intro-pred modified to disallow on linked trees off t, e>t.
 //this problem and others arise for lack of a proper es node.
 //tree building is on links consigned to the hyp-build-t's
 //this is only commensurate with this version in which there's no link adjunction off type e
+
 
 intro-pred
 IF		?ty(t)
