@@ -2709,6 +2709,19 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		return result;
 	}
 
+
+	/**
+	 * Returns the dependents of field, but not the field itself.
+	 * @author: AA
+	 * @param field
+	 * @return
+	 */
+	public List<TTRField> getProperDependents(TTRField field) {
+		List<TTRField> result = getDependents(field);
+		result.remove(field);
+		return result;
+	}
+
 	public TTRRecordType getSuperTypeWithParents(TTRField f) {
 		if (!this.hasField(f))
 			return new TTRRecordType();
