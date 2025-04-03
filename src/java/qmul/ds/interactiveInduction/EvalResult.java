@@ -173,10 +173,10 @@ public class EvalResult {
     /**
      * Writes the evaluation results to a file.
      */
-    public void writeResutlsToFile(String resultsPath) {
+    public void writeResutlsToFile(String resultsPath, String datasetName) {
         FileWriter fw;
         try {
-            fw = new FileWriter(resultsPath + "eval_results.txt");
+            fw = new FileWriter(resultsPath + datasetName + "_eval_results.txt");
             fw.write(getSemanticAccResultsTable("sem acc"));
             fw.write("\n\n\n");
             fw.write(getParsingCoverageResultsTable("coverage"));
