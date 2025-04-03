@@ -1448,6 +1448,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		f.setParentRecType(this);
 	}
 
+
+	/**
+	 * addField for when you have a field!
+	 * @author: AA
+	 * @param f field ot be added to the RT.
+	 */
+	public void addField (TTRField f) {
+		TTRLabel label = new TTRLabel(f.getLabel());
+		Formula formula = f.getType();
+		DSType dsType = f.getDSType();
+		add(label, formula, dsType);
 	}
 
 	/**
@@ -3576,6 +3587,90 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 
+	/**
+	 * Resets all indices of all "x, p, e"s in a RT to the minimum possible, starting at 0.
+	 * Built for BabyDS so might not generalise.
+	 * The methods freshenVars and relabel are confusing (as far as I needed them for my
+	 * unEmbed method) and are not working as I expected, so I implemented this.
+	 * ASSUMPTION: the labels start only x, p or e. Although, it can be extended.
+	 * @author: AA
+	 * @return the same RT with all indices reset to the smallest value possible.
+	 */
+	public TTRRecordType resetAllIndices () {
+		logger.info("Resetting all indices in: " + this);
+		TTRRecordType result = new TTRRecordType(this);
+		Set<TTRLabel> pLables = new HashSet<>();
+		Set<TTRLabel> xLabels = new HashSet<>();
+		Set<TTRLabel> eLabels = new HashSet<>();
+		Set<TTRLabel> allLabels = this.getLabels();
+		for (TTRLabel l: allLabels) {
+			if (l.toString().startsWith("p")) {
+				pLables.add(l);
+			} else if (l.toString().startsWith("x")) {
+				xLabels.add(l);
+			} else if (l.toString().startsWith("e")) {
+				eLabels.add(l);
+			} else {
+				logger.error("This method cannot handle label: " + l);
+				// todo Maybe raise an exception?
+			}
+		}
+
+		ArrayList<Pair<Set<TTRLabel>, String>> labelSets = new ArrayList<>();
+		labelSets.add(new Pair<>(pLables, "p"));
+		labelSets.add(new Pair<>(xLabels, "x"));
+		labelSets.add(new Pair<>(eLabels, "e"));
+		for (Pair<Set<TTRLabel>, String> labels: labelSets) {
+			int largestIndex = 0;
+			Map<Variable, Variable> varMap = new HashMap<>();
+			List<Integer> indices = new ArrayList<>();
+			String varName = labels.second;
+			for (TTRLabel l : labels.first) {
+				Integer idx = Integer.parseInt(l.toString().substring(1));
+				indices.add(idx);
+			}
+			indices.sort(Comparator.naturalOrder());
+			logger.trace("Indices: " + indices);
+
+			for (int i: indices) {
+                if (i != largestIndex) {
+					varMap.put(new Variable(varName+i), new Variable(varName+largestIndex));
+                }
+                largestIndex++;
+            }
+			logger.info("varMap: " + varMap);
+			// Time to apply the map:
+			for (Variable varKey: varMap.keySet()) {
+				// Replace all labels:
+				TTRField f = this.getField(varKey);
+				List<TTRField> fDependants = result.getProperDependents(f);  // Includes the field itself, so no need to do it separately.
+				logger.debug("Replacing " + varKey + " with " + varMap.get(varKey) + " in " + f);
+				TTRField newF = f.substitute(varKey, varMap.get(varKey));
+				result = result.removeField(f);
+				result.add(newF);
+				logger.debug("RT after replacement is: " + result);
+				for (TTRField dep: fDependants) {
+					logger.debug("Replacing " + varKey + " with " + varMap.get(varKey) + " in " + dep);
+					TTRField newDep = dep.substitute(varKey, varMap.get(varKey));
+					result = result.removeField(dep);
+					result.add(newDep);
+					logger.debug("RT after replacement is: " + result);
+				}
+			}
+		}
+		logger.debug("final RT: " + result);
+		return result;
+	}
+
+
+	/**
+	 * Overloads the method below with my special character.
+	 * @return
+	 */
+	public List<String> makeNeuralParsingRT (String specialChar) {
+		if (specialChar.isEmpty())
+			return makeNeuralParsingRepresentationWO();
+		return 	makeNeuralParsingRepresentation(specialChar);
 	}
 
 
