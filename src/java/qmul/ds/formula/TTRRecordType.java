@@ -1066,8 +1066,20 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		// go to a door
 		TTRRecordType b4 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]");
 // [r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]
-		//Testing getAbstractions
-//		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = t30.getAbstractions(DSType.t, 1);
+
+		TTRRecordType tp = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
+
+		// testing some new BabyDS methods:
+		TTRRecordType u = tp.unEmbed();
+		u = u.resetAllIndices();
+		List<String> nnRt = u.makeNeuralParsingRepr("<none>");
+		System.out.println(nnRt);
+		// or now all together:
+		System.out.println(u.embeddedRT2NN());
+
+
+//		//Testing getAbstractions
+//		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = tp.getAbstractions(DSType.t, 1);
 //		System.out.println("----------------------------------");
 //		for(Pair<TTRRecordType, TTRLambdaAbstract> pair:abstractions) {
 //			System.out.println("The argument: "+pair.first);
@@ -3667,11 +3679,165 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * Overloads the method below with my special character.
 	 * @return
 	 */
-	public List<String> makeNeuralParsingRT (String specialChar) {
-		if (specialChar.isEmpty())
-			return makeNeuralParsingRepresentationWO();
-		return 	makeNeuralParsingRepresentation(specialChar);
+	public List<String> makeNeuralParsingRepr(String fillerChar) {
+		if (fillerChar.isEmpty())
+			return makeNeuralParsingRepNoFiller();
+		return 	makeNeuralParsingReprWithFiller(fillerChar);
 	}
+
+
+	/**
+	 * Made for BabyDS neural TTR parsing task, so might not necessarily generalise.
+	 * Assumption is each field should have five elements. If they exist, add them, and if not, put a special character
+	 * that represents it doesn't exist.
+	 * @author: AA
+	 * @return A neural-network-ready representation of an *un-embedded* RT as a list of strings.
+	 */
+	public List<String> makeNeuralParsingReprWithFiller(String fillerTag) {
+		List<String> result = new ArrayList<>();
+		// first unEmbed, then resetIndices, then getString
+		//todo can potentially track tag-len here...
+		for (TTRField f: this.fields) {
+			String one = f.getLabel().toString();
+			logger.trace("1st part: " + one);
+			result.add(one);
+			Formula two = f.getType();
+			if (two==null) {
+				logger.trace("Adding three nonExistantTags because type is null...");
+				result.add(fillerTag);  // For two
+				result.add(fillerTag);  // For three
+				result.add(fillerTag);  // For four
+				String five = f.getDSType().toString();
+				logger.trace("5th part: " + five);
+				result.add(five);
+				logger.debug("Result so far is: " + result);
+				continue;
+			} else if (f.getType() instanceof PredicateArgumentFormula) {
+				PredicateArgumentFormula p = ((PredicateArgumentFormula) f.getType());
+				String formula = p.getPredicate().toString();
+				logger.trace("Second: " + formula);
+				result.add(formula);
+				logger.debug("Result so far is: " + result);
+				String arg1;
+				if (f.getVariables().size() >= 1) {
+					arg1 = p.getArguments().get(0).toString();
+				} else {
+					arg1 = fillerTag;
+				}
+				logger.trace("third: " + arg1);
+				result.add(arg1);
+				logger.debug("Result so far is: " + result);
+				String arg2;
+				if (f.getVariables().size() == 2) {
+					arg2 = p.getArguments().get(1).toString();
+				} else {
+					arg2 = fillerTag;
+				}
+				logger.trace("forth: " + arg2);
+				result.add(arg2);
+				logger.debug("Result so far is: " + result);
+			}
+			else {
+				logger.trace("2nd part: " + two);
+				result.add(two.toString());
+				logger.trace("Adding two nonExistantTags because numVars=0");
+				result.add(fillerTag);  // For three
+				result.add(fillerTag);
+			}
+			String five = f.getDSType().toString();
+			logger.trace("5th part: " + five);
+			result.add(five);
+			logger.debug("Result so far is: " + result);
+		}
+		logger.info("The final nn representation is:");
+		logger.info(result);
+		return result;
+	}
+
+
+	/**
+	 * Made for BabyDS neural TTR parsing task, so might not necessarily generalise.
+	 * Assumption is each field should have five elements. If they exist, add them, and if not, put a special character
+	 * that represents it doesn't exist.
+	 * @author: AA
+	 * @return A neural-network-ready representation of an *un-embedded* RT as a list of strings.
+	 */
+	public List<String> makeNeuralParsingRepNoFiller() {
+		List<String> result = new ArrayList<>();
+		// first unEmbed, then resetIndices, then getString
+		//todo can potentially track tag-len here...
+		for (TTRField f: this.fields) {
+			String one = f.getLabel().toString();
+			logger.trace("1st part: " + one);
+			result.add(one);
+			Formula two = f.getType();
+			if (two==null) {
+				logger.trace("Adding three nonExistantTags because type is null...");
+
+				String five = f.getDSType().toString();
+				logger.trace("5th part: " + five);
+				result.add(five);
+				logger.debug("Result so far is: " + result);
+				continue;
+			} else if (f.getType() instanceof PredicateArgumentFormula) {
+				PredicateArgumentFormula p = ((PredicateArgumentFormula) f.getType());
+				String formula = p.getPredicate().toString();
+				logger.trace("Second: " + formula);
+				result.add(formula);
+				logger.debug("Result so far is: " + result);
+				if (f.getVariables().size() >= 1) {
+					String arg1 = p.getArguments().get(0).toString();
+					logger.trace("third: " + arg1);
+				result.add(arg1);
+				} else {
+					logger.trace("third: NOTHING!");
+				}
+				logger.debug("Result so far is: " + result);
+				if (f.getVariables().size() == 2) {
+					String arg2 = p.getArguments().get(1).toString();
+					logger.trace("forth: " + arg2);
+					result.add(arg2);
+				} else {
+					logger.trace("forth: NOTHING!");
+				}
+				logger.debug("Result so far is: " + result);
+			}
+			else {
+				logger.trace("2nd part: " + two);
+				result.add(two.toString());
+				logger.trace("Adding two nonExistantTags because numVars=0");
+			}
+			String five = f.getDSType().toString();
+			logger.trace("5th part: " + five);
+			result.add(five);
+			logger.debug("Result so far is: " + result);
+		}
+		logger.info("The final nn representation is:");
+		logger.info(result);
+		return result;
+	}
+
+
+	/**
+	 * Overloads the method below with default special character "".
+	 * @return
+	 */
+	public List<String> embeddedRT2NN() {
+		return this.unEmbed().resetAllIndices().makeNeuralParsingRepr("");
+	}
+
+
+	/**
+	 * Converts an embedded RT to a neural-network-ready representation.
+	 * Working procedure: first unEmbed, then reset indices to minimum possible, then convert to a list of strings repr.
+	 * Built for BabyDS.
+	 * @author: AA
+	 * @return neural parsing-ready representation
+	 */
+	public List<String> embeddedRT2NN(String specialChar) {
+		return this.unEmbed().resetAllIndices().makeNeuralParsingRepr(specialChar);
+	}
+
 
 
 //	public boolean equals(Object o){
