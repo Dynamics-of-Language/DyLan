@@ -3441,6 +3441,140 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			logger.info(" ======== none of the cases. ========");
 			return this.toString().compareTo(other.toString()); // AA: I have a feeling this is incorrect.
 		}
+	}
+
+
+	/**
+	 * Defined for BabyDS neural parsing preprocessing.
+	 * The rules for un-embedding/flattening are:
+	 * - Remove embedded record types and convert them to fields.
+	 * - remove the head field (in the general RT and the embedded RTs).
+	 * - remove the restrictor field and convert it to a predicate.
+	 * Assumes the indices are tidy already (start from 1 and go up one by one) -> Otherwise I have to improve this. TODO check this
+	 * IMPORTANT LIMITATION/HACK in the comments below!
+	 * Also, Some of these operations I'm doing here could have/deserve their own methods imo!
+	 * @author: AA
+	 * @return a flattened version of the record type (following the rules above).
+	 */
+	public TTRRecordType unEmbed() {
+		TTRRecordType result = new TTRRecordType();
+		Map<Variable, Variable> toReplaceMap = new HashMap<>();
+		List<TTRField> badFields = new ArrayList<>();  // The ones that when I try to add them to result, raise an error.
+		// I assume these are caused by bad `p` index (and no other variables), so I collect them in this list and deal
+		// with them at the end. This limitation ("p"s only) can easily be dealt with, but not my concern.
+		for (TTRField f: this.fields) {
+			if (f.getType() instanceof TTRRecordType) {
+				TTRRecordType rec = (TTRRecordType) f.getType();
+				Variable myVar = null;
+				for (TTRField ff: rec.fields) {
+					if (!ff.getLabel().equals(HEAD)) {
+						// have to hande coincidental variables here...
+						try {
+							result.addField(new TTRField(ff));
+						} catch (Exception e) {
+							badFields.add(ff);
+						}
+						logger.debug("Result so far: " + result);
+					} else {
+						myVar = ff.getVariables().iterator().next(); // The "x" I am looking for.
+					}
+				}
+				TTRField epsilonTerm = this.getProperDependents(f).getFirst(); // FOUND IT! Have to play with this now!
+				Formula core = epsilonTerm.getPredicate();
+				// Now have to build my own field in the following shape: p_i=core(head_variable):t)
+				TTRField myEpsilonField = TTRField.parse("p" + lastIndexOfPredicateMeta + "==" + core + "(" + myVar + ")" + ":t");
+				try {
+					result.addField(myEpsilonField);
+				} catch (Exception e) {
+					badFields.add(myEpsilonField);
+				}
+				logger.debug("Result so far: " + result);
+			} else if (f.getType() instanceof PredicateArgumentFormula) {
+				Predicate p = ((PredicateArgumentFormula) f.getType()).getPredicate();
+				if (p.toString().equals("iota") || p.toString().equals("epsilon")) {  // My bad. For sure there is a cleaner way of doing this... But it's working!
+					logger.debug("Skipping the restrictor: " + f); // skipping r.
+					// AA: I don't know how efficient I'm handling this, but at least it is working correctly.
+					TTRLabel oldLabel = f.getLabel();
+					Variable v = oldLabel.getVariables().iterator().next();
+//					System.out.println(v);
+//					TTRLabel newLabel = null;
+					String l = ((PredicateArgumentFormula) f.getType()).arguments.getLast().toString();
+					TTRField fff = ((TTRRecordType) this.get(new TTRLabel(l))).getHeadField();
+					TTRLabel newLabel = fff.getLabel();
+					Variable v2 = newLabel.getVariables().iterator().next();
+//					System.out.println(v2);
+					toReplaceMap.put(v, v2);
+				} else {
+					try {
+						result.addField(new TTRField(f));
+					} catch (Exception e) {
+						badFields.add(f);
+					}
+				}
+			} else if (!f.getLabel().equals(HEAD)) {
+				try {
+				result.addField(new TTRField(f));
+				} catch (Exception e) {
+					badFields.add(f);
+				}
+				logger.debug("Result so far: " + result);
+			}
+		}
+		logger.debug("All bad fields: " + badFields);
+		logger.info("Now fixing potential bad fields...");
+		logger.debug("final result before adding bad fields: " + result);
+		for (TTRField f: badFields) {
+			int currentPIndex = Integer.parseInt(f.getLabel().toString().replace("p", ""));
+			int potential_good_index = currentPIndex + 1;
+			boolean is_bad_index = true;
+			while (is_bad_index) {
+				try {
+					String goodP = "p" + potential_good_index;
+					f.setLabel(new TTRLabel(goodP));
+					logger.debug("Trying a new label for the bad field: " + f.getLabel());
+					result.add(f);
+					is_bad_index = false;
+					logger.debug("That's a good label!");
+				} catch (Exception e) {
+					logger.debug("Still not a good index. Incrementing it...");
+					potential_good_index++;
+				}
+			}
+		}
+		logger.info("result after adding the fixed bad fields: ");
+		logger.info(result);
+		logger.info("Now doing potential re-labeling...");
+		logger.debug("Map is: " + toReplaceMap);
+		// Since relabelling (in the form of the above line) is not working as I expected, I'm doing mit by myself:
+		TTRRecordType subsRT = new TTRRecordType();
+		for (TTRField field: result.fields) {
+			Set<Variable> variables = field.getVariables();
+			for (Variable v: variables) {
+				if (toReplaceMap.containsKey(v)) {
+					logger.debug("Replacing " + v + " with " + toReplaceMap.get(v) + " in " + field);
+					field = field.substitute(v, toReplaceMap.get(v));
+				}
+			}
+			subsRT.addField(field);
+		}
+		logger.info("result after relabeling: ");
+		logger.info(subsRT);
+		return subsRT;
+	}
+
+
+	/**
+	 * The opposite of the above method: converts an un-embedded record type to an embedded one.
+	 * Used after neural parsing inference, to have a the prediction in the original format for evaluation.
+	 * @author: AA
+	 * @return a record type with embedded record types.
+	 */
+	public TTRRecordType reEmbed () {  //TODO
+		TTRRecordType result = new TTRRecordType();
+
+		return result;
+	}
+
 
 	}
 
