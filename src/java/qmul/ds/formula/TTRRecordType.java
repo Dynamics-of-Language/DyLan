@@ -1006,16 +1006,6 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 
-	/**
-	 * Tests a given getAbstraction method on a set of RTs, and prints the results.
-	 * Output is comparison of the real and expected number of abstractions. todo
-	 */
-	public void testGetAbstractions(String methodName){
-		// have a list of childes RTs, complete t list below
-		// have a list of baby DS RTs
-		// loop through them, getAbstractions, compare the answer with real number of abstractions
-	}
-
 	public static void main(String[] a) {
 		TTRRecordType t = TTRRecordType.parse("[r : [x:e|p1==juice(x):t|head==x:e]|x1==more(r.head,r):e|head==x1:e]");
 		TTRRecordType t2 = TTRRecordType.parse("[x1 : e|y==dylan : e|" +
