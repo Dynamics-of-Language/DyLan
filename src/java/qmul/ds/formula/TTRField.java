@@ -248,7 +248,7 @@ public class TTRField extends Formula{
 	
 	/*
 	 * (non-Javadoc)
-	 * 
+	 * AA Comment: This method does not work in-place, so it's the returned value that carries the substitution effect.
 	 * @see qmul.ds.formula.Formula#substitute(qmul.ds.formula.Formula,
 	 * qmul.ds.formula.Formula)
 	 */
@@ -256,19 +256,12 @@ public class TTRField extends Formula{
 	public TTRField substitute(Formula f1, Formula f2) {
 		if (type != null) {
 			if (type.equals(f1)) {
-
 				TTRField newF = new TTRField(new TTRLabel(label), dsType, f2);
-
 				return newF;
 			}
 		}
-		
-		
 		return new TTRField(label.substitute(f1, f2), dsType,
 				(type != null) ? type.substitute(f1, f2) : type);
-
-
-
 	}
 
 	//
