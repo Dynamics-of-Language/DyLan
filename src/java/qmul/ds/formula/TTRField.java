@@ -747,4 +747,14 @@ public class TTRField extends Formula{
 		return label instanceof MetaTTRLabel;
 	}
 
+	/**
+	 * Returns the predicate (in AA's terms, the "semantic core") of this field.
+	 * @author: AA
+	 * @return the predicate of the field.
+	 */
+	public Formula getPredicate() {
+        return ((PredicateArgumentFormula) this.getType()).predicate;
+	}
+
+
 }
