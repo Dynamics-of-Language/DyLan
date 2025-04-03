@@ -660,23 +660,23 @@ public class BabyDSInduction {
      * Called in the constructor.
      * @author: AA
      */
-public void verify_model_path(String modelAddress) {
-    File modelDir = new File(modelAddress);
-    if (!modelDir.exists()) {
-        logger.info("Model directory doesn't exist. Creating it now...");
-        if (!modelDir.mkdirs()) {
-            try {
-                throw new IOException("Could not create directory: " + modelDir.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    public void verify_model_path(String modelAddress) {
+        File modelDir = new File(modelAddress);
+        if (!modelDir.exists()) {
+            logger.info("Model directory doesn't exist. Creating it now...");
+            if (!modelDir.mkdirs()) {
+                try {
+                    throw new IOException("Could not create directory: " + modelDir.getAbsolutePath());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            logger.info("Model directory created: " + modelDir);
+            logger.info("double-verifying: " + modelDir.getAbsolutePath());
+        } else {
+            logger.warn(ANSI_RED + "Model directory already exists (WILL RE-WRITE MODEL): " + modelDir + ANSI_RESET);
         }
-        logger.info("Model directory created: " + modelDir);
-        logger.info("double-verifying: " + modelDir.getAbsolutePath());
-    } else {
-        logger.warn(ANSI_RED + "Model directory already exists (WILL RE-WRITE MODEL): " + modelDir + ANSI_RESET);
     }
-}
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
