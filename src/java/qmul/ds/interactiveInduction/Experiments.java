@@ -208,6 +208,78 @@ public class Experiments {
     }
 
 
+    /**
+     * Finds the minimum amount of data that is needed to "have mastered" a class for BabyDS.
+     * Workflow:
+     * - Split the data into training batches and a development set.
+     * - Train a model on the training batches.
+     * - Evaluate the model on the development set.
+     * - If the model has not reached the mastery threshold, add more data to the training batches and retrain the model.
+     * - Keep track of results until the model has reached the mastery threshold.
+     * - If the difference between the current and previous evaluation results is less than the improvement threshold for
+     * a "patience" number of times, stop the process, otherwise continue.
+     * - Return the minimum amount of data that is needed to reach the mastery threshold.
+     * - Repeat the experiment a number of times (with different seeds) to get an average as a true estimate.
+     *
+     * @param corpus the data of a class
+     * @param masteryThreshold the threshold for mastery
+     * @param improvementThreshold the threshold for improvement
+     * @param metric the metric to use for evaluation
+     * @param repeatCount the number of times to repeat the experiment
+     * @param seed the seed for reproducibility
+     * @param patience the number of times to wait for improvement before stopping
+     */
+    public void findMinimumMasteryData(RecordTypeCorpus corpus, String modelPath, double masteryThreshold, double improvementThreshold, String metric, int repeatCount, int seed, int patience) {
+        BabyDSInduction ds = new BabyDSInduction(modelPath);
+        corpus.corpusName = "mycorpus";
+        List<EvalResult > results = new ArrayList<>();  //todo integrate for furthur analysis
+        for (int i = 0; i < repeatCount; i++) {
+            int rollingPatience = patience;
+            // Split the data into training batches and a development set
+            Collections.shuffle(corpus, new Random(seed+i));
+            List<RecordTypeCorpus> trainingBatches = ds.prepare_batches(corpus);
+            RecordTypeCorpus devSet = trainingBatches.getLast();
+            devSet.corpusName = corpus.corpusName+"test";
+            trainingBatches.removeLast();
+            RecordTypeCorpus currentBatch = trainingBatches.getLast();  // todo have to somehow handle these training sets, in terms of them being read for model training
+            trainingBatches.removeLast();
+            // Train a model on the training batches
+            ds.train_model(currentBatch, modelPath, seedGrammarPath); //todo
+
+            // Evaluate the model on the development set
+            Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>>
+                    ttsResults = ds.evaluate_model(0, modelPath, corpus.corpusName);  //todo
+
+            // If the model has not reached the mastery threshold, add more data to the training batches and retrain the model
+            while (ttsResults.second.get(0).get(metric).get(1) < masteryThreshold) {
+                // Add more data to the training batches
+                RecordTypeCorpus newBatch = trainingBatches.getLast();
+                trainingBatches.removeLast();
+                currentBatch.mergeCorpora(newBatch);
+
+                // Retrain the model
+                ds.train_model(currentBatch, modelPath, seedGrammarPath);  //todo
+
+                // Evaluate the model on the development set
+                Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>>
+                        newTtsResults = ds.evaluate_model(0, modelPath, corpus.corpusName);
+
+                // If the difference between the current and previous evaluation results is less than the improvement threshold for
+                // a "patience" number of times, stop the process, otherwise continue
+                if (Math.abs(newTtsResults.second.get(0).get(metric).get(1) - ttsResults.second.get(0).get(metric).get(1)) < improvementThreshold) {
+                    rollingPatience--;
+                    if (rollingPatience == 0) {
+                        break;
+                    }
+                } else {
+                    rollingPatience = patience;  // rest? todo
+                }
+                ttsResults = newTtsResults;
+            }
+        }
+    }
+
+
     public void rq2() {
     // TODO should add "G" for generalisation tests, "F" for forgetting tests, and "B" for both forgetting and generalisation tests.
     //todo add also "C" for curriculum learning tests, and "R" for random learning tests.
