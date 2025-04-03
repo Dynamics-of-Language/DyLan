@@ -69,6 +69,10 @@ public class BabyDSInduction {
         }
     }
 
+      BabyDSInduction () { //todo improve
+        logger.warn("Make sure (at least in IntelliJ) your working directory is set to /DyLan to prevent errors with dirs.");
+    }
+
 
     /**
      * Overloads the below method, with default values for modelAddress and datasetName.
@@ -189,7 +193,7 @@ public class BabyDSInduction {
                 logger.info("Parsing coverage for " + dataset_name + ": " + parsedCount + " out of " + corpus.size());  // AA MODIFIED FROM parsedCount
             }
         }
-        evalResult.writeResutlsToFile(modelAddress); //TODO add proper text info after each table is created: use old table way of doing stuff.
+        evalResult.writeResutlsToFile(modelAddress, datasetName); //TODO add proper text info after each table is created: use old table way of doing stuff.
         return new Pair<>(semanticAccuracy, parsingCoverage);
     }
 
@@ -480,13 +484,13 @@ public class BabyDSInduction {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Do you want to load this model instead of training from scratch? (y/n)");
             String answer = scanner.nextLine();
-            if (answer.equals("y")) {
+            if (answer.equals("y") || answer.equals("Y")) {
                 logger.info("Loading the existing model...");
                 return;
-            } else if (answer.equals("n")) {
+            } else if (answer.equals("n") || answer.equals("N")) {
                 logger.info("Training BabyDS model from scratch...");
             } else {
-                logger.error("Invalid input. Please enter 'y' or 'n'.");
+                logger.error("Invalid input. Please enter 'y/Y' or 'n/N'.");
                 return;
             }
         }
