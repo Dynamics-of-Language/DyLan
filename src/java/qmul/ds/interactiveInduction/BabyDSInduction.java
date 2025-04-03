@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.io.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -40,7 +41,8 @@ public class BabyDSInduction {
 //    static String modelDirUser ="2025_babyds_RQ2" ;//"2024_babyds_induction";//"2025_babyds_RQ2";  // User has to modify every time!
     static final String modelPath = "resource\\2024_babyds_induction\\".replace("\\", File.separator);  //the dir that works!
 //    static final String modelPath = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
-    static final String DATASET_NAME = "class1";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
+    static final String DATASET_NAME = "pt";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
+    static final String DATASET_NAME_IDX = "2";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
 
     public static final int SEED = 45; // Set a constant seed for reproducibility
     public static final int TOP_N = 5;  // topN learned actions to evaluate
@@ -679,6 +681,92 @@ public class BabyDSInduction {
     }
 
 
+    public void makeNeuralParsingCorpus(String corpusName, String modelAddress) {
+        RecordTypeCorpus corpus = new RecordTypeCorpus();
+        try {
+            corpus.loadCorpus(new File(modelAddress + corpusName+".txt"));
+            // Extract all TTRRecordTypes from corpus pairs
+            List<TTRRecordType> rts = corpus.stream()
+                .map(Pair::second)
+                .collect(Collectors.toList());
+
+            // Process RTTypes in parallel using embeddedRT2NN
+            List<List<String>> nnReprs = rts.parallelStream()
+                .map(TTRRecordType::embeddedRT2NN)
+                .collect(Collectors.toList());
+
+            logger.info("Processed " + nnReprs.size() + " record types into neural representations");
+            // TODO: Save or further process the neural representations
+            //TODO move this out of the try block
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(modelAddress + corpusName + "_neural"+DATASET_NAME_IDX+".txt"))) {
+                for (int i = 0; i < corpus.size(); i++) {
+                    writer.write(corpus.get(i).first().toString());
+                    writer.newLine();
+                    writer.write(String.join(" ", nnReprs.get(i)));
+                    writer.newLine();
+                    writer.newLine();
+                }
+                logger.info("Saved neural representations to: " + modelAddress + corpusName + "_neural"+DATASET_NAME_IDX+".txt");
+            } catch (IOException e) {
+                logger.error("Error saving neural representations: " + e.getMessage());
+            }
+
+        } catch (IOException e) {
+            logger.error("Error loading corpus: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void testParallelisationEffect(int rounds) {
+        long start;
+        long end;
+        long duration;
+        long sum;
+
+        RecordTypeCorpus corpus = new RecordTypeCorpus();
+        try {
+            corpus.loadCorpus(new File(modelPath+DATASET_NAME+".txt"));
+        } catch (IOException e) {
+            logger.error("Error loading corpus: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        // Parallel processing:
+        sum = 0;
+        for (int i = 0; i < rounds; i++) {
+            start = System.currentTimeMillis();
+            List<TTRRecordType> rts = corpus.stream()
+                    .map(Pair::second)
+                    .collect(Collectors.toList());
+            List<List<String>> nnReprs = rts.parallelStream()
+                    .map(TTRRecordType::embeddedRT2NN)
+                    .collect(Collectors.toList());
+            end = System.currentTimeMillis();
+            duration = end - start;
+            System.out.println("Duration for parallel processing: " + duration);
+            sum += duration;
+        }
+        System.out.println("parallel: average over " + rounds + " rounds is: " + sum / rounds);
+
+        // Normal / non-parallel processing:
+        sum = 0;
+        for (int i = 0; i < rounds; i++) {
+            start = System.currentTimeMillis();
+            List<List<String>> results = new ArrayList<>();
+            for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
+                TTRRecordType rt = pair.second();
+                results.add(rt.embeddedRT2NN());
+            }
+            end = System.currentTimeMillis();
+            duration = end - start;
+            System.out.println("Duration for normal processing: " + duration);
+            sum += duration;
+        }
+        System.out.println("parallel: average over " + rounds + " rounds is: " + sum / rounds);
+    }
+
+
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // To run evaluation only, uncomment the following:
@@ -689,12 +777,16 @@ public class BabyDSInduction {
 //        System.out.println(bbds.get_parsingCoverage_results(ttsResults.second(), null));
 
         // To run full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
-        BabyDSInduction testInduction = new BabyDSInduction(modelPath);
-        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED, seedGrammarPath);
+//        BabyDSInduction testInduction = new BabyDSInduction(modelPath);
+//        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED, seedGrammarPath);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
 //        bbds.train_model(corpusPath + datasetName);
+
+        BabyDSInduction test = new BabyDSInduction();
+//        test.makeNeuralParsingCorpus(DATASET_NAME, modelPath);
+        test.testParallelisationEffect(10);
     }
 
 }
