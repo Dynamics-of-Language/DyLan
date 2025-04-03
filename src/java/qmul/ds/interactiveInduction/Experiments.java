@@ -137,8 +137,7 @@ public class Experiments {
         // of class 1, and also a mix of these), and train a model on it:
 //        RecordTypeCorpus class1_minimum_data = new RecordTypeCorpus();  //TODO and more because I want to add batches
         // First shuffle class 1 data
-        Random random = new Random(SEED);
-        Collections.shuffle(corpus1, random);
+        Collections.shuffle(corpus1, new Random(SEED));
         List<RecordTypeCorpus> class1_batches = ds.prepare_batches(corpus1);
         // get the test data
         RecordTypeCorpus test_data = class1_batches.getLast();  // TODO or maybe do train-test split...
@@ -170,7 +169,7 @@ public class Experiments {
                 mergedCorpusS = mergedCorpusS.mergeCorpora(batch.getSubCorpus(0,40));  // TODO set name as well! + maybe deal with batch size here?
                 logger.debug("Current merged corpus size: " + mergedCorpusS.size());
                 mergedCorpusS.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // maybe add and use a setName method? //todo fix + include batch number in the name
-                Collections.shuffle(mergedCorpusS, random);
+                Collections.shuffle(mergedCorpusS, new Random(SEED));
                 mergedCorpusS.corpusName = "babyds_train_" + startClass + "_" + mergedCorpusS.size() + ".txt";  //TODO
                 try {  // todo improve save and load methods to return the object itself.
                     mergedCorpusS.saveCorpus(forgettingPath + mergedCorpusS.corpusName);
@@ -196,7 +195,7 @@ public class Experiments {
                 mergedCorpusF = mergedCorpusF.mergeCorpora(batch);  // TODO set name as well!
                 mergedCorpusF.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // maybe add and use a setName method? //todo fix
                 // todo save in forgetting dir - later add batch number to the name
-                Collections.shuffle(mergedCorpusF, random);
+                Collections.shuffle(mergedCorpusF, new Random(SEED));
                 ds.train_model(mergedCorpusF, forgettingPath, seedGrammarPath); //
                 Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = ds.evaluate_model(0, forgettingPath, "babyds");
                 EvalResult ev = new EvalResult(ttsResults.first, ttsResults.second);
@@ -211,17 +210,15 @@ public class Experiments {
 
     public void rq2() {
     // TODO should add "G" for generalisation tests, "F" for forgetting tests, and "B" for both forgetting and generalisation tests.
+    //todo add also "C" for curriculum learning tests, and "R" for random learning tests.
     }
 
     public void rq3() {
 
     }
 
-    /**
-     * Writes the results of the experiments to a text file.
-     */
-    public void writeResultsToFile() {
-
+    public void runAllExperiments() {
+        // TODO run all experiments here, like a boss.
     }
 
 
