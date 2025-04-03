@@ -3,18 +3,7 @@ package qmul.ds.formula;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;
@@ -685,6 +674,12 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		}
 	}
 
+	/**
+	 * AA comment: Does not remove dependant fields, and does not work in-place, so the effect will be on
+	 * the returned RT.
+	 * @param field
+	 * @return
+	 */
 	public TTRRecordType removeField(TTRField field) {
 		if (field != null)
 			return removeLabel(field.getLabel());
@@ -806,19 +801,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * @return new relabelled record type
 	 */
 	public TTRRecordType relabel(Map<Variable, Variable> map) {
+		logger.trace("relabelling map: " + map);
 		TTRRecordType mapped = new TTRRecordType();
 		List<TTRField> mappedFields = new ArrayList<TTRField>();
 
 		for (TTRField f : this.fields) {
-
 			Variable curLabel = new Variable(f.getLabel());
-
 			Set<Variable> variables = f.getVariables();
 			Formula type = f.getType();
 			for (Variable var : variables) {
 				if (map.containsKey(var))
 					type = type.substitute(var, map.get(var));
-
 			}
 			TTRLabel newLabel;
 			// what if this record type already has the target variable as
@@ -832,25 +825,20 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				map.put(curLabel, newVar);
 				newLabel = new TTRLabel(newVar);
 				// System.out.println("mapping label to fresh label");
-
 			} else {
 				// System.out.println("not mapping label");
 				newLabel = new TTRLabel(curLabel);
 			}
-
 			TTRField mappedField = new TTRField(newLabel, f.getDSType(), type);
-
 			mappedFields.add(mappedField);
 			// System.out.println("Mapped " + f + "->" + mappedField);
 		}
-
 		for (TTRField f : mappedFields) {
 			mapped.add(f);
 		}
-
 		return mapped;
-
 	}
+
 
 	/**
 	 * collapses duplicate super-types, i.e. super-types which are isomorphic.
@@ -1074,8 +1062,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		// Testing on BabyDS semantics:
 		// Pickup a red box
 		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p2==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
-		// go to a door
 
+		// go to a door
 		TTRRecordType b4 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]");
 // [r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]
 		//Testing getAbstractions
@@ -1458,6 +1446,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		record.put(f.getLabel(), f);
 		this.fields.add(f);
 		f.setParentRecType(this);
+	}
 
 	}
 
@@ -1469,7 +1458,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 */
 	public void add(TTRField f) {
 		if (record.containsKey(f.getLabel()))
-			throw new IllegalArgumentException("Coinciding labels in:" + this + " when adding:" + f);
+			throw new IllegalArgumentException("Coinciding labels in: " + this + " when adding: " + f);
 
 		// if (!f.getMetas().isEmpty() && f.isMeta())
 		// throw new IllegalArgumentException("Illegal field:"+f+" - cannot have
@@ -2016,7 +2005,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	/**
 	 * Freshens all the labels in {@code this} with respect to {@code r}, so that
 	 * the result will not contain any variables from {@code r}.
-	 *
+	 * AA Comment: seems like it does not work with embedded record types. Even not properly with normal fields (as
+	 * in, it's probably correct, but not necessarily the best (e.g. doesn't start from 1).
 	 * @param r
 	 * @param map Must be an empty map. After method call it will contain the
 	 *            mappings from old to new variables
@@ -3281,7 +3271,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 	/**
-	 *
+	 * AA: Why not just overload some getLabels method?
 	 * @param str
 	 * @return
 	 */
@@ -3385,9 +3375,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 	public MetaPredicate getFreshPredicateMetaVariable() {
 		lastIndexOfPredicateMeta++;
-
 		return MetaPredicate.get(Formula.META_PREDICATE_ROOT_PATTERN + lastIndexOfPredicateMeta);
-
 	}
 
 	public int getSpecificity(TTRField field) {
