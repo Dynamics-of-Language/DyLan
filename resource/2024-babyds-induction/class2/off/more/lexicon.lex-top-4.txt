@@ -1,0 +1,625 @@
+[0.42687056097121046,0]
+red
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r1 : R1|x2==iota(r1.head, r1) : e|head==x2 : e])
+ELSE  abort
+
+[0.19047619047619013,1]
+red
+IF    ?Ty(cn>e)
+THEN  ttrput(R1^[r1 : R1|x2==epsilon(r1.head, r1) : e|head==x2 : e])
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.07944977370874659,2]
+red
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r2 : R1|x4==iota(r2.head, r2) : e|head==x4 : e])
+ELSE  abort
+IF    ?Ty(cn>e)
+      Ty(cn>e)
+THEN  delete(?Ty(cn>e))
+ELSE  abort
+IF    Ty(cn>e)
+      ¬?Ty(cn>e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    ?Ty(e)
+      ¬Ex.Fo(META)
+      <\/1>Ty(cn>e)
+      <\/0>Ty(cn)
+      ¬<\/1>Ex.?x
+      ¬<\/0>Ex.?x
+THEN  beta-reduce
+ELSE  abort
+IF    ?Ty(e)
+      Ty(e)
+THEN  delete(?Ty(e))
+ELSE  abort
+IF    Ty(e)
+      ¬?Ty(e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    <\/1>Ex.?x
+THEN  go(<\/1>)
+ELSE  abort
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+
+[0.06704452068478046,3]
+red
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r2 : R1|x4==iota(r2.head, r2) : e|head==x4 : e])
+ELSE  abort
+IF    ?Ty(cn>e)
+      Ty(cn>e)
+THEN  delete(?Ty(cn>e))
+ELSE  abort
+IF    Ty(cn>e)
+      ¬?Ty(cn>e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    ?Ty(e)
+      ¬Ex.Fo(META)
+      <\/1>Ty(cn>e)
+      <\/0>Ty(cn)
+      ¬<\/1>Ex.?x
+      ¬<\/0>Ex.?x
+THEN  beta-reduce
+ELSE  abort
+IF    ?Ty(e)
+      Ty(e)
+THEN  delete(?Ty(e))
+ELSE  abort
+IF    Ty(e)
+      ¬?Ty(e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    <\/1>Ex.?x
+THEN  go(<\/1>)
+ELSE  abort
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+
+[0.4319509913527575,0]
+the
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r2 : R1|x4==iota(r2.head, r2) : e|head==x4 : e])
+ELSE  abort
+
+[0.10933308996326639,1]
+the
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r2 : R1|x4==iota(r2.head, r2) : e|head==x4 : e])
+ELSE  abort
+IF    ?Ty(cn>e)
+      Ty(cn>e)
+THEN  delete(?Ty(cn>e))
+ELSE  abort
+IF    Ty(cn>e)
+      ¬?Ty(cn>e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    ?Ty(e)
+      ¬Ex.Fo(META)
+      <\/1>Ty(cn>e)
+      <\/0>Ty(cn)
+      ¬<\/1>Ex.?x
+      ¬<\/0>Ex.?x
+THEN  beta-reduce
+ELSE  abort
+IF    ?Ty(e)
+      Ty(e)
+THEN  delete(?Ty(e))
+ELSE  abort
+IF    Ty(e)
+      ¬?Ty(e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    <\/1>Ex.?x
+THEN  go(<\/1>)
+ELSE  abort
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+
+[0.08585359507716438,2]
+the
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x3 : e|head==x3 : e|p4==col_red(x3) : t])
+ELSE  abort
+
+[0.06520175098540262,3]
+the
+IF    ?Ty(cn>cn)
+THEN  put(Ty(cn>cn))
+      ttrput(R2^(R2 ++ [head==R2.head : e|p2==col_red(R2.head) : t]))
+ELSE  abort
+
+[0.49176990622125877,0]
+a
+IF    ?Ty(cn>e)
+THEN  ttrput(R1^[r1 : R1|x2==epsilon(r1.head, r1) : e|head==x2 : e])
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.09446738656768706,1]
+a
+IF    ?Ty(cn>e)
+THEN  ttrput(R1^[r2 : R1|x4==epsilon(r2.head, r2) : e|head==x4 : e])
+      put(Ty(cn>e))
+ELSE  abort
+IF    ?Ty(cn>e)
+      Ty(cn>e)
+THEN  delete(?Ty(cn>e))
+ELSE  abort
+IF    Ty(cn>e)
+      ¬?Ty(cn>e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    ?Ty(e)
+      ¬Ex.Fo(META)
+      <\/1>Ty(cn>e)
+      <\/0>Ty(cn)
+      ¬<\/1>Ex.?x
+      ¬<\/0>Ex.?x
+THEN  beta-reduce
+ELSE  abort
+IF    ?Ty(e)
+      Ty(e)
+THEN  delete(?Ty(e))
+ELSE  abort
+IF    Ty(e)
+      ¬?Ty(e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    <\/1>Ex.?x
+THEN  go(<\/1>)
+ELSE  abort
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+
+[0.08042937387772094,2]
+a
+IF    ?Ty(cn>e)
+THEN  ttrput(R1^[r2 : R1|x4==epsilon(r2.head, r2) : e|head==x4 : e])
+      put(Ty(cn>e))
+ELSE  abort
+IF    ?Ty(cn>e)
+      Ty(cn>e)
+THEN  delete(?Ty(cn>e))
+ELSE  abort
+IF    Ty(cn>e)
+      ¬?Ty(cn>e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    ?Ty(e)
+      ¬Ex.Fo(META)
+      <\/1>Ty(cn>e)
+      <\/0>Ty(cn)
+      ¬<\/1>Ex.?x
+      ¬<\/0>Ex.?x
+THEN  beta-reduce
+ELSE  abort
+IF    ?Ty(e)
+      Ty(e)
+THEN  delete(?Ty(e))
+ELSE  abort
+IF    Ty(e)
+      ¬?Ty(e)
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    <\/1>Ex.?x
+THEN  go(<\/1>)
+ELSE  abort
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+
+[0.07777777777777772,3]
+a
+IF    ?Ty(cn)
+THEN  ttrput([x1 : e|head==x1 : e|p1==obj_key(x1) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.5000000000000013,0]
+ball
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      ttrput(R2^R1^(R2 ++ (R1 ++ [e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t])))
+ELSE  abort
+
+[0.1527777777777779,1]
+ball
+IF    ?Ty(cn)
+THEN  ttrput([x1 : e|head==x1 : e|p1==obj_ball(x1) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.11111111111111104,2]
+ball
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x1 : e|head==x1 : e|p1==obj_ball(x1) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.11111111111111104,2]
+ball
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x1 : e|head==x1 : e|p1==obj_ball(x1) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.25000000000000006,0]
+putnextto
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x3 : e|head==x3 : e|p3==obj_ball(x3) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.25,1]
+putnextto
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x3 : e|head==x3 : e|p3==obj_key(x3) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.12500000000000003,2]
+putnextto
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x3 : e|head==x3 : e|p3==obj_box(x3) : t])
+ELSE  abort
+
+[0.09718642611683834,3]
+putnextto
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x3 : e|head==x3 : e|p4==col_red(x3) : t])
+ELSE  abort
+
+[0.5000000000000004,0]
+box
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      ttrput(R2^R1^(R2 ++ (R1 ++ [e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t])))
+ELSE  abort
+
+[0.34817073170731727,1]
+box
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x1 : e|head==x1 : e|p1==obj_box(x1) : t])
+ELSE  abort
+
+[0.09878048780487812,2]
+box
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x1 : e|head==x1 : e|p1==obj_box(x1) : t])
+ELSE  abort
+
+[0.05304878048780485,3]
+box
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x1 : e|head==x1 : e|p1==obj_box(x1) : t])
+ELSE  abort
+
+[0.49999999999999933,0]
+key
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      ttrput(R2^R1^(R2 ++ (R1 ++ [e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t])))
+ELSE  abort
+
+[0.19950109787067216,1]
+key
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x1 : e|head==x1 : e|p1==obj_key(x1) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.042679609165117385,2]
+key
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x1 : e|head==x1 : e|p1==obj_key(x1) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.030683947385617673,3]
+key
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  put(Ty(cn>cn))
+      ttrput(R2^(R2 ++ [head==R2.head : e|p2==col_red(R2.head) : t]))
+ELSE  abort
+

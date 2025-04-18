@@ -1,0 +1,50 @@
+// COLORS
+red                           color                           red
+green                         color                           green
+blue                          color                           blue
+purple						  color							purple
+yellow                        color                           yellow
+grey                          color                           grey
+
+
+// OBJECTS
+box			 				  object2							box
+ball						  object2							ball
+key						      object2							key
+door						  object2							door
+
+
+// ACTIONS
+go					        action2                         facing
+pick    					action2							holding
+open                        action2							opened
+//put                         action3							beside
+
+
+// DETERMINERS
+the                         det_the               the
+a                             det_the               a
+
+
+// DIRECTIONS
+left                          direction            lf
+right                         direction            rf
+front                         direction2
+behind                        direction2
+
+
+// CONJUNCTIONS
+and                           connective_prop          and
+// used for "before", according to the baby ai grammar
+after                        connective_prop2          after
+// used for normal "after", according to the baby ai grammar
+then                         connective_prop          after
+
+
+// MISSING: FOR NOW
+// directions: left/right, behind/front
+// det_a
+// action put_next_to
+
+// MISSING: LATER
+// and, then, after

@@ -1,0 +1,46 @@
+[0.6571428571428573,0]
+the
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r1 : R1|x2==iota(r1.head, r1) : e|head==x2 : e])
+ELSE  abort
+
+[0.4999999999999999,0]
+ball
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      ttrput(R2^R1^(R2 ++ (R1 ++ [e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t])))
+ELSE  abort
+
+[0.7142857142857143,0]
+a
+IF    ?Ty(cn>e)
+THEN  ttrput(R1^[r1 : R1|x2==epsilon(r1.head, r1) : e|head==x2 : e])
+      put(Ty(cn>e))
+ELSE  abort
+
+[0.6666666666666666,0]
+putnextto
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+      go(</\1>)
+      make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+ELSE  abort
+IF    ?Ty(cn)
+THEN  ttrput([x3 : e|head==x3 : e|p3==obj_ball(x3) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.49999999999999994,0]
+key
+IF    ?Ty(e>(e>t))
+THEN  put(Ty(e>(e>t)))
+      ttrput(R2^R1^(R2 ++ (R1 ++ [e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t])))
+ELSE  abort
+

@@ -1,0 +1,51 @@
+GoldSent : pickup the yellow key
+Sem : [e93==state_holding : es|r : [x185 : e|p186==col_yellow(x185) : t|p185==obj_key(x185) : t|head==x185 : e]|head==e93 : es|x186==epsilon(r.head, r) : e|p186==obj(e93, x186) : t]
+
+GoldSent : pickup a grey box
+Sem : [e47==state_holding : es|r : [x93 : e|p94==col_grey(x93) : t|p93==obj_box(x93) : t|head==x93 : e]|head==e47 : es|x94==epsilon(r.head, r) : e|p94==obj(e47, x94) : t]
+
+GoldSent : goto the blue key
+Sem : [e73==state_facing : es|r : [x145 : e|p146==col_blue(x145) : t|p145==obj_key(x145) : t|head==x145 : e]|head==e73 : es|x146==epsilon(r.head, r) : e|p146==obj(e73, x146) : t]
+
+GoldSent : pickup the red key
+Sem : [e61==state_holding : es|r : [x121 : e|p122==col_red(x121) : t|p121==obj_key(x121) : t|head==x121 : e]|head==e61 : es|x122==epsilon(r.head, r) : e|p122==obj(e61, x122) : t]
+
+GoldSent : goto a purple ball
+Sem : [e26==state_facing : es|r : [x51 : e|p52==col_purple(x51) : t|p51==obj_ball(x51) : t|head==x51 : e]|head==e26 : es|x52==epsilon(r.head, r) : e|p52==obj(e26, x52) : t]
+
+GoldSent : goto a red ball
+Sem : [e2==state_facing : es|r : [x3 : e|p4==col_red(x3) : t|p3==obj_ball(x3) : t|head==x3 : e]|head==e2 : es|x4==epsilon(r.head, r) : e|p4==obj(e2, x4) : t]
+
+GoldSent : goto a green box
+Sem : [e11==state_facing : es|r : [x21 : e|p22==col_green(x21) : t|p21==obj_box(x21) : t|head==x21 : e]|head==e11 : es|x22==epsilon(r.head, r) : e|p22==obj(e11, x22) : t]
+
+GoldSent : pickup a box
+Sem : [e55==state_holding : es|r : [x109 : e|p109==obj_box(x109) : t|head==x109 : e]|head==e55 : es|x110==epsilon(r.head, r) : e|p110==obj(e55, x110) : t]
+
+GoldSent : open the purple door
+Sem : [e88==state_opened : es|r : [x175 : e|p176==col_purple(x175) : t|p175==obj_door(x175) : t|head==x175 : e]|head==e88 : es|x176==epsilon(r.head, r) : e|p176==obj(e88, x176) : t]
+
+GoldSent : goto the yellow box
+Sem : [e91==state_facing : es|r : [x181 : e|p182==col_yellow(x181) : t|p181==obj_box(x181) : t|head==x181 : e]|head==e91 : es|x182==epsilon(r.head, r) : e|p182==obj(e91, x182) : t]
+
+GoldSent : goto a purple key
+Sem : [e25==state_facing : es|r : [x49 : e|p50==col_purple(x49) : t|p49==obj_key(x49) : t|head==x49 : e]|head==e25 : es|x50==epsilon(r.head, r) : e|p50==obj(e25, x50) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 3 is 1.
+// Count of sentences with length 4 is 10.
+
+// Corpus size: 11
+// Maximum length: 4
+// Minimum length: 3
+// Average length: 3.909091
+
+// ---- Word-Level Stats ----
+// Count of all words: 43
+// Count of unique tokens: 15
+// Words/Tokens count ratio: 2.866667

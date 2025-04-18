@@ -1,0 +1,192 @@
+Sent : putnextto a key a key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 1 - Class: 2
+
+Sent : putnextto a key the key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 2 - Class: 2
+
+Sent : putnextto a key a ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 3 - Class: 2
+
+Sent : putnextto a key the ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 4 - Class: 2
+
+Sent : putnextto a key a box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 5 - Class: 2
+
+Sent : putnextto a key the box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 6 - Class: 2
+
+Sent : putnextto a key a door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 7 - Class: 2
+
+Sent : putnextto a key the door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 8 - Class: 2
+
+Sent : putnextto a ball a key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 9 - Class: 2
+
+Sent : putnextto a ball the key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 10 - Class: 2
+
+Sent : putnextto a ball a ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 11 - Class: 2
+
+Sent : putnextto a ball the ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 12 - Class: 2
+
+Sent : putnextto a ball a box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 13 - Class: 2
+
+Sent : putnextto a ball the box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 14 - Class: 2
+
+Sent : putnextto a ball a door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 15 - Class: 2
+
+Sent : putnextto a ball the door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 16 - Class: 2
+
+Sent : putnextto a box a key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 17 - Class: 2
+
+Sent : putnextto a box the key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 18 - Class: 2
+
+Sent : putnextto a box a ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 19 - Class: 2
+
+Sent : putnextto a box the ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 20 - Class: 2
+
+Sent : putnextto a box a box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 21 - Class: 2
+
+Sent : putnextto a box the box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 22 - Class: 2
+
+Sent : putnextto a box a door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 23 - Class: 2
+
+Sent : putnextto a box the door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 24 - Class: 2
+
+Sent : putnextto the key a key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 25 - Class: 2
+
+Sent : putnextto the key the key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 26 - Class: 2
+
+Sent : putnextto the key a ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 27 - Class: 2
+
+Sent : putnextto the key the ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 28 - Class: 2
+
+Sent : putnextto the key a box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 29 - Class: 2
+
+Sent : putnextto the key the box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 30 - Class: 2
+
+Sent : putnextto the key a door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 31 - Class: 2
+
+Sent : putnextto the key the door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 32 - Class: 2
+
+Sent : putnextto the ball a key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 33 - Class: 2
+
+Sent : putnextto the ball the key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 34 - Class: 2
+
+Sent : putnextto the ball a ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 35 - Class: 2
+
+Sent : putnextto the ball the ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 36 - Class: 2
+
+Sent : putnextto the ball a box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 37 - Class: 2
+
+Sent : putnextto the ball the box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 38 - Class: 2
+
+Sent : putnextto the ball a door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 39 - Class: 2
+
+Sent : putnextto the ball the door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_ball(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 40 - Class: 2
+
+Sent : putnextto the box a key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 41 - Class: 2
+
+Sent : putnextto the box the key
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 42 - Class: 2
+
+Sent : putnextto the box a ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 43 - Class: 2
+
+Sent : putnextto the box the ball
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 44 - Class: 2
+
+Sent : putnextto the box a box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 45 - Class: 2
+
+Sent : putnextto the box the box
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_box(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 46 - Class: 2
+
+Sent : putnextto the box a door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 47 - Class: 2
+
+Sent : putnextto the box the door
+Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
+Num : 48 - Class: 2
+

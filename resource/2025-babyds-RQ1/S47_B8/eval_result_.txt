@@ -1,0 +1,78 @@
+
+sem acc | train size: 88 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  96.03 |  96.03 |  96.03 |  93.44 |  93.44 |  93.44 |
+| Top-2           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
+| Top-3           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      85.23 |       65.91 |      61.54 |       38.46 |
+| Top-2           |     100.00 |      100.00 |     100.00 |      100.00 |
+| Top-3           |     100.00 |      100.00 |     100.00 |      100.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-1 | Failed Parses:
+goto a door
+open a green door
+open the door
+open the green door
+goto a yellow door
+>>> Dataset: train | Top-1 | Failed Parses:
+goto a blue door
+goto a green door
+goto the blue door
+open a blue door
+goto the green door
+open a door
+open the purple door
+open a yellow door
+goto the door
+goto the purple door
+goto a purple door
+open the yellow door
+goto the yellow door
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+pickup a red box
+goto a red box
+pickup a red ball
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+pickup a red key
+goto a grey ball
+pickup the grey key
+goto the red ball
+pickup the grey box
+goto the grey ball
+pickup a grey key
+goto the grey key
+pickup the red box
+goto a red key
+pickup the red key
+pickup a grey ball
+pickup the grey ball
+pickup the red ball
+goto a grey box
+goto the grey box
+goto the red box

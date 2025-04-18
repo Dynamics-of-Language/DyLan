@@ -1,0 +1,63 @@
+Sent : goto the key
+Sem : [r : [x209 : e|head==x209 : e|p209==obj_key(x209) : t]|x210==epsilon(r.head, r) : e|e105==state_facing : es|head==e105 : es|p210==obj(e105, x210) : t]
+Num : 105 - Class: 1
+
+Sent : goto the ball
+Sem : [r : [x211 : e|head==x211 : e|p211==obj_ball(x211) : t]|x212==epsilon(r.head, r) : e|e106==state_facing : es|head==e106 : es|p212==obj(e106, x212) : t]
+Num : 106 - Class: 1
+
+Sent : goto the box
+Sem : [r : [x213 : e|head==x213 : e|p213==obj_box(x213) : t]|x214==epsilon(r.head, r) : e|e107==state_facing : es|head==e107 : es|p214==obj(e107, x214) : t]
+Num : 107 - Class: 1
+
+Sent : goto the door
+Sem : [r : [x215 : e|head==x215 : e|p215==obj_door(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p216==obj(e108, x216) : t]
+Num : 108 - Class: 1
+
+Sent : pickup the key
+Sem : [r : [x217 : e|head==x217 : e|p217==obj_key(x217) : t]|x218==epsilon(r.head, r) : e|e109==state_holding : es|head==e109 : es|p218==obj(e109, x218) : t]
+Num : 109 - Class: 1
+
+Sent : pickup the ball
+Sem : [r : [x219 : e|head==x219 : e|p219==obj_ball(x219) : t]|x220==epsilon(r.head, r) : e|e110==state_holding : es|head==e110 : es|p220==obj(e110, x220) : t]
+Num : 110 - Class: 1
+
+Sent : pickup the box
+Sem : [r : [x221 : e|head==x221 : e|p221==obj_box(x221) : t]|x222==epsilon(r.head, r) : e|e111==state_holding : es|head==e111 : es|p222==obj(e111, x222) : t]
+Num : 111 - Class: 1
+
+Sent : open the door
+Sem : [r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]
+Num : 112 - Class: 1
+
+Sent : goto a key
+Sem : [r : [x97 : e|head==x97 : e|p97==obj_key(x97) : t]|x98==epsilon(r.head, r) : e|e49==state_facing : es|head==e49 : es|p98==obj(e49, x98) : t]
+Num : 49 - Class: 1
+
+Sent : goto a ball
+Sem : [r : [x99 : e|head==x99 : e|p99==obj_ball(x99) : t]|x100==epsilon(r.head, r) : e|e50==state_facing : es|head==e50 : es|p100==obj(e50, x100) : t]
+Num : 50 - Class: 1
+
+Sent : goto a box
+Sem : [r : [x101 : e|head==x101 : e|p101==obj_box(x101) : t]|x102==epsilon(r.head, r) : e|e51==state_facing : es|head==e51 : es|p102==obj(e51, x102) : t]
+Num : 51 - Class: 1
+
+Sent : goto a door
+Sem : [r : [x103 : e|head==x103 : e|p103==obj_door(x103) : t]|x104==epsilon(r.head, r) : e|e52==state_facing : es|head==e52 : es|p104==obj(e52, x104) : t]
+Num : 52 - Class: 1
+
+Sent : pickup a key
+Sem : [r : [x105 : e|head==x105 : e|p105==obj_key(x105) : t]|x106==epsilon(r.head, r) : e|e53==state_holding : es|head==e53 : es|p106==obj(e53, x106) : t]
+Num : 53 - Class: 1
+
+Sent : pickup a ball
+Sem : [r : [x107 : e|head==x107 : e|p107==obj_ball(x107) : t]|x108==epsilon(r.head, r) : e|e54==state_holding : es|head==e54 : es|p108==obj(e54, x108) : t]
+Num : 54 - Class: 1
+
+Sent : pickup a box
+Sem : [r : [x109 : e|head==x109 : e|p109==obj_box(x109) : t]|x110==epsilon(r.head, r) : e|e55==state_holding : es|head==e55 : es|p110==obj(e55, x110) : t]
+Num : 55 - Class: 1
+
+Sent : open a door
+Sem : [r : [x111 : e|head==x111 : e|p111==obj_door(x111) : t]|x112==epsilon(r.head, r) : e|e56==state_opened : es|head==e56 : es|p112==obj(e56, x112) : t]
+Num : 56 - Class: 1

@@ -1,0 +1,315 @@
+GoldSent : pickup a yellow ball
+Sem : [e38==state_holding : es|r : [x75 : e|p76==col_yellow(x75) : t|p75==obj_ball(x75) : t|head==x75 : e]|head==e38 : es|x76==epsilon(r.head, r) : e|p76==obj(e38, x76) : t]
+
+GoldSent : pickup a purple box
+Sem : [e31==state_holding : es|r : [x61 : e|p62==col_purple(x61) : t|p61==obj_box(x61) : t|head==x61 : e]|head==e31 : es|x62==epsilon(r.head, r) : e|p62==obj(e31, x62) : t]
+
+GoldSent : pickup a blue box
+Sem : [e23==state_holding : es|r : [x45 : e|p46==col_blue(x45) : t|p45==obj_box(x45) : t|head==x45 : e]|head==e23 : es|x46==epsilon(r.head, r) : e|p46==obj(e23, x46) : t]
+
+GoldSent : pickup a purple ball
+Sem : [e30==state_holding : es|r : [x59 : e|p60==col_purple(x59) : t|p59==obj_ball(x59) : t|head==x59 : e]|head==e30 : es|x60==epsilon(r.head, r) : e|p60==obj(e30, x60) : t]
+
+GoldSent : pickup a red key
+Sem : [e5==state_holding : es|r : [x9 : e|p10==col_red(x9) : t|p9==obj_key(x9) : t|head==x9 : e]|head==e5 : es|x10==epsilon(r.head, r) : e|p10==obj(e5, x10) : t]
+
+GoldSent : pickup the yellow key
+Sem : [e93==state_holding : es|r : [x185 : e|p186==col_yellow(x185) : t|p185==obj_key(x185) : t|head==x185 : e]|head==e93 : es|x186==epsilon(r.head, r) : e|p186==obj(e93, x186) : t]
+
+GoldSent : goto a grey ball
+Sem : [e42==state_facing : es|r : [x83 : e|p84==col_grey(x83) : t|p83==obj_ball(x83) : t|head==x83 : e]|head==e42 : es|x84==epsilon(r.head, r) : e|p84==obj(e42, x84) : t]
+
+GoldSent : goto the purple box
+Sem : [e83==state_facing : es|r : [x165 : e|p166==col_purple(x165) : t|p165==obj_box(x165) : t|head==x165 : e]|head==e83 : es|x166==epsilon(r.head, r) : e|p166==obj(e83, x166) : t]
+
+GoldSent : goto a blue door
+Sem : [e20==state_facing : es|r : [x39 : e|p40==col_blue(x39) : t|p39==obj_door(x39) : t|head==x39 : e]|head==e20 : es|x40==epsilon(r.head, r) : e|p40==obj(e20, x40) : t]
+
+GoldSent : pickup the grey key
+Sem : [e101==state_holding : es|r : [x201 : e|p202==col_grey(x201) : t|p201==obj_key(x201) : t|head==x201 : e]|head==e101 : es|x202==epsilon(r.head, r) : e|p202==obj(e101, x202) : t]
+
+GoldSent : pickup the yellow box
+Sem : [e95==state_holding : es|r : [x189 : e|p190==col_yellow(x189) : t|p189==obj_box(x189) : t|head==x189 : e]|head==e95 : es|x190==epsilon(r.head, r) : e|p190==obj(e95, x190) : t]
+
+GoldSent : pickup the green key
+Sem : [e69==state_holding : es|r : [x137 : e|p138==col_green(x137) : t|p137==obj_key(x137) : t|head==x137 : e]|head==e69 : es|x138==epsilon(r.head, r) : e|p138==obj(e69, x138) : t]
+
+GoldSent : pickup the ball
+Sem : [e110==state_holding : es|r : [x219 : e|p219==obj_ball(x219) : t|head==x219 : e]|head==e110 : es|x220==epsilon(r.head, r) : e|p220==obj(e110, x220) : t]
+
+GoldSent : open a red door
+Sem : [e8==state_opened : es|r : [x15 : e|p16==col_red(x15) : t|p15==obj_door(x15) : t|head==x15 : e]|head==e8 : es|x16==epsilon(r.head, r) : e|p16==obj(e8, x16) : t]
+
+GoldSent : goto a green door
+Sem : [e12==state_facing : es|r : [x23 : e|p24==col_green(x23) : t|p23==obj_door(x23) : t|head==x23 : e]|head==e12 : es|x24==epsilon(r.head, r) : e|p24==obj(e12, x24) : t]
+
+GoldSent : pickup the key
+Sem : [e109==state_holding : es|r : [x217 : e|p217==obj_key(x217) : t|head==x217 : e]|head==e109 : es|x218==epsilon(r.head, r) : e|p218==obj(e109, x218) : t]
+
+GoldSent : goto the grey door
+Sem : [e100==state_facing : es|r : [x199 : e|p200==col_grey(x199) : t|p199==obj_door(x199) : t|head==x199 : e]|head==e100 : es|x200==epsilon(r.head, r) : e|p200==obj(e100, x200) : t]
+
+GoldSent : goto the blue door
+Sem : [e76==state_facing : es|r : [x151 : e|p152==col_blue(x151) : t|p151==obj_door(x151) : t|head==x151 : e]|head==e76 : es|x152==epsilon(r.head, r) : e|p152==obj(e76, x152) : t]
+
+GoldSent : goto the red ball
+Sem : [e58==state_facing : es|r : [x115 : e|p116==col_red(x115) : t|p115==obj_ball(x115) : t|head==x115 : e]|head==e58 : es|x116==epsilon(r.head, r) : e|p116==obj(e58, x116) : t]
+
+GoldSent : open a blue door
+Sem : [e24==state_opened : es|r : [x47 : e|p48==col_blue(x47) : t|p47==obj_door(x47) : t|head==x47 : e]|head==e24 : es|x48==epsilon(r.head, r) : e|p48==obj(e24, x48) : t]
+
+GoldSent : pickup the grey box
+Sem : [e103==state_holding : es|r : [x205 : e|p206==col_grey(x205) : t|p205==obj_box(x205) : t|head==x205 : e]|head==e103 : es|x206==epsilon(r.head, r) : e|p206==obj(e103, x206) : t]
+
+GoldSent : goto a box
+Sem : [e51==state_facing : es|r : [x101 : e|p101==obj_box(x101) : t|head==x101 : e]|head==e51 : es|x102==epsilon(r.head, r) : e|p102==obj(e51, x102) : t]
+
+GoldSent : pickup the purple ball
+Sem : [e86==state_holding : es|r : [x171 : e|p172==col_purple(x171) : t|p171==obj_ball(x171) : t|head==x171 : e]|head==e86 : es|x172==epsilon(r.head, r) : e|p172==obj(e86, x172) : t]
+
+GoldSent : pickup a blue key
+Sem : [e21==state_holding : es|r : [x41 : e|p42==col_blue(x41) : t|p41==obj_key(x41) : t|head==x41 : e]|head==e21 : es|x42==epsilon(r.head, r) : e|p42==obj(e21, x42) : t]
+
+GoldSent : goto the green door
+Sem : [e68==state_facing : es|r : [x135 : e|p136==col_green(x135) : t|p135==obj_door(x135) : t|head==x135 : e]|head==e68 : es|x136==epsilon(r.head, r) : e|p136==obj(e68, x136) : t]
+
+GoldSent : goto a red door
+Sem : [e4==state_facing : es|r : [x7 : e|p8==col_red(x7) : t|p7==obj_door(x7) : t|head==x7 : e]|head==e4 : es|x8==epsilon(r.head, r) : e|p8==obj(e4, x8) : t]
+
+GoldSent : goto the yellow key
+Sem : [e89==state_facing : es|r : [x177 : e|p178==col_yellow(x177) : t|p177==obj_key(x177) : t|head==x177 : e]|head==e89 : es|x178==epsilon(r.head, r) : e|p178==obj(e89, x178) : t]
+
+GoldSent : pickup a blue ball
+Sem : [e22==state_holding : es|r : [x43 : e|p44==col_blue(x43) : t|p43==obj_ball(x43) : t|head==x43 : e]|head==e22 : es|x44==epsilon(r.head, r) : e|p44==obj(e22, x44) : t]
+
+GoldSent : goto the grey ball
+Sem : [e98==state_facing : es|r : [x195 : e|p196==col_grey(x195) : t|p195==obj_ball(x195) : t|head==x195 : e]|head==e98 : es|x196==epsilon(r.head, r) : e|p196==obj(e98, x196) : t]
+
+GoldSent : open the red door
+Sem : [e64==state_opened : es|r : [x127 : e|p128==col_red(x127) : t|p127==obj_door(x127) : t|head==x127 : e]|head==e64 : es|x128==epsilon(r.head, r) : e|p128==obj(e64, x128) : t]
+
+GoldSent : pickup the blue key
+Sem : [e77==state_holding : es|r : [x153 : e|p154==col_blue(x153) : t|p153==obj_key(x153) : t|head==x153 : e]|head==e77 : es|x154==epsilon(r.head, r) : e|p154==obj(e77, x154) : t]
+
+GoldSent : pickup the purple box
+Sem : [e87==state_holding : es|r : [x173 : e|p174==col_purple(x173) : t|p173==obj_box(x173) : t|head==x173 : e]|head==e87 : es|x174==epsilon(r.head, r) : e|p174==obj(e87, x174) : t]
+
+GoldSent : pickup a yellow key
+Sem : [e37==state_holding : es|r : [x73 : e|p74==col_yellow(x73) : t|p73==obj_key(x73) : t|head==x73 : e]|head==e37 : es|x74==epsilon(r.head, r) : e|p74==obj(e37, x74) : t]
+
+GoldSent : pickup a yellow box
+Sem : [e39==state_holding : es|r : [x77 : e|p78==col_yellow(x77) : t|p77==obj_box(x77) : t|head==x77 : e]|head==e39 : es|x78==epsilon(r.head, r) : e|p78==obj(e39, x78) : t]
+
+GoldSent : pickup a grey key
+Sem : [e45==state_holding : es|r : [x89 : e|p90==col_grey(x89) : t|p89==obj_key(x89) : t|head==x89 : e]|head==e45 : es|x90==epsilon(r.head, r) : e|p90==obj(e45, x90) : t]
+
+GoldSent : goto the grey key
+Sem : [e97==state_facing : es|r : [x193 : e|p194==col_grey(x193) : t|p193==obj_key(x193) : t|head==x193 : e]|head==e97 : es|x194==epsilon(r.head, r) : e|p194==obj(e97, x194) : t]
+
+GoldSent : goto the green key
+Sem : [e65==state_facing : es|r : [x129 : e|p130==col_green(x129) : t|p129==obj_key(x129) : t|head==x129 : e]|head==e65 : es|x130==epsilon(r.head, r) : e|p130==obj(e65, x130) : t]
+
+GoldSent : goto the ball
+Sem : [e106==state_facing : es|r : [x211 : e|p211==obj_ball(x211) : t|head==x211 : e]|head==e106 : es|x212==epsilon(r.head, r) : e|p212==obj(e106, x212) : t]
+
+GoldSent : goto the blue box
+Sem : [e75==state_facing : es|r : [x149 : e|p150==col_blue(x149) : t|p149==obj_box(x149) : t|head==x149 : e]|head==e75 : es|x150==epsilon(r.head, r) : e|p150==obj(e75, x150) : t]
+
+GoldSent : pickup a green box
+Sem : [e15==state_holding : es|r : [x29 : e|p30==col_green(x29) : t|p29==obj_box(x29) : t|head==x29 : e]|head==e15 : es|x30==epsilon(r.head, r) : e|p30==obj(e15, x30) : t]
+
+GoldSent : goto the red door
+Sem : [e60==state_facing : es|r : [x119 : e|p120==col_red(x119) : t|p119==obj_door(x119) : t|head==x119 : e]|head==e60 : es|x120==epsilon(r.head, r) : e|p120==obj(e60, x120) : t]
+
+GoldSent : goto a blue box
+Sem : [e19==state_facing : es|r : [x37 : e|p38==col_blue(x37) : t|p37==obj_box(x37) : t|head==x37 : e]|head==e19 : es|x38==epsilon(r.head, r) : e|p38==obj(e19, x38) : t]
+
+GoldSent : open a grey door
+Sem : [e48==state_opened : es|r : [x95 : e|p96==col_grey(x95) : t|p95==obj_door(x95) : t|head==x95 : e]|head==e48 : es|x96==epsilon(r.head, r) : e|p96==obj(e48, x96) : t]
+
+GoldSent : goto the green ball
+Sem : [e66==state_facing : es|r : [x131 : e|p132==col_green(x131) : t|p131==obj_ball(x131) : t|head==x131 : e]|head==e66 : es|x132==epsilon(r.head, r) : e|p132==obj(e66, x132) : t]
+
+GoldSent : pickup a green ball
+Sem : [e14==state_holding : es|r : [x27 : e|p28==col_green(x27) : t|p27==obj_ball(x27) : t|head==x27 : e]|head==e14 : es|x28==epsilon(r.head, r) : e|p28==obj(e14, x28) : t]
+
+GoldSent : pickup the red box
+Sem : [e63==state_holding : es|r : [x125 : e|p126==col_red(x125) : t|p125==obj_box(x125) : t|head==x125 : e]|head==e63 : es|x126==epsilon(r.head, r) : e|p126==obj(e63, x126) : t]
+
+GoldSent : goto a yellow ball
+Sem : [e34==state_facing : es|r : [x67 : e|p68==col_yellow(x67) : t|p67==obj_ball(x67) : t|head==x67 : e]|head==e34 : es|x68==epsilon(r.head, r) : e|p68==obj(e34, x68) : t]
+
+GoldSent : goto a red key
+Sem : [e1==state_facing : es|r : [x1 : e|p2==col_red(x1) : t|p1==obj_key(x1) : t|head==x1 : e]|head==e1 : es|x2==epsilon(r.head, r) : e|p2==obj(e1, x2) : t]
+
+GoldSent : goto a blue ball
+Sem : [e18==state_facing : es|r : [x35 : e|p36==col_blue(x35) : t|p35==obj_ball(x35) : t|head==x35 : e]|head==e18 : es|x36==epsilon(r.head, r) : e|p36==obj(e18, x36) : t]
+
+GoldSent : goto the purple ball
+Sem : [e82==state_facing : es|r : [x163 : e|p164==col_purple(x163) : t|p163==obj_ball(x163) : t|head==x163 : e]|head==e82 : es|x164==epsilon(r.head, r) : e|p164==obj(e82, x164) : t]
+
+GoldSent : goto the key
+Sem : [e105==state_facing : es|r : [x209 : e|p209==obj_key(x209) : t|head==x209 : e]|head==e105 : es|x210==epsilon(r.head, r) : e|p210==obj(e105, x210) : t]
+
+GoldSent : goto the yellow ball
+Sem : [e90==state_facing : es|r : [x179 : e|p180==col_yellow(x179) : t|p179==obj_ball(x179) : t|head==x179 : e]|head==e90 : es|x180==epsilon(r.head, r) : e|p180==obj(e90, x180) : t]
+
+GoldSent : open a door
+Sem : [e56==state_opened : es|r : [x111 : e|p111==obj_door(x111) : t|head==x111 : e]|head==e56 : es|x112==epsilon(r.head, r) : e|p112==obj(e56, x112) : t]
+
+GoldSent : open the purple door
+Sem : [e88==state_opened : es|r : [x175 : e|p176==col_purple(x175) : t|p175==obj_door(x175) : t|head==x175 : e]|head==e88 : es|x176==epsilon(r.head, r) : e|p176==obj(e88, x176) : t]
+
+GoldSent : pickup the red key
+Sem : [e61==state_holding : es|r : [x121 : e|p122==col_red(x121) : t|p121==obj_key(x121) : t|head==x121 : e]|head==e61 : es|x122==epsilon(r.head, r) : e|p122==obj(e61, x122) : t]
+
+GoldSent : pickup a green key
+Sem : [e13==state_holding : es|r : [x25 : e|p26==col_green(x25) : t|p25==obj_key(x25) : t|head==x25 : e]|head==e13 : es|x26==epsilon(r.head, r) : e|p26==obj(e13, x26) : t]
+
+GoldSent : pickup the box
+Sem : [e111==state_holding : es|r : [x221 : e|p221==obj_box(x221) : t|head==x221 : e]|head==e111 : es|x222==epsilon(r.head, r) : e|p222==obj(e111, x222) : t]
+
+GoldSent : pickup a grey ball
+Sem : [e46==state_holding : es|r : [x91 : e|p92==col_grey(x91) : t|p91==obj_ball(x91) : t|head==x91 : e]|head==e46 : es|x92==epsilon(r.head, r) : e|p92==obj(e46, x92) : t]
+
+GoldSent : pickup the grey ball
+Sem : [e102==state_holding : es|r : [x203 : e|p204==col_grey(x203) : t|p203==obj_ball(x203) : t|head==x203 : e]|head==e102 : es|x204==epsilon(r.head, r) : e|p204==obj(e102, x204) : t]
+
+GoldSent : goto the blue ball
+Sem : [e74==state_facing : es|r : [x147 : e|p148==col_blue(x147) : t|p147==obj_ball(x147) : t|head==x147 : e]|head==e74 : es|x148==epsilon(r.head, r) : e|p148==obj(e74, x148) : t]
+
+GoldSent : goto the green box
+Sem : [e67==state_facing : es|r : [x133 : e|p134==col_green(x133) : t|p133==obj_box(x133) : t|head==x133 : e]|head==e67 : es|x134==epsilon(r.head, r) : e|p134==obj(e67, x134) : t]
+
+GoldSent : pickup the red ball
+Sem : [e62==state_holding : es|r : [x123 : e|p124==col_red(x123) : t|p123==obj_ball(x123) : t|head==x123 : e]|head==e62 : es|x124==epsilon(r.head, r) : e|p124==obj(e62, x124) : t]
+
+GoldSent : pickup a key
+Sem : [e53==state_holding : es|r : [x105 : e|p105==obj_key(x105) : t|head==x105 : e]|head==e53 : es|x106==epsilon(r.head, r) : e|p106==obj(e53, x106) : t]
+
+GoldSent : goto a grey box
+Sem : [e43==state_facing : es|r : [x85 : e|p86==col_grey(x85) : t|p85==obj_box(x85) : t|head==x85 : e]|head==e43 : es|x86==epsilon(r.head, r) : e|p86==obj(e43, x86) : t]
+
+GoldSent : goto the blue key
+Sem : [e73==state_facing : es|r : [x145 : e|p146==col_blue(x145) : t|p145==obj_key(x145) : t|head==x145 : e]|head==e73 : es|x146==epsilon(r.head, r) : e|p146==obj(e73, x146) : t]
+
+GoldSent : goto the purple key
+Sem : [e81==state_facing : es|r : [x161 : e|p162==col_purple(x161) : t|p161==obj_key(x161) : t|head==x161 : e]|head==e81 : es|x162==epsilon(r.head, r) : e|p162==obj(e81, x162) : t]
+
+GoldSent : open the grey door
+Sem : [e104==state_opened : es|r : [x207 : e|p208==col_grey(x207) : t|p207==obj_door(x207) : t|head==x207 : e]|head==e104 : es|x208==epsilon(r.head, r) : e|p208==obj(e104, x208) : t]
+
+GoldSent : goto a purple box
+Sem : [e27==state_facing : es|r : [x53 : e|p54==col_purple(x53) : t|p53==obj_box(x53) : t|head==x53 : e]|head==e27 : es|x54==epsilon(r.head, r) : e|p54==obj(e27, x54) : t]
+
+GoldSent : pickup the blue ball
+Sem : [e78==state_holding : es|r : [x155 : e|p156==col_blue(x155) : t|p155==obj_ball(x155) : t|head==x155 : e]|head==e78 : es|x156==epsilon(r.head, r) : e|p156==obj(e78, x156) : t]
+
+GoldSent : pickup the blue box
+Sem : [e79==state_holding : es|r : [x157 : e|p158==col_blue(x157) : t|p157==obj_box(x157) : t|head==x157 : e]|head==e79 : es|x158==epsilon(r.head, r) : e|p158==obj(e79, x158) : t]
+
+GoldSent : pickup the purple key
+Sem : [e85==state_holding : es|r : [x169 : e|p170==col_purple(x169) : t|p169==obj_key(x169) : t|head==x169 : e]|head==e85 : es|x170==epsilon(r.head, r) : e|p170==obj(e85, x170) : t]
+
+GoldSent : open a yellow door
+Sem : [e40==state_opened : es|r : [x79 : e|p80==col_yellow(x79) : t|p79==obj_door(x79) : t|head==x79 : e]|head==e40 : es|x80==epsilon(r.head, r) : e|p80==obj(e40, x80) : t]
+
+GoldSent : pickup the yellow ball
+Sem : [e94==state_holding : es|r : [x187 : e|p188==col_yellow(x187) : t|p187==obj_ball(x187) : t|head==x187 : e]|head==e94 : es|x188==epsilon(r.head, r) : e|p188==obj(e94, x188) : t]
+
+GoldSent : goto a yellow box
+Sem : [e35==state_facing : es|r : [x69 : e|p70==col_yellow(x69) : t|p69==obj_box(x69) : t|head==x69 : e]|head==e35 : es|x70==epsilon(r.head, r) : e|p70==obj(e35, x70) : t]
+
+GoldSent : goto a green ball
+Sem : [e10==state_facing : es|r : [x19 : e|p20==col_green(x19) : t|p19==obj_ball(x19) : t|head==x19 : e]|head==e10 : es|x20==epsilon(r.head, r) : e|p20==obj(e10, x20) : t]
+
+GoldSent : pickup the green ball
+Sem : [e70==state_holding : es|r : [x139 : e|p140==col_green(x139) : t|p139==obj_ball(x139) : t|head==x139 : e]|head==e70 : es|x140==epsilon(r.head, r) : e|p140==obj(e70, x140) : t]
+
+GoldSent : goto the door
+Sem : [e108==state_facing : es|r : [x215 : e|p215==obj_door(x215) : t|head==x215 : e]|head==e108 : es|x216==epsilon(r.head, r) : e|p216==obj(e108, x216) : t]
+
+GoldSent : goto the purple door
+Sem : [e84==state_facing : es|r : [x167 : e|p168==col_purple(x167) : t|p167==obj_door(x167) : t|head==x167 : e]|head==e84 : es|x168==epsilon(r.head, r) : e|p168==obj(e84, x168) : t]
+
+GoldSent : pickup a purple key
+Sem : [e29==state_holding : es|r : [x57 : e|p58==col_purple(x57) : t|p57==obj_key(x57) : t|head==x57 : e]|head==e29 : es|x58==epsilon(r.head, r) : e|p58==obj(e29, x58) : t]
+
+GoldSent : pickup the green box
+Sem : [e71==state_holding : es|r : [x141 : e|p142==col_green(x141) : t|p141==obj_box(x141) : t|head==x141 : e]|head==e71 : es|x142==epsilon(r.head, r) : e|p142==obj(e71, x142) : t]
+
+GoldSent : goto a purple ball
+Sem : [e26==state_facing : es|r : [x51 : e|p52==col_purple(x51) : t|p51==obj_ball(x51) : t|head==x51 : e]|head==e26 : es|x52==epsilon(r.head, r) : e|p52==obj(e26, x52) : t]
+
+GoldSent : pickup a box
+Sem : [e55==state_holding : es|r : [x109 : e|p109==obj_box(x109) : t|head==x109 : e]|head==e55 : es|x110==epsilon(r.head, r) : e|p110==obj(e55, x110) : t]
+
+GoldSent : goto a purple door
+Sem : [e28==state_facing : es|r : [x55 : e|p56==col_purple(x55) : t|p55==obj_door(x55) : t|head==x55 : e]|head==e28 : es|x56==epsilon(r.head, r) : e|p56==obj(e28, x56) : t]
+
+GoldSent : open the yellow door
+Sem : [e96==state_opened : es|r : [x191 : e|p192==col_yellow(x191) : t|p191==obj_door(x191) : t|head==x191 : e]|head==e96 : es|x192==epsilon(r.head, r) : e|p192==obj(e96, x192) : t]
+
+GoldSent : goto the grey box
+Sem : [e99==state_facing : es|r : [x197 : e|p198==col_grey(x197) : t|p197==obj_box(x197) : t|head==x197 : e]|head==e99 : es|x198==epsilon(r.head, r) : e|p198==obj(e99, x198) : t]
+
+GoldSent : goto the red box
+Sem : [e59==state_facing : es|r : [x117 : e|p118==col_red(x117) : t|p117==obj_box(x117) : t|head==x117 : e]|head==e59 : es|x118==epsilon(r.head, r) : e|p118==obj(e59, x118) : t]
+
+GoldSent : goto the yellow door
+Sem : [e92==state_facing : es|r : [x183 : e|p184==col_yellow(x183) : t|p183==obj_door(x183) : t|head==x183 : e]|head==e92 : es|x184==epsilon(r.head, r) : e|p184==obj(e92, x184) : t]
+
+GoldSent : goto a key
+Sem : [e49==state_facing : es|r : [x97 : e|p97==obj_key(x97) : t|head==x97 : e]|head==e49 : es|x98==epsilon(r.head, r) : e|p98==obj(e49, x98) : t]
+
+GoldSent : goto a green key
+Sem : [e9==state_facing : es|r : [x17 : e|p18==col_green(x17) : t|p17==obj_key(x17) : t|head==x17 : e]|head==e9 : es|x18==epsilon(r.head, r) : e|p18==obj(e9, x18) : t]
+
+GoldSent : goto a red ball
+Sem : [e2==state_facing : es|r : [x3 : e|p4==col_red(x3) : t|p3==obj_ball(x3) : t|head==x3 : e]|head==e2 : es|x4==epsilon(r.head, r) : e|p4==obj(e2, x4) : t]
+
+GoldSent : goto a yellow key
+Sem : [e33==state_facing : es|r : [x65 : e|p66==col_yellow(x65) : t|p65==obj_key(x65) : t|head==x65 : e]|head==e33 : es|x66==epsilon(r.head, r) : e|p66==obj(e33, x66) : t]
+
+GoldSent : goto a purple key
+Sem : [e25==state_facing : es|r : [x49 : e|p50==col_purple(x49) : t|p49==obj_key(x49) : t|head==x49 : e]|head==e25 : es|x50==epsilon(r.head, r) : e|p50==obj(e25, x50) : t]
+
+GoldSent : goto a green box
+Sem : [e11==state_facing : es|r : [x21 : e|p22==col_green(x21) : t|p21==obj_box(x21) : t|head==x21 : e]|head==e11 : es|x22==epsilon(r.head, r) : e|p22==obj(e11, x22) : t]
+
+GoldSent : goto the box
+Sem : [e107==state_facing : es|r : [x213 : e|p213==obj_box(x213) : t|head==x213 : e]|head==e107 : es|x214==epsilon(r.head, r) : e|p214==obj(e107, x214) : t]
+
+GoldSent : goto the red key
+Sem : [e57==state_facing : es|r : [x113 : e|p114==col_red(x113) : t|p113==obj_key(x113) : t|head==x113 : e]|head==e57 : es|x114==epsilon(r.head, r) : e|p114==obj(e57, x114) : t]
+
+GoldSent : pickup a grey box
+Sem : [e47==state_holding : es|r : [x93 : e|p94==col_grey(x93) : t|p93==obj_box(x93) : t|head==x93 : e]|head==e47 : es|x94==epsilon(r.head, r) : e|p94==obj(e47, x94) : t]
+
+GoldSent : open the blue door
+Sem : [e80==state_opened : es|r : [x159 : e|p160==col_blue(x159) : t|p159==obj_door(x159) : t|head==x159 : e]|head==e80 : es|x160==epsilon(r.head, r) : e|p160==obj(e80, x160) : t]
+
+GoldSent : open a purple door
+Sem : [e32==state_opened : es|r : [x63 : e|p64==col_purple(x63) : t|p63==obj_door(x63) : t|head==x63 : e]|head==e32 : es|x64==epsilon(r.head, r) : e|p64==obj(e32, x64) : t]
+
+GoldSent : goto a grey key
+Sem : [e41==state_facing : es|r : [x81 : e|p82==col_grey(x81) : t|p81==obj_key(x81) : t|head==x81 : e]|head==e41 : es|x82==epsilon(r.head, r) : e|p82==obj(e41, x82) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 3 is 12.
+// Count of sentences with length 4 is 87.
+
+// Corpus size: 99
+// Maximum length: 4
+// Minimum length: 3
+// Average length: 3.878788
+
+// ---- Word-Level Stats ----
+// Count of all words: 384
+// Count of unique tokens: 15
+// Words/Tokens count ratio: 25.600000
