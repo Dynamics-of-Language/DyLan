@@ -26,7 +26,7 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 	public final static String WORD_SEP_PATTERN = "\\s";
 	public ArrayList<String> sentenceIndices;
 	private static final long serialVersionUID = 4914176393669845762L;
-	public String corpusName = "";  // Added by Arash A.
+	public String corpusName;  // Added by Arash A.
 
 	public RecordTypeCorpus() {
 		super();
@@ -112,7 +112,7 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 				corpusStats.addSentence(sent);
 				}
             out.print(corpusStats.statReporter()); // If the corpus is empty, this will throw an error. Have to handle it properly.
-			logger.info("Successfully saved TTR corpus to \"" + fileDir + "\".");
+			logger.info("Successfully saved TTR corpus (size: " + this.size() + ") to \"" + fileDir + "\".");
         } catch (Exception e) {
             logger.error("Couldn't write to \"" + fileDir + "\"!");
         } finally {

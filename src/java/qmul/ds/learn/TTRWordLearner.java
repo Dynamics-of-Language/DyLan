@@ -110,7 +110,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		int totalSplit = 0;  // AA: Better be called `totalSplits`!
 		int i = 0;
 		try {
-			for (CandidateSequence cs: hyps) {
+			for (CandidateSequence cs: hyps) {  // TODO Potential parallelisable loop
 				i++;
 				logger.debug("Splitting: " + cs.toShortString());
 				Set<List<CandidateSequence>> splitSequences = cs.split();

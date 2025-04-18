@@ -97,12 +97,12 @@ public abstract class WordLearner<T> {
 			throw new IllegalStateException("Corpus not loaded or is empty");
 		}
 		int i=0;
-		int totalSize = corpus.size();
-		try (ProgressBar pb = new ProgressBar("Learning progress", totalSize)) {
+		int corpusSize = corpus.size();
+		try (ProgressBar pb = new ProgressBar("Learning progress", corpusSize)) {
 			while (learnOnce()) {
 				i++;
 				pb.step();
-				logger.info("So far processed: " + i + " of " + corpus.size() + "\n");
+				logger.info("So far processed: " + i + " of " + corpusSize + "\n");
 			}
 		}
 	}

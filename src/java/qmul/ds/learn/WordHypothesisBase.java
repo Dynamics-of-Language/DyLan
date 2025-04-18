@@ -325,6 +325,7 @@ public class WordHypothesisBase {
 	 * @throws IOException
 	 */
 	public void saveLearnedLexicon(String f, int topN) throws IOException {
+		//TODO why are we still creating the binary lexicon files? It should be only text files, as the others are not being used anymore.
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f+"-top-"+topN));
 		
 		Lexicon lex = this.getLearnedLexiconAA(topN);  // AA NEW dangerous...
