@@ -38,18 +38,16 @@ public class BabyDSInduction {
     public static final String ANSI_RED = "\u001B[31m";
 
     static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
-//    static String modelDirUser ="2025_babyds_RQ2" ;//"2024_babyds_induction";//"2025_babyds_RQ2";  // User has to modify every time!
-    static final String modelPath = "resource\\2024_babyds_induction\\".replace("\\", File.separator);  //the dir that works!
-//    static final String modelPath = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
-    static final String DATASET_NAME = "pt";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
-    static final String DATASET_NAME_IDX = "2";//""babyds_WoSubj.txt";//"babyds_wDylan.txt";
+    static final String modelPath = "resource\\2024-babyds-induction\\".replace("\\", File.separator);  //the dir that works!
+    static final String DATASET_NAME = "class2";
+    static final String DATASET_NAME_IDX = "2";  // TODO is this needed?
 
     public static final int SEED = 45; // Set a constant seed for reproducibility
-    public static final int TOP_N = 5;  // topN learned actions to evaluate
+    public static final int TOP_N = 3;  // topN learned actions to evaluate
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
     public static final double INIT_BATCH_RATIO = 0.1;  // Size of the initial data batch for evaluation - used in prepare_batch().
     public static final double INC_BATCH_RATIO = 0.1; // Size of the incremental data batches for evaluation - used in prepare_batch().
-    private static final int FOLDS = 0;  // Number of folds for k-fold cross validation. Use 0 for train-test split.
+    private static final int FOLDS = 0;  // Number of folds for k-fold cross-validation. Use 0 for train-test split.
     public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
     private static final boolean PRINT_DIAG = true;  // Print failed parses and exact matches (for each top-n and dataset) if true.
 
@@ -78,34 +76,42 @@ public class BabyDSInduction {
 
     /**
      * Overloads the below method, with default values for modelAddress and datasetName.
-     * @param kfcv The number of folds for k-fold cross validation. If 0, a train-test split is performed.
+     * @param kfcv The number of folds for k-fold cross-validation. If 0, a train-test split is performed.
      * @return A pair of semantic accuracy and parsing coverage results.
      * @author: AA
      */
-    public Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> evaluate_model(int kfcv) {
-        return evaluate_model(kfcv, "", "");
+    public EvalResult evaluate_model(int kfcv) {
+        return evaluate_model(kfcv, "", "", "", TOP_N);
     }
 
 
     /**
-     * AA: assumes that model and dataset are in the same directory.
-     * A method for full evaluation:
+     * TODO Add better doc here
+     * A method for full evaluation: ?
      * 1. Loads the learned lexical actions (parsing model) for all topNs.
      * 2. Loads both training and testing sets.
      * 3. Evaluates the parsing model on both sets.
-     * 4. Returns the calculated results: mainly semantic accuracy and parsing coverage.
+     * 4. Writes the calculated results to file (both in shape of tables, and a tsv file).
+     * 4. Returns the results (see EvalResult class).
+     * NOTE: assumes that model and dataset are in the same directory.
      */
-    public Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> evaluate_model(int kfcv, String modelAddress, String datasetName) {
+    public EvalResult evaluate_model(int kfcv, String modelAddress, String datasetFileName, String datasetNameAttachment, int topN) {
         logger.info("Evaluating BabyDS model...");
+
         EvalResult evalResult = new EvalResult();
+        int trainingSize = -1;
+        int testingSize = -1;
+        // TODO remove the use of the maps below, now that I have eval result.
         HashMap<Integer, HashMap<String, HashMap<String, Double>>> semanticAccuracy = new HashMap<>();
         HashMap<Integer, HashMap<String, ArrayList<Double>>> parsingCoverage = new HashMap<>();  // Should have used double[] instead of ArrayList<Double>... Anyways.
         Evaluation eval = new Evaluation();  // AA: For semantic accuracy - based on Julian's code.
-        for (int n = 1; n <= TOP_N; n++) {
+        for (int n = 1; n <= topN; n++) {
             logger.info("Loading parser with top-" + n + " learned actions...");
             InteractiveContextParser parser;
             parser = new InteractiveContextParser(modelAddress, n);
-            File[] train_test_files = get_corpus_files(kfcv, modelAddress, datasetName);
+            File[] train_test_files = get_corpus_files(kfcv, modelAddress, datasetFileName, datasetNameAttachment); //todo maybe remove attachment thingy?
+            //todo assert that this is size=2 (one train, and one test)
+            //todo I'm doing sth potentially unclean here, have to double check...
             for (int i = 0; i < train_test_files.length; i++) {
                 int parsedCount = 0;
                 int exactMatchCount = 0;
@@ -117,6 +123,10 @@ public class BabyDSInduction {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                if (i==0)
+                    trainingSize = corpus.size();
+                else
+                    testingSize = corpus.size();
                 logger.info("Loaded corpus: " + file.getName());
                 List<TTRRecordType[]> evalList = new ArrayList<>();
                 for (Pair<Sentence<Word>, TTRRecordType> pair : ProgressBar.wrap(corpus, "Eval progress with top-" + n + " actions: ")) {
@@ -132,8 +142,12 @@ public class BabyDSInduction {
                         allSemantics.add(parsedSem);
                         logger.debug("Looking for more possible semantics...");  // Because of the ambiguity caused by computational actions.
                         int parseIdx = 0;
-                        while (parser.parse()) {  // Steps through all different semantic interpretations.
+                        while (true) {  // Steps through all different semantic interpretations.
                             try {
+                                if (!parser.parse()) {  // Check if parsing should continue
+                                break;
+                                }
+
                                 logger.trace(ANSI_YELLOW + parseIdx + "- other semantics: " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
                                 TTRRecordType newSem = (TTRRecordType) parser.getState().getCurrentTuple().getSemantics();
                                 parseIdx++;
@@ -141,12 +155,11 @@ public class BabyDSInduction {
                                     allSemantics.add(newSem);
                                 }
                             } catch (Exception e) {
-                                logger.warn(ANSI_RED + "Sem is probs DisjunctiveType?: " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
+                                logger.warn(ANSI_RED + "Sem is probs DisjunctiveType? (or could be other problems): " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
                                 break;
                             }
                         }
                         for (TTRRecordType sem : allSemantics) {
-
                             if (sem.subsumes(goldSem) && goldSem.subsumes(sem)) {
                                 parsedSem = sem;
                                 break;
@@ -192,11 +205,13 @@ public class BabyDSInduction {
 
                 evalResult.addSemanticAccuracy( n, dataset_name, scores.get(0)*100, scores.get(1)*100, scores.get(2)*100);
                 evalResult.addParsingCoverage(n, dataset_name, (double) parsedCount / corpus.size() * 100, (double) exactMatchCount / corpus.size() * 100);
+
                 logger.info("Parsing coverage for " + dataset_name + ": " + parsedCount + " out of " + corpus.size());  // AA MODIFIED FROM parsedCount
             }
         }
-        evalResult.writeResutlsToFile(modelAddress, datasetName); //TODO add proper text info after each table is created: use old table way of doing stuff.
-        return new Pair<>(semanticAccuracy, parsingCoverage);
+        evalResult.setDatasetSizes(trainingSize, testingSize);
+        evalResult.writeResultsToFile(modelAddress, datasetFileName);
+        return evalResult;
     }
 
 
@@ -279,12 +294,12 @@ public class BabyDSInduction {
 
     /**
      * Returns the training and testing files from the corpus directory.
-     * @param kfcv The k-fold cross validation index. If 0, a train-test data is returned.
+     * @param kfcv The k-fold cross-validation index. If 0, train-test data is returned.
      * @param modelAddress The address of the model directory.
      * @param datasetName The dataset name.     *
      * @return train_test_files An array of two files: training and testing files.
      */
-    public File[] get_corpus_files(int kfcv, String modelAddress, String datasetName) {
+    public File[] get_corpus_files(int kfcv, String modelAddress, String datasetName, String nameAttachment) {
         File[] train_test_files = new File[2];
         File folder;
         folder = new File(modelAddress);
@@ -294,7 +309,7 @@ public class BabyDSInduction {
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
                 if (kfcv == 0) {
-                    if (file.isFile() && file.getName().startsWith(datasetName+"_train")) {
+                    if (file.isFile() && file.getName().startsWith(datasetName+"_train"+nameAttachment)) {  // To handle batching. Not for the test set.
                         train_test_files[0] = file;
                         logger.trace("Training file found: " + file.getName());
                         continue;
@@ -313,11 +328,17 @@ public class BabyDSInduction {
                         train_test_files[1] = file;
                 }
             }
-            if (train_test_files[0] == null || train_test_files[1] == null)
-                logger.warn(ANSI_RED + "Couldn't find either training or testing file." + ANSI_RESET);
-        } else {
-            logger.error(ANSI_RED + "No files found in the corpus directory." + ANSI_RESET);
-        }
+            if (train_test_files[0] == null)
+                logger.warn(ANSI_RED + "Couldn't find training file." + ANSI_RESET);
+            else if (train_test_files[1] == null)
+                logger.warn(ANSI_RED + "Couldn't find testing file." + ANSI_RESET);
+            else
+                logger.info(ANSI_GREEN + "Found both training and testing files." + ANSI_RESET);
+            logger.debug(ANSI_GREEN + "Training files found: " + train_test_files[0].getName());
+            logger.debug(ANSI_GREEN + "Testing files found: " + train_test_files[1].getName() + ANSI_RESET);
+            }
+            else
+                logger.error(ANSI_RED + "No files found in the corpus directory." + ANSI_RESET);
         return train_test_files;
     }
 
@@ -346,9 +367,9 @@ public class BabyDSInduction {
      */
    public static void mergeFiles(File file1, File file2, File outputFile) throws IOException {
        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
-           // Read first file and write to output
+           // Read the first file and write to output
            writeContent(file1, writer);
-           // Read second file and write to output
+           // Read the second file and write to output
            writeContent(file2, writer);
        }
    }
@@ -412,7 +433,7 @@ public class BabyDSInduction {
 
 
     /**
-     * Performs k-fold cross validation on the dataset and saves the training and testing sets to file.
+     * Performs k-fold cross-validation on the dataset and saves the training and testing sets to file.
      * @param folds The number of folds for k-fold cross validation.
      * @param saveToFile A boolean to save the training and testing sets to file or not.
      * @return A list of pairs of training and testing datasets for each fold.
@@ -469,6 +490,7 @@ public class BabyDSInduction {
      * @param modelDir The directory to save the learned lexicon to.
      */
     public void train_model(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress) {
+
         logger.info("Training BabyDS model...");
         // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
         String[] files = new File(modelDir).list();
@@ -501,7 +523,8 @@ public class BabyDSInduction {
         try {
             babyDS.setTrainingCorpus(trainingCorpus);
             logger.info("BabyDS training starting...");
-            babyDS.learn();
+            babyDS.learn();  //TODO it doesn't make sense that I can't specify "what top-N models to learn" here. Maybe
+            // to save time or for any other reasons I didn't want to do more calculations!
             String saveModelDir = modelDir + "lexicon.lex";
 
             babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 1);
@@ -520,7 +543,7 @@ public class BabyDSInduction {
      * @param kFold The number of folds for k-fold cross validation. If 0, a train-test split is performed.
      * @param saveToFile A boolean to save the training and testing sets to file.
      */
-    public void full_pipeline(int kFold, Double train_test_ratio, boolean saveToFile, String modelAddress, String datasetName, int seed, String seedGrammarAddress) {
+    public void full_pipeline(int kFold, Double train_test_ratio, boolean saveToFile, String modelAddress, String datasetName, int seed, String seedGrammarAddress, int topN) {
         if (kFold != 0) {  // The k-fold cross validation scenario.
             logger.info("Performing " + kFold + "-fold Cross Validation...");
             List<HashMap<Integer, HashMap<String, HashMap<String, Double>>>> kfSemAccResults = new ArrayList<>();
@@ -531,9 +554,9 @@ public class BabyDSInduction {
                 for (Pair<RecordTypeCorpus, RecordTypeCorpus> pair : train_test_pairs) {
                     int train_size = pair.first().size();
                     train_model(modelAddress + datasetName+"_kfcv_"+i+"_train_"+train_size+".txt", modelAddress, seedGrammarAddress);  // currently it doesn't save the kfcv models separately, just overwrites. TODO fix inputs.
-                    Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> kfResultsPair = evaluate_model(i+1, modelAddress, datasetName);
-                    kfSemAccResults.add(kfResultsPair.first());  // Maybe refactor so testing data can be specified...
-                    kfParsCvgResults.add(kfResultsPair.second());
+                    EvalResult kfResults = evaluate_model(i+1, modelAddress, datasetName, "", topN);
+                    kfSemAccResults.add(kfResults.getSemanticAccuracy());  // todo refactor here, and all the below
+                    kfParsCvgResults.add(kfResults.getParsingCoverage());  // todo refactor here, and all the below
                 }
                 // !! Uncomment below to print results for each fold !!  // todo test this...
 //                for (int j = 0; j < kfResults.size(); j++) {
@@ -589,17 +612,23 @@ public class BabyDSInduction {
             int train_size = train_test_pair.first().size();
             int test_size = train_test_pair.second().size();
             train_model(datasetName + "_train_" + train_size + ".txt", modelAddress, seedGrammarAddress);
-            Pair<HashMap<Integer, HashMap<String, HashMap<String, Double>>>, HashMap<Integer, HashMap<String, ArrayList<Double>>>> ttsResults = evaluate_model(0, modelAddress, datasetName);
+            EvalResult ttsResults = evaluate_model(0, modelAddress, datasetName, "", topN);
+            String tsvresult = ttsResults.toTSVString(saveToFile, true, modelAddress);
             System.out.println();
             System.out.println("Results on:  Dataset: " + datasetName + " | Seed: " + seed + " | Folds: " + kFold);
             System.out.println();
-            print_semanticAcc_results(ttsResults.first(), String.format("Train-Test Split | Ratio: %.2f | Data Sizes: train=%d - test=%d",
-                    train_test_ratio, train_size, test_size));  //todo refactor
+//            print_semanticAcc_results(ttsResults.first(), String.format("Train-Test Split | Ratio: %.2f | Data Sizes: train=%d - test=%d",
+//                    train_test_ratio, train_size, test_size));  //todo refactor
+            System.out.println(ttsResults.getSemanticAccResultsTable(String.format("Train-Test Split | Ratio: %.2f | Data Sizes: train=%d - test=%d",
+                    train_test_ratio, train_size, test_size)));
             System.out.println();
-            System.out.println(get_parsingCoverage_results(ttsResults.second(), ""));  //todo refactor
+//            System.out.println(get_parsingCoverage_results(ttsResults.second(), ""));  //todo refactor
+            System.out.println(ttsResults.getParsingCoverageResultsTable(""));
+            if (PRINT_DIAG)
+//            print_diagnostics();
+                System.out.println(ttsResults.getDiagnosticResults());
         }
-        if (PRINT_DIAG)
-            print_diagnostics();
+
     }
 
 
@@ -607,6 +636,7 @@ public class BabyDSInduction {
      * overloads the method below, with default values for INIT_BATCH_RATIO and INC_BATCH_RATIO.
      * @param corpus The corpus to split into batches.
      * @return A list of data batches.
+     * todo move this all to experiments, it's not even used here!
      */
     public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus) {
         return prepare_batches(corpus,
@@ -619,6 +649,7 @@ public class BabyDSInduction {
      * For model training purposes, the input corpus should be shuffled first.
      * @return A list of data batches.
      * @author: AA
+     * todo maybe add SaveToFile as a parameter/option?
      */
     public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, double init_batch_ratio, double inc_batch_ratio) {
         logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_RATIO: " + init_batch_ratio + " | INC_BATCH_RATIO: " + inc_batch_ratio);
@@ -648,7 +679,7 @@ public class BabyDSInduction {
             }
         }
         if (!inc_batch.isEmpty()) {  // If there are any remaining elements in the last batch, add it to the list.
-            // add remaining elements to the last existing batch and not create a new one.
+            // Add remaining elements to the last existing batch and not create a new one.
             batches.getLast().addAll(inc_batch);
             logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.getLast().size());
         }
@@ -676,7 +707,17 @@ public class BabyDSInduction {
             logger.info("Model directory created: " + modelDir);
             logger.info("double-verifying: " + modelDir.getAbsolutePath());
         } else {
-            logger.warn(ANSI_RED + "Model directory already exists (WILL RE-WRITE MODEL): " + modelDir + ANSI_RESET);
+            logger.warn("Model directory already exists (model will be re-written): " + modelDir);
+            System.out.println("Model directory already exists (model will be re-written): " + modelDir);
+            System.out.println("Enter 'y/Y' to continue or anything else to exit:");
+            Scanner scanner = new Scanner(System.in);
+            String answer = scanner.nextLine();
+            if (answer.equals("y") || answer.equals("Y")) {
+                logger.info("Continuing...");
+            } else {
+                logger.error("Exiting...");
+                System.exit(0);
+            }
         }
     }
 
@@ -776,17 +817,17 @@ public class BabyDSInduction {
 //        System.out.println();
 //        System.out.println(bbds.get_parsingCoverage_results(ttsResults.second(), null));
 
-        // To run full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
-//        BabyDSInduction testInduction = new BabyDSInduction(modelPath);
-//        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED, seedGrammarPath);
+        // To run the full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
+        BabyDSInduction testInduction = new BabyDSInduction(modelPath);
+        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED, seedGrammarPath, TOP_N);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
 //        bbds.train_model(corpusPath + datasetName);
 
-        BabyDSInduction test = new BabyDSInduction();
+//        BabyDSInduction test = new BabyDSInduction();
 //        test.makeNeuralParsingCorpus(DATASET_NAME, modelPath);
-        test.testParallelisationEffect(10);
+//        test.testParallelisationEffect(10);
     }
 
 }
