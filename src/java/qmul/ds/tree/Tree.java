@@ -908,16 +908,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 	}
 
+
 	/**
 	 * Semantic Node Decorations in TTR - otherwise should return empty set, or
 	 * throw pointer exception!
-	 * 
 	 * The maximal semantics will not contain a head field.
-	 * 
 	 * @return the maximal semantics of this tree
 	 */
 	public TTRFormula getMaximalSemantics(Context c) {
-
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:" + this);
 		List<Tree> merged = mergeUnfixed();
@@ -928,15 +926,11 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 
 		merged.get(0).addUnderspecifiedFormulae(c);
 		if (merged.size() == 1) {
-
 			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), c);
 		}
-
 		merged.get(1).addUnderspecifiedFormulae(c);
-
 		TTRFormula sem = new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), c),
 				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode(), c));
-
 		return sem;
 		// return new
 		// DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(),c),
@@ -944,28 +938,25 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		//
 	}
 
+
 	public TTRFormula getMaximalSemantics() {
 		logger.warn("Running max sem without context");
 		logger.debug("Merging unfixed if possible,");
 		logger.debug("before merge:" + this);
 		List<Tree> merged = mergeUnfixed();
 		logger.debug("after merge:" + merged);
-
 		if (merged.size() > 2)
 			throw new UnsupportedOperationException("Can't have more than two results after merging unfixed node");
-
 		merged.get(0).addUnderspecifiedFormulae();
 		if (merged.size() == 1) {
-
 			return merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), null);
 		}
 
 		merged.get(1).addUnderspecifiedFormulae();
-
 		return new DisjunctiveType(merged.get(0).getMaximalSemantics(merged.get(0).getRootNode(), null),
 				merged.get(1).getMaximalSemantics(merged.get(1).getRootNode(), null));
-
 	}
+
 
 	TTRFormula questionRec = (TTRRecordType) Formula.create("[p==question(head):t]");
 	TTRFormula negatedRec = (TTRRecordType) Formula.create("[p==not(head):t]");
