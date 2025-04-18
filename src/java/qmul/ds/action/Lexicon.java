@@ -287,7 +287,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         // Modified by Arash A. to write the effects in file correctly.
         for (String word : keySet()) {
             for (LexicalAction la : get(word)) {
-                logger.info("word: " + word + " | la: " + la);  // AA this should be debug, not info.
+                logger.debug("word: " + word + " | la: " + la);  // AA this should be debug, not info.
                     out.write("[" + la.getProb() + "," + la.getRank() + "]");
                     out.newLine();
                     out.write(la.toString());
@@ -300,6 +300,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
             }
             out.flush();
         }
+        logger.info("Wrote " + this.size() + " lexical actions to " + fileName);
         out.close();
     }
 
@@ -655,6 +656,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         }
 
         try {
+            // TODO is this why I could only use 2023 folder sa my seed grammar? What is this generally, ans why is it hardcoded?
             // Create file with the lexicon itself
             FileWriter fstream = new FileWriter("resource\\2023-babyds-induction-output\\".replace("\\", File.separator)
                     + "lexicon_Complete.txt".replaceAll("\\\\", File.separator));
