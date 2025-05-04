@@ -106,7 +106,9 @@ public class TTRHypothesiser extends Hypothesiser {
 			TTRRecordType wholeInc = flatten(inc);
 			// filtering trees according to subj, obj, etc. being in their right positions
 			// only if the head element is an event...
+//			logger.warn(ANSI_RED + "AA IMPORTANT CHANGE: filtered is fixed to false to test hyps!" + ANSI_RESET);
 			boolean filtered = wholeInc.getHeadField().getDSType().equals(DSType.es);
+//			boolean filtered = false;
 			logger.info("Increment: " + wholeInc);
 			logger.info("Now the abstraction trees: ");
 			List<Tree> trees = wholeInc.getMaximalFilteredAbstractions(state
@@ -436,7 +438,7 @@ public class TTRHypothesiser extends Hypothesiser {
 					System.out.println("stopping");
 					return false;
 				}
-				System.out.print(this.hypotheses.size() + " ");
+				System.out.print(this.hypotheses.size() + " ");  // AA: This is where the numbers being printed are coming from: number of hypotheses so far.
 				doneWithBranch = true;
 			}
 
@@ -454,12 +456,13 @@ public class TTRHypothesiser extends Hypothesiser {
 			logger.warn("Target sem: " + targetType);  // AA well I guess these should be debug, not warn
 		}
 		// AA what does the below mean?
-		if (!state.atRoot() && !state.getPrevAction().getName()
+		if	 (!state.atRoot() && !state.getPrevAction().getName()
 						.startsWith(HYP_ADJUNCTION_PREFIX) && !doneWithBranch) {
 			this.applyLexicalHypotheses(state.getCurrentTuple().getTargetTree());
 			this.applyOptionalGrammar(state.getCurrentTuple().getTargetTree());
 		}
 		// ParserTuple result=null;
+		// AA: Dag search happens here, and it takes a lot of time!
 		do {
 			DAGEdge traversed = state.goFirst();
 			logger.debug(traversed);
@@ -713,7 +716,11 @@ public class TTRHypothesiser extends Hypothesiser {
 //        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
-        h.loadTrainingExample(sent1, sem1);
+
+		String sp = "putnextto the key the ball";
+		TTRRecordType tp = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]");
+
+		h.loadTrainingExample(sp, tp);
 		Collection<CandidateSequence> hyps = h.hypothesise();
 
 		for (CandidateSequence hyp : hyps)
