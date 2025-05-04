@@ -48,17 +48,17 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
     private static Logger logger = Logger.getLogger(Lexicon.class);
     public int lexiconsize = 0;
 
+
     /**
      * A template for creating lexical actions for a particular syntactic class
-     *
      * @author mpurver
      */
     protected class LexicalTemplate {
-
         private String name;
         private List<String> metavars;
         private List<String> lines;
         private boolean noLeftAdjustment = false;
+
 
         /**
          * @param name
@@ -107,10 +107,12 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
     public static final Pattern MACRO_SPEC_PATTERN = Pattern.compile("(.+?)(\\(.*\\))*");
 
     private HashMap<String, LexicalTemplate> actionTemplates = new HashMap<String, LexicalTemplate>();
+    public HashMap<String, Double> lexiconEntropy = new HashMap<>();
+
+
 
     /**
-     * Read a set of {@link LexicalAction}s from file
-     *
+     * Read a set of {@link LexicalAction}s from a file.
      * @param dir containing at least the lexical-actions.txt and lexicon.txt files
      */
     public Lexicon(File dir) {
@@ -304,19 +306,6 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         out.close();
     }
 
-    public static void main(String a[]) {
-        Lexicon lex = new Lexicon("resource/2013-ttr-learner-output/", 1);
-        // print word-action pairs
-        for (String word : lex.keySet()) {
-            for (LexicalAction la : lex.get(word)) {
-                for (Effect e : la.getEffects()) {
-                    System.out.println("word: " + word + "\n" + e + "\n");
-                }
-//                System.out.println("word: " + word + "\n" + la.getEffects() + "\n");
-//                System.out.println("la.getEffects()[0]: " + la.getEffects()[0]);
-            }
-        }
-    }
 
     /**
      * Read a set of {@link LexicalAction} templates from file
@@ -716,6 +705,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * @author Arash Ash & Arash Eshghi
      * TODO what's exactly in `prob`? add necessary logs/docs
      * TODO initLexicalTemplates add necessary try-catches
+     * TODO needs a better name, as there is another method called readLexTxt.
      */
     public void loadLearntLexiconTxt(String grammarPath, int topN) {
         //AA: THIS SHOULD BE FIXED LATER: any name should be possible!
@@ -827,6 +817,65 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
         }
         return null;
+    }
+
+
+    public double calcWordEntropy (String word) {
+        double entropy = 0.0;
+        for (LexicalAction la : this.get(word)) {
+            double laProb = la.getProb();
+            entropy -= (laProb * Math.log(laProb));
+        }
+        lexiconEntropy.put(word, entropy);
+        return entropy;
+    }
+
+
+    public double getWordEntropy(String word) {
+        if (lexiconEntropy.isEmpty()) {
+            calcLexiconEntropy();
+        }
+        return lexiconEntropy.getOrDefault(word, 0.0);  //TODO is this correct?
+    }
+
+
+    public HashMap<String, Double> getLexiconEntropy () {
+        if (lexiconEntropy.isEmpty()) {
+            calcLexiconEntropy();
+        }
+        return lexiconEntropy;
+    }
+
+
+    /**
+     * Calculates (and sets) the Shannon entropy for the lexicon.
+     */
+    public void calcLexiconEntropy () {
+        HashMap<String, Double> entropyMap = new HashMap<>();
+        for (String word : keySet()) {
+            double entropy = calcWordEntropy(word);
+            if (entropyMap.containsKey(word)) {
+                entropyMap.put(word, entropyMap.get(word) + entropy);  //TODO is this correct?
+            } else {
+                entropyMap.put(word, entropy);
+            }
+        }
+        this.lexiconEntropy = entropyMap;
+    }
+
+
+    public static void main(String[] a) {
+        Lexicon lex = new Lexicon("resource/2013-ttr-learner-output/", 1);
+        // print word-action pairs
+        for (String word : lex.keySet()) {
+            for (LexicalAction la : lex.get(word)) {
+                for (Effect e : la.getEffects()) {
+                    System.out.println("word: " + word + "\n" + e + "\n");
+                }
+//                System.out.println("word: " + word + "\n" + la.getEffects() + "\n");
+//                System.out.println("la.getEffects()[0]: " + la.getEffects()[0]);
+            }
+        }
     }
 
 }
