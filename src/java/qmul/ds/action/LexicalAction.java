@@ -113,10 +113,7 @@ public class LexicalAction extends Action {
 	}
 
 	/**
-	 * @param name
-	 *            the name of this action
-	 * @param lines
-	 *            a {@link String} representation as used in lexicon specs
+	 * @param lines a {@link String} representation as used in lexicon specs
 	 */
 	public LexicalAction(String word, List<String> lines, Formula sem, String actiontype) {
 
@@ -144,10 +141,7 @@ public class LexicalAction extends Action {
 	}
 
 	/**
-	 * @param name
-	 *            the name of this action
-	 * @param lines
-	 *            a {@link String} representation as used in lexicon specs
+	 * @param lines a {@link String} representation as used in lexicon specs
 	 */
 	public LexicalAction(String word, List<String> lines) {
 
