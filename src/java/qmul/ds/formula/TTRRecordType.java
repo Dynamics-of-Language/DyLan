@@ -2524,9 +2524,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			list.add(DSType.parse("cn>cn"));
 		}
 
+		// trying a trick here to get stuff working (want to force-add the largest trees...)
+		int maxNumNodes = 0;
 		for (DSType dsType: list) {
 			// AA: Here is where the TTRFormula getAbstractions method is called:
 			List<Tree> curTrees = getAbstractions(dsType, prefix);
+			for (Tree tree: curTrees) {
+				int curNumNodes = tree.getNumNodes();
+				if (curNumNodes > maxNumNodes) {
+					maxNumNodes = curNumNodes;
+				}
+			}
 			// AA: And this is where the filtering happens.
 			if (!filtering && !curTrees.isEmpty()) {
 //				result.addAll(curTrees);  // AA commented out to avoid duplicates.
@@ -2542,6 +2550,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 //				return result;
 			}
 
+			logger.debug("Max number of nodes in trees: " + maxNumNodes);
 			List<Tree> filtered = filter.filter(curTrees);
 			// subj/obj/ind-obj fields are in the init method of a TreeFilter here.
 			if (!filtered.isEmpty()) {
@@ -2556,6 +2565,18 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					}
 				}
 //				return result;
+			} else {  // AA: Added because bigger trees were getting filtered in babyDS class2 tests.
+				for(Tree curTree: curTrees) {
+					if (curTree.size() == maxNumNodes) {
+						if (!result.contains(curTree)) {
+							result.add(curTree);
+							logger.debug(ANSI_RED + "Although this tree was supposed to be filtered, it will be added (has maximal num nodes): " + ANSI_RESET + curTree);
+						} else {
+							logger.debug(ANSI_YELLOW + "Tree already in results." + ANSI_RESET);
+							logger.trace(curTree);
+						}
+					}
+				}
 			}
 		}
 		if (result.isEmpty())
