@@ -610,12 +610,15 @@ public class TypeLattice extends DelegateTree<TypeTuple, TypeLatticeIncrement> {
 				"p4==obj_box(x1) : t|p5==col_red(x1) : t|" +
 				"e1 == state_beside : es| p1 == subj(e1, y) : t|" +
 				"p2 == obj(e1, x1) : t| head == e1 : es]");
-//		TTRRecordType target2 = TTRRecordType.parse("[y==dylan : e|x1 : e|p1==obj_box(x1) : t|p2==col_red(x1) : t|p3==state_beside(y, x1) : t|head==p3 : t]");
+		TTRRecordType t1 = TTRRecordType.parse("[y==dylan : e|x1 : e|p1==obj_box(x1) : t|p2==col_red(x1) : t|p3==state_beside(y, x1) : t|head==p3 : t]");
+		TTRRecordType t2 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p215==obj_door(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p216==obj(e108, x216) : t]");
+		TTRRecordType t3 = TTRRecordType.parse("[r : [x199 : e|head==x199 : e|p199==obj_door(x199) : t|p200==col_grey(x199) : t]|x200==epsilon(r.head, r) : e|e100==state_facing : es|head==e100 : es|p200==obj(e100, x200) : t]");
+		TTRRecordType t4 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]");
 
-		TypeLattice lattice = new TypeLattice(target2);
+		TypeLattice lattice = new TypeLattice(t4);
 		System.out.println(lattice);
 		System.out.println("Increments are: ");
-		for(List<?> l: lattice.getIncrements(target2.getHeadField().getLabel())) {  // AA or call getHeadIncrements I guess?
+		for(List<?> l: lattice.getIncrements(t4.getHeadField().getLabel())) {  // AA or call getHeadIncrements I guess?
 			System.out.println(l);
 		}
 //		printIncs(lattice.getHeadIncrements()); // AA Idk why, but it doesn't work.
