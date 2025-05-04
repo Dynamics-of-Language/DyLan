@@ -624,7 +624,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					} else {
 						Variable subFVar = subF.iterator().next();
 						// Ad-hoc solution by AA to fix substitution of r (which has to be the corresponding x instead)
-						if (subFVar.getName().equals("r"))
+						logger.warn("Ad-hoc solution by AA to fix substitution of r here");
+						if (subFVar.getName().startsWith("r"))
 							subFVar = f.getLabel();
 
 						substCore = core.substitute(subFVar, TTRPath.parse(v.getName() + ".head"));
