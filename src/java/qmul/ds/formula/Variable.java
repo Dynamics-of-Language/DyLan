@@ -172,6 +172,17 @@ public class Variable extends AtomicFormula {
 		return super.toUniqueInt();
 
 	}
+
+
+	/**
+	 * Added by AA, obviously assumes the variable's name is one character and then a number as index.
+	 * @return the index of the variable, e.g. 1 for x1, 2 for e2, 3 for p3
+	 */
+	public int getIndex() {
+		return Integer.parseInt(this.toString().substring(1));
+	}
+
+
 	public static void main(String[] args) {
 		TTRRecordType f1 = (TTRRecordType) Formula.create("[e1:es|head==e1:es|p==subj(e1, R.head):t]");
 		TTRRecordType tense = (TTRRecordType) Formula.create("[head:es|p1==future(head):t]");
