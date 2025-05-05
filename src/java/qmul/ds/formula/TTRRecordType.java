@@ -2421,7 +2421,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		// out of the record type. This is built based on a given DSType.
 		if (type.equals(DSType.t)) {
 			list.add(DSType.parse("e>(e>(e>t))"));
-			list.add(DSType.parse("es>(e>(e>t))"));
+			logger.warn("AA has REMOVED es>(e>(e>t)) here! Not verified by AE. For BabyDS.");
+//			list.add(DSType.parse("es>(e>(e>t))"));
 			list.add(DSType.parse("e>(e>t)"));
 			list.add(DSType.parse("e>t"));
 
