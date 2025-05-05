@@ -3394,13 +3394,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * - Remove embedded record types and convert them to fields.
 	 * - remove the head field (in the general RT and the embedded RTs).
 	 * - remove the restrictor field and convert it to a predicate.
-	 * Assumes the indices are tidy already (start from 1 and go up one by one) -> Otherwise I have to improve this. TODO check this
+	 * Assumes the indices are tidy already (start from 0 and go up one by one) -> Otherwise I have to improve this. TODO check this
 	 * IMPORTANT LIMITATION/HACK in the comments below!
 	 * Also, Some of these operations I'm doing here could have/deserve their own methods imo!
 	 * @author: AA
 	 * @return a flattened version of the record type (following the rules above).
 	 */
 	public TTRRecordType unEmbed() {
+		logger.info("UnEmbedding rt: " + this);
 		TTRRecordType result = new TTRRecordType();
 		Map<Variable, Variable> toReplaceMap = new HashMap<>();
 		List<TTRField> badFields = new ArrayList<>();  // The ones that when I try to add them to result, raise an error.
@@ -3423,7 +3424,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 						myVar = ff.getVariables().iterator().next(); // The "x" I am looking for.
 					}
 				}
-				TTRField epsilonTerm = this.getProperDependents(f).getFirst(); // FOUND IT! Have to play with this now!
+				TTRField epsilonTerm = this.getProperDependents(f).getFirst();
 				Formula core = epsilonTerm.getPredicate();
 				// Now have to build my own field in the following shape: p_i=core(head_variable):t)
 				TTRField myEpsilonField = TTRField.parse("p" + lastIndexOfPredicateMeta + "==" + core + "(" + myVar + ")" + ":t");
@@ -3450,18 +3451,22 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					toReplaceMap.put(v, v2);
 				} else {
 					try {
-						result.addField(new TTRField(f));
+						result.addField(f);
 					} catch (Exception e) {
 						badFields.add(f);
 					}
 				}
 			} else if (!f.getLabel().equals(HEAD)) {
 				try {
-				result.addField(new TTRField(f));
+				result.addField(f);
 				} catch (Exception e) {
 					badFields.add(f);
 				}
 				logger.debug("Result so far: " + result);
+			} else if (f.getLabel().equals(HEAD)) {
+				result.addField(f);
+			} else {
+				logger.warn("Skipping field: " + f + " for no reason!");
 			}
 		}
 		logger.debug("All bad fields: " + badFields);
@@ -3678,7 +3683,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 	/**
 	 * Made for BabyDS neural TTR parsing task, so might not necessarily generalise.
-	 * Assumption is each field should have five elements. If they exist, add them, and if not, put a special character
+	 * The assumption is each field should have five elements. If they exist, add them, and if not, put a special character
 	 * that represents it doesn't exist.
 	 * @author: AA
 	 * @return A neural-network-ready representation of an *un-embedded* RT as a list of strings.
