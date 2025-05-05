@@ -38,9 +38,9 @@ public class BabyDSInduction {
     public static final String ANSI_RED = "\u001B[31m";
 
     static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
-    static final String modelPath = "resource\\2024-babyds-induction\\".replace("\\", File.separator);  //the dir that works!
-    static final String DATASET_NAME = "class2";
-    static final String DATASET_NAME_IDX = "2";  // TODO is this needed?
+    static final String modelPath = "resource\\2025-babyds-RQ1\\class2\\smol48Par\\".replace("\\", File.separator);  //the dir that works!
+    static final String DATASET_NAME = "smol48";
+    static final String NN_FOLDER_NAME = "nn_data";  //TODO add comment on what this is used for
 
     public static final int SEED = 45; // Set a constant seed for reproducibility
     public static final int TOP_N = 3;  // topN learned actions to evaluate
@@ -59,7 +59,7 @@ public class BabyDSInduction {
     HashMap<Pair<String, Integer> , List<String>> failedParses = new HashMap<>();
     HashMap<Pair<String, Integer> , List<String>> failedExactMatches = new HashMap<>();
 
-// --------------------------- Constructor ---------------------------
+// --------------------------- Constructors ---------------------------
     BabyDSInduction (String modelDir) {
         logger.warn("Make sure (at least in IntelliJ) your working directory is set to /DyLan to prevent errors with dirs.");
         try{
@@ -526,12 +526,9 @@ public class BabyDSInduction {
             babyDS.learn();  //TODO it doesn't make sense that I can't specify "what top-N models to learn" here. Maybe
             // to save time or for any other reasons I didn't want to do more calculations!
             String saveModelDir = modelDir + "lexicon.lex";
-
-            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 1);
-            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 2);
-            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 3);
-            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 4);
-            babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, 5);
+            for (int i = 1; i <= TOP_N; i++) {
+                babyDS.getHypothesisBase().saveLearnedLexicon(saveModelDir, i);
+            }
         } catch(Exception e) {
 			e.printStackTrace();
 		}
