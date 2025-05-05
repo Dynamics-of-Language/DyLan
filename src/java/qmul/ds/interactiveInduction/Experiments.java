@@ -2,16 +2,21 @@ package qmul.ds.interactiveInduction;
 
 import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
+import qmul.ds.formula.TTRRecordType;
+import qmul.ds.learn.Evaluation;
 import qmul.ds.learn.RecordTypeCorpus;
 import static qmul.ds.interactiveInduction.BabyDSInduction.mergeFiles;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.StandardCopyOption;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Experiments {
@@ -26,16 +31,18 @@ public class Experiments {
 
     static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
     static final String modelPath = "resource\\2025-babyds-RQ2\\minimal_data\\".replace("\\", File.separator);  //the dir that works!
-    static final String rq1path = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);
+    static final String rq1path = "resource\\2025-babyds-RQ1\\class2\\".replace("\\", File.separator);
     static final String rq2path = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
     String forgettingPath = "resource\\2025-babyds-RQ2\\forgetting\\".replace("\\", File.separator);
     String generalisationPath = "resource\\2025-babyds-RQ2\\generalisation\\".replace("\\", File.separator);
+    static final String NTRR_RQ1_CLASS1_PATH = "resource\\2025-babyds-RQ1\\class1\\nn_results\\".replace("\\", File.separator);
+
 
     public static final int SEED = 45; // Set a constant seed for reproducibility
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
     public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
-    public static final String CORPUS_NAME = "class1";
-    public static final int REPEAT = 5;  // Increments the seed for each repeat
+    public static final String CORPUS_NAME = "class2";
+    public static final int REPEAT = 1;  // Increments the seed for each repeat
     public static final int N = 3; // TopN actions to use.
     public static final double INIT_BATCH_RATIO = 0.1;  // Size of the initial data batch for evaluation - used in prepare_batch().
     public static final double INC_BATCH_RATIO = 0.1; // Size of the incremental data batches for evaluation - used in prepare_batch().
@@ -426,6 +433,163 @@ public class Experiments {
     }
 
 
+    /**
+     * Evaluates NeuralTTR. Provides default values for the targets and predictions file names, for the method below.
+     * todo make it parallel
+     * @param rootFolderPath
+     */
+    public HashMap<Integer, List<EvalResult>> evalNeuralTTR(String rootFolderPath){
+        return evalNeuralTTR(rootFolderPath, "_neural_targets", "_predictions");
+    }
+
+
+    public HashMap<Integer, List<EvalResult>> evalNeuralTTR(String rootFolderPath, String targetsFileName, String predictionsFileName) {
+        HashMap<Integer, List<EvalResult>> fullResults = new HashMap<>();
+        String[] train_test_file_names = {"train", "test"};
+
+        File rootFolder = new File(rootFolderPath);
+        if (!rootFolder.exists() || !rootFolder.isDirectory()) {
+            logger.error("Invalid root folder path: " + rootFolderPath);
+            return fullResults;
+        }
+
+        File[] subFolders = rootFolder.listFiles(File::isDirectory);
+        if (subFolders == null || subFolders.length == 0) {
+            logger.error("No subfolders found in the root folder: " + rootFolderPath);
+            return fullResults;
+        }
+
+        Arrays.stream(subFolders).forEach(subFolder -> {
+            // Extract seed from folder name (e.g., "S45_B1" -> 45)
+            int seed = extractSeedFromFolderName(subFolder.getName());
+            if (seed == -1) {
+                logger.warn("Could not extract seed from folder name: " + subFolder.getName());
+                return;
+            }
+
+            EvalResult neuralTTRResult = new EvalResult();
+            int[] sizes = {0, 0}; // {trainingSize, testSize}
+
+            for (String file_name : train_test_file_names) {
+                File targetsFile = new File(subFolder, "_"+file_name+targetsFileName + ".txt");
+                File predictionsFile = new File(subFolder, "_"+file_name+predictionsFileName + ".txt");
+                Evaluation eval = new Evaluation();
+                if (!targetsFile.exists() || !predictionsFile.exists()) {
+                    logger.warn("Missing targets or predictions file in folder: " + subFolder.getName());
+                    continue;
+                }
+                try {
+                    List<String> targets = readTargetFile(targetsFile.toPath().toString());
+                    List<String> predictions = Files.lines(predictionsFile.toPath())
+                        .filter(line -> !line.trim().isEmpty())
+                        .collect(Collectors.toList());
+
+                    if (targets.size() != predictions.size()) {
+                        logger.warn("Mismatch in size between targets and predictions in folder: " + subFolder.getName());
+                        continue;
+                    }
+
+                    processEvaluation(targets, predictions, file_name, sizes, neuralTTRResult);
+                    logger.info("Folder: " + subFolder.getName() + " | Results processed successfully");
+
+                } catch (IOException e) {
+                    logger.error("Error reading files in folder: " + subFolder.getName() + " | " + e.getMessage());
+                } catch (Exception e) {
+                    logger.error("Error processing files in folder: " + subFolder.getName() + " | " + e.getMessage());
+                }
+            }
+
+            neuralTTRResult.setDatasetSizes(sizes[0], sizes[1]);
+
+            // Add result to fullResults map
+            synchronized (fullResults) {
+                if (!fullResults.containsKey(seed)) {
+                    fullResults.put(seed, new ArrayList<>());
+                }
+                fullResults.get(seed).add(neuralTTRResult);
+            }
+
+            // Write individual result to file
+            neuralTTRResult.writeResultsToFile(subFolder+File.separator, "");
+
+            // Add results to TSV
+            addResultsToTSV(seed, neuralTTRResult, rootFolderPath + "fullResultsNeuralTTR.tsv");
+        });
+
+        return fullResults;
+    }
+
+
+    private int extractSeedFromFolderName(String folderName) {
+        try {
+            // Extract number between "S" and "_B"
+            int startIndex = folderName.indexOf('S') + 1;
+            int endIndex = folderName.indexOf("_B");
+            if (startIndex > 0 && endIndex > startIndex) {
+                return Integer.parseInt(folderName.substring(startIndex, endIndex));
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to extract seed from folder name: " + folderName);
+        }
+        return -1;
+    }
+
+
+    private void processEvaluation(List<String> targets, List<String> predictions,
+                                 String file_name, int[] sizes, EvalResult neuralTTRResult) {
+        int numParsed = 0;
+        int exactMatches = 0;
+        int total = targets.size();
+
+        if (file_name.equals("train")) {
+            sizes[0] = total;
+        } else if (file_name.equals("test")) {
+            sizes[1] = total;
+        }
+
+        List<TTRRecordType[]> evalList = new ArrayList<>();
+
+        for (int i = 0; i < total; i++) {
+            Pair<TTRRecordType, Boolean> target = TTRRecordType.nn2RTfs(TTRRecordType.str2listTargets(targets.get(i)));
+            Pair<TTRRecordType, Boolean> prediction = TTRRecordType.nn2RTfs(TTRRecordType.str2listPreds(predictions.get(i)));
+            TTRRecordType targetRT = target.first;
+            TTRRecordType predictionRT = prediction.first;
+            evalList.add(new TTRRecordType[]{predictionRT, targetRT});
+
+            if (prediction.second) {
+                numParsed++;
+                if (targetRT.subsumes(predictionRT) && predictionRT.subsumes(targetRT)) {
+                    exactMatches++;
+                }
+            }
+        }
+
+        List<Float> scores = new Evaluation().precisionRecallMacro(evalList);
+        neuralTTRResult.addSemanticAccuracy(1, file_name, scores.get(0)*100, scores.get(1)*100, scores.get(2)*100);
+        neuralTTRResult.addParsingCoverage(1, file_name, (double) numParsed / total* 100, (double) exactMatches / total* 100);
+        logger.info(String.format("Processed %s | Parsed: %d/%d | Exact Matches: %d/%d",
+            file_name, numParsed, total, exactMatches, total));
+    }
+
+
+    public List<String> readTargetFile(String filePath) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            int lineNum = 0;
+            while ((line = reader.readLine()) != null) {
+                lineNum++;
+                if (lineNum % 3 == 2 && !line.trim().isEmpty()) {  // Every second non-empty line
+                    lines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Error reading file: " + filePath + " | " + e.getMessage());
+        }
+        return lines;
+    }
+
+
     public void rq2() {
     // TODO should add "G" for generalisation tests, "F" for forgetting tests, and "B" for both forgetting and generalisation tests.
     //todo add also "C" for curriculum learning tests, and "R" for random learning tests.
@@ -439,7 +603,8 @@ public class Experiments {
     public static void main(String[] args) {
 
         Experiments exp = new Experiments();
-        exp.runRQ1();
+//        exp.runRQ1();
+        System.out.println(exp.evalNeuralTTR(NTRR_RQ1_CLASS1_PATH));
 ////        exp.test_forgetting(1, 2, "S");
 //        HashMap<Integer, List<EvalResult>> minData = exp.findMinimumMasteryData(CORPUS_NAME, modelPath, REPEAT, SEED);
 //        exp.allResultsToTSV(minData);
