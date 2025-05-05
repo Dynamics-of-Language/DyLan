@@ -719,32 +719,54 @@ public class BabyDSInduction {
     }
 
 
-    public void makeNeuralParsingCorpus(String corpusName, String modelAddress) {
+    /**
+     * Creates a neural parsing corpus from the given corpus name and model address.
+     * Does this in a paralleled way. :)
+     * @param corpusName The name of the corpus to read (without .txt).
+     * @param modelAddress The main directory (to read the corpus and save the model in).
+     * todo move to their own class I think.
+     */
+    public void makeNeuralParsingCorpus(String corpusName, String modelAddress, String savePath) {
         RecordTypeCorpus corpus = new RecordTypeCorpus();
         try {
-            corpus.loadCorpus(new File(modelAddress + corpusName+".txt"));
+            corpus.loadCorpus(new File(modelAddress + File.separator + corpusName+".txt"));
             // Extract all TTRRecordTypes from corpus pairs
             List<TTRRecordType> rts = corpus.stream()
                 .map(Pair::second)
                 .collect(Collectors.toList());
 
             // Process RTTypes in parallel using embeddedRT2NN
-            List<List<String>> nnReprs = rts.parallelStream()
-                .map(TTRRecordType::embeddedRT2NN)
+            List<String> nnReprs = rts.parallelStream()
+                .map(TTRRecordType::embeddedRT2NNList)
                 .collect(Collectors.toList());
 
             logger.info("Processed " + nnReprs.size() + " record types into neural representations");
             // TODO: Save or further process the neural representations
             //TODO move this out of the try block
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(modelAddress + corpusName + "_neural"+DATASET_NAME_IDX+".txt"))) {
+            if (savePath.isEmpty()) {
+                savePath = modelAddress;
+            }
+            // Making sure it exists
+            File saveDir = new File(savePath);
+            if (!saveDir.exists()) {
+                if (saveDir.mkdirs()) {
+                    logger.info("Directory created: " + savePath);
+                } else {
+                    logger.error("Failed to create directory: " + savePath);
+                    throw new IOException("Could not create directory: " + savePath);
+                }
+            }
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(savePath + File.separator + corpusName + "_neural_targets"+".txt"))) { // + idx was here.
                 for (int i = 0; i < corpus.size(); i++) {
                     writer.write(corpus.get(i).first().toString());
                     writer.newLine();
-                    writer.write(String.join(" ", nnReprs.get(i)));
+//                    writer.write(String.join(" ", nnReprs.get(i)));
+                    writer.write(nnReprs.get(i));
                     writer.newLine();
                     writer.newLine();
                 }
-                logger.info("Saved neural representations to: " + modelAddress + corpusName + "_neural"+DATASET_NAME_IDX+".txt");
+                logger.info("Saved neural representations to: " + savePath + corpusName + "_neural_targets"+".txt");  // + idx was here.
             } catch (IOException e) {
                 logger.error("Error saving neural representations: " + e.getMessage());
             }
@@ -756,52 +778,35 @@ public class BabyDSInduction {
     }
 
 
-    public void testParallelisationEffect(int rounds) {
-        long start;
-        long end;
-        long duration;
-        long sum;
-
-        RecordTypeCorpus corpus = new RecordTypeCorpus();
-        try {
-            corpus.loadCorpus(new File(modelPath+DATASET_NAME+".txt"));
-        } catch (IOException e) {
-            logger.error("Error loading corpus: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-
-        // Parallel processing:
-        sum = 0;
-        for (int i = 0; i < rounds; i++) {
-            start = System.currentTimeMillis();
-            List<TTRRecordType> rts = corpus.stream()
-                    .map(Pair::second)
-                    .collect(Collectors.toList());
-            List<List<String>> nnReprs = rts.parallelStream()
-                    .map(TTRRecordType::embeddedRT2NN)
-                    .collect(Collectors.toList());
-            end = System.currentTimeMillis();
-            duration = end - start;
-            System.out.println("Duration for parallel processing: " + duration);
-            sum += duration;
-        }
-        System.out.println("parallel: average over " + rounds + " rounds is: " + sum / rounds);
-
-        // Normal / non-parallel processing:
-        sum = 0;
-        for (int i = 0; i < rounds; i++) {
-            start = System.currentTimeMillis();
-            List<List<String>> results = new ArrayList<>();
-            for (Pair<Sentence<Word>, TTRRecordType> pair : corpus) {
-                TTRRecordType rt = pair.second();
-                results.add(rt.embeddedRT2NN());
+    /**
+     * Reads in generated corpora and converts them to neural representations.
+     * Basically looping over folders with the above method.
+     */
+    public void convertCurrentCorpusToNN(String rootFolder) {
+        File root = new File(rootFolder);
+        File[] folders = root.listFiles(File::isDirectory);
+        if (folders != null) {
+            for (File folder : folders) {
+                String folderName = folder.getName();
+                if (folderName.contains("B")) {  // AA trick to read the desired (batch) folders
+                    File[] files = folder.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            String fileName = file.getName();
+                            if (fileName.startsWith("_tr")) {  // Train file
+                                makeNeuralParsingCorpus("_train", folder.getAbsolutePath(), rootFolder+NN_FOLDER_NAME+File.separator+folderName);
+                            } else if (fileName.startsWith("_te")) {  // Test file
+                                makeNeuralParsingCorpus("_test", folder.getAbsolutePath(), rootFolder+NN_FOLDER_NAME+File.separator+folderName);
+                            } else {
+                                logger.trace("File " + file.getName() + " does not start with _train or _test. Skipping...");
+                            }
+                        }
+                    }
+                }
             }
-            end = System.currentTimeMillis();
-            duration = end - start;
-            System.out.println("Duration for normal processing: " + duration);
-            sum += duration;
+        } else {
+            logger.error("No folders found in the root directory: " + rootFolder);
         }
-        System.out.println("parallel: average over " + rounds + " rounds is: " + sum / rounds);
     }
 
 
@@ -823,8 +828,8 @@ public class BabyDSInduction {
 //        bbds.train_model(corpusPath + datasetName);
 
 //        BabyDSInduction test = new BabyDSInduction();
-//        test.makeNeuralParsingCorpus(DATASET_NAME, modelPath);
-//        test.testParallelisationEffect(10);
+//        test.makeNeuralParsingCorpus(DATASET_NAME, modelPath, "");
+//        test.convertCurrentCorpusToNN(modelPath);
     }
 
 }
