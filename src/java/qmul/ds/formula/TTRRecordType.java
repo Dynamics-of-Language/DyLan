@@ -3514,12 +3514,98 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 	/**
 	 * The opposite of the above method: converts an un-embedded record type to an embedded one.
-	 * Used after neural parsing inference, to have a the prediction in the original format for evaluation.
+	 * Used after neural parsing inference, to have the prediction in the original format for evaluation.
+	 * Procedure/rules:
+	 * - get the `x`s
+	 * - find all of its dependents, and extract the predicates with one variable from these (to exclude what should not go back into the embedded RT)
+	 * - convert the one with iota/epsilon to an iota/epsilon term
+	 * - the rest go into an embedded RT
+	 * - add head==x as well, inside the embedded RT.
 	 * @author: AA
 	 * @return a record type with embedded record types.
 	 */
 	public TTRRecordType reEmbed () {  //TODO
 		TTRRecordType result = new TTRRecordType();
+		logger.trace("Input RT: " + this);
+		ResetIndicesResult rt = this.resetAllIndices();
+		TTRRecordType rec = rt.getRecordType();
+		logger.info("Re-Embedding rt: " + rec);
+		logger.trace("Max indices: " + rt.getMaxIndices());
+		List<Integer> maxIndices = rt.getMaxIndices();
+		List<TTRField> xFields = new ArrayList<>();
+		logger.debug("Finding fields with x labels...");
+		for (TTRField f: rec.fields) {
+			if (f.getLabel().toString().startsWith("x")) {
+				xFields.add(f);
+				logger.trace("Found x field: " + f);
+			}
+		}
+		int rIndex = 0;
+		int maxX = maxIndices.get(1); // To get the biggest x index, as returned by the resetAllIndices method.
+		for (TTRField f: xFields) {
+			Variable oldX = f.getLabel();
+			logger.debug("Getting the dependents of field: " + f);
+			TTRRecordType embeddedRT = new TTRRecordType();
+			List<TTRField> dependants = rec.getProperDependents(f);
+			for (TTRField dep: dependants) {
+				logger.trace("Processing dependent: " + dep);
+				if (dep.getType() instanceof PredicateArgumentFormula) {
+					Predicate p = ((PredicateArgumentFormula) dep.getType()).getPredicate();
+					if (p.toString().equals("iota") || p.toString().equals("epsilon")) {
+						logger.debug("Found iota/epsilon predicate: " + dep);
+						// todo make r field, with new x
+						TTRField iotaTerm = TTRField.parse("x"+(maxX+1)+"=="+p+"(r"+rIndex+".head, r"+rIndex+") : e");  // Maybe clean this up a little bit!
+						result.addField(iotaTerm);
+						logger.debug("Added iota term: " + iotaTerm + " to the result.");
+						logger.trace("Result so far: " + result);
+						logger.trace("Current embedded RT: " + embeddedRT);
+					} else if (dep.getVariables().size() == 1) { // number of variables is 1, so it goes in the embedded RT.
+						embeddedRT.addField(dep);
+						logger.debug("Added dependent: " + dep + " (1-arg) to the embedded RT.");
+						logger.trace("Result so far: " + result);
+						logger.trace("Current embedded RT: " + embeddedRT);
+					} else {  // number of variables is more than 1, so it goes in the main RT body (obj & subj, afaik)
+						//TODO have to do a relabeling ot the new idx for x
+						Variable newX = new Variable("x"+(maxX+1));
+						logger.debug("Have to rename " + oldX + " to " + newX);
+						TTRField newF = dep.substitute(oldX, newX);
+						result.addField(newF);
+						logger.debug("Added dependent " + newF + " (2-arg) to the main RT.");
+						logger.trace("Result so far: " + result);
+						logger.trace("Current embedded RT: " + embeddedRT);
+					}
+				} else {
+					if (!result.hasField(dep)) {
+						result.addField(dep);
+						logger.debug("Added dependent " + dep + " (not a predicate) to the embedded RT.");
+						logger.trace("Result so far: " + result);
+						logger.trace("Current embedded RT: " + embeddedRT);
+					} else {
+						logger.trace(dep + " already exists in the result.");
+					}
+
+				}
+			}
+			// check if it is empty or not. Add f itself if necessary, and make it head. AND ADD IT AS FIELD
+			embeddedRT.addField(f);
+			logger.debug("Added field " + f + " to the embedded RT.");
+			logger.trace("Result so far: " + result);
+			logger.trace("Current embedded RT: " + embeddedRT);
+			String embHead = "head==x"+maxX+":e";
+			embeddedRT.addField(TTRField.parse(embHead));
+			logger.debug("Added embedded RT head: " + embHead);
+			logger.trace("Result so far: " + result);
+			logger.trace("Current embedded RT: " + embeddedRT);
+			result.add(TTRField.parse("r"+rIndex+":"+embeddedRT));
+			logger.debug("Added embedded RT: " + embeddedRT + " to the result.");
+			logger.trace("Result so far: " + result);
+			logger.trace("Current embedded RT: " + embeddedRT);
+			rIndex++;
+			maxX+=2;  // increment the x index by 2, because I have added a new x field.
+			logger.debug("Max x index: " + maxX + " and r index: " + rIndex);
+		}
+		result.add(rec.head());
+		// I don't think if there will be any left, because all of them should be dependents of the x fields!
 
 		return result;
 	}
