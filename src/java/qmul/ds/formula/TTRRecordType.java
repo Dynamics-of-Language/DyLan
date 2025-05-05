@@ -3618,56 +3618,74 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * unEmbed method) and are not working as I expected, so I implemented this.
 	 * ASSUMPTION: the labels start only x, p or e. Although, it can be extended.
 	 * @author: AA
-	 * @return the same RT with all indices reset to the smallest value possible.
+	 * @return ResetIndicesResult containing:
+	 *         - the same RT with all indices reset to the smallest value possible
+	 *         - list of largest indices [maxP, maxX, maxE] in that order
 	 */
-	public TTRRecordType resetAllIndices () {
+	public ResetIndicesResult resetAllIndices() {
 		logger.info("Resetting all indices in: " + this);
 		TTRRecordType result = new TTRRecordType(this);
-		Set<TTRLabel> pLables = new HashSet<>();
+		Set<TTRLabel> pLabels = new HashSet<>();
 		Set<TTRLabel> xLabels = new HashSet<>();
 		Set<TTRLabel> eLabels = new HashSet<>();
 		Set<TTRLabel> allLabels = this.getLabels();
+
+		// Track max indices
+		List<Integer> maxIndices = Arrays.asList(0, 0, 0); // [maxP, maxX, maxE]
+
 		for (TTRLabel l: allLabels) {
 			if (l.toString().startsWith("p")) {
-				pLables.add(l);
+				pLabels.add(l);
 			} else if (l.toString().startsWith("x")) {
 				xLabels.add(l);
 			} else if (l.toString().startsWith("e")) {
 				eLabels.add(l);
 			} else {
 				logger.error("This method cannot handle label: " + l);
-				// todo Maybe raise an exception?
 			}
 		}
 
 		ArrayList<Pair<Set<TTRLabel>, String>> labelSets = new ArrayList<>();
-		labelSets.add(new Pair<>(pLables, "p"));
+		labelSets.add(new Pair<>(pLabels, "p"));
 		labelSets.add(new Pair<>(xLabels, "x"));
 		labelSets.add(new Pair<>(eLabels, "e"));
+
+		int setIndex = 0;
 		for (Pair<Set<TTRLabel>, String> labels: labelSets) {
 			int largestIndex = 0;
 			Map<Variable, Variable> varMap = new HashMap<>();
 			List<Integer> indices = new ArrayList<>();
 			String varName = labels.second;
+
 			for (TTRLabel l : labels.first) {
 				Integer idx = Integer.parseInt(l.toString().substring(1));
 				indices.add(idx);
 			}
 			indices.sort(Comparator.naturalOrder());
-			logger.trace("Indices: " + indices);
+			logger.trace("Indices for " + labels.second+ " are: " + indices);
+
+			// Store max index for current type (p, x, or e)
+			if (!indices.isEmpty()) {
+				maxIndices.set(setIndex, indices.get(indices.size() - 1));
+//				maxIndices.set(setIndex, Collections.max(indices));
+
+			}
 
 			for (int i: indices) {
-                if (i != largestIndex) {
+				if (i != largestIndex) {
 					varMap.put(new Variable(varName+i), new Variable(varName+largestIndex));
-                }
-                largestIndex++;
-            }
+				}
+				largestIndex++;
+			}
+
 			logger.info("varMap: " + varMap);
 			// Time to apply the map:
-			for (Variable varKey: varMap.keySet()) {
-				// Replace all labels:
+			// sort these to avoid collisions
+			List<Variable> sortedList = new ArrayList<>(varMap.keySet());
+			sortedList.sort(Comparator.comparing(Variable::getIndex));
+			for (Variable varKey: sortedList) {
 				TTRField f = this.getField(varKey);
-				List<TTRField> fDependants = result.getProperDependents(f);  // Includes the field itself, so no need to do it separately.
+				List<TTRField> fDependants = result.getProperDependents(f);
 				logger.debug("Replacing " + varKey + " with " + varMap.get(varKey) + " in " + f);
 				TTRField newF = f.substitute(varKey, varMap.get(varKey));
 				result = result.removeField(f);
@@ -3681,9 +3699,13 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					logger.debug("RT after replacement is: " + result);
 				}
 			}
+			setIndex++;
 		}
-		logger.debug("final RT: " + result);
-		return result;
+
+		logger.debug("Final RT with reset indices is: " + result);
+		maxIndices = Arrays.asList(pLabels.size()-1, xLabels.size()-1, eLabels.size()-1);
+		logger.debug("max indices: " + maxIndices);
+		return new ResetIndicesResult(result, maxIndices);
 	}
 
 
