@@ -3691,10 +3691,10 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * Overloads the method below with my special character.
 	 * @return
 	 */
-	public List<String> makeNeuralParsingRepr(String fillerChar) {
+	public List<String> rt2nn(String fillerChar) {
 		if (fillerChar.isEmpty())
-			return makeNeuralParsingRepNoFiller();
-		return 	makeNeuralParsingReprWithFiller(fillerChar);
+			return rt2nnNoFiller();
+		return 	rt2nnWithFiller(fillerChar);
 	}
 
 
@@ -3705,7 +3705,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * @author: AA
 	 * @return A neural-network-ready representation of an *un-embedded* RT as a list of strings.
 	 */
-	public List<String> makeNeuralParsingReprWithFiller(String fillerTag) {
+	public List<String> rt2nnWithFiller(String fillerTag) {
 		List<String> result = new ArrayList<>();
 		// first unEmbed, then resetIndices, then getString
 		//todo can potentially track tag-len here...
@@ -3731,8 +3731,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				result.add(formula);
 				logger.debug("Result so far is: " + result);
 				String arg1;
-				if (f.getVariables().size() >= 1) {
-					arg1 = p.getArguments().get(0).toString();
+				if (!f.getVariables().isEmpty()) {
+					arg1 = p.getArguments().getFirst().toString();
 				} else {
 					arg1 = fillerTag;
 				}
@@ -3774,7 +3774,94 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * @author: AA
 	 * @return A neural-network-ready representation of an *un-embedded* RT as a list of strings.
 	 */
-	public List<String> makeNeuralParsingRepNoFiller() {
+	public String getNNParsingRepList() {
+		List<String> result = new ArrayList<>();
+		// first unEmbed, then resetIndices, then getString
+		//todo can potentially track tag-len here...
+		for (TTRField f: this.fields) {
+			String one = f.getLabel().toString();
+			logger.trace("1st part: " + one);
+			result.add(one);
+			Formula two = f.getType();
+			if (two==null) {
+				String five = f.getDSType().toString();
+				logger.trace("5th part: " + five);
+				result.add(five);
+				logger.debug("Result so far is: " + result);
+				result.add(TTR_FIELD_SEPARATOR); // To separate the fields for fields like `x:e`
+				continue;
+			} else if (f.getType() instanceof PredicateArgumentFormula) {
+				PredicateArgumentFormula p = ((PredicateArgumentFormula) f.getType());
+				String formula = p.getPredicate().toString();
+				logger.trace("Second: " + formula);
+				result.add(formula);
+				logger.debug("Result so far is: " + result);
+				String arg1;
+				if (!f.getVariables().isEmpty()) {
+					arg1 = p.getArguments().getFirst().toString();
+				} else {
+					arg1 = "";  //TODO
+				}
+				logger.trace("third: " + arg1);
+				if (!arg1.equals("")) {
+					result.add(arg1);
+				}
+				logger.debug("Result so far is: " + result);
+				String arg2;
+				if (f.getVariables().size() == 2) {
+					arg2 = p.getArguments().get(1).toString();
+				} else {
+					arg2 = "";  //TODO
+				}
+				logger.trace("forth: " + arg2);
+				if (!arg2.equals("")) {
+					result.add(arg2);
+				}
+				logger.debug("Result so far is: " + result);
+			} else {
+				logger.trace("2nd part: " + two);
+				result.add(two.toString());
+				logger.trace("Adding two nonExistantTags because numVars=0");
+			}
+			String five = f.getDSType().toString();
+			logger.trace("5th part: " + five);
+			result.add(five);
+			logger.debug("Result so far is: " + result);
+			result.add(TTR_FIELD_SEPARATOR);  // field separator
+		}
+//		result.removeLast(); // There's one extra field separator at the end, that I intentionally want to keep!
+		logger.info("The final nn representation is:");
+		logger.info(result);
+		String resultAsString = "";
+		for (String s: result) {
+//			resultAsString += "'" + s + "'" + ", ";
+			resultAsString += s + " ";
+		}
+
+		resultAsString = resultAsString.substring(0, resultAsString.length() - 1);
+//		resultAsString = "[" + resultAsString + "]";
+		return resultAsString;
+	}
+
+
+		/**
+	 * Overloads the method below with default special character "".
+	 * @return
+	 */
+	public String embeddedRT2NNList() {
+		return this.unEmbed().resetAllIndices().getRecordType().getNNParsingRepList();
+	}
+
+
+
+	/**
+	 * Made for BabyDS neural TTR parsing task, so might not necessarily generalise.
+	 * The assumption is each field should have five elements. If they exist, add them, and if not, put a special character
+	 * that represents it doesn't exist.
+	 * @author: AA
+	 * @return A neural-network-ready representation of an *un-embedded* RT as a list of strings.
+	 */
+	public List<String> rt2nnNoFiller() {
 		List<String> result = new ArrayList<>();
 		// first unEmbed, then resetIndices, then getString
 		//todo can potentially track tag-len here...
@@ -3835,7 +3922,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * @return
 	 */
 	public List<String> embeddedRT2NN() {
-		return this.unEmbed().resetAllIndices().makeNeuralParsingRepr("");
+		return this.unEmbed().resetAllIndices().getRecordType().rt2nn("");
 	}
 
 
@@ -3847,7 +3934,245 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * @return neural parsing-ready representation
 	 */
 	public List<String> embeddedRT2NN(String specialChar) {
-		return this.unEmbed().resetAllIndices().makeNeuralParsingRepr(specialChar);
+		return this.unEmbed().resetAllIndices().getRecordType().rt2nn(specialChar);
+	}
+
+
+	/**
+	 * INCOMPLETE METHOD -> does not include a field separator.
+	 * @param nnRepr
+	 * @return
+	 */
+	public static TTRRecordType nn2RT(List<String> nnRepr) {
+		TTRRecordType result = new TTRRecordType();
+		String[] myDSTypes = new String[] { "e", "t", "es" };
+		String[] myVariables = new String[] { "p", "x", "e" };
+		TTRField currentField;
+		int currentIdx = 0;  //To show how far we are into the nn prediction.
+		for (int i = 0; i < nnRepr.size(); i++) {
+			String l = nnRepr.get(i);
+			// if l is in mydstypes:
+			if (Arrays.asList(myDSTypes).contains(l)) {
+				logger.trace("Found a DSType: " + l);
+				List<String> prev_elements = nnRepr.subList(currentIdx, i);
+				logger.trace("Potentially found a field: " + prev_elements);
+				if (prev_elements.size() >= 5 || prev_elements.size() == 0) {
+					logger.warn("Invalid number of elements for a field: " + prev_elements);
+					logger.error("Have to inspect in a different way...");
+//					pause();
+//					continue;//?
+				} else {
+					String label = prev_elements.get(0);  // check label
+					if (prev_elements.size() == 1) {
+						String fieldStr = prev_elements.get(0) + ":" + l;
+						TTRField newfield = TTRField.parse(fieldStr);
+						result.addField(newfield);
+						currentIdx = i+1;
+						continue;
+					} else if (prev_elements.size() == 2) {
+						logger.debug("Found a field with 3 elements: " + prev_elements);
+						String fieldStr = prev_elements.get(0) + "==" + prev_elements.get(1) + ":" + l;
+						TTRField newfield = TTRField.parse(fieldStr);
+						result.addField(newfield);
+						currentIdx = i+1;
+						continue;//?
+					}  else if (prev_elements.size() == 3) {
+						continue;
+//						logger.debug("Found a field with 4 elements: " + prev_elements);
+//						String formula = prev_elements.get(1);
+//						String formulaArg = prev_elements.get(2);
+////						TTRField newfield = new TTRField(new TTRLabel(label), new Formula(formula), DSType.parse(l));  //todo
+////						result.addField(newfield);
+//						currentIdx = i+1;
+//						continue;//?
+					}   else if (prev_elements.size() == 4) {
+						continue;
+//						logger.debug("Found a field with 5 elements: " + prev_elements);
+//						String formula = prev_elements.get(1);
+//						String formulaArg1 = prev_elements.get(2);
+//						String formulaArg2 = prev_elements.get(3);
+////						TTRField newfield = new TTRField(new TTRLabel(label), new Formula(formula), DSType.parse(l)); //todo
+////						result.addField(newfield);
+//						currentIdx = i+1;
+//						continue;//?
+					}
+				}
+
+				currentIdx = i+1; //?
+			} else {
+				logger.warn("IDK WHAT");
+			}
+		}
+		return result;
+	}
+
+
+	/**
+	 * Provides a default field separator "|" for the method below.
+	 * @param nnRepr
+	 * @return
+	 */
+	public static Pair<TTRRecordType, Boolean> nn2RTfs(List<String> nnRepr){
+		return nn2RTfs(nnRepr, "|");
+	}
+
+
+	/**
+	 * Based on a field separator
+	 * fs stands for field separator, and not fucks sake.
+	 * @param nnRepr
+	 * @return
+	 * @author: AA
+	 */
+	public static Pair<TTRRecordType, Boolean> nn2RTfs(List<String> nnRepr, String fieldSeparator) {
+		TTRRecordType result = new TTRRecordType();
+		boolean parsed = true;
+//		String[] myDSTypes = new String[] { "e", "t", "es" };
+//		String[] myVariables = new String[] { "p", "x", "e" };
+//		TTRField currentField;
+		logger.trace("Converting nnRepr to RT for: " + nnRepr);
+		int currentIdx = 0;  //To show how far we are into the nn prediction.
+		for (int i = 0; i < nnRepr.size(); i++) {
+			String l = nnRepr.get(i);
+			// if l is in mydstypes:
+			logger.trace("Current element: " + l);
+			if (l.equals(fieldSeparator)) {
+//				logger.trace("Found a field separator.");
+				List<String> prev_elements = nnRepr.subList(currentIdx, i);
+				logger.trace("Potentially found a field: " + prev_elements);
+				if (prev_elements.size() >= 6 || prev_elements.size() <= 1) {
+					logger.warn("Invalid number of elements for a field: " + prev_elements);
+					logger.error(ANSI_RED + "Have to inspect manually ^^^^^ " + ANSI_RESET);
+					pause();
+					currentIdx = i+1;
+					parsed = false;
+					continue;//?
+				} else {
+					if (prev_elements.size() == 2) {
+						String fieldStr = prev_elements.get(0) + ":" + prev_elements.get(1);
+						try {
+							TTRField newfield = TTRField.parse(fieldStr);  // TODO test what happens on an invalid field like : x:t
+							result.addField(newfield);
+							logger.debug("Successfully added field: " + newfield);
+							logger.trace("Result so far: " + result);
+						} catch (Exception e) {
+							logger.error(ANSI_RED + "Couldn't create a field out of: " + ANSI_RESET + prev_elements );
+							logger.error(e.getMessage());
+							parsed = false;
+						}
+						currentIdx = i+1;
+						continue; //?
+					} else if (prev_elements.size() == 3) {
+						logger.debug("Found a field with 3 elements: " + prev_elements);
+						String fieldStr = prev_elements.get(0) + "==" + prev_elements.get(1) + ":" + prev_elements.get(2);
+						try {
+							TTRField newfield = TTRField.parse(fieldStr); // TODO test what happens on an invalid field like : x==t:e
+							result.addField(newfield);
+							logger.debug("Successfully added field: " + newfield);
+							logger.trace("Result so far: " + result);
+						}  catch (Exception e) {
+							logger.error(ANSI_RED + "Couldn't create a field out of: " + ANSI_RESET + prev_elements);
+							logger.error(e.getMessage());
+							parsed = false;
+						}
+						currentIdx = i+1;
+						continue; //?
+					}  else if (prev_elements.size() == 4) {
+						logger.debug("Found a field with 4 elements: " + prev_elements);
+						String variable = prev_elements.get(0);
+						String formula = prev_elements.get(1);
+						String formulaArg = prev_elements.get(2);
+						String fieldDSType = prev_elements.get(3);
+						String fieldStr = variable + "==" + formula + "("+formulaArg+") : " + fieldDSType;
+						logger.trace("Field string: " + fieldStr);
+						try {
+							TTRField newfield = TTRField.parse(fieldStr); // TODO test what happens on an invalid field like : x==t:e
+							result.addField(newfield);
+							logger.debug("Successfully added field: " + newfield);
+							logger.trace("Result so far: " + result);
+
+						} catch (Exception e) {
+							logger.error(ANSI_RED + "Couldn't create a field out of: " + ANSI_RESET + prev_elements);
+							logger.error(e.getMessage());
+							parsed = false;
+						}
+						currentIdx = i + 1;
+						continue;//?
+					}   else {
+						logger.debug("Found a field with 5 elements: " + prev_elements);
+						String variable = prev_elements.get(0);
+						String formula = prev_elements.get(1);
+						String formulaArg1 = prev_elements.get(2);
+						String formulaArg2 = prev_elements.get(3);
+						String fieldDSType = prev_elements.get(4);
+						String fieldStr = variable + "==" + formula + "("+formulaArg1+", "+formulaArg2+") : " + fieldDSType;
+						logger.trace("Field string: " + fieldStr);
+						try {
+							TTRField newfield = TTRField.parse(fieldStr); // TODO test what happens on an invalid field like : x==t:e
+							result.addField(newfield);
+							logger.debug("Successfully added field: " + newfield);
+							logger.trace("Result so far: " + result);
+						} catch (Exception e) {
+							logger.error(ANSI_RED + "Couldn't create a field or label already exists: " + ANSI_RESET + prev_elements);
+//							pause();
+							logger.error(e.getMessage());
+							parsed = false;
+						}
+//						currentIdx = i+1;
+					}
+				}
+				currentIdx = i+1; //?
+			} else {
+				logger.warn("Not a separator. Skipping to the next element.");
+			}
+		}
+		//TODO HAVE TO CHECK the validity of the RT -> the ones that are not added, how bad do they affect the whole RT?
+		return new Pair<>(result, parsed);
+	}
+
+
+	/**
+	 * Converts a string representation of a list to a List<String>.
+	 * @param s The string representation of the list.
+	 * @return The converted List<String>.
+	 */
+	public static List<String> str2listPreds(String s) {
+		    // Remove the brackets and split the string
+        s = s.substring(1, s.length() - 1); // Remove '[' and ']'
+        List<String> items = Arrays.asList(s.split(", "));
+		// Remove any leading/trailing single quotation from each item
+		for (int i = 0; i < items.size(); i++) {
+//			items.set(i, items.get(i).replaceAll("^['\"]|['\"]$|,|\\[|\\]", ""));
+			items.set(i, items.get(i).replaceAll("[^a-zA-Z0-9|_]", ""));
+		}
+		return items;
+	}
+
+
+	/**
+	 * Converts a string representation of a list to a List<String>.
+	 * @param s The string representation of the list.
+	 * @return The converted List<String>.
+	 */
+	public static List<String> str2listTargets(String s) {
+		    // Remove the brackets and split the string
+//        s = s.substring(1, s.length() - 1); // Remove '[' and ']'
+        List<String> items = Arrays.asList(s.split(" "));
+		// Remove any leading/trailing single quotation from each item
+		for (int i = 0; i < items.size(); i++) {
+//			items.set(i, items.get(i).replaceAll("^['\"]|['\"]$|,|\\[|\\]", ""));
+			items.set(i, items.get(i).replaceAll("[^a-zA-Z0-9|_]", ""));
+		}
+		return items;
+	}
+
+
+	public static void pause() {
+		System.out.println("Press enter to continue...");
+		try {
+			System.in.read();
+		} catch (Exception e) {
+		}
 	}
 
 
