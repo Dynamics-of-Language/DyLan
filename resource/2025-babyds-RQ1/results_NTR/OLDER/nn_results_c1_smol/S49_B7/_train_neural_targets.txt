@@ -1,0 +1,231 @@
+goto the green ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a grey box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a blue key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a purple key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a grey box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the grey key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the red ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the purple ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open the grey door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the blue door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a green door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a yellow box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a blue ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the yellow box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+goto a yellow box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the red door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the red box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a green box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a green box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the green box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a purple box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open the purple door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the purple key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the purple box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a red key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p2', 'col_red', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p0', 'epsilon', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a red ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a blue ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a grey door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open a purple door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a red box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a green key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the blue box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a grey ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a green ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open a red door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a purple door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open a blue door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a yellow ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a grey ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a red door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the purple door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the yellow key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open a door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a yellow ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a grey key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a green ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open the door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a red key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the purple ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the green door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open the green door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+goto a purple box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a grey key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+goto the blue key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the blue key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the yellow ball
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a purple ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup a yellow key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+open the red door
+'e0', 'state_opened', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the grey ball
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_ball', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a purple key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_purple', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the red box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_red', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the grey box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_grey', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the yellow box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the green box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a yellow key
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto the yellow door
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p2', 'col_yellow', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+goto a box
+'e0', 'state_facing', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the blue box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'p2', 'col_blue', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the green key
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_key', 'x0', 't', '|', 'p2', 'col_green', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p3', 'obj', 'e0', 'x0', 't', '|',
+
+pickup the box
+'e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p1', 'obj_box', 'x0', 't', '|', 'head', 'e0', 'es', '|', 'p2', 'obj', 'e0', 'x0', 't', '|',
+
