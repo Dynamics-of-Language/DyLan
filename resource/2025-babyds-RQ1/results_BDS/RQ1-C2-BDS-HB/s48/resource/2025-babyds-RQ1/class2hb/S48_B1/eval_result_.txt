@@ -1,0 +1,65 @@
+
+sem acc | train size: 12 | test size: 12
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  95.14 |  95.14 |  95.14 |  96.83 |  96.83 |  96.83 |
+| Top-2           |  99.09 |  99.09 |  99.09 |  99.00 |  99.00 |  99.00 |
+| Top-3           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      83.33 |       60.00 |      75.00 |       77.78 |
+| Top-2           |      91.67 |       90.91 |      83.33 |       90.00 |
+| Top-3           |      91.67 |      100.00 |      83.33 |      100.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+putnextto the yellow box the ball
+putnextto a key the yellow ball
+>>> Dataset: test | Top-3 | Failed Parses:
+putnextto the yellow box the ball
+putnextto a key the yellow ball
+>>> Dataset: test | Top-1 | Failed Parses:
+putnextto the yellow box the ball
+putnextto a key the yellow ball
+putnextto the green box the door
+>>> Dataset: train | Top-1 | Failed Parses:
+putnextto a yellow key the box
+putnextto a ball the door
+>>> Dataset: train | Top-2 | Failed Parses:
+putnextto a yellow key the box
+>>> Dataset: train | Top-3 | Failed Parses:
+putnextto a yellow key the box
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+putnextto a key the grey box
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+putnextto a key the grey box
+putnextto the grey ball a key
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+putnextto a key the grey key
+putnextto the box a grey ball
+putnextto a grey ball the key
+putnextto the ball a grey ball
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+putnextto a key the grey key

@@ -1,0 +1,114 @@
+
+sem acc | train size: 12 | test size: 12
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |    NaN |    NaN |    NaN |    NaN |    NaN |    NaN |
+| Top-2           |    NaN |    NaN |    NaN |    NaN |    NaN |    NaN |
+| Top-3           |  80.77 |  80.77 |  80.77 |    NaN |    NaN |    NaN |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |       0.00 |         NaN |       0.00 |         NaN |
+| Top-2           |       0.00 |         NaN |       0.00 |         NaN |
+| Top-3           |       8.33 |      100.00 |       0.00 |         NaN |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+putnextto the box the yellow door
+putnextto the green key a door
+putnextto a purple key the key
+putnextto the grey box a box
+putnextto a box the yellow key
+putnextto a key a blue ball
+putnextto a box the purple ball
+putnextto the ball the grey ball
+putnextto the key the key
+putnextto a ball the yellow box
+putnextto the purple box a box
+putnextto a green ball the box
+>>> Dataset: test | Top-3 | Failed Parses:
+putnextto the box the yellow door
+putnextto the green key a door
+putnextto a purple key the key
+putnextto the grey box a box
+putnextto a box the yellow key
+putnextto a key a blue ball
+putnextto a box the purple ball
+putnextto the ball the grey ball
+putnextto the key the key
+putnextto a ball the yellow box
+putnextto the purple box a box
+putnextto a green ball the box
+>>> Dataset: test | Top-1 | Failed Parses:
+putnextto the box the yellow door
+putnextto the green key a door
+putnextto a purple key the key
+putnextto the grey box a box
+putnextto a box the yellow key
+putnextto a key a blue ball
+putnextto a box the purple ball
+putnextto the ball the grey ball
+putnextto the key the key
+putnextto a ball the yellow box
+putnextto the purple box a box
+putnextto a green ball the box
+>>> Dataset: train | Top-1 | Failed Parses:
+putnextto the red box a box
+putnextto the purple key the box
+putnextto a ball the green door
+putnextto the ball a box
+putnextto a green key the door
+putnextto the yellow box a key
+putnextto the red ball a door
+putnextto a ball the red door
+putnextto a box the grey box
+putnextto the red key a ball
+putnextto the box a red box
+putnextto the ball the purple ball
+>>> Dataset: train | Top-2 | Failed Parses:
+putnextto the red box a box
+putnextto the purple key the box
+putnextto a ball the green door
+putnextto the ball a box
+putnextto a green key the door
+putnextto the yellow box a key
+putnextto the red ball a door
+putnextto a ball the red door
+putnextto a box the grey box
+putnextto the red key a ball
+putnextto the box a red box
+putnextto the ball the purple ball
+>>> Dataset: train | Top-3 | Failed Parses:
+putnextto the red box a box
+putnextto the purple key the box
+putnextto a ball the green door
+putnextto a green key the door
+putnextto the yellow box a key
+putnextto the red ball a door
+putnextto a ball the red door
+putnextto a box the grey box
+putnextto the red key a ball
+putnextto the box a red box
+putnextto the ball the purple ball
+
+***** Failed Exact Matches *****
+No failed exact matches.

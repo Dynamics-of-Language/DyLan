@@ -1,0 +1,576 @@
+Sent : putnextto a red key a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 1 - Class: 2
+
+Sent : putnextto a red key the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 2 - Class: 2
+
+Sent : putnextto a red key a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 3 - Class: 2
+
+Sent : putnextto a red key the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 4 - Class: 2
+
+Sent : putnextto a red key a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 5 - Class: 2
+
+Sent : putnextto a red key the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 6 - Class: 2
+
+Sent : putnextto a red key a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 7 - Class: 2
+
+Sent : putnextto a red key the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 8 - Class: 2
+
+Sent : putnextto a red key a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 9 - Class: 2
+
+Sent : putnextto a red key the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 10 - Class: 2
+
+Sent : putnextto a red key a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 11 - Class: 2
+
+Sent : putnextto a red key the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 12 - Class: 2
+
+Sent : putnextto a red ball a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 13 - Class: 2
+
+Sent : putnextto a red ball the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 14 - Class: 2
+
+Sent : putnextto a red ball a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 15 - Class: 2
+
+Sent : putnextto a red ball the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 16 - Class: 2
+
+Sent : putnextto a red ball a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 17 - Class: 2
+
+Sent : putnextto a red ball the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 18 - Class: 2
+
+Sent : putnextto a red ball a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 19 - Class: 2
+
+Sent : putnextto a red ball the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 20 - Class: 2
+
+Sent : putnextto a red ball a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 21 - Class: 2
+
+Sent : putnextto a red ball the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 22 - Class: 2
+
+Sent : putnextto a red ball a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 23 - Class: 2
+
+Sent : putnextto a red ball the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 24 - Class: 2
+
+Sent : putnextto a red box a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 25 - Class: 2
+
+Sent : putnextto a red box the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 26 - Class: 2
+
+Sent : putnextto a red box a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 27 - Class: 2
+
+Sent : putnextto a red box the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 28 - Class: 2
+
+Sent : putnextto a red box a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 29 - Class: 2
+
+Sent : putnextto a red box the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 30 - Class: 2
+
+Sent : putnextto a red box a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 31 - Class: 2
+
+Sent : putnextto a red box the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 32 - Class: 2
+
+Sent : putnextto a red box a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 33 - Class: 2
+
+Sent : putnextto a red box the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 34 - Class: 2
+
+Sent : putnextto a red box a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 35 - Class: 2
+
+Sent : putnextto a red box the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 36 - Class: 2
+
+Sent : putnextto a green key a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 37 - Class: 2
+
+Sent : putnextto a green key the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 38 - Class: 2
+
+Sent : putnextto a green key a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 39 - Class: 2
+
+Sent : putnextto a green key the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 40 - Class: 2
+
+Sent : putnextto a green key a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 41 - Class: 2
+
+Sent : putnextto a green key the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 42 - Class: 2
+
+Sent : putnextto a green key a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 43 - Class: 2
+
+Sent : putnextto a green key the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 44 - Class: 2
+
+Sent : putnextto a green key a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 45 - Class: 2
+
+Sent : putnextto a green key the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 46 - Class: 2
+
+Sent : putnextto a green key a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 47 - Class: 2
+
+Sent : putnextto a green key the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 48 - Class: 2
+
+Sent : putnextto a green ball a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 49 - Class: 2
+
+Sent : putnextto a green ball the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 50 - Class: 2
+
+Sent : putnextto a green ball a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 51 - Class: 2
+
+Sent : putnextto a green ball the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 52 - Class: 2
+
+Sent : putnextto a green ball a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 53 - Class: 2
+
+Sent : putnextto a green ball the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 54 - Class: 2
+
+Sent : putnextto a green ball a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 55 - Class: 2
+
+Sent : putnextto a green ball the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 56 - Class: 2
+
+Sent : putnextto a green ball a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 57 - Class: 2
+
+Sent : putnextto a green ball the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 58 - Class: 2
+
+Sent : putnextto a green ball a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 59 - Class: 2
+
+Sent : putnextto a green ball the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 60 - Class: 2
+
+Sent : putnextto a green box a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 61 - Class: 2
+
+Sent : putnextto a green box the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 62 - Class: 2
+
+Sent : putnextto a green box a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 63 - Class: 2
+
+Sent : putnextto a green box the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 64 - Class: 2
+
+Sent : putnextto a green box a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 65 - Class: 2
+
+Sent : putnextto a green box the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 66 - Class: 2
+
+Sent : putnextto a green box a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 67 - Class: 2
+
+Sent : putnextto a green box the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 68 - Class: 2
+
+Sent : putnextto a green box a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 69 - Class: 2
+
+Sent : putnextto a green box the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 70 - Class: 2
+
+Sent : putnextto a green box a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 71 - Class: 2
+
+Sent : putnextto a green box the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 72 - Class: 2
+
+Sent : putnextto the red key a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 73 - Class: 2
+
+Sent : putnextto the red key the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 74 - Class: 2
+
+Sent : putnextto the red key a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 75 - Class: 2
+
+Sent : putnextto the red key the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 76 - Class: 2
+
+Sent : putnextto the red key a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 77 - Class: 2
+
+Sent : putnextto the red key the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 78 - Class: 2
+
+Sent : putnextto the red key a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 79 - Class: 2
+
+Sent : putnextto the red key the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 80 - Class: 2
+
+Sent : putnextto the red key a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 81 - Class: 2
+
+Sent : putnextto the red key the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 82 - Class: 2
+
+Sent : putnextto the red key a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 83 - Class: 2
+
+Sent : putnextto the red key the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 84 - Class: 2
+
+Sent : putnextto the red ball a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 85 - Class: 2
+
+Sent : putnextto the red ball the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 86 - Class: 2
+
+Sent : putnextto the red ball a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 87 - Class: 2
+
+Sent : putnextto the red ball the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 88 - Class: 2
+
+Sent : putnextto the red ball a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 89 - Class: 2
+
+Sent : putnextto the red ball the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 90 - Class: 2
+
+Sent : putnextto the red ball a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 91 - Class: 2
+
+Sent : putnextto the red ball the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 92 - Class: 2
+
+Sent : putnextto the red ball a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 93 - Class: 2
+
+Sent : putnextto the red ball the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 94 - Class: 2
+
+Sent : putnextto the red ball a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 95 - Class: 2
+
+Sent : putnextto the red ball the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 96 - Class: 2
+
+Sent : putnextto the red box a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 97 - Class: 2
+
+Sent : putnextto the red box the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 98 - Class: 2
+
+Sent : putnextto the red box a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 99 - Class: 2
+
+Sent : putnextto the red box the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 100 - Class: 2
+
+Sent : putnextto the red box a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 101 - Class: 2
+
+Sent : putnextto the red box the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 102 - Class: 2
+
+Sent : putnextto the red box a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 103 - Class: 2
+
+Sent : putnextto the red box the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 104 - Class: 2
+
+Sent : putnextto the red box a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 105 - Class: 2
+
+Sent : putnextto the red box the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 106 - Class: 2
+
+Sent : putnextto the red box a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 107 - Class: 2
+
+Sent : putnextto the red box the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_red(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 108 - Class: 2
+
+Sent : putnextto the green key a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 109 - Class: 2
+
+Sent : putnextto the green key the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 110 - Class: 2
+
+Sent : putnextto the green key a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 111 - Class: 2
+
+Sent : putnextto the green key the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 112 - Class: 2
+
+Sent : putnextto the green key a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 113 - Class: 2
+
+Sent : putnextto the green key the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 114 - Class: 2
+
+Sent : putnextto the green key a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 115 - Class: 2
+
+Sent : putnextto the green key the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 116 - Class: 2
+
+Sent : putnextto the green key a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 117 - Class: 2
+
+Sent : putnextto the green key the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 118 - Class: 2
+
+Sent : putnextto the green key a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 119 - Class: 2
+
+Sent : putnextto the green key the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 120 - Class: 2
+
+Sent : putnextto the green ball a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 121 - Class: 2
+
+Sent : putnextto the green ball the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 122 - Class: 2
+
+Sent : putnextto the green ball a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 123 - Class: 2
+
+Sent : putnextto the green ball the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 124 - Class: 2
+
+Sent : putnextto the green ball a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 125 - Class: 2
+
+Sent : putnextto the green ball the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 126 - Class: 2
+
+Sent : putnextto the green ball a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 127 - Class: 2
+
+Sent : putnextto the green ball the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 128 - Class: 2
+
+Sent : putnextto the green ball a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 129 - Class: 2
+
+Sent : putnextto the green ball the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 130 - Class: 2
+
+Sent : putnextto the green ball a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 131 - Class: 2
+
+Sent : putnextto the green ball the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 132 - Class: 2
+
+Sent : putnextto the green box a red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 133 - Class: 2
+
+Sent : putnextto the green box the red key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 134 - Class: 2
+
+Sent : putnextto the green box a green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 135 - Class: 2
+
+Sent : putnextto the green box the green key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_key(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 136 - Class: 2
+
+Sent : putnextto the green box a red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 137 - Class: 2
+
+Sent : putnextto the green box the red ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 138 - Class: 2
+
+Sent : putnextto the green box a green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 139 - Class: 2
+
+Sent : putnextto the green box the green ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_ball(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 140 - Class: 2
+
+Sent : putnextto the green box a red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 141 - Class: 2
+
+Sent : putnextto the green box the red box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 142 - Class: 2
+
+Sent : putnextto the green box a green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==epsilon(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 143 - Class: 2
+
+Sent : putnextto the green box the green box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p1==col_green(x0) : t]|x1==iota(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_box(x2) : t|p3==col_green(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p4==obj(e0, x1) : t|p5==ind_obj(e0, x3) : t]
+Num : 144 - Class: 2
+

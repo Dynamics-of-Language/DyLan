@@ -1,0 +1,669 @@
+GoldSent : putnextto the key the green ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue ball a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey box a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a blue box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the red ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey key the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red box the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the red ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the red box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a grey door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green key the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a red ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey box the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a green key the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red ball the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green key the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a yellow door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow ball a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a blue key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red ball a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a blue key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a green ball the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the green ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue key the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the grey key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple box the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey box a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow ball the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey key a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue key a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a yellow door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the green door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a green door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the red ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a green ball a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey ball the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a green ball a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red box a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a grey door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the grey box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the green box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a purple door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue ball the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a green door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the purple door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a blue box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red key a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the green door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green ball a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue box the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow box the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow box the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a blue ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the purple ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow box a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple ball a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red key the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red box a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a green ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a blue door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a red key the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the yellow box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a yellow box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a green box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the green box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the yellow key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a red box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the blue ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey key a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple key the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the grey ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a green door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the yellow box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the grey ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey box a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the green box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow box a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow key the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the blue ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red key the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red box a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue box the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple key the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow ball a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green key the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a green ball the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the yellow ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple box a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple key the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a blue ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey key a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the purple ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red key the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the blue box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the green box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a yellow door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a red door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a blue key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green ball the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green box a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple ball the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a yellow ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow box the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the yellow box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue box a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a green key a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the red box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green box the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue ball the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the grey door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a blue ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow ball the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the purple box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a red ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the blue door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green ball a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the yellow ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow key the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple key a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow key the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the red ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the blue door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red ball a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the purple door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the red key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a grey ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the purple box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the red door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a grey box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a purple ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the purple box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the red ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple box the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the yellow box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue key a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the purple ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box a green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue box the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a yellow box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a purple door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a grey key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a grey ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the blue door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue ball the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the red box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue ball a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey ball the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the grey door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green ball a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a red box a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the grey door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the blue key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow ball the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the grey box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a yellow key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a yellow door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the red key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a purple box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow ball a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the grey key a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple box a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the yellow key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green key a door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the purple box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green key a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green box the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a yellow ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_yellow(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a purple box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a yellow ball the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box the green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the yellow key the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_yellow(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a purple ball a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a blue box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 5 is 16.
+// Count of sentences with length 6 is 201.
+
+// Corpus size: 217
+// Maximum length: 6
+// Minimum length: 5
+// Average length: 5.926267
+
+// ---- Word-Level Stats ----
+// Count of all words: 1286
+// Count of unique tokens: 13
+// Words/Tokens count ratio: 98.923077

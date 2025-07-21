@@ -1,0 +1,193 @@
+[0.2928674897249894,0]
+door
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x207 : e|head==x207 : e|p207==obj_door(x207) : t])
+ELSE  abort
+
+[0.8089326812709061,0]
+a
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+ELSE  abort
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r : R1|x70==epsilon(r.head, r) : e|head==x70 : e])
+ELSE  abort
+
+[0.20264170208972443,0]
+green
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  put(Ty(cn>cn))
+      ttrput(R2^(R2 ++ [head==R2.head : e|p32==col_green(R2.head) : t]))
+ELSE  abort
+
+[0.21006036727350816,0]
+yellow
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  put(Ty(cn>cn))
+      ttrput(R2^(R2 ++ [head==R2.head : e|p180==col_yellow(R2.head) : t]))
+ELSE  abort
+
+[0.7114122324249844,0]
+pickup
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      ttrput(R1^(R1 ++ [e79==state_holding : es|head==e79 : es|p158==obj(e79, R1.head) : t]))
+ELSE  abort
+
+[0.6345268967699855,0]
+box
+IF    ?Ty(cn)
+THEN  ttrput([x69 : e|head==x69 : e|p69==obj_box(x69) : t])
+      put(Ty(cn))
+ELSE  abort
+
+[0.6714272430260941,0]
+grey
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  ttrput(R2^(R2 ++ [head==R2.head : e|p208==col_grey(R2.head) : t]))
+      put(Ty(cn>cn))
+ELSE  abort
+
+[0.815255542477546,0]
+the
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
+ELSE  abort
+IF    ?Ty(cn>e)
+THEN  put(Ty(cn>e))
+      ttrput(R1^[r : R1|x208==epsilon(r.head, r) : e|head==x208 : e])
+ELSE  abort
+
+[0.29752273606827623,0]
+red
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  ttrput(R2^(R2 ++ [head==R2.head : e|p120==col_red(R2.head) : t]))
+      put(Ty(cn>cn))
+ELSE  abort
+
+[0.3392188726731235,0]
+ball
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x19 : e|head==x19 : e|p19==obj_ball(x19) : t])
+ELSE  abort
+
+[0.5088029244560865,0]
+goto
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      ttrput(R1^(R1 ++ [e65==state_facing : es|head==e65 : es|p130==obj(e65, R1.head) : t]))
+ELSE  abort
+
+[0.3580166881865198,0]
+blue
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  ttrput(R2^(R2 ++ [head==R2.head : e|p34==col_blue(R2.head) : t]))
+      put(Ty(cn>cn))
+ELSE  abort
+
+[0.2484807516144004,0]
+purple
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+ELSE  abort
+IF    ?Ty(cn>cn)
+THEN  put(Ty(cn>cn))
+      ttrput(R2^(R2 ++ [head==R2.head : e|p60==col_purple(R2.head) : t]))
+ELSE  abort
+
+[0.6124744386969994,0]
+open
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      ttrput(R1^(R1 ++ [e72==state_opened : es|head==e72 : es|p144==obj(e72, R1.head) : t]))
+ELSE  abort
+
+[0.2539628487168462,0]
+key
+IF    ?Ty(cn)
+THEN  ttrput([x217 : e|head==x217 : e|p217==obj_key(x217) : t])
+      put(Ty(cn))
+ELSE  abort
+

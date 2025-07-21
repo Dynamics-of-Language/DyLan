@@ -1,0 +1,83 @@
+
+sem acc | train size: 24 | test size: 12
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  97.15 |  96.21 |  96.66 |  98.32 |  97.46 |  97.87 |
+| Top-2           |  95.99 |  95.11 |  95.53 |  94.76 |  94.12 |  94.43 |
+| Top-3           |  98.59 |  98.30 |  98.44 |  98.04 |  97.40 |  97.71 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      91.67 |       63.64 |      66.67 |       75.00 |
+| Top-2           |     100.00 |       62.50 |      91.67 |       54.55 |
+| Top-3           |     100.00 |       91.67 |      91.67 |       72.73 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+putnextto a key a blue ball
+>>> Dataset: test | Top-3 | Failed Parses:
+putnextto a key a blue ball
+>>> Dataset: test | Top-1 | Failed Parses:
+putnextto a purple key the key
+putnextto a key a blue ball
+putnextto a box the purple ball
+putnextto the purple box a box
+>>> Dataset: train | Top-1 | Failed Parses:
+putnextto the purple key the box
+putnextto the ball the purple ball
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+putnextto the box the yellow door
+putnextto the green key a door
+putnextto a purple key the key
+putnextto a box the purple ball
+putnextto the purple box a box
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+putnextto a purple key the key
+putnextto a box the purple ball
+putnextto the purple box a box
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+putnextto the box the yellow door
+putnextto the green key a door
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+putnextto a ball the green door
+putnextto a green key the door
+putnextto the red ball a door
+putnextto a ball the red door
+putnextto the box a grey door
+putnextto the red box the door
+putnextto the ball a door
+putnextto a ball a door
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+putnextto the purple key the box
+putnextto a ball the green door
+putnextto a green key the door
+putnextto the red ball a door
+putnextto a ball the red door
+putnextto the ball the purple ball
+putnextto the box a grey door
+putnextto the red box the door
+putnextto the ball a door
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+putnextto the purple key the box
+putnextto the ball the purple ball

@@ -1,0 +1,151 @@
+
+sem acc | train size: 30 | test size: 6
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |    NaN |    NaN |    NaN |    NaN |    NaN |    NaN |
+| Top-2           |    NaN |    NaN |    NaN |    NaN |    NaN |    NaN |
+| Top-3           |    NaN |    NaN |    NaN |    NaN |    NaN |    NaN |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |       0.00 |        0.00 |       0.00 |        0.00 |
+| Top-2           |       0.00 |        0.00 |       0.00 |        0.00 |
+| Top-3           |       0.00 |        0.00 |       0.00 |        0.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+putnextto the red ball a key
+putnextto a red ball the ball
+putnextto a red box the box
+putnextto a red ball the box
+putnextto the red box the key
+putnextto the red key the ball
+>>> Dataset: test | Top-3 | Failed Parses:
+putnextto the red ball a key
+putnextto a red ball the ball
+putnextto a red box the box
+putnextto a red ball the box
+putnextto the red box the key
+putnextto the red key the ball
+>>> Dataset: test | Top-1 | Failed Parses:
+putnextto the red ball a key
+putnextto a red ball the ball
+putnextto a red box the box
+putnextto a red ball the box
+putnextto the red box the key
+putnextto the red key the ball
+>>> Dataset: train | Top-1 | Failed Parses:
+putnextto a red key the box
+putnextto the red ball a ball
+putnextto the red key the box
+putnextto a red key a key
+putnextto a red key the ball
+putnextto the red box a key
+putnextto a red box the ball
+putnextto a red key the key
+putnextto the red key a ball
+putnextto a red box the key
+putnextto a red ball the key
+putnextto a red ball a ball
+putnextto the red ball a box
+putnextto the red box a ball
+putnextto the red ball the ball
+putnextto the red box the box
+putnextto the red key a key
+putnextto a red ball a box
+putnextto a red key a ball
+putnextto the red ball the key
+putnextto a red box a box
+putnextto a red box a key
+putnextto a red key a box
+putnextto the red key a box
+putnextto the red key the key
+putnextto a red box a ball
+putnextto the red box a box
+putnextto a red ball a key
+putnextto the red ball the box
+putnextto the red box the ball
+>>> Dataset: train | Top-2 | Failed Parses:
+putnextto a red key the box
+putnextto the red ball a ball
+putnextto the red key the box
+putnextto a red key a key
+putnextto a red key the ball
+putnextto the red box a key
+putnextto a red box the ball
+putnextto a red key the key
+putnextto the red key a ball
+putnextto a red box the key
+putnextto a red ball the key
+putnextto a red ball a ball
+putnextto the red ball a box
+putnextto the red box a ball
+putnextto the red ball the ball
+putnextto the red box the box
+putnextto the red key a key
+putnextto a red ball a box
+putnextto a red key a ball
+putnextto the red ball the key
+putnextto a red box a box
+putnextto a red box a key
+putnextto a red key a box
+putnextto the red key a box
+putnextto the red key the key
+putnextto a red box a ball
+putnextto the red box a box
+putnextto a red ball a key
+putnextto the red ball the box
+putnextto the red box the ball
+>>> Dataset: train | Top-3 | Failed Parses:
+putnextto a red key the box
+putnextto the red ball a ball
+putnextto the red key the box
+putnextto a red key a key
+putnextto a red key the ball
+putnextto the red box a key
+putnextto a red box the ball
+putnextto a red key the key
+putnextto the red key a ball
+putnextto a red box the key
+putnextto a red ball the key
+putnextto a red ball a ball
+putnextto the red ball a box
+putnextto the red box a ball
+putnextto the red ball the ball
+putnextto the red box the box
+putnextto the red key a key
+putnextto a red ball a box
+putnextto a red key a ball
+putnextto the red ball the key
+putnextto a red box a box
+putnextto a red box a key
+putnextto a red key a box
+putnextto the red key a box
+putnextto the red key the key
+putnextto a red box a ball
+putnextto the red box a box
+putnextto a red ball a key
+putnextto the red ball the box
+putnextto the red box the ball
+
+***** Failed Exact Matches *****
+No failed exact matches.

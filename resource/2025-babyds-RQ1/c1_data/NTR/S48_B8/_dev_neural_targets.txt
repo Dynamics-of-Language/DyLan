@@ -1,0 +1,33 @@
+goto the green key
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_key x0 t | p2 col_green x0 t | head e0 es | p3 obj e0 x0 t |
+
+pickup a box
+e0 state_holding es | x0 e | p0 epsilon x0 t | p1 obj_box x0 t | head e0 es | p2 obj e0 x0 t |
+
+pickup the purple ball
+e0 state_holding es | x0 e | p0 epsilon x0 t | p1 obj_ball x0 t | p2 col_purple x0 t | head e0 es | p3 obj e0 x0 t |
+
+pickup a yellow ball
+e0 state_holding es | x0 e | p0 epsilon x0 t | p1 obj_ball x0 t | p2 col_yellow x0 t | head e0 es | p3 obj e0 x0 t |
+
+goto the red key
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_key x0 t | p2 col_red x0 t | head e0 es | p3 obj e0 x0 t |
+
+goto a yellow key
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_key x0 t | p2 col_yellow x0 t | head e0 es | p3 obj e0 x0 t |
+
+goto the red door
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_door x0 t | p2 col_red x0 t | head e0 es | p3 obj e0 x0 t |
+
+goto a grey ball
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_ball x0 t | p2 col_grey x0 t | head e0 es | p3 obj e0 x0 t |
+
+goto a key
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_key x0 t | head e0 es | p2 obj e0 x0 t |
+
+pickup the purple box
+e0 state_holding es | x0 e | p0 epsilon x0 t | p1 obj_box x0 t | p2 col_purple x0 t | head e0 es | p3 obj e0 x0 t |
+
+goto a blue key
+e0 state_facing es | x0 e | p0 epsilon x0 t | p1 obj_key x0 t | p2 col_blue x0 t | head e0 es | p3 obj e0 x0 t |
+

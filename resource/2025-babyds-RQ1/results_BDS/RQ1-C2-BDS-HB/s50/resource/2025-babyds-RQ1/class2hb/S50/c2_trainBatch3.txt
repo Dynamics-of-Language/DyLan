@@ -1,0 +1,54 @@
+GoldSent : putnextto a key the red box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a grey box the box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball a blue ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_blue(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a key the red key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_red(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the blue box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the key the grey key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a blue key a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_blue(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto a box a purple key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_purple(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball the green key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_green(x2) : t|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the box the grey ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+GoldSent : putnextto the green key the ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p2==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 5 is 1.
+// Count of sentences with length 6 is 11.
+
+// Corpus size: 12
+// Maximum length: 6
+// Minimum length: 5
+// Average length: 5.916667
+
+// ---- Word-Level Stats ----
+// Count of all words: 71
+// Count of unique tokens: 12
+// Words/Tokens count ratio: 5.916667
