@@ -1,0 +1,9 @@
+[r2 : [p3==(head subset reftime) : t|p1==(reftime = now) : t|e5 : es|reftime : es|head : e5]
+e4==(eps, r2.head, r2) : es
+x4==mary : e
+pred2==like : e>(es>t)
+p7==event(pred2, e4) : t
+p8==subj(pred2, x2) : t
+p9==obj(pred2, x4) : t
+x2==john : e
+head : x2]
