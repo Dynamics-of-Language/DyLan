@@ -6,8 +6,10 @@ import java.awt.Graphics2D;
 import java.util.*;
 import java.util.regex.Matcher;
 
+import org.apache.jena.sparql.core.Var;
 import org.apache.log4j.Logger;
 
+import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.action.meta.Meta;
@@ -15,8 +17,10 @@ import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
+import qmul.ds.learn.RecordTypeCorpus;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
+import qmul.ds.tree.Node;
 import qmul.ds.tree.NodeAddress;
 import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;
@@ -2419,6 +2423,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		TreeFilter filter = new TreeFilter(this);  // AA TODO currently haven't investigated how the filtering works...
 		List<DSType> list = new ArrayList<DSType>();  // AA: A list of DSTypes as starting templates to be abstracted/extracted
 		// out of the record type. This is built based on a given DSType.
+		logger.warn("IMPORTANT: If you are playing with the templates here in getFilteredAbstractions (maybe for extending induction)," +
+				"don't forget to modify the two typeMaps (for underspecification?) in class Tree to stay consistent." +
+				"And if this warning saved you, you are welcome :)");
 		if (type.equals(DSType.t)) {
 			list.add(DSType.parse("e>(e>(e>t))"));
 			logger.warn("AA has REMOVED es>(e>(e>t)) here! Not verified by AE. For BabyDS.");
@@ -2525,6 +2532,33 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			}
 		}
 		logger.debug(ANSI_CYAN + "Final number of tree abstractions with max num nodes: " + MaximalFilteredAbstractions.size() + ANSI_RESET);
+
+		logger.warn("BIG HACK BY AA here to match the R1 R2 order with typeMaps in class Tree.");
+		// It mainly has to be fixed in the code, but no time now... Also, it is not generalisable to R3 R2 R1.
+		for (Tree tree: MaximalFilteredAbstractions) {
+			for (Node node: tree.getNodes()) {
+				Formula formula = node.getFormula();
+				if (formula.toString().startsWith("R2^R1")) {
+					// Works for no adj. But not yet for one adj.
+					TTRLambdaAbstract lambdaAbstract = (TTRLambdaAbstract) formula;
+					Variable vOuter = lambdaAbstract.getVariable();
+					TTRFormula coreOuter = lambdaAbstract.getCore();
+					TTRInfixExpression expression = (TTRInfixExpression)coreOuter;
+					Variable vInner = (Variable)((TTRInfixExpression)expression.getArg2()).getArg1();
+					if (vInner.getName().equals(vOuter.getName())) {
+						// skip:
+						logger.debug("Skipping swapping of " + vInner + " and " + vOuter + " as they are the same variable.");
+						continue;
+					}
+					Formula coreInner = ((TTRInfixExpression)expression.getArg2()).getArg2();
+					TTRFormula newInnerCore = new TTRInfixExpression(TTRInfixExpression.ASYM_MERGE_FUNCTOR, vOuter, coreInner);
+					TTRFormula newOuterCore = new TTRInfixExpression(TTRInfixExpression.ASYM_MERGE_FUNCTOR, vInner, newInnerCore);
+					TTRLambdaAbstract swapped = new TTRLambdaAbstract(vOuter, new TTRLambdaAbstract(vInner, newOuterCore));
+					logger.debug("Swapped formula: " + swapped);
+					node.setFormula(swapped);
+				}
+			}
+		}
 		return MaximalFilteredAbstractions;
 	}
 
@@ -3400,6 +3434,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	 * Also, Some of these operations I'm doing here could have/deserve their own methods imo!
 	 * @author: AA
 	 * @return a flattened version of the record type (following the rules above).
+	 * TODO does not add head, have to!
 	 */
 	public TTRRecordType unEmbed() {
 		logger.info("UnEmbedding rt: " + this);
@@ -3425,7 +3460,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 						myVar = ff.getVariables().iterator().next(); // The "x" I am looking for.
 					}
 				}
-				TTRField epsilonTerm = this.getProperDependents(f).getFirst();
+				TTRField epsilonTerm = this.getProperDependents(f).get(0);
 				Formula core = epsilonTerm.getPredicate();
 				// Now have to build my own field in the following shape: p_i=core(head_variable):t)
 				TTRField myEpsilonField = TTRField.parse("p" + lastIndexOfPredicateMeta + "==" + core + "(" + myVar + ")" + ":t");
@@ -3442,13 +3477,11 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 					// AA: I don't know how efficient I'm handling this, but at least it is working correctly.
 					TTRLabel oldLabel = f.getLabel();
 					Variable v = oldLabel.getVariables().iterator().next();
-//					System.out.println(v);
-//					TTRLabel newLabel = null;
-					String l = ((PredicateArgumentFormula) f.getType()).arguments.getLast().toString();
+					ArrayList<Formula> arguments = ((PredicateArgumentFormula) f.getType()).arguments;
+					String l = arguments.get(arguments.size()-1).toString();
 					TTRField fff = ((TTRRecordType) this.get(new TTRLabel(l))).getHeadField();
 					TTRLabel newLabel = fff.getLabel();
 					Variable v2 = newLabel.getVariables().iterator().next();
-//					System.out.println(v2);
 					toReplaceMap.put(v, v2);
 				} else {
 					try {
@@ -3578,7 +3611,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				} else {
 					if (!result.hasField(dep)) {
 						result.addField(dep);
-						logger.debug("Added dependent " + dep + " (not a predicate) to the embedded RT.");
+						logger.debug("Added dependent " + dep + " (not a predicate) to the result.");
 						logger.trace("Result so far: " + result);
 						logger.trace("Current embedded RT: " + embeddedRT);
 					} else {
@@ -3590,9 +3623,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			// check if it is empty or not. Add f itself if necessary, and make it head. AND ADD IT AS FIELD
 			embeddedRT.addField(f);
 			logger.debug("Added field " + f + " to the embedded RT.");
+			int xIdx;
+			String labelStr = f.getLabel().toString();
+			if (labelStr.startsWith("x")) {
+				xIdx = Integer.parseInt(labelStr.substring(1));
+			} else {
+				xIdx = maxX;
+				logger.warn("Maybe this is not correct: ");
+			}
 			logger.trace("Result so far: " + result);
 			logger.trace("Current embedded RT: " + embeddedRT);
-			String embHead = "head==x"+maxX+":e";
+			String embHead = "head==x"+xIdx+":e";
 			embeddedRT.addField(TTRField.parse(embHead));
 			logger.debug("Added embedded RT head: " + embHead);
 			logger.trace("Result so far: " + result);
@@ -3755,7 +3796,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				logger.debug("Result so far is: " + result);
 				String arg1;
 				if (!f.getVariables().isEmpty()) {
-					arg1 = p.getArguments().getFirst().toString();
+					arg1 = p.getArguments().get(0).toString();
 				} else {
 					arg1 = fillerTag;
 				}
@@ -3821,7 +3862,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 				logger.debug("Result so far is: " + result);
 				String arg1;
 				if (!f.getVariables().isEmpty()) {
-					arg1 = p.getArguments().getFirst().toString();
+					arg1 = p.getArguments().get(0).toString();
 				} else {
 					arg1 = "";  //TODO
 				}
@@ -3856,7 +3897,9 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		logger.info("The final nn representation is:");
 		logger.info(result);
 		String resultAsString = "";
+//		System.out.println(ANSI_RED+"FIX IT HERE"+ANSI_RESET);
 		for (String s: result) {
+//			System.out.println(ANSI_RED+"FIX IT HERE"+ANSI_RESET);
 //			resultAsString += "'" + s + "'" + ", ";
 			resultAsString += s + " ";
 		}
@@ -3867,7 +3910,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 
-		/**
+	/**
 	 * Overloads the method below with default special character "".
 	 * @return
 	 */
@@ -4041,6 +4084,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 
 	/**
+	 * Converts a single string to a TTR-RT.
 	 * Based on a field separator
 	 * fs stands for field separator, and not fucks sake.
 	 * @param nnRepr
@@ -4079,7 +4123,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 							logger.debug("Successfully added field: " + newfield);
 							logger.trace("Result so far: " + result);
 						} catch (Exception e) {
-							logger.error(ANSI_RED + "Couldn't create a field out of: " + ANSI_RESET + prev_elements );
+							logger.error(ANSI_RED + "Field already exists or couldn't create a field out of: " + ANSI_RESET + prev_elements);
 							logger.error(e.getMessage());
 							parsed = false;
 						}
@@ -4150,6 +4194,8 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 			}
 		}
 		//TODO HAVE TO CHECK the validity of the RT -> the ones that are not added, how bad do they affect the whole RT?
+		logger.info("Final RT is: " + result);
+//		System.out.println(result.reEmbed());
 		return new Pair<>(result, parsed);
 	}
 
@@ -4191,7 +4237,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 
 	public static void pause() {
-		System.out.println("Press enter to continue...");
+		System.out.println("TTR-RT PAUSE: Press enter to continue...");
 		try {
 			System.in.read();
 		} catch (Exception e) {
@@ -4254,16 +4300,16 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		// Subj-0, Obj-1: Pickup a box
 		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
 
-		// Subj-0, Obj-2: Pickup a red box
-		TTRRecordType b2 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p2==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
-
 		// go to a key
-		TTRRecordType b4 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]");
+		TTRRecordType bds_c1_0 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]");
+		// Subj-0, Obj-2: Pickup a red box
+		TTRRecordType bds_c1_1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p2==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
 		// Subj-0, Obj-1, ind_obj-1: putnextto the key the ball
-		TTRRecordType c1 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
+		TTRRecordType bds_c2_00 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
 		// Subj-0, Obj-1, ind_obj-2: putnextto the key the red ball
-		TTRRecordType c2 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t|p10==col_red(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
-
+		TTRRecordType bds_c2_01 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t|p10==col_red(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
+		TTRRecordType bds_c2_10 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t|p14==col_red(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
+		TTRRecordType bds_c2_11 = TTRRecordType.parse("[r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t|p14==col_red(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_ball(x3) : t|p15==col_blue(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p10==obj(e1, x2) : t|p20==ind_obj(e1, x4) : t]");
 
 		String predTest = "['e0', 'state_holding', 'es', 'x0', 'e', 'p2', 'col_grey', 't', 't', 'p1', 'obj_door', 'x0', 't', 'p0', 'epsilon', 'x0', 't', 'p3', 'obj', 'e0', 'x0', 't']";
 		String predTestSep = "['e0', 'state_holding', 'es', '|', 'x0', 'e', '|', 'p2', 'col_grey', 't', 't', '|', 'p1', 'obj_door', 'x0', 't', '|', 'p0', 'epsilon', 'x0', 't', '|', 'p3', 'obj', 'e0', 'x0', 't', '|']";
@@ -4271,10 +4317,14 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 //		// testing some new BabyDS methods:
 //		TTRRecordType u = c2.unEmbed();
-//		System.out.println("Original RT: " + c2);
+//		System.out.println("Original RT: \n" + c2);
 //		System.out.println("Un-embedded RT: " + u);
 //		TTRRecordType embU = u.reEmbed();
-//		System.out.println("Re-embedded RT: " + embU);
+//		System.out.println("Re-embedded RT: \n" + embU);
+//		System.out.println(c2);
+//		System.out.println(embU);
+//		System.out.println(embU.subsumes(c2));
+//		System.out.println(c2.subsumes(embU));
 
 //		System.out.println(nn2RTfs(str2listPreds(predTestSep)));
 //		System.out.println(str2list(predTest));
@@ -4288,7 +4338,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 
 		//Testing getAbstractions
-//		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = c3.getAbstractions(DSType.t, 1);
+//		List<Pair<TTRRecordType, TTRLambdaAbstract>> abstractions = b2.getAbstractions(DSType.t, 1);
 //		System.out.println("----------------------------------");
 //		System.out.println("Number of abstractions received: " + abstractions.size());
 //		for(Pair<TTRRecordType, TTRLambdaAbstract> pair:abstractions) {
@@ -4298,24 +4348,22 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 //		}
 
 		// Testing getFilteredAbstractions
-//		List<Tree> trees = tp.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
+//		List<Tree> trees = b2.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
+		List<Tree> trees = bds_c2_01.getFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
+		List<Tree> treesWO = bds_c2_01.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
 
-//		List<Tree> trees = c3.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
-//		List<Tree> treesWO = c3.getFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
-		List<Tree> treesWO = c1.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
-//
-//
-//		int i = 1;
-//		String s = "Got " + trees.size() + " abstractions FILTERING FALSE";
-//		System.out.println(new String(new char[s.length()]).replace("\0", "="));
-//		System.out.println(s);
-//		System.out.println(new String(new char[s.length()]).replace("\0", "="));
-//		for(Tree abs: trees) {
-//			System.out.println("<Abstraction " + i + ">");
-//			System.out.println(abs);
-//			i++;
-//			System.out.println(" ------------ ");
-//		}
+
+		int i = 1;
+		String s = "Got " + trees.size() + " abstractions FILTERING TRUE";
+		System.out.println(new String(new char[s.length()]).replace("\0", "="));
+		System.out.println(s);
+		System.out.println(new String(new char[s.length()]).replace("\0", "="));
+		for(Tree abs: trees) {
+			System.out.println("<Abstraction " + i + ">");
+			System.out.println(abs);
+			i++;
+			System.out.println(" ------------ ");
+		}
 
 		int i2 = 1;
 		String s2 = "Got " + treesWO.size() + " abstractions FILTERING TRUE";
@@ -4330,6 +4378,17 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 		}
 
 //		System.out.println(b1.toPythonDictString());
+
+		// NN to RT and RT to NN tests:
+//		String first = "[e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p5==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]";
+//		String second = "[r1 : [x1 : e|head==x1 : e|p2==col_grey(x1) : t|p1==obj_door(x1) : t]|r0 : [x0 : e|head==x0 : e|p5==obj_box(x0) : t]|x2==iota(r0.head, r0) : e|e0==state_beside : es|head==e0 : es|p3==obj(e0, x2) : t|x4==iota(r1.head, r1) : e|p4==ind_obj(e0, x4) : t]";
+//		//		String second = "[r1 : [x0 : e|head==x0 : e|p1==obj_key(x0) : t]|r0 : [x1 : e|head==x1 : e|p3==obj_ball(x1) : t|p4==col_red(x1) : t]|x2==iota(r0.head, r0) : e|e0==state_beside : es|head==e0 : es|p6==ind_obj(e0, x2) : t|x4==iota(r1.head, r1) : e|p5==obj(e0, x4) : t]";
+////		String first = "[e1==state_beside : es|r2 : [x3 : e|p10==col_red(x3) : t|p3==obj_ball(x3) : t|head==x3 : e]|r1 : [x1 : e|p1==obj_key(x1) : t|head==x1 : e]|head==e1 : es|x4==iota(r2.head, r2) : e|x2==iota(r1.head, r1) : e|p20==ind_obj(e1, x4) : t|p11==obj(e1, x2) : t]";
+//		TTRRecordType firstRT = TTRRecordType.parse(first);
+//		TTRRecordType secRT = TTRRecordType.parse(second);
+//		System.out.println(firstRT.subsumes(secRT));
+//		System.out.println(secRT.subsumes(firstRT));
+//		System.out.println(firstRT.subsumes(secRT) && secRT.subsumes(firstRT));
 
 	}
 

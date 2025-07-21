@@ -250,4 +250,8 @@ public class DAGEdge implements Comparable<DAGEdge> {
 	}
 	
 
+	public long getId() {
+		return id;
+	}
+
 }

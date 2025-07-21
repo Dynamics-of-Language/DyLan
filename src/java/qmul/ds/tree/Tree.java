@@ -703,6 +703,7 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		map.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
 		// map.put(DSType.parse("e>(e>(e>t))"), Formula
 		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		logger.warn("AA has removed es>(e>(e>t)) here. NOT verified by AE.");
 		map.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
 		map.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
 		// for underspec adjunct e>t, see below, special case
@@ -771,10 +772,12 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 		typeMap.put(DSType.parse("es>cnev"), Formula.create("R1^(R1 ++ [head==R1.head:es])"));  //TODO what is cnev?
 		typeMap.put(DSType.parse("e>cn"), Formula.create("R1^(R1 ++ [head==R1.head:e|p:t])"));
 		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [head:es])"));  // "head:es" was added to get the NLG working.
+		logger.warn("head:es was added here to get the NLG working.");
 //		typeMap.put(DSType.parse("e>t"), Formula.create("R1^(R1 ++ [])"));
 		typeMap.put(DSType.parse("e>(e>t)"), Formula.create("R2^R1^(R1 ++ (R2 ++ [head:es]))"));
 		// typeMap.put(DSType.parse("e>(e>(e>t))"), Formula
 		// .create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
+//		logger.warn("AA has removed es>(e>(e>t)) here. NOT verified by AE.");
 		typeMap.put(DSType.parse("es>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
 		typeMap.put(DSType.parse("e>(e>(e>t))"), Formula.create("R3^R2^R1^(R1 ++ (R2 ++ (R3 ++ [head:es])))"));
 		// for underspec adjunct e>t, see below, special case
@@ -1047,10 +1050,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 			// unfixed nodes
 			if (unfixedReduced != null && localUnfixedReduced != null)
 				rootReduced = rootReduced.conjoin(unfixedReduced.removeHead().conjoin(localUnfixedReduced.removeHead()));
-			else if (unfixedReduced != null && localUnfixedReduced == null)
-				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced);  //.removeHead() was removed by AE to get the NLG working.
-			else if (localUnfixedReduced != null)
+			else if (unfixedReduced != null && localUnfixedReduced == null) {
+				rootReduced = unfixedFunctor ? unfixedReduced : rootReduced.conjoin(unfixedReduced); //.removeHead() was removed by AE to get the NLG working.
+				logger.warn(".removeHead() was removed here by AE to get the NLG working.");
+			}
+			else if (localUnfixedReduced != null) {
 				rootReduced = unfixedFunctor ? localUnfixedReduced : rootReduced.conjoin(localUnfixedReduced);  //.removeHead() was removed by AE to get the NLG working.
+
+			logger.warn(".removeHead() was removed here by AE to get the NLG working.");}
 		}
 		
 		if (!getDaughters(root, "L").isEmpty()) {
@@ -1174,6 +1181,14 @@ public class Tree extends TreeMap<NodeAddress, Node> implements Cloneable, Seria
 	 */
 	public int getNumNodes() {
 		return values().size();
+	}
+
+	public static Tree fromString(String treeStr) {
+		// Basic implementation - this should be enhanced based on your tree format
+		Tree tree = new Tree();
+		// Parse the string representation and build the tree
+		// This is a placeholder - implement actual parsing logic
+		return tree;
 	}
 
 }

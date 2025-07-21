@@ -73,7 +73,10 @@ public class DAGTupleSet extends ArrayList<ParserTuple> {
 
 	public String toString() {
 		return super.toString();
+	}
 
+	public Long getId() {
+		return id;
 	}
 
 }

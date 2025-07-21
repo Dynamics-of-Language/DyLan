@@ -1,7 +1,6 @@
 package qmul.ds.learn;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -295,7 +294,7 @@ public class Evaluation {
 								logger.debug("Failed partial subsumption for: " + otherField);
 								logger.debug("map is now:" + map);
 							}
-							// pause();pause();
+							//pause();pause();
 						} else if (last.getType() instanceof TTRRecordType
 								&& otherField.getType() instanceof TTRRecordType) {
 							logger.debug(last + " and " + otherField + " both RT types");
@@ -326,7 +325,7 @@ public class Evaluation {
 	}
 
 	/**
-	 * Total number of fields for a TTRrecord type, including the embedded ones
+	 * Total number of fields for a TTR record type, including the embedded ones
 	 * 
 	 * @param ttr
 	 * @return
@@ -356,7 +355,7 @@ public class Evaluation {
 			return 0;
 		HashMap<Variable, Variable> mapping = maximalMapping(hypttr, goalttr, new HashMap<Variable, Variable>());
 		logger.debug("above is a mapping for \n" + hypttr + " and gold \n" + goalttr);
-		// pause();pause();pause();
+		//pause();pause();pause();
 
 		HashMap<Variable, Float> fieldScoreMap = new HashMap<Variable, Float>();
 		float totalMappedNodes = 0;
@@ -500,7 +499,7 @@ public class Evaluation {
 	}
 
 	public static void pause() {
-		System.out.println("Press enter to continue...");
+		System.out.println("Class Evaluation pause - Press enter to continue...");
 		try {
 			System.in.read();
 		} catch (Exception e) {
@@ -640,6 +639,43 @@ public class Evaluation {
 		logger.debug("f-score = " + res.getFScore());
 		return res;
 	}
+
+
+	/**
+	 * Finds the maximal overlapping prediction given a gold record type.
+	 * This is, in the best case, an EM (two-way subsumption), or just the one with max f1-score.
+	 * @param predictions List of predicted record types
+	 * @param goldRT The gold record type to compare against
+	 * @return a Pair containing the EvaluationResult and the TTRRecordType of the best matching prediction.
+	 */
+	public TTRRecordType findBestInterpretation(List<TTRRecordType> predictions, TTRRecordType goldRT) {
+		logger.info("Finding best interpretation given the gold RT: " + goldRT);
+		logger.info("Checking against " +predictions.size()+ " predictions...");
+		EvaluationResult bestEval = null;
+		TTRRecordType bestPred = null;
+		for (TTRRecordType predRT : predictions) {
+			logger.info("Checking prediction: " + predRT);
+			if (predRT.subsumes(goldRT) && goldRT.subsumes(predRT)) {
+				// perfect match, return it
+				bestPred = predRT;
+				logger.info("Found perfect match: " + predRT);
+				return bestPred;
+			}
+		}
+		// no perfect match, find the one with the best f-score
+		for (TTRRecordType predRT : predictions) {
+			EvaluationResult eval = precisionRecall(predRT, goldRT);
+			if (bestEval == null || eval.getFScore() > bestEval.getFScore()) {
+				bestEval = eval;
+				bestPred = predRT;
+				logger.info("New best prediction: " + predRT + " with f-score: " + eval.getFScore());
+			} else {
+				logger.info("Skipping prediction: " + predRT + " with f-score: " + eval.getFScore());
+			}
+		}
+		return bestPred;
+	}
+
 
 	/**
 	 * @param args

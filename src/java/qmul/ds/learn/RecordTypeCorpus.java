@@ -42,6 +42,23 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 		this.corpusName = corpusName;
 		sentenceIndices = new ArrayList<String>();
 	}
+
+
+		/**
+	 * Added by Arash A. for BabyDS
+	 * @param corpusName the name of the corpus (for reading and writing purposes, I hope)
+	 * @param corpusPath the path to the corpus file
+	 */
+	public RecordTypeCorpus(String corpusName, String corpusPath) {
+		super();
+		this.corpusName = corpusName;
+		sentenceIndices = new ArrayList<String>();
+		try {
+			loadCorpus(new File(corpusPath));
+		} catch (IOException e) {
+			logger.error("Couldn't load corpus from " + corpusPath + "!");
+		}	
+	}
 	
 	
 	public void addIndex(String index){
@@ -90,6 +107,7 @@ public class RecordTypeCorpus extends Corpus<TTRRecordType> implements Serializa
 		logger.info("Successfully loaded TTR corpus with " + i + " entries.");
 	}
 
+	
 	/**
 	 * Saves the corpus to a file.
 	 * @param fileDir The directory to save the corpus to.

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EvalResult {
-        private static final Logger logger = Logger.getLogger(EvalResult.class);
+    private static final Logger logger = Logger.getLogger(EvalResult.class);
 
     private final HashMap<Integer, HashMap<String, HashMap<String, Double>>> semanticAccuracy;  // Description: top-n -> dataset -> metric -> value
     private final HashMap<Integer, HashMap<String, ArrayList<Double>>> parsingCoverage;  // Description: top-n -> dataset -> (coverage, exact match)
@@ -29,7 +29,6 @@ public class EvalResult {
         this.failedExactMatches = new HashMap<>();
         this.datasetNames = new ArrayList<>();
         this.datasetSizes = new ArrayList<>();
-//        this.metadata = "";
     }
 
 
@@ -40,7 +39,6 @@ public class EvalResult {
         this.failedExactMatches = new HashMap<>();
         this.datasetNames = new ArrayList<>();
         this.datasetSizes = new ArrayList<>();
-//        this.metadata = "";
     }
 
 
@@ -60,6 +58,14 @@ public class EvalResult {
 
     public double getTestAccuracy(int n, String metric) {
         return this.semanticAccuracy.get(n).get("test").get(metric);
+    }
+
+    public double getTestCoverage(int n) {
+        return this.parsingCoverage.get(n).get("test").get(0);
+    }
+
+    public double getTestEM(int n) {
+        return this.parsingCoverage.get(n).get("test").get(1);
     }
 
 
@@ -125,9 +131,9 @@ public class EvalResult {
         String leftAlignFormat = "| %-15s | %6.2f | %6.2f | %6.2f | %6.2f | %6.2f | %6.2f |%n";
         String rowSeparator = "+-----------------+--------+--------+--------+--------+--------+--------+";
         if (!datasetNames.isEmpty())
-            info += " | training set name: " + datasetNames.getFirst() + " | testing set name: " + datasetNames.getLast();
+            info += " | training set name: " + datasetNames.get(0) + " | testing set name: " + datasetNames.get(1);
         if (!datasetSizes.isEmpty())
-            info += " | train size: " + datasetSizes.getFirst() + " | test size: " + datasetSizes.getLast();
+            info += " | train size: " + datasetSizes.get(0) + " | test size: " + datasetSizes.get(1);//datasetNames.get(datasetNames.size()-1);
 //        if (!info.isEmpty())
         semAccResults += "\n" + info + "\n";
         semAccResults += "\n====================| Semantic Accuracy Results |====================\n";
@@ -254,19 +260,19 @@ public class EvalResult {
         for (int topN : semanticAccuracy.keySet()) {
             for (String dataset : semanticAccuracy.get(topN).keySet()) {
                 HashMap<String, Double> scores = semanticAccuracy.get(topN).get(dataset);
-                    Double coverage = parsingCoverage.get(topN).get(dataset).getFirst();
-                    Double em = parsingCoverage.get(topN).get(dataset).getLast();
+                    Double coverage = parsingCoverage.get(topN).get(dataset).get(0);
+                    Double em = parsingCoverage.get(topN).get(dataset).get(parsingCoverage.get(topN).get(dataset).size()-1);
                     String trainName = "None";
                     String testName = "None";
                     if (!datasetNames.isEmpty()) {
-                        trainName = this.datasetNames.getFirst();
-                        testName = this.datasetNames.getLast();
+                        trainName = this.datasetNames.get(0);
+                        testName = this.datasetNames.get(datasetNames.size()-1);
                     }
                     int trainSize = -1;
                     int testSize = -1;
                     if (!datasetSizes.isEmpty()) {
-                        trainSize = this.datasetSizes.getFirst();
-                        testSize = this.datasetSizes.getLast();
+                        trainSize = this.datasetSizes.get(0);
+                        testSize = this.datasetSizes.get(datasetSizes.size()-1);
                     }
                     sb.append(topN).append("\t")
                             .append(dataset).append("\t")

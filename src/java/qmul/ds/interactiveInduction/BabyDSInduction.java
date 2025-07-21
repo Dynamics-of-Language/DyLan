@@ -9,8 +9,13 @@ import qmul.ds.InteractiveContextParser;
 import qmul.ds.Utterance;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.learn.Evaluation;
+
 import qmul.ds.learn.RecordTypeCorpus;
 import qmul.ds.learn.TTRWordLearner;
+import qmul.ds.learn.WordHypothesisBase;
+import static qmul.ds.learn.WordHypothesisBase.compareHypothesisBases;
+
+
 
 import java.io.File;
 import java.io.IOException;
@@ -38,15 +43,23 @@ public class BabyDSInduction {
     public static final String ANSI_RED = "\u001B[31m";
 
     static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
-    static final String modelPath = "resource\\2025-babyds-RQ1\\class2\\smol48Par\\".replace("\\", File.separator);  //the dir that works!
-    static final String DATASET_NAME = "smol48";
-    static final String NN_FOLDER_NAME = "nn_data";  //TODO add comment on what this is used for
+//    static final String seedGrammarPath = "resource\\2023-english-ttr-induction-seed\\".replace("\\", File.separator); // The dir that works!
 
-    public static final int SEED = 45; // Set a constant seed for reproducibility
+//    static final String modelPath = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);  //the dir that works!
+    // static final String modelPath = "resource\\2025-babyds-RQ1\\class1smol\\".replace("\\", File.separator);  //the dir that works!
+    static final String modelPath = "resource\\2025-babyds-RQ1\\class2hbsmoltest\\".replace("\\", File.separator);  //the dir that works!
+     static final String c2full = "resource\\2025-babyds-RQ1\\class2full\\".replace("\\", File.separator);  //the dir that works!
+    static final String BDS_RQ1_CLASS2_PATH = "resource\\2025-babyds-RQ1\\c2-s47-debug\\".replace("\\", File.separator);
+    static final String RQ1_C2_NTR_PATH = "resource\\2025-babyds-RQ1\\c2_ntr_data_newseed\\".replace("\\", File.separator);
+
+    static final String DATASET_NAME = "oat";
+//    static final String NN_FOLDER_NAME = "nn_data";  //TODO add comment on what this is used for
+
+    public static final int SEED = 50; // Set a constant seed for reproducibility
     public static final int TOP_N = 3;  // topN learned actions to evaluate
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
-    public static final double INIT_BATCH_RATIO = 0.1;  // Size of the initial data batch for evaluation - used in prepare_batch().
-    public static final double INC_BATCH_RATIO = 0.1; // Size of the incremental data batches for evaluation - used in prepare_batch().
+    public static final double INIT_BATCH_RATIO = 0.05;  // Size of the initial data batch for evaluation - used in prepare_batch().
+    public static final double INC_BATCH_RATIO = 0.05; // Size of the incremental data batches for evaluation - used in prepare_batch().
     private static final int FOLDS = 0;  // Number of folds for k-fold cross-validation. Use 0 for train-test split.
     public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
     private static final boolean PRINT_DIAG = true;  // Print failed parses and exact matches (for each top-n and dataset) if true.
@@ -55,7 +68,8 @@ public class BabyDSInduction {
     // Two hashmaps for diagnostics, one for failed parses, and one for failed exact matches, for each topN and dataset.
     // Helps to see which sentences are not parsed, and which ones are parsed but not exactly matched, and this makes
     // "mis-learned" patterns more visible.
-    // TODO test EvalResult class usage here, and remove all of these.
+
+    // TODO EvalResult is taking care of the below now, and these are left from the past. To be removed.
     HashMap<Pair<String, Integer> , List<String>> failedParses = new HashMap<>();
     HashMap<Pair<String, Integer> , List<String>> failedExactMatches = new HashMap<>();
 
@@ -69,7 +83,7 @@ public class BabyDSInduction {
         }
     }
 
-      BabyDSInduction () { //todo improve
+    BabyDSInduction () { //todo improve
         logger.warn("Make sure (at least in IntelliJ) your working directory is set to /DyLan to prevent errors with dirs.");
     }
 
@@ -94,8 +108,14 @@ public class BabyDSInduction {
      * 4. Writes the calculated results to file (both in shape of tables, and a tsv file).
      * 4. Returns the results (see EvalResult class).
      * NOTE: assumes that model and dataset are in the same directory.
+     * @param kfcv The number of folds for k-fold cross-validation. If 0, a train-test split is performed.
+     * @param modelAddress The address of the model directory.
+     * @param datasetFileName The name of the dataset file (for both training and testing sets).
+     * @param testSetSuffix The suffix for the test set file name. Mainly used in Experiments for generalisation and forgetting tests.
+     * @param topN The top-N actions/models to evaluate.
+     * @return An EvalResult object containing the evaluation results.
      */
-    public EvalResult evaluate_model(int kfcv, String modelAddress, String datasetFileName, String datasetNameAttachment, int topN) {
+    public EvalResult evaluate_model(int kfcv, String modelAddress, String datasetFileName, String testSetSuffix, int topN) {
         logger.info("Evaluating BabyDS model...");
 
         EvalResult evalResult = new EvalResult();
@@ -105,11 +125,11 @@ public class BabyDSInduction {
         HashMap<Integer, HashMap<String, HashMap<String, Double>>> semanticAccuracy = new HashMap<>();
         HashMap<Integer, HashMap<String, ArrayList<Double>>> parsingCoverage = new HashMap<>();  // Should have used double[] instead of ArrayList<Double>... Anyways.
         Evaluation eval = new Evaluation();  // AA: For semantic accuracy - based on Julian's code.
-        for (int n = 1; n <= topN; n++) {
+        for (int n = 1; n <= topN; n++) {  //TODO SHOULD be made parallel
             logger.info("Loading parser with top-" + n + " learned actions...");
             InteractiveContextParser parser;
             parser = new InteractiveContextParser(modelAddress, n);
-            File[] train_test_files = get_corpus_files(kfcv, modelAddress, datasetFileName, datasetNameAttachment); //todo maybe remove attachment thingy?
+            File[] train_test_files = get_corpus_files(kfcv, modelAddress, datasetFileName, testSetSuffix);
             //todo assert that this is size=2 (one train, and one test)
             //todo I'm doing sth potentially unclean here, have to double check...
             for (int i = 0; i < train_test_files.length; i++) {
@@ -133,57 +153,59 @@ public class BabyDSInduction {
                     parser.init();  // Restarts parser.
                     Sentence<Word> sentence = pair.first();
                     TTRRecordType goldSem = pair.second();
-                    boolean parsed = parser.parseUtterance(new Utterance(sentence));
-                    if (parsed) {
-                        List<TTRRecordType> allSemantics = new ArrayList<>();
-                        logger.debug("With top-" + n + " actions parsed: sentence: " + sentence);
-                        logger.debug("Gold semantics: " + goldSem);
-                        TTRRecordType parsedSem = (TTRRecordType) parser.getState().getCurrentTuple().getSemantics();
-                        allSemantics.add(parsedSem);
-                        logger.debug("Looking for more possible semantics...");  // Because of the ambiguity caused by computational actions.
-                        int parseIdx = 0;
-                        while (true) {  // Steps through all different semantic interpretations.
-                            try {
-                                if (!parser.parse()) {  // Check if parsing should continue
-                                break;
+                    try {
+                        boolean parsed = parser.parseUtterance(new Utterance(sentence));
+                        if (parsed) {
+                            List<TTRRecordType> allSemantics = new ArrayList<>();
+                            logger.debug("With top-" + n + " actions parsed: sentence: " + sentence);
+                            logger.debug("Gold semantics: " + goldSem);
+                            TTRRecordType parsedSem = (TTRRecordType) parser.getState().getCurrentTuple().getSemantics();
+                            allSemantics.add(parsedSem);
+                            logger.debug("Looking for more possible semantics...");  // Because of the ambiguity caused by computational actions.
+                            int parseIdx = 0;
+                            while (true) {  // Steps through all different semantic interpretations.
+                                try {
+                                    if (!parser.parse()) {  // Check if parsing should continue
+                                        break;
+                                    }
+
+                                    logger.trace(ANSI_YELLOW + parseIdx + "- other semantics: " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
+                                    TTRRecordType newSem = (TTRRecordType) parser.getState().getCurrentTuple().getSemantics();
+                                    parseIdx++;
+                                    if (!allSemantics.contains(newSem)) {
+                                        allSemantics.add(newSem);
+                                    }
+                                } catch (Exception e) {
+                                    logger.warn(ANSI_RED + "Sem is probs DisjunctiveType? (or could be other problems): " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
+                                    break;
                                 }
-
-                                logger.trace(ANSI_YELLOW + parseIdx + "- other semantics: " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
-                                TTRRecordType newSem = (TTRRecordType) parser.getState().getCurrentTuple().getSemantics();
-                                parseIdx++;
-                                if (!allSemantics.contains(newSem)) {
-                                    allSemantics.add(newSem);
-                                }
-                            } catch (Exception e) {
-                                logger.warn(ANSI_RED + "Sem is probs DisjunctiveType? (or could be other problems): " + parser.getState().getCurrentTuple().getSemantics() + ANSI_RESET);
-                                break;
                             }
-                        }
-                        for (TTRRecordType sem : allSemantics) {
-                            if (sem.subsumes(goldSem) && goldSem.subsumes(sem)) {
-                                parsedSem = sem;
-                                break;
+                            parsedSem = eval.findBestInterpretation(allSemantics, goldSem);
+
+                            evalList.add(new TTRRecordType[]{parsedSem, goldSem});
+                            logger.debug("Hyp semantics: " + parsedSem);
+                            logger.info(ANSI_GREEN + "Was able to parse: " + ANSI_RESET + sentence);
+                            parsedCount++;
+                            if (parsedSem.subsumes(goldSem) && goldSem.subsumes(parsedSem)) {
+                                exactMatchCount++;
+                                logger.info(ANSI_GREEN + "Exact match found for: " + ANSI_RESET + sentence);
+                            } else {
+                                logger.info(ANSI_YELLOW + "No exact match found for: " + ANSI_RESET + sentence);
+                                logger.debug("Gold " + goldSem);
+                                logger.debug("Pars " + parsedSem);
+                                failedExactMatches.putIfAbsent(new Pair<>(dataset_name, n), new ArrayList<>());
+                                failedExactMatches.get(new Pair<>(dataset_name, n)).add(sentence.toString());
+                                evalResult.addFailedExactMatch(dataset_name, n, sentence.toString());
                             }
+                        } else {
+                            logger.info(ANSI_RED + "Parsing failed for: " + ANSI_RESET + sentence);
+                            failedParses.putIfAbsent(new Pair<>(dataset_name, n), new ArrayList<>());
+                            failedParses.get(new Pair<>(dataset_name, n)).add(sentence.toString());
+                            evalResult.addFailedParse(dataset_name, n, sentence.toString());
                         }
-
-                        evalList.add(new TTRRecordType[]{parsedSem, goldSem});
-                        logger.debug("Hyp semantics: " + parsedSem);
-                        logger.info(ANSI_GREEN + "Was able to parse: " + ANSI_RESET + sentence);
-                        parsedCount++;
-                        if (parsedSem.subsumes(goldSem) && goldSem.subsumes(parsedSem)) {
-                            exactMatchCount++;
-                            logger.info(ANSI_GREEN + "Exact match found for: " + ANSI_RESET + sentence);
-                        }
-                        else {
-                            logger.info(ANSI_YELLOW + "No exact match found for: " + ANSI_RESET + sentence);
-                            failedExactMatches.putIfAbsent(new Pair<>(dataset_name, n) , new ArrayList<>());
-                            failedExactMatches.get(new Pair<>(dataset_name, n)).add(sentence.toString());
-                            evalResult.addFailedExactMatch(dataset_name, n, sentence.toString());
-                        }
-
-                    } else {
-                        logger.info(ANSI_RED + "Parsing failed for: " + ANSI_RESET + sentence);
-                        failedParses.putIfAbsent(new Pair<>(dataset_name, n) , new ArrayList<>());
+                    } catch (Exception e) {
+                        logger.error(ANSI_RED + "Error while parsing: " + sentence + ANSI_RESET, e);
+                        failedParses.putIfAbsent(new Pair<>(dataset_name, n), new ArrayList<>());
                         failedParses.get(new Pair<>(dataset_name, n)).add(sentence.toString());
                         evalResult.addFailedParse(dataset_name, n, sentence.toString());
                     }
@@ -204,7 +226,7 @@ public class BabyDSInduction {
                 parsingCoverage.put(n, datasetCoverage);
 
                 evalResult.addSemanticAccuracy( n, dataset_name, scores.get(0)*100, scores.get(1)*100, scores.get(2)*100);
-                evalResult.addParsingCoverage(n, dataset_name, (double) parsedCount / corpus.size() * 100, (double) exactMatchCount / corpus.size() * 100);
+                evalResult.addParsingCoverage(n, dataset_name, (double) parsedCount / corpus.size() * 100, (double) exactMatchCount / parsedCount * 100);
 
                 logger.info("Parsing coverage for " + dataset_name + ": " + parsedCount + " out of " + corpus.size());  // AA MODIFIED FROM parsedCount
             }
@@ -296,10 +318,11 @@ public class BabyDSInduction {
      * Returns the training and testing files from the corpus directory.
      * @param kfcv The k-fold cross-validation index. If 0, train-test data is returned.
      * @param modelAddress The address of the model directory.
-     * @param datasetName The dataset name.     *
+     * @param datasetName The dataset name.
+     * @param testSetSuffix The suffix for the test set file name. Mainly used in Experiments for generalisation and forgetting tests.
      * @return train_test_files An array of two files: training and testing files.
      */
-    public File[] get_corpus_files(int kfcv, String modelAddress, String datasetName, String nameAttachment) {
+    public File[] get_corpus_files(int kfcv, String modelAddress, String datasetName, String testSetSuffix) {
         File[] train_test_files = new File[2];
         File folder;
         folder = new File(modelAddress);
@@ -309,14 +332,27 @@ public class BabyDSInduction {
         if (listOfFiles != null) {
             for (File file : listOfFiles) {
                 if (kfcv == 0) {
-                    if (file.isFile() && file.getName().startsWith(datasetName+"_train"+nameAttachment)) {  // To handle batching. Not for the test set.
+                    if (file.isFile() && file.getName().startsWith(datasetName+"_train")) {
                         train_test_files[0] = file;
                         logger.trace("Training file found: " + file.getName());
                         continue;
                     }
-                    if (file.isFile() && file.getName().startsWith(datasetName+"_test")) {
-                        train_test_files[1] = file;
-                        logger.trace("Testing file found: " + file.getName());
+                    
+                    // Handle test file matching with proper suffix logic
+                    if (file.isFile()) {
+                        if (testSetSuffix.isEmpty()) {
+                            // When suffix is empty, we want regular test files, not dev files
+                            if (file.getName().startsWith(datasetName + "_test") && !file.getName().contains("_dev")) {
+                                train_test_files[1] = file;
+                                logger.trace("Testing file found: " + file.getName());
+                            }
+                        } else {
+                            // When suffix is not empty, use the original logic
+                            if (file.getName().startsWith(datasetName + "_test" + testSetSuffix)) {
+                                train_test_files[1] = file;
+                                logger.trace("Dev file found: " + file.getName());
+                            }
+                        }
                     }
                 } else {
                     logger.trace("Trying to load k-fold cross validation files...");
@@ -343,36 +379,7 @@ public class BabyDSInduction {
     }
 
 
-    /** Used in the mergeFiles method below.
-     * @param file The file to read from.
-     * @param writer The writer to write to.
-     * @throws IOException If an I/O error occurs.
-     */
-    private static void writeContent(File file, BufferedWriter writer) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                writer.write(line);
-                writer.newLine(); // Ensure lines are properly separated
-            }
-        }
-    }
 
-    /** Used where I need to merge two datasets and create a RT corpus from them.
-     * Merges two files into one and saves it.
-     * @param file1 The first file to merge.
-     * @param file2 The second file to merge.
-     * @param outputFile The output file to save the merged content.
-     * @throws IOException If an I/O error occurs.
-     */
-   public static void mergeFiles(File file1, File file2, File outputFile) throws IOException {
-       try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
-           // Read the first file and write to output
-           writeContent(file1, writer);
-           // Read the second file and write to output
-           writeContent(file2, writer);
-       }
-   }
 
 
     /**
@@ -383,7 +390,7 @@ public class BabyDSInduction {
      * @return A pair of training and testing datasets.
      */
    public Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_split(String corpusAddress, double ratio, boolean saveToFile, String saveAddress, int seed) {
-               RecordTypeCorpus corpus = new RecordTypeCorpus();
+       RecordTypeCorpus corpus = new RecordTypeCorpus();
         try {
             corpus.loadCorpus(new File(corpusAddress));
         } catch (IOException e) {
@@ -535,6 +542,131 @@ public class BabyDSInduction {
     }
 
 
+    public void trainBabyDSwithHB(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress, String hbDir) {
+
+        logger.info("Training BabyDS model...");
+        // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
+        String[] files = new File(modelDir).list();
+        String x = modelDir + "lexicon.lex";
+        if (files != null) {
+            for (String file : files) {
+                if (file.startsWith("lexicon.lex")) {
+                    logger.info("Previously trained model found in the given directory with name: " + file);
+                    x = modelDir + file;
+                }
+            }
+                    // Verify model directory exists
+        File modelDirFile = new File(modelDir);
+        if (!modelDirFile.exists()) {
+            if (!modelDirFile.mkdirs()) {
+                throw new RuntimeException("Could not create model directory: " + modelDir);
+            }
+        }
+        
+        // Verify computational-actions.txt exists
+        File compActionsFile = new File(modelDir + "computational-actions.txt");
+        if (!compActionsFile.exists()) {
+            throw new RuntimeException("computational-actions.txt not found in: " + modelDir);
+        }
+        // if (new File(x).exists()) {
+        //     System.out.println("A trained model already exists at: " + modelDir);
+        //     Scanner scanner = new Scanner(System.in);
+        //     System.out.println("Do you want to load this model instead of training from scratch? (y/n)");
+        //     String answer = scanner.nextLine();
+        //     if (answer.equals("y") || answer.equals("Y")) {
+        //         logger.info("Loading the existing model...");
+        //         return;
+        //     } else if (answer.equals("n") || answer.equals("N")) {
+        //         logger.info("Training BabyDS model from scratch...");
+        //     } else {
+        //         logger.error("Invalid input. Please enter 'y/Y' or 'n/N'.");
+        //         return;
+        //     }
+        // }
+        
+        TTRWordLearner babyDS = new TTRWordLearner(seedGrammarAddress, trainingCorpus, hbDir);
+        try {
+            logger.info("BabyDS training starting...");
+            babyDS.learn();  //TODO it doesn't make sense that I can't specify "what top-N models to learn" here. Maybe
+            // to save time or for any other reasons I didn't want to do more calculations!
+            // Writing models to file:
+            
+            babyDS.getHypothesisBase().saveModelToJSON(modelDir);
+            for (int i = 1; i <= TOP_N; i++) {
+                babyDS.getHypothesisBase().saveLearnedLexicon(modelDir + "lexicon.lex", i);
+            }
+        } catch(Exception e) {
+            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
+        }
+    }
+    }
+
+
+    public WordHypothesisBase trainBabyDSwithHB(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress, WordHypothesisBase previousModel) {
+        WordHypothesisBase newModel = null;
+        logger.info("Training BabyDS model...");
+        // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
+        String[] files = new File(modelDir).list();
+        String x = modelDir + "lexicon.lex";
+        if (files != null) {
+            for (String file : files) {
+                if (file.startsWith("lexicon.lex")) {
+                    logger.info("Previously trained model found in the given directory with name: " + file);
+                    x = modelDir + file;
+                }
+            }
+            // Verify model directory exists
+            File modelDirFile = new File(modelDir);
+            if (!modelDirFile.exists()) {
+                if (!modelDirFile.mkdirs()) {
+                    throw new RuntimeException("Could not create model directory: " + modelDir);
+                }
+            }
+
+            // Verify computational-actions.txt exists
+            File compActionsFile = new File(modelDir + "computational-actions.txt");
+            if (!compActionsFile.exists()) {
+                throw new RuntimeException("computational-actions.txt not found in: " + modelDir);
+            }
+        // if (new File(x).exists()) {
+        //     System.out.println("A trained model already exists at: " + modelDir);
+        //     Scanner scanner = new Scanner(System.in);
+        //     System.out.println("Do you want to load this model instead of training from scratch? (y/n)");
+        //     String answer = scanner.nextLine();
+        //     if (answer.equals("y") || answer.equals("Y")) {
+        //         logger.info("Loading the existing model...");
+        //         return;
+        //     } else if (answer.equals("n") || answer.equals("N")) {
+        //         logger.info("Training BabyDS model from scratch...");
+        //     } else {
+        //         logger.error("Invalid input. Please enter 'y/Y' or 'n/N'.");
+        //         return;
+        //     }
+        // }
+
+            TTRWordLearner babyDS = new TTRWordLearner(seedGrammarAddress, trainingCorpus, previousModel);
+            try {
+                logger.info("BabyDS training starting...");
+                babyDS.learn();  //TODO it doesn't make sense that I can't specify "what top-N models to learn" here. Maybe
+                // to save time or for any other reasons I didn't want to do more calculations!
+                // Writing models to file:
+
+    //            babyDS.getHypothesisBase().saveModelToJSON(modelDir);
+                for (int i = 1; i <= TOP_N; i++) {
+                    newModel = babyDS.getHypothesisBase();
+                    newModel.saveLearnedLexicon(modelDir + "lexicon.lex", i);
+                }
+            } catch(Exception e) {
+                throw new RuntimeException("Failed during training: " + e.getMessage(), e);
+            }
+        }
+        if (newModel == null) {
+            logger.error(ANSI_RED + "New model is null!!!" + ANSI_RESET);
+        }
+        return newModel;
+    }
+
+
     /**
      * A pipeline for full training and evaluation:
      * @param kFold The number of folds for k-fold cross validation. If 0, a train-test split is performed.
@@ -561,9 +693,9 @@ public class BabyDSInduction {
 //                }
                 // Average the semAcc results over the k-folds
                 HashMap<Integer, HashMap<String, HashMap<String, Double>>> avgSemAccResults = new HashMap<>();
-                for (int n : kfSemAccResults.getFirst().keySet()) {
+                for (int n : kfSemAccResults.get(0).keySet()) {
                     HashMap<String, HashMap<String, Double>> datasetMap = new HashMap<>();
-                    for (String dataset : kfSemAccResults.getFirst().get(n).keySet()) {
+                    for (String dataset : kfSemAccResults.get(0).get(n).keySet()) {
                         HashMap<String, Double> scoresMap = new HashMap<>();
                         double precision = 0.0, recall = 0.0, f1 = 0.0;
                         for (HashMap<Integer, HashMap<String, HashMap<String, Double>>> result : kfSemAccResults) {
@@ -580,7 +712,7 @@ public class BabyDSInduction {
                 }
                 // Average the parsing coverage results over the k-folds
                 HashMap<Integer, HashMap<String, ArrayList<Double>>> avgParsCvgResults = new HashMap<>();
-                for (int n : kfParsCvgResults.getFirst().keySet()) {
+                for (int n : kfParsCvgResults.get(0).keySet()) {
                     HashMap<String, ArrayList<Double>> coverageMap = new HashMap<>();
                     double trainCvg = 0.0, testCvg = 0.0;
                     double trainEM = 0.0, testEM = 0.0;
@@ -625,19 +757,6 @@ public class BabyDSInduction {
 //            print_diagnostics();
                 System.out.println(ttsResults.getDiagnosticResults());
         }
-
-    }
-
-
-    /**
-     * overloads the method below, with default values for INIT_BATCH_RATIO and INC_BATCH_RATIO.
-     * @param corpus The corpus to split into batches.
-     * @return A list of data batches.
-     * todo move this all to experiments, it's not even used here!
-     */
-    public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus) {
-        return prepare_batches(corpus,
-                INIT_BATCH_RATIO, INC_BATCH_RATIO);
     }
 
 
@@ -648,7 +767,7 @@ public class BabyDSInduction {
      * @author: AA
      * todo maybe add SaveToFile as a parameter/option?
      */
-    public List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, double init_batch_ratio, double inc_batch_ratio) {
+    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, double init_batch_ratio, double inc_batch_ratio) {
         logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_RATIO: " + init_batch_ratio + " | INC_BATCH_RATIO: " + inc_batch_ratio);
         List<RecordTypeCorpus> batches = new ArrayList<>();
         int corpus_size = corpus.size();
@@ -677,8 +796,8 @@ public class BabyDSInduction {
         }
         if (!inc_batch.isEmpty()) {  // If there are any remaining elements in the last batch, add it to the list.
             // Add remaining elements to the last existing batch and not create a new one.
-            batches.getLast().addAll(inc_batch);
-            logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.getLast().size());
+            batches.get(batches.size()-1).addAll(inc_batch);
+            logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.get(batches.size()-1).size());
         }
         logger.info("Batches prepared: " + batches.size());
         return batches;
@@ -720,94 +839,75 @@ public class BabyDSInduction {
 
 
     /**
-     * Creates a neural parsing corpus from the given corpus name and model address.
-     * Does this in a paralleled way. :)
-     * @param corpusName The name of the corpus to read (without .txt).
-     * @param modelAddress The main directory (to read the corpus and save the model in).
-     * todo move to their own class I think.
-     */
-    public void makeNeuralParsingCorpus(String corpusName, String modelAddress, String savePath) {
-        RecordTypeCorpus corpus = new RecordTypeCorpus();
+	 * Test method to verify save/load functionality.
+	 * Note: I have already tested if saving and loading methods work correctly (I think, need to double check).
+	 * Have a dataset of two samples, and compare the HB at the end of these two scenarios:
+	 * - Training on the first sample, then saving and loading the HB, then training on the second sample.
+	 * - Training on both samples together, then saving the HB.
+	 */
+	public void testWHBJson() {
+        String main_dir = "resource\\2025-babyds-RQ1\\hb1test\\".replace("\\", File.separator);
+        
+        // -------------------------------- Test one: both samples same time
+        String double_dir = main_dir + "double" + File.separator;
+        WordHypothesisBase double_hb = new WordHypothesisBase();
+        RecordTypeCorpus trainingCorpus = new RecordTypeCorpus();
         try {
-            corpus.loadCorpus(new File(modelAddress + File.separator + corpusName+".txt"));
-            // Extract all TTRRecordTypes from corpus pairs
-            List<TTRRecordType> rts = corpus.stream()
-                .map(Pair::second)
-                .collect(Collectors.toList());
-
-            // Process RTTypes in parallel using embeddedRT2NN
-            List<String> nnReprs = rts.parallelStream()
-                .map(TTRRecordType::embeddedRT2NNList)
-                .collect(Collectors.toList());
-
-            logger.info("Processed " + nnReprs.size() + " record types into neural representations");
-            // TODO: Save or further process the neural representations
-            //TODO move this out of the try block
-            if (savePath.isEmpty()) {
-                savePath = modelAddress;
-            }
-            // Making sure it exists
-            File saveDir = new File(savePath);
-            if (!saveDir.exists()) {
-                if (saveDir.mkdirs()) {
-                    logger.info("Directory created: " + savePath);
-                } else {
-                    logger.error("Failed to create directory: " + savePath);
-                    throw new IOException("Could not create directory: " + savePath);
-                }
-            }
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(savePath + File.separator + corpusName + "_neural_targets"+".txt"))) { // + idx was here.
-                for (int i = 0; i < corpus.size(); i++) {
-                    writer.write(corpus.get(i).first().toString());
-                    writer.newLine();
-//                    writer.write(String.join(" ", nnReprs.get(i)));
-                    writer.write(nnReprs.get(i));
-                    writer.newLine();
-                    writer.newLine();
-                }
-                logger.info("Saved neural representations to: " + savePath + corpusName + "_neural_targets"+".txt");  // + idx was here.
-            } catch (IOException e) {
-                logger.error("Error saving neural representations: " + e.getMessage());
-            }
-
+            trainingCorpus.loadCorpus(new File(double_dir + "double.txt"));
         } catch (IOException e) {
-            logger.error("Error loading corpus: " + e.getMessage());
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-    }
-
-
-    /**
-     * Reads in generated corpora and converts them to neural representations.
-     * Basically looping over folders with the above method.
-     */
-    public void convertCurrentCorpusToNN(String rootFolder) {
-        File root = new File(rootFolder);
-        File[] folders = root.listFiles(File::isDirectory);
-        if (folders != null) {
-            for (File folder : folders) {
-                String folderName = folder.getName();
-                if (folderName.contains("B")) {  // AA trick to read the desired (batch) folders
-                    File[] files = folder.listFiles();
-                    if (files != null) {
-                        for (File file : files) {
-                            String fileName = file.getName();
-                            if (fileName.startsWith("_tr")) {  // Train file
-                                makeNeuralParsingCorpus("_train", folder.getAbsolutePath(), rootFolder+NN_FOLDER_NAME+File.separator+folderName);
-                            } else if (fileName.startsWith("_te")) {  // Test file
-                                makeNeuralParsingCorpus("_test", folder.getAbsolutePath(), rootFolder+NN_FOLDER_NAME+File.separator+folderName);
-                            } else {
-                                logger.trace("File " + file.getName() + " does not start with _train or _test. Skipping...");
-                            }
-                        }
-                    }
-                }
+        
+        TTRWordLearner babyDSdouble = new TTRWordLearner(seedGrammarPath, trainingCorpus, "");
+        try {
+            babyDSdouble.learn();
+            double_hb = babyDSdouble.getHypothesisBase();
+            double_hb.saveModelToJSON(double_dir);
+            for (int i = 1; i <= TOP_N; i++) {
+                babyDSdouble.getHypothesisBase().saveLearnedLexicon(double_dir + "lexicon.lex", i);
             }
-        } else {
-            logger.error("No folders found in the root directory: " + rootFolder);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
         }
-    }
+        
+        // -------------------------- Test two: training on the first sample,
+        // save the hb and then loading it and continue training to get the second HB.
+        WordHypothesisBase single_hb = new WordHypothesisBase();
+        String single_dir = main_dir + "single" + File.separator;
+
+        TTRWordLearner babyDSsingle = new TTRWordLearner(seedGrammarPath, single_dir+"1.txt", "");
+        try {
+            babyDSsingle.learn();
+            single_hb = babyDSsingle.getHypothesisBase();
+            single_hb.saveModelToJSON(single_dir);
+            for (int i = 1; i <= TOP_N; i++) {
+                babyDSsingle.getHypothesisBase().saveLearnedLexicon(single_dir + "lexicon.lex", i);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
+        }
+        
+        WordHypothesisBase single_hb2;
+        TTRWordLearner babyDSsingle2 = new TTRWordLearner(seedGrammarPath, single_dir+"2.txt", single_dir);
+        try {
+            babyDSsingle2.learn();
+            single_hb2 = babyDSsingle2.getHypothesisBase();
+            // single_hb2.saveModelToJSON(single_dir);
+            for (int i = 1; i <= TOP_N; i++) {
+                single_hb2.saveLearnedLexicon(single_dir + "lexicon.lex", i);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
+        }
+    
+        logger.info("Comparing hypothesis bases between combined training and sequential training...");
+        boolean result = compareHypothesisBases(double_hb, single_hb2);
+        if (result) {
+            logger.info(ANSI_GREEN + "Test passed! The hypothesis bases are equivalent." + ANSI_RESET);
+        } else {
+            logger.error(ANSI_RED + "Test failed! The hypothesis bases are different." + ANSI_RESET);
+        }
+	}
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
@@ -820,16 +920,28 @@ public class BabyDSInduction {
 //        System.out.println(bbds.get_parsingCoverage_results(ttsResults.second(), null));
 
         // To run the full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
-        BabyDSInduction testInduction = new BabyDSInduction(modelPath);
-        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, modelPath, DATASET_NAME, SEED, seedGrammarPath, TOP_N);
+//        String dtsName = args.length > 0 ? args[0] : DATASET_NAME;
+// ----------------------------- UNCOMMENT BELOW
+//        BabyDSInduction testInduction = new BabyDSInduction();
+//        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, BDS_RQ1_CLASS2_PATH, "_train", SEED, seedGrammarPath, TOP_N);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
 //        bbds.train_model(corpusPath + datasetName);
 
+        // To make neural parsing corpus:
+         BabyDSInduction test = new BabyDSInduction();
+//         test.makeNeuralParsingCorpus(DATASET_NAME, c2full, "");
+//        test.convertCurrentCorpusToNN(RQ1_C2_NTR_PATH);
+
 //        BabyDSInduction test = new BabyDSInduction();
-//        test.makeNeuralParsingCorpus(DATASET_NAME, modelPath, "");
-//        test.convertCurrentCorpusToNN(modelPath);
+//        test.testWHBJson();
+
+
+        // to train-test-split class2:
+//        BabyDSInduction test = new BabyDSInduction();
+//        test.train_test_split(c2full+DATASET_NAME+".txt", TRAIN_TEST_RATIO, true, c2full, 45);
+
     }
 
 }

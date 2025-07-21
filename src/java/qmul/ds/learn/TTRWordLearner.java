@@ -44,15 +44,80 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		this.corpusIterator = corpus.iterator();
 	}
 	
-	public TTRWordLearner(String resourceDir, String corpusFileName) throws IOException, ClassNotFoundException {
+	public TTRWordLearner(String resourceDir, String corpusFileName) {
 		this(resourceDir);
-		this.loadCorpus(new File(corpusFileName));
+		try {
+			this.loadCorpus(new File(corpusFileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public TTRWordLearner(String seedResourceDir, RecordTypeCorpus trainingCorpus, String hbDir) {
+		this.seedResourceDir = seedResourceDir;
+		hypothesiser = new TTRHypothesiser(seedResourceDir);
+		this.corpus = trainingCorpus;
+		this.corpusIterator = corpus.iterator();
+
+		try {
+			if (!hbDir.isEmpty()) {
+				this.hb = new WordHypothesisBase();
+				this.hb.loadModelFromJSON(hbDir);
+			} else {
+				this.hb = new WordHypothesisBase();
+			}
+		} catch (IOException e) {
+			logger.error("Failed to load model from " + hbDir, e);
+			// this.hb = new WordHypothesisBase();
+		}
+	}
+
+
+	public TTRWordLearner(String seedResourceDir, RecordTypeCorpus trainingCorpus, WordHypothesisBase whb) {
+		this.seedResourceDir = seedResourceDir;
+		hypothesiser = new TTRHypothesiser(seedResourceDir);
+		this.corpus = trainingCorpus;
+		this.corpusIterator = corpus.iterator();
+		if (whb != null) {
+			this.hb = whb;
+		} else {
+			this.hb = new WordHypothesisBase();
+		}
+	}
+
+
+	public TTRWordLearner(String seedResourceDir, String trainingCorpusDir, String hbDir) {
+		RecordTypeCorpus trainingCorpus = new RecordTypeCorpus();
+		try {
+			trainingCorpus.loadCorpus(new File(trainingCorpusDir));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.seedResourceDir= seedResourceDir; //"resource" + File.separator + "2013-english-ttr-induction-seed";
+		hypothesiser = new TTRHypothesiser(seedResourceDir);
+		this.corpus = trainingCorpus;
+		this.corpusIterator = corpus.iterator();
+		try {
+			if (!hbDir.isEmpty()) {
+				this.hb = new WordHypothesisBase();
+				this.hb.loadModelFromJSON(hbDir);
+			} else {
+				this.hb = new WordHypothesisBase();
+			}
+		} catch (IOException e) {
+			logger.error("Failed to load model from " + hbDir, e);
+			// this.hb = new WordHypothesisBase();
+		}
 	}
 
 	public TTRWordLearner(String seedResourceDir) {
 		this.seedResourceDir= seedResourceDir; //"resource" + File.separator + "2013-english-ttr-induction-seed";
 		hypothesiser = new TTRHypothesiser(seedResourceDir);
 		corpus = null;
+
 	}
 
 	/**

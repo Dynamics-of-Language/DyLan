@@ -138,7 +138,7 @@ public abstract class TTRFormula extends Formula {
 			return result;
 		}
 
-		BasicType basic = (BasicType) types.getFirst();
+		BasicType basic = (BasicType) types.get(0);
 		List<Pair<TTRRecordType, TTRLambdaAbstract>> basicAbstracts = getAbstractions(basic, 1);
 		// AA before getting abstractions, check if it is already computed and stored in the cache
 		// TODO: for lambdaAbstracts it doesn't work (as it is not the class/type of the key for my cache) so has to be fixed.
@@ -187,7 +187,7 @@ public abstract class TTRFormula extends Formula {
 //				for (Pair<TTRRecordType, TTRLambdaAbstract> argumentAbstract : argumentAbstracts) {  // AA Replace this with "only the first one"
 				// AA First, make the right node for the first one (here), and then put the rest under it (below). This
 				// is an assumption I made in the way I am getting the abstractions from the RTs, in this specific case.
-				Pair<TTRRecordType, TTRLambdaAbstract> argumentAbstract = argumentAbstracts.getFirst();
+				Pair<TTRRecordType, TTRLambdaAbstract> argumentAbstract = argumentAbstracts.get(0);
 				local.make(BasicOperator.DOWN_1);
 				local.go(BasicOperator.DOWN_1);
 				local.put(new FormulaLabel(argumentAbstract.second()));
