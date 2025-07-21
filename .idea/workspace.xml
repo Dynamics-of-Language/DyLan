@@ -1,40 +1,264 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="38f39ebc-3846-4628-bc46-8eff31438405" name="Changes" comment="" />
+    <list default="true" id="38f39ebc-3846-4628-bc46-8eff31438405" name="Changes" comment="Fixes logging in CandidateSequence &amp; TTRWordLearner.">
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/DS4.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024-babyds-grammar/lexical-actions-copy.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024-babyds-grammar/lexical-macros-copy.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024-babyds-grammar/lexicon-copy.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024_induction_test/lexicon.lex-top-1.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024_induction_test/lexicon.lex-top-2.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024_induction_test/lexicon.lex-top-3.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024_induction_test/lexicon.lex-top-4.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/2024_induction_test/lexicon.lex-top-5.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/SocketCommunicator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/SocketSenderReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/log4j.properties" beforeDir="false" afterPath="$PROJECT_DIR$/log/log4j.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/dataset.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/dataset.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-1" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-2" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-3" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-4" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-4.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-5" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resource/2023-babyds-induction-output/lexicon.lex-top-5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cgi/ds_daemon.cgi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cgi/ds_fork.cgi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cgi/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cgi/test.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/action/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/action/Action.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/action/Lexicon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/action/Lexicon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/dag/TypeLattice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/dag/TypeLattice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/dag/TypeLatticeIncrement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/dag/TypeLatticeIncrement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/formula/TTRFormula.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/formula/TTRFormula.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/formula/TTRRecordType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/formula/TTRRecordType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/Observation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/Observation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/RobotParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/RobotParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/interactiveInduction/SocketReceiver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/CandidateSequence.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/CandidateSequence.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/Evaluation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/Evaluation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/Hypothesiser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/Hypothesiser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/TTRHypothesiser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/TTRHypothesiser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/TTRWordLearner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/TTRWordLearner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/TreeFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/TreeFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/TreeWordLearner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/TreeWordLearner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/WordHypothesisBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/WordHypothesisBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/learn/WordLearner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/learn/WordLearner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/qmul/ds/type/DSType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/qmul/ds/type/DSType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/perl/get-lexicon" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/computational_actions.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/computational_actions_english_2001.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/computational_actions_english_2005.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/computational_actions_english_2009.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/computational_actions_english_2009ttr.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/computational_actions_japanese.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/corpus.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/ds.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dscontext.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dsflags.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dsgenerator.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dsio.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dslexicon.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dsparser.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dsprinter.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dsprob.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/dstrees.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lambda_calculus.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexical_actions.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexical_templates_english_2001.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexical_templates_english_2005.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexical_templates_english_2009.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexical_templates_english_2009ttr.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexical_templates_japanese.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexicon_english.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexicon_english_full.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/lexicon_japanese.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/sicstus2swi.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prolog/utils.pl" beforeDir="false" />
+    </list>
+    <list id="c92ae8b0-5cab-4453-a01d-6375d7cce088" name="Changes by arash" comment="Changes by arash" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2cxNEqpRe5kRzKm1vBrJK6C1xb2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.DSType.executor&quot;: &quot;Run&quot;,
+    &quot;Application.JavaSenderReceiver.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ParserGUI.executor&quot;: &quot;Run&quot;,
+    &quot;Application.RobotParser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SocketCommunication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SocketSenderReceiver.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SocketTest.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TTRHypothesiser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TTRRecordType.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TTRWordLearner.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TestInduction.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/ArashMath/CodeNEW/DyLanGit/DyLan/resource/2024_induction_test&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\ArashMath\CodeNEW\DyLanGit\DyLan\resource\2024_induction_test" />
+      <recent name="C:\ArashMath\CodeNEW\DyLanGit\DyLan\resource\2023-babyds-induction-output\2024_induction_test" />
+      <recent name="C:\ArashMath\CodeNEW\DyLanGit\DyLan\resource\2024-babyds-grammar" />
+      <recent name="C:\ArashMath\CodeNEW\DyLanGit\DyLan\resource\2023-babyds-induction-output" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\ArashMath\CodeNEW\DyLanGit\DyLan\resource\" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.TTRHypothesiser">
+    <configuration name="DSType" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="qmul.ds.type.DSType" />
+      <module name="DyLan" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="qmul.ds.type.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ParserGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="qmul.ds.gui.ParserGUI" />
+      <module name="DyLan" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="qmul.ds.gui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TTRHypothesiser" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="qmul.ds.learn.TTRHypothesiser" />
+      <module name="DyLan" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="qmul.ds.learn.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TTRWordLearner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="qmul.ds.learn.TTRWordLearner" />
+      <module name="DyLan" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="qmul.ds.learn.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestInduction" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="qmul.ds.interactiveInduction.TestInduction" />
+      <module name="DyLan" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="qmul.ds.interactiveInduction.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.TTRHypothesiser" />
+      <item itemvalue="Application.DSType" />
+      <item itemvalue="Application.TTRWordLearner" />
+      <item itemvalue="Application.TestInduction" />
+      <item itemvalue="Application.ParserGUI" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TTRHypothesiser" />
+        <item itemvalue="Application.ParserGUI" />
+        <item itemvalue="Application.DSType" />
+        <item itemvalue="Application.TestInduction" />
+        <item itemvalue="Application.TTRWordLearner" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -44,10 +268,164 @@
       <option name="presentableId" value="Default" />
       <updated>1709049160082</updated>
       <workItem from="1709049161428" duration="59000" />
+      <workItem from="1709638308815" duration="516000" />
+      <workItem from="1710160148227" duration="24000" />
+      <workItem from="1710160240596" duration="59000" />
+      <workItem from="1710160380563" duration="70000" />
+      <workItem from="1710170969338" duration="3922000" />
+      <workItem from="1710237834619" duration="13112000" />
+      <workItem from="1710341658358" duration="945000" />
+      <workItem from="1710343098572" duration="5342000" />
+      <workItem from="1710408099035" duration="936000" />
+      <workItem from="1710496659967" duration="15388000" />
+      <workItem from="1710677823720" duration="5294000" />
+      <workItem from="1710695114788" duration="6000" />
+      <workItem from="1710749008190" duration="8873000" />
+      <workItem from="1710839180316" duration="18497000" />
+      <workItem from="1710873386567" duration="586000" />
+      <workItem from="1710928783918" duration="15066000" />
+      <workItem from="1711022781334" duration="1334000" />
+      <workItem from="1711453409984" duration="9351000" />
+      <workItem from="1711534762933" duration="574000" />
+      <workItem from="1711535459690" duration="4749000" />
+      <workItem from="1711625660964" duration="141000" />
+      <workItem from="1711625827880" duration="4143000" />
+      <workItem from="1712050657444" duration="7845000" />
+      <workItem from="1712130090118" duration="19099000" />
+      <workItem from="1712573962471" duration="509000" />
+      <workItem from="1712574492487" duration="14239000" />
+      <workItem from="1712653753606" duration="6045000" />
+      <workItem from="1712746809903" duration="139000" />
+      <workItem from="1712762030459" duration="479000" />
+      <workItem from="1713182918346" duration="3200000" />
+      <workItem from="1713452292889" duration="1259000" />
+      <workItem from="1713514548273" duration="10641000" />
+      <workItem from="1713693519310" duration="6735000" />
+      <workItem from="1713776245941" duration="1669000" />
+      <workItem from="1713791978489" duration="1305000" />
+      <workItem from="1713972543092" duration="4435000" />
+      <workItem from="1714038673586" duration="3121000" />
+      <workItem from="1714124183654" duration="1030000" />
+      <workItem from="1714394953141" duration="4887000" />
+      <workItem from="1714471028519" duration="775000" />
+      <workItem from="1714738075214" duration="5002000" />
+      <workItem from="1715532470701" duration="96000" />
+      <workItem from="1715532584156" duration="745000" />
+      <workItem from="1715594380296" duration="2144000" />
+      <workItem from="1715600265467" duration="1216000" />
+      <workItem from="1715674356583" duration="11663000" />
+      <workItem from="1716151884809" duration="8000" />
+      <workItem from="1716294061338" duration="2887000" />
+      <workItem from="1716539454557" duration="231000" />
+      <workItem from="1716540220457" duration="226000" />
+      <workItem from="1716546533654" duration="20000" />
+      <workItem from="1716729065088" duration="278000" />
+      <workItem from="1717408187294" duration="704000" />
+      <workItem from="1717694900050" duration="1000" />
+      <workItem from="1719759457646" duration="1809000" />
+      <workItem from="1719763722996" duration="22000" />
+      <workItem from="1719764118081" duration="30000" />
+      <workItem from="1719764256429" duration="79000" />
+      <workItem from="1719764489473" duration="775000" />
+      <workItem from="1720103840456" duration="57000" />
+      <workItem from="1723642548098" duration="8000" />
+      <workItem from="1723642612723" duration="36000" />
+      <workItem from="1723643429757" duration="49000" />
+      <workItem from="1723643574110" duration="1511000" />
+      <workItem from="1723645313927" duration="123000" />
+      <workItem from="1723646009453" duration="2813000" />
+      <workItem from="1723653599290" duration="17000" />
+      <workItem from="1723653859139" duration="1555000" />
+      <workItem from="1723655449272" duration="84000" />
+      <workItem from="1723655598382" duration="14000" />
+      <workItem from="1724920292860" duration="4207000" />
+      <workItem from="1724935819950" duration="7778000" />
+      <workItem from="1724971199932" duration="1944000" />
+      <workItem from="1725016635450" duration="636000" />
+      <workItem from="1725026278302" duration="2293000" />
+      <workItem from="1725191662923" duration="9119000" />
+      <workItem from="1725260115673" duration="866000" />
+      <workItem from="1725267215282" duration="14188000" />
+      <workItem from="1725303282970" duration="18000" />
+      <workItem from="1725441649546" duration="5176000" />
+      <workItem from="1725529099485" duration="2798000" />
+      <workItem from="1725803860500" duration="50000" />
+      <workItem from="1725803944562" duration="23000" />
+      <workItem from="1725817641282" duration="5015000" />
+      <workItem from="1725873132491" duration="10070000" />
+      <workItem from="1726564655463" duration="604000" />
+      <workItem from="1726566165574" duration="8279000" />
+      <workItem from="1726597619975" duration="3214000" />
+      <workItem from="1726658359666" duration="213000" />
+      <workItem from="1726741362886" duration="15302000" />
+      <workItem from="1726823583034" duration="10400000" />
+      <workItem from="1726845751985" duration="1037000" />
+      <workItem from="1727017416904" duration="945000" />
     </task>
+    <task id="LOCAL-00001" summary="Adds inducer diagnostic dataset.">
+      <option name="closed" value="true" />
+      <created>1710408423664</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1710408423664</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Adds inducer diagnostic dataset.">
+      <option name="closed" value="true" />
+      <created>1710749251283</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1710749251283</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixes printing of learned actions into txt files.">
+      <option name="closed" value="true" />
+      <created>1710751806901</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1710751806901</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Fixes logging in CandidateSequence &amp; TTRWordLearner.">
+      <option name="closed" value="true" />
+      <created>1710768517151</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1710768517151</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Changes by arash" />
+    <MESSAGE value="Adds inducer diagnostic dataset." />
+    <MESSAGE value="Fixes printing of learned actions into txt files." />
+    <MESSAGE value="Fixes logging in CandidateSequence &amp; TTRWordLearner." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes logging in CandidateSequence &amp; TTRWordLearner." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.net.SocketException" package="java.net" />
+          <option name="timeStamp" value="7" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
