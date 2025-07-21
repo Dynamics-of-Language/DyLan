@@ -1,0 +1,108 @@
+putnextto the grey ball the ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_grey x0 t | p0 obj_ball x0 t | p5 iota x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a yellow key a box
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_box x1 t | p1 col_yellow x0 t | p0 obj_key x0 t | p5 epsilon x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a ball the green door
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_green x1 t | p6 iota x1 t | p5 epsilon x0 t | p0 obj_ball x0 t | p1 obj_door x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a grey key a ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_grey x0 t | p0 obj_key x0 t | p5 epsilon x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the yellow box the ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_yellow x0 t | p0 obj_box x0 t | p5 iota x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the purple ball the ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_purple x0 t | p0 obj_ball x0 t | p5 iota x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a red ball the door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_red x0 t | p0 obj_ball x0 t | p5 epsilon x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the ball the blue key
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_blue x1 t | p6 iota x1 t | p5 iota x0 t | p0 obj_ball x0 t | p1 obj_key x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a box a green door
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_green x1 t | p6 epsilon x1 t | p5 epsilon x0 t | p0 obj_box x0 t | p1 obj_door x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a purple key the door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_purple x0 t | p0 obj_key x0 t | p5 epsilon x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a green ball the ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_green x0 t | p0 obj_ball x0 t | p5 epsilon x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a green box a ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_green x0 t | p0 obj_box x0 t | p5 epsilon x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the blue key a door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_blue x0 t | p0 obj_key x0 t | p5 iota x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a grey ball the ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_grey x0 t | p0 obj_ball x0 t | p5 epsilon x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a box the yellow ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_yellow x1 t | p6 iota x1 t | p5 epsilon x0 t | p0 obj_box x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a key a red key
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_red x1 t | p6 epsilon x1 t | p5 epsilon x0 t | p0 obj_key x0 t | p1 obj_key x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a key the red box
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_red x1 t | p6 iota x1 t | p5 epsilon x0 t | p0 obj_key x0 t | p1 obj_box x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a key the blue box
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_blue x1 t | p6 iota x1 t | p5 epsilon x0 t | p0 obj_key x0 t | p1 obj_box x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a box a yellow ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_yellow x1 t | p6 epsilon x1 t | p5 epsilon x0 t | p0 obj_box x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a blue box a box
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_box x1 t | p1 col_blue x0 t | p0 obj_box x0 t | p5 epsilon x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the green box the ball
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_ball x1 t | p1 col_green x0 t | p0 obj_box x0 t | p5 iota x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a key a grey door
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_grey x1 t | p6 epsilon x1 t | p5 epsilon x0 t | p0 obj_key x0 t | p1 obj_door x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a yellow key a door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_yellow x0 t | p0 obj_key x0 t | p5 epsilon x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the ball the purple ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_purple x1 t | p6 iota x1 t | p5 iota x0 t | p0 obj_ball x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the green key the key
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_key x1 t | p1 col_green x0 t | p0 obj_key x0 t | p5 iota x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the yellow ball a door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_yellow x0 t | p0 obj_ball x0 t | p5 iota x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a key the blue key
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_blue x1 t | p6 iota x1 t | p5 epsilon x0 t | p0 obj_key x0 t | p1 obj_key x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the box the yellow ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_yellow x1 t | p6 iota x1 t | p5 iota x0 t | p0 obj_box x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the box the blue ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_blue x1 t | p6 iota x1 t | p5 iota x0 t | p0 obj_box x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the red box a door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_red x0 t | p0 obj_box x0 t | p5 iota x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a yellow ball the key
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_key x1 t | p1 col_yellow x0 t | p0 obj_ball x0 t | p5 epsilon x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a key the blue ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_blue x1 t | p6 iota x1 t | p5 epsilon x0 t | p0 obj_key x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the grey ball a door
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_door x1 t | p1 col_grey x0 t | p0 obj_ball x0 t | p5 iota x0 t | p6 epsilon x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the green ball the box
+x1 e | x0 e | e0 state_beside es | head e0 es | p2 obj_box x1 t | p1 col_green x0 t | p0 obj_ball x0 t | p5 iota x0 t | p6 iota x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto the key the purple ball
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_purple x1 t | p6 iota x1 t | p5 iota x0 t | p0 obj_key x0 t | p1 obj_ball x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+
+putnextto a box a red door
+x0 e | x1 e | e0 state_beside es | head e0 es | p2 col_red x1 t | p6 epsilon x1 t | p5 epsilon x0 t | p0 obj_box x0 t | p1 obj_door x1 t | p4 ind_obj e0 x1 t | p3 obj e0 x0 t |
+

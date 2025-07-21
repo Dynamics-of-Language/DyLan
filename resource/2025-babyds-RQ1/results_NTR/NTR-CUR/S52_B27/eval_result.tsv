@@ -1,0 +1,3 @@
+TopN	ResultsOn	TrainName	TrainSize	TestName	TestSize	Precision	Recall	F1	Coverage	ExactMatch
+1	test	None	324	None	12	100.0	100.0	100.0	100.0	100.0
+1	train	None	324	None	12	73.54251861572266	73.54593658447266	73.51490020751953	100.0	0.0
