@@ -38,9 +38,12 @@ public abstract class WordLearner<T> {
 	Corpus<T> corpus;
 	Iterator<Pair<Sentence<Word>, T>> corpusIterator;
 	WordHypothesisBase hb = new WordHypothesisBase();
-	public static String parserResourceDir = "resource" + File.separator + "2009-english-test-induction";
+	public String parserResourceDir = "resource" + File.separator + "2009-english-test-induction";
+	public String aaDir = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);
 //	public static String seedResourceDir = "resource" + File.separator + "2009-english-test-induction-seed"; // commented out by Arash A.
-	public String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A.
+	public String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A. // THE SEED DIR IS THIS!
+	// TODO This shouldn't be hardcoded here
+
 
 	Corpus<T> skipped=new Corpus<T>();
 	
@@ -112,22 +115,25 @@ public abstract class WordLearner<T> {
 		return corpus != null && !corpus.isEmpty();
 	}
 
+
 	public WordHypothesisBase getHypothesisBase() {
 		return this.hb;
 	}
 
-	public void writeMissedCorpusToFile() throws IOException
-	{
+
+	public void writeMissedCorpusToFile() throws IOException {
 		this.writeCorpusToFile(this.skipped, "Skipped-Error-Corpus.txt");
 	}
 
+
 	public abstract void loadCorpus(File corpusFile) throws IOException, ClassNotFoundException;
+
+
 	/**
 	 * Usage: java WordLearner [resource Dir] [corpus File] [lexicon file] [number of hyps]
 	 * @param a
 	 */
-	public static void main(String a[])
-	{
+	public static void main(String a[]) {
 		if (a.length<4)
 			System.out.println("Usage: java WordLearner [resource Dir] [corpus File] [lexicon file]");
 		try{
@@ -157,18 +163,11 @@ public abstract class WordLearner<T> {
 					corpusName=c.readLine();
 					
 				}
-				
 			}
-			
-			
-			
-			
-			
 		}catch(Exception e)
 		{
 			logger.fatal(e);
 		}
-		
-		
 	}
+
 }
