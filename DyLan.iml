@@ -51,7 +51,7 @@
       <src_folder value="file://$MODULE_DIR$/log" expected_position="1" />
     </src_description>
   </component>
-  <component name="NewModuleRootManager">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
     <output url="file://$MODULE_DIR$/bin" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -467,5 +467,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="me.tongfei.progressbar" level="project" />
+    <orderEntry type="library" name="json-20231013" level="project" />
+    <orderEntry type="library" name="weka" level="project" />
   </component>
 </module>
