@@ -267,6 +267,18 @@ public class Node extends TreeSet<Label> {
 	/**
 	 * @return the formula requirement for this node if specified, null otherwise
 	 */
+	public void setFormula(Formula formula) {
+		logger.warn("added by AA, not verified by AE:");
+		FormulaLabel fl = getFormulaLabel();
+		if (fl != null) {
+			remove(fl);
+		}
+		add(new FormulaLabel(formula));
+	}
+
+	/**
+	 * @return the formula requirement for this node if specified, null otherwise
+	 */
 	public Formula getRequiredFormula() {
 		for (Label l : this) {
 			if (l instanceof Requirement) {
