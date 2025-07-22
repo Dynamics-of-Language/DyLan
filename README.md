@@ -1,6 +1,6 @@
 # babyDS-backup
 
-This is a branch for an emergency back up of all things babyDS (NOT CLEAN AT ALL, BUT I HAD NO CHOICE).
+This is a branch for an emergency back up of all things babyDS (NOT CLEAN AT ALL, BUT I HAD NO CHOICE). It's here because I made a few local copies of DS while working on the BabyDS branch; now I've learned my lesson.
 
 There are a bunch of strange/new folders here and I will describe these over time...
 
@@ -14,4 +14,6 @@ The good things about this branch:
 
 The bad things:
 
-- It is very untidy and doesn't properly follow what we had in the previous branches like arash_dsttr or babyDS, and may contain garbage files.
+- It is very untidy and doesn't properly follow what we had in the previous branches like arash_dsttr or babyDS.
+
+Anyway, I think DS code clean up should happen at all levels, not just this.
