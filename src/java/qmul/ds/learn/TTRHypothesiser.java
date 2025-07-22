@@ -1,14 +1,10 @@
 package qmul.ds.learn;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.ling.Word;
+import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
-
 import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
@@ -16,17 +12,8 @@ import qmul.ds.action.atomic.Effect;
 import qmul.ds.action.atomic.EffectFactory;
 import qmul.ds.action.atomic.Put;
 import qmul.ds.action.atomic.TTRFreshPut;
-import qmul.ds.dag.DAGEdge;
-import qmul.ds.dag.DAGInductionState;
-import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.TypeLattice;
-import qmul.ds.dag.TypeLatticeIncrement;
-import qmul.ds.dag.UtteredWord;
-import qmul.ds.formula.Formula;
-import qmul.ds.formula.TTRFormula;
-import qmul.ds.formula.TTRLabel;
-import qmul.ds.formula.TTRPath;
-import qmul.ds.formula.TTRRecordType;
+import qmul.ds.dag.*;
+import qmul.ds.formula.*;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Node;
 import qmul.ds.tree.NodeAddress;
@@ -34,10 +21,8 @@ import qmul.ds.tree.Tree;
 import qmul.ds.tree.label.FormulaLabel;
 import qmul.ds.tree.label.Label;
 import qmul.ds.type.DSType;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.Sentence;
-import edu.stanford.nlp.ling.Word;
-import edu.stanford.nlp.util.Pair;
+
+import java.util.*;
 
 /**
  * Hypothesiser to hypothesise action sequences that lead from the axiom tree
