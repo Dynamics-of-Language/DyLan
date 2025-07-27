@@ -931,63 +931,6 @@ public class Experiments {
     }
 
 
-    public EvalResult trainTestBatchwithHB(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, String hbDir) {
-        // todo properly test this method
-        // make foldername under modelDir and copy the computational action files there:
-        String folderPath = modelDir + folderName + File.separator;
-        File folder = new File(folderPath);
-        if (!folder.exists()) {
-            if (!folder.mkdirs()) {
-                throw new RuntimeException("Could not create directory: " + folderPath);
-            }
-        }
-        
-        // Copy the comp-action file from current dir (model dir) to this folder:
-        File sourceFile = new File(modelDir + "computational-actions.txt");
-        if (!sourceFile.exists()) {
-            throw new RuntimeException("Source file does not exist: " + sourceFile.getAbsolutePath());
-        }
-        
-        File destFile = new File(folder + File.separator + "computational-actions.txt");
-        try {
-            Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to copy computational-actions.txt: " + e.getMessage());
-        }
-        
-        // save training set and test set to this folder:
-        try {
-            trainingBatch.saveCorpus(folder + File.separator + "_train.txt");  //todo set their names?
-            testingData.saveCorpus(folder + File.separator + "_test.txt");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save corpus files: " + e.getMessage());
-        }
-
-        BabyDSInduction ds = new BabyDSInduction();
-        System.out.println(ANSI_CYAN + "******** Batch " + batchNumber + " ********" + ANSI_RESET);
-        // If the model exists and skip is true, then skip!
-        if (modelExists(folderPath)) {
-            System.out.println("Model already exists in " + folderPath);
-            if (SKIP_RETRAINING) {
-                System.out.println("Skipping training...");
-            } else {
-                logger.info("Training model...");
-                ds.trainBabyDSwithHB(trainingBatch, folderPath, seedGrammarPath, hbDir);
-            }
-        } else {
-            logger.info("Training model...");
-            ds.trainBabyDSwithHB(trainingBatch, folderPath, seedGrammarPath, hbDir);
-        }
-        EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, N);
-        result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
-        result.setDatasetSizes(trainingBatch.size(), testingData.size());
-        System.out.println("\nEvaluation results for batch: " + batchNumber  + " are:");
-        System.out.println(result.getSemanticAccResultsTable(String.format("Batch %d", batchNumber)));
-        System.out.println(result.getParsingCoverageResultsTable(""));  //todo add proper info
-        logger.trace(result.getDiagnosticResults());
-        return result;
-    }
-
     /**
      * TODO trainingBatch should be renamed to just trainingData. Batch should be used in the upper method!
      * TODO Add documnetation here.

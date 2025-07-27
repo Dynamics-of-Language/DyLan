@@ -13,15 +13,12 @@ import qmul.ds.learn.Evaluation;
 import qmul.ds.learn.RecordTypeCorpus;
 import qmul.ds.learn.TTRWordLearner;
 import qmul.ds.learn.WordHypothesisBase;
-import static qmul.ds.learn.WordHypothesisBase.compareHypothesisBases;
-
 
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.io.*;
-import java.util.stream.Collectors;
+
 
 
 /**
@@ -542,66 +539,6 @@ public class BabyDSInduction {
     }
 
 
-    public void trainBabyDSwithHB(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress, String hbDir) {
-
-        logger.info("Training BabyDS model...");
-        // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
-        String[] files = new File(modelDir).list();
-        String x = modelDir + "lexicon.lex";
-        if (files != null) {
-            for (String file : files) {
-                if (file.startsWith("lexicon.lex")) {
-                    logger.info("Previously trained model found in the given directory with name: " + file);
-                    x = modelDir + file;
-                }
-            }
-                    // Verify model directory exists
-        File modelDirFile = new File(modelDir);
-        if (!modelDirFile.exists()) {
-            if (!modelDirFile.mkdirs()) {
-                throw new RuntimeException("Could not create model directory: " + modelDir);
-            }
-        }
-        
-        // Verify computational-actions.txt exists
-        File compActionsFile = new File(modelDir + "computational-actions.txt");
-        if (!compActionsFile.exists()) {
-            throw new RuntimeException("computational-actions.txt not found in: " + modelDir);
-        }
-        // if (new File(x).exists()) {
-        //     System.out.println("A trained model already exists at: " + modelDir);
-        //     Scanner scanner = new Scanner(System.in);
-        //     System.out.println("Do you want to load this model instead of training from scratch? (y/n)");
-        //     String answer = scanner.nextLine();
-        //     if (answer.equals("y") || answer.equals("Y")) {
-        //         logger.info("Loading the existing model...");
-        //         return;
-        //     } else if (answer.equals("n") || answer.equals("N")) {
-        //         logger.info("Training BabyDS model from scratch...");
-        //     } else {
-        //         logger.error("Invalid input. Please enter 'y/Y' or 'n/N'.");
-        //         return;
-        //     }
-        // }
-        
-        TTRWordLearner babyDS = new TTRWordLearner(seedGrammarAddress, trainingCorpus, hbDir);
-        try {
-            logger.info("BabyDS training starting...");
-            babyDS.learn();  //TODO it doesn't make sense that I can't specify "what top-N models to learn" here. Maybe
-            // to save time or for any other reasons I didn't want to do more calculations!
-            // Writing models to file:
-            
-            babyDS.getHypothesisBase().saveModelToJSON(modelDir);
-            for (int i = 1; i <= TOP_N; i++) {
-                babyDS.getHypothesisBase().saveLearnedLexicon(modelDir + "lexicon.lex", i);
-            }
-        } catch(Exception e) {
-            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
-        }
-    }
-    }
-
-
     public WordHypothesisBase trainBabyDSwithHB(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress, WordHypothesisBase previousModel) {
         WordHypothesisBase newModel = null;
         logger.info("Training BabyDS model...");
@@ -650,8 +587,6 @@ public class BabyDSInduction {
                 babyDS.learn();  //TODO it doesn't make sense that I can't specify "what top-N models to learn" here. Maybe
                 // to save time or for any other reasons I didn't want to do more calculations!
                 // Writing models to file:
-
-    //            babyDS.getHypothesisBase().saveModelToJSON(modelDir);
                 for (int i = 1; i <= TOP_N; i++) {
                     newModel = babyDS.getHypothesisBase();
                     newModel.saveLearnedLexicon(modelDir + "lexicon.lex", i);
@@ -838,78 +773,6 @@ public class BabyDSInduction {
     }
 
 
-    /**
-	 * Test method to verify save/load functionality.
-	 * Note: I have already tested if saving and loading methods work correctly (I think, need to double check).
-	 * Have a dataset of two samples, and compare the HB at the end of these two scenarios:
-	 * - Training on the first sample, then saving and loading the HB, then training on the second sample.
-	 * - Training on both samples together, then saving the HB.
-	 */
-	public void testWHBJson() {
-        String main_dir = "resource\\2025-babyds-RQ1\\hb1test\\".replace("\\", File.separator);
-        
-        // -------------------------------- Test one: both samples same time
-        String double_dir = main_dir + "double" + File.separator;
-        WordHypothesisBase double_hb = new WordHypothesisBase();
-        RecordTypeCorpus trainingCorpus = new RecordTypeCorpus();
-        try {
-            trainingCorpus.loadCorpus(new File(double_dir + "double.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        TTRWordLearner babyDSdouble = new TTRWordLearner(seedGrammarPath, trainingCorpus, "");
-        try {
-            babyDSdouble.learn();
-            double_hb = babyDSdouble.getHypothesisBase();
-            double_hb.saveModelToJSON(double_dir);
-            for (int i = 1; i <= TOP_N; i++) {
-                babyDSdouble.getHypothesisBase().saveLearnedLexicon(double_dir + "lexicon.lex", i);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
-        }
-        
-        // -------------------------- Test two: training on the first sample,
-        // save the hb and then loading it and continue training to get the second HB.
-        WordHypothesisBase single_hb = new WordHypothesisBase();
-        String single_dir = main_dir + "single" + File.separator;
-
-        TTRWordLearner babyDSsingle = new TTRWordLearner(seedGrammarPath, single_dir+"1.txt", "");
-        try {
-            babyDSsingle.learn();
-            single_hb = babyDSsingle.getHypothesisBase();
-            single_hb.saveModelToJSON(single_dir);
-            for (int i = 1; i <= TOP_N; i++) {
-                babyDSsingle.getHypothesisBase().saveLearnedLexicon(single_dir + "lexicon.lex", i);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
-        }
-        
-        WordHypothesisBase single_hb2;
-        TTRWordLearner babyDSsingle2 = new TTRWordLearner(seedGrammarPath, single_dir+"2.txt", single_dir);
-        try {
-            babyDSsingle2.learn();
-            single_hb2 = babyDSsingle2.getHypothesisBase();
-            // single_hb2.saveModelToJSON(single_dir);
-            for (int i = 1; i <= TOP_N; i++) {
-                single_hb2.saveLearnedLexicon(single_dir + "lexicon.lex", i);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed during training: " + e.getMessage(), e);
-        }
-    
-        logger.info("Comparing hypothesis bases between combined training and sequential training...");
-        boolean result = compareHypothesisBases(double_hb, single_hb2);
-        if (result) {
-            logger.info(ANSI_GREEN + "Test passed! The hypothesis bases are equivalent." + ANSI_RESET);
-        } else {
-            logger.error(ANSI_RED + "Test failed! The hypothesis bases are different." + ANSI_RESET);
-        }
-	}
-
-
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // To run evaluation only, uncomment the following:
@@ -922,8 +785,8 @@ public class BabyDSInduction {
         // To run the full pipeline (training and testing based on parameters defined on top of this class), uncomment the following:
 //        String dtsName = args.length > 0 ? args[0] : DATASET_NAME;
 // ----------------------------- UNCOMMENT BELOW
-//        BabyDSInduction testInduction = new BabyDSInduction();
-//        testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, BDS_RQ1_CLASS2_PATH, "_train", SEED, seedGrammarPath, TOP_N);
+       BabyDSInduction testInduction = new BabyDSInduction();
+       testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, BDS_RQ1_CLASS2_PATH, "_train", SEED, seedGrammarPath, TOP_N);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
@@ -933,9 +796,6 @@ public class BabyDSInduction {
          BabyDSInduction test = new BabyDSInduction();
 //         test.makeNeuralParsingCorpus(DATASET_NAME, c2full, "");
 //        test.convertCurrentCorpusToNN(RQ1_C2_NTR_PATH);
-
-//        BabyDSInduction test = new BabyDSInduction();
-//        test.testWHBJson();
 
 
         // to train-test-split class2:
