@@ -18,14 +18,7 @@ import qmul.ds.action.ComputationalAction;
 import qmul.ds.action.Grammar;
 import qmul.ds.action.LexicalAction;
 import qmul.ds.action.Lexicon;
-import qmul.ds.dag.ActionReplayEdge;
-import qmul.ds.dag.DAG;
-import qmul.ds.dag.DAGEdge;
-import qmul.ds.dag.DAGTuple;
-import qmul.ds.dag.GroundableEdge;
-import qmul.ds.dag.UtteredWord;
-import qmul.ds.dag.VirtualRepairingEdge;
-import qmul.ds.dag.WordLevelContextDAG;
+import qmul.ds.dag.*;
 import qmul.ds.formula.Formula;
 import qmul.ds.formula.TTRFormula;
 import qmul.ds.formula.TTRRecordType;
@@ -95,12 +88,14 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	 */
 	public static final int max_repair_depth = 1;
 
+	// Added by AA
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
 	public static final String ANSI_BLUE = "\u001B[34m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_CYAN = "\u001B[36m";
+	public static final String ANSI_RED = "\u001B[31m";
 
 	public InteractiveContextParser(File resourceDir) {
 		super(resourceDir);
@@ -180,7 +175,6 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 	}
 
 	private boolean adjustOnce(Formula goal) {
-
 		if (repairInitiated()) {
 			logger.info("Repair initiated");
 			if (this.forcedRestart) {
@@ -200,20 +194,14 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 			}
 		} else if (getState().outDegree(getState().getCurrentTuple()) == 0)
 			applyAllPermutations(goal);
-
 		DAGEdge result;
 		do {
-
 			result = getState().goFirst();
-
 			if (result != null) {
-
 				break;
 			}
 		} while (getState().attemptBacktrack());
-
 		return (result != null);
-
 	}
 
 	public synchronized boolean parse(Formula goal) {
@@ -224,7 +212,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 
 		do {
 
-			if (!adjustOnce(goal)) {
+			if (!adjustOnce(goal)) {  // similar to HypOnce, have to combine these ideas
 				logger.debug("wordstack:" + getState().wordStack());
 				logger.debug("depth:" + getState().getDepth());
 				getState().setExhausted(true);
@@ -628,7 +616,7 @@ public class InteractiveContextParser extends DAGParser<DAGTuple, GroundableEdge
 		}
 
 		Collection<LexicalAction> actions = this.lexicon.get(word.word());
-		if (actions == null || actions.isEmpty()) {
+		if (actions == null || actions.isEmpty()) {  // AA TODO handle unknown words here, so it won't fail. Call hypUnkFromContext? or maybe return "UNK" so it is handled by parseUtterance?
 			logger.error(ANSI_YELLOW + "Word not in Lexicon: " + word + ANSI_RESET);
 			return null;
 		}

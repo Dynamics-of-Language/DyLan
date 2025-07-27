@@ -35,7 +35,7 @@ public abstract class WordLearner<T> {
 
 	Hypothesiser hypothesiser;
 
-	Corpus<T> corpus;
+	Corpus<T> corpus;  //AE: becomes Corpus<TTRRecordType> in TTRWordLearner
 	Iterator<Pair<Sentence<Word>, T>> corpusIterator;
 	WordHypothesisBase hb = new WordHypothesisBase();
 	public String parserResourceDir = "resource" + File.separator + "2009-english-test-induction";

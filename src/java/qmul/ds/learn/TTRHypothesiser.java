@@ -100,7 +100,7 @@ public class TTRHypothesiser extends Hypothesiser {
 					.getCurrentTuple().getTree().getPointer(), DSType.t, filtered);
 			for (Tree tree : trees) {
 				logger.info(tree);
-				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree);
+				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree); /// AE: is actually an action, doesn't' do anythign tho
 				logger.debug("Adding tree hyp child: " + treeHyp); // AA Kind of an edge
 				DAGInductionTuple child = new DAGInductionTuple(state.getCurrentTuple().getTree().clone());
 				Tree mergedInc = state.getCurrentTuple().getTargetTree().merge(treeHyp.getTree());
