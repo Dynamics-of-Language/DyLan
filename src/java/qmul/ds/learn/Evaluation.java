@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
 
 import qmul.ds.formula.Formula;
@@ -16,6 +17,7 @@ import qmul.ds.formula.TTRPath;
 import qmul.ds.formula.TTRRecordType;
 import qmul.ds.formula.TTRRelativePath;
 import qmul.ds.formula.Variable;
+import qmul.ds.tree.Tree;
 
 /**
  * A class to evaluate the performance of a ttr parser in terms of precision and recall of test corpus
@@ -648,7 +650,7 @@ public class Evaluation {
 	 * @param goldRT The gold record type to compare against
 	 * @return a Pair containing the EvaluationResult and the TTRRecordType of the best matching prediction.
 	 */
-	public TTRRecordType findBestInterpretation(List<TTRRecordType> predictions, TTRRecordType goldRT) {
+	public TTRRecordType findBestTTRInterpretation(List<TTRRecordType> predictions, TTRRecordType goldRT) {
 		logger.info("Finding best interpretation given the gold RT: " + goldRT);
 		logger.info("Checking against " +predictions.size()+ " predictions...");
 		EvaluationResult bestEval = null;
@@ -674,6 +676,45 @@ public class Evaluation {
 			}
 		}
 		return bestPred;
+	}
+
+
+	/**
+	 * The tree version of the above method.
+	 * Finds the maximal overlapping prediction given a gold record type.
+	 * This is, in the best case, an EM (two-way subsumption), or just the one with max f1-score.
+	 * @param predictions List of predicted record types
+	 * @param goldRT The gold record type to compare against
+	 * @return a Pair containing the EvaluationResult and the TTRRecordType of the best matching prediction.
+	 */
+	public Tree findBestTreeInterpretation(List<Pair<TTRRecordType, Tree>> predictions, TTRRecordType goldRT) {
+		logger.info("Finding best interpretation given the gold RT: " + goldRT);
+		logger.info("Checking against " +predictions.size()+ " predictions...");
+		EvaluationResult bestEval = null;
+		Tree bestTree = null;
+		for (Pair<TTRRecordType, Tree> pair: predictions) {
+			TTRRecordType predRT = pair.first();
+			logger.info("Checking prediction: " + predRT);
+			if (predRT.subsumes(goldRT) && goldRT.subsumes(predRT)) {
+				// perfect match, return it
+				bestTree = pair.second();
+				logger.info("Found perfect match: " + predRT);
+				return bestTree;
+			}
+		}
+		// no perfect match, find the one with the best f-score
+		for (Pair<TTRRecordType, Tree> pair: predictions) {
+			TTRRecordType predRT = pair.first();
+			EvaluationResult eval = precisionRecall(predRT, goldRT);
+			if (bestEval == null || eval.getFScore() > bestEval.getFScore()) {
+				bestEval = eval;
+				bestTree = pair.second();
+				logger.info("New best prediction: " + predRT + " with f-score: " + eval.getFScore());
+			} else {
+				logger.info("Skipping prediction: " + predRT + " with f-score: " + eval.getFScore());
+			}
+		}
+		return bestTree;
 	}
 
 

@@ -151,7 +151,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
      * the constructor with (String dirNameOrURL, int topN) parameters.
      */
     public Lexicon(String dirNameOrURL) {
-        this(dirNameOrURL, 1);
+        this(dirNameOrURL, 3);
     }
 
 

@@ -1,0 +1,15 @@
+//door                        count                          obj_door
+//ball                        count                          obj_ball
+//box                         count                          obj_box
+//key                         count                          obj_key
+//pickup                      verb                           state_holding
+//goto                        verb                           state_beside
+//open                        verb                           state_opened
+//a                           det                            epsilon
+//the                         det                            iota
+//green                       adj                           color_green
+//red                         adj                           color_red
+//yellow                      adj                           color_yellow
+//blue                        adj                           color_blue
+//grey                        adj                           color_grey
+//purple                      adj                           color_purple

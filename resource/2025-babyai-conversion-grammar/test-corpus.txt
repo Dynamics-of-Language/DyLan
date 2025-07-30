@@ -1,0 +1,3 @@
+Sent : open the door
+Sem : [r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]
+Num : 112 - Class: 1

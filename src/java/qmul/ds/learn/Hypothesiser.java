@@ -65,7 +65,7 @@ public class Hypothesiser {
 	protected Set<LexicalHypothesis> targetIndependentHyps;
 	protected DAGInductionState state;
 	protected Tree target;  // AA TODO add "tree" to the name of the var
-	protected String curUnknownSubstring = "";
+	protected String curUnknownSubstring = "";  // AA+AE it's not necessarily a single word, and better be split (see examples below)
 	protected LexicalHypothesis copyHyp;
 
 	public Hypothesiser(Lexicon seedLexicon, Grammar grammar, Tree start, Tree target) {
@@ -208,20 +208,20 @@ public class Hypothesiser {
 	}
 
 	protected boolean hypothesiseOnce() {
-		if (!(state.getCurrentTuple().getTree().subsumes(this.target) && this.target.subsumes(state.getCurrentTuple()
-				.getTree()))) {
+		if (!(state.getCurrentTuple().getTree().subsumes(this.target) && this.target.subsumes(state.getCurrentTuple().getTree()))) {
 			if (state.getCurrentTuple().getTree().isComplete()) {
 				logger.info("got to complete tree:" + state.getCurrentTuple().getTree());
 				logger.info("no equality. target is:" + this.target);
 			}
 			if (!state.wordStack().isEmpty()) {
+				logger.debug("Word stack is not empty, it is:" + state.wordStack());
 				if (this.seedLexicon.containsKey(state.wordStack().peek())) {
 					// applying lexical actions for top(wordstack)
 					this.applyKnownLexical();
 				}
 				if (!this.seedLexicon.containsKey(state.wordStack().peek())) {  // AA Why this is not an ELSE for the previous IF?
 					while (!state.wordStack().isEmpty() && !this.seedLexicon.containsKey(state.wordStack().peek())) {  // AA also here, why the repeated condition?
-						this.curUnknownSubstring += state.wordStack().pop() + " ";
+						this.curUnknownSubstring += state.wordStack().pop() + " "; // AE filled with all the words
 						logger.debug("Unknown word boundary. Setting CurUnknown to:" + this.curUnknownSubstring);
 					}
 					this.curUnknownSubstring = this.curUnknownSubstring.trim();
@@ -295,7 +295,7 @@ public class Hypothesiser {
 	}
 
 	/**
-	 * 
+	 * AE puts the state back into "ready for parsing"
 	 * @return true if successful, false if we're at root without any more exploration possibilities
 	 */
 	public boolean attemptBacktrack() {

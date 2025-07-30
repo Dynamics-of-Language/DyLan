@@ -1,6 +1,0 @@
-//door                        count                          obj_door
-//box                         count                          obj_box
-//pickup                      verb                           state_holding
-//goto                        verb                           state_beside
-//a                           det                            epsilon
-//the                         det                            iota

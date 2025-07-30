@@ -177,7 +177,7 @@ public class BabyDSInduction {
                                     break;
                                 }
                             }
-                            parsedSem = eval.findBestInterpretation(allSemantics, goldSem);
+                            parsedSem = eval.findBestTTRInterpretation(allSemantics, goldSem);
 
                             evalList.add(new TTRRecordType[]{parsedSem, goldSem});
                             logger.debug("Hyp semantics: " + parsedSem);

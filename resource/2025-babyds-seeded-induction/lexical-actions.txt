@@ -1,0 +1,55 @@
+// Lexical actions for seed lexical actions for babyAI
+// Arash A+E , 2025
+
+// Rule metavariables: uppercase rule spec arguments
+// Formula metavariables: A,B,C
+// Bottom requirement: !
+
+
+
+count(PRED)
+IF    ?Ty(cn)
+THEN  ttrput([x31 : e|head==x31 : e|p31==PRED(x31) : t])
+      put(Ty(cn))
+ELSE  abort
+
+
+adj(PRED)
+IF    ?Ty(cn)
+      ¬<\/0>Ex.x
+      ¬<\/1>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>cn))
+      ttrput(R2^(R2 ++ [p140==PRED(R2.head) : t|head==R2.head : e]))
+      put(Ty(cn>cn))
+ELSE  abort
+
+
+verb(PRED)
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      ttrput(R1^(R1 ++ [e70==PRED : es|head==e70 : es|p140==obj(e70, R1.head) : t]))
+      delete(?Ty(e>t))
+      go(</\>)
+      go(\/0)
+ELSE  abort
+
+
+det(PRED)
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(Ty(cn>e))
+      ttrput(R1^[r : R1|x220==PRED(r.head, r) : e|head==x220 : e])
+ELSE  abort
