@@ -1,0 +1,7 @@
+Sent : pickup the box
+Sem : [r : [x221 : e|head==x221 : e|p221==obj_box(x221) : t]|x222==iota(r.head, r) : e|e111==state_holding : es|head==e111 : es|p222==obj(e111, x222) : t]
+Num : 111 - Class: 1
+
+//Sent : open the door
+//Sem : [r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]
+//Num : 112 - Class: 1
