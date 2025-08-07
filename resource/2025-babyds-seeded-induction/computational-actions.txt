@@ -84,6 +84,7 @@ THEN	put(?+eval)
 ELSE	abort
 *//
 
+//*
 hyp-adjunction-e
 IF      ?ty(e)
 		¬<\/0>Ex.x
@@ -102,7 +103,7 @@ THEN    put(?+eval)
         go(\/1)
         put(?ty(e>t))
 ELSE    abort
-
+*//
 
 hyp-build-t-1
 IF      ?ty(t)
@@ -295,7 +296,7 @@ THEN	put(?+eval)
 ELSE	abort
 
 
-
+//*
 hyp-adj-t
 IF		ty(t)
 		¬<\/L>Ex.x	
@@ -331,7 +332,7 @@ THEN	put(?+eval)
 		put(?ty(t))
 ELSE	abort
 
-
+*//
 
 
 /////////////////////// END OF GENERAL TREE BUILDING HYPS

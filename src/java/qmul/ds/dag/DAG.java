@@ -535,9 +535,8 @@ public abstract class DAG<T extends DAGTuple, E extends DAGEdge> extends Directe
 				updateLastN();
 
 				logger.info("depth is now:" + getDepth());
-				logger.debug("e.word() before:" + e.word());
 				if (e.word() != null) {
-					logger.debug("e.word() after:" + e.word());
+					logger.debug("Edge word is :" + e.word());
 					if (e.word().equals(this.wordStack().peek()))
 						this.wordStack.pop();
 					else {

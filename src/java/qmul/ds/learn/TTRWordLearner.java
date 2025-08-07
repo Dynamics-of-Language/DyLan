@@ -3,9 +3,12 @@ package qmul.ds.learn;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.stanford.nlp.ling.HasWord;
+import org.apache.jena.tdb.store.Hash;
 import org.apache.log4j.Logger;
 
 import qmul.ds.formula.TTRRecordType;
@@ -125,25 +128,40 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			return true;
 		}
 		logger.info(ANSI_GREEN +  "Got " + hyps.size() + " sequences from Hypothesiser for "+ entry.second() + ANSI_RESET);
+		logger.info(ANSI_GREEN);
+		for(CandidateSequence cs: hyps)
+		{
+			logger.info(cs.toShortString());
+
+		}
+		logger.info(ANSI_RESET);
+
 		logger.info(ANSI_GREEN + "Now splitting the sequences..." + ANSI_RESET);
 		// DAGHypothesiser.printHypMap(hyps);
+		Collection<Word> unknownWords = getUnknownWords(entry.first());
+
 		hb.forgetCurrentDist();
 		int totalSplit = 0;  // AA: Better be called `totalSplits`!
 		int i = 0;
 		try {
+
 			for (CandidateSequence cs: hyps) {  // TODO Potential parallelisable loop
 				i++;
 				logger.debug("Splitting: " + cs.toShortString());
 				Set<List<CandidateSequence>> splitSequences = cs.split();
-				for (List<CandidateSequence> seq: splitSequences)
-					logger.trace("Result: " + seq);
+				for (List<CandidateSequence> seq: splitSequences) {
+					logger.trace("Result: " + seq + "\n");
+				}
+
 				totalSplit += splitSequences.size();
-				logger.trace(i + ":" + splitSequences.size()+ " ");
+				logger.debug(i + ":" + splitSequences.size()+ " ");
 				logger.debug("Adding split sequences to hypothesis base...");
+
 				hb.addSequenceTuples(splitSequences);
 			}
+
 			logger.info("\n");
-			this.hb.updateDistsEndOfExample(entry.first());
+			this.hb.updateDistsEndOfExample(unknownWords);
 			logger.info("Processing took:"+ (System.currentTimeMillis()-time)/1000 + " seconds");  // AA Not working correctly!
 		} catch (Exception e) {
 			logger.fatal("problem while updating distributions on sentence:" + entry);
@@ -151,9 +169,18 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 			e.printStackTrace();
 			System.exit(1);
 		}
-		// System.out.println("All Done. Prior after " + sentence);
-		// System.out.println(hb.getPrior());
+
 		return true;
+	}
+
+	private Collection<Word> getUnknownWords(Sentence<Word> sent) {
+		HashSet<Word> result = new HashSet<Word>();
+		for (Word w: sent)
+		{
+			if (!this.hypothesiser.seedLexicon.containsKey(w.word()))
+				result.add(w);
+		}
+		return result;
 	}
 
 
@@ -175,31 +202,14 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 
 	
 	public static void main(String[] args) {
-//		TTRWordLearner learner = new TTRWordLearner();  // Commented out by Arash A.
-		String babyDSPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator);  // fix later
-		String corpusPath = babyDSPath + "babyds_train_86.txt";//"CHILDES400.txt";//"dataset.txt";//"AAtrain-3-testInduction.txt";
-		String lexiconPath = babyDSPath + "lexicon.lex";
-		TTRWordLearner learner = new TTRWordLearner(babyDSPath);
-//		logger.info(ANSI_YELLOW + "learner initialized with seed resource dir: " + babyDSPath + ANSI_RESET);
-		try {
-//			learner.loadCorpus(new File(args[2]));  // Commented out by Arash A.
-//			learner.learn();
-//			learner.getHypothesisBase().saveLearnedLexicon("resource/2013-ttr-learner-output/lexicon.lex", 2);
-//			learner.getHypothesisBase().saveLearnedLexicon("resource/2013-ttr-learner-output/lexicon.lex", 3);
-//			learner.getHypothesisBase().saveLearnedLexicon("resource/2013-ttr-learner-output/lexicon.lex", 4);
-//			learner.getHypothesisBase().saveLearnedLexicon("resource/2013-ttr-learner-output/lexicon.lex", 5);
+		String babyDSPath = "resource\\2025-babyds-seeded-induction\\".replace("\\", File.separator);  // fix later
+		String corpusPath = babyDSPath + "class1-debug.txt";
 
-			File corpusFile = new File(corpusPath);
-			learner.loadCorpus(corpusFile);
-			learner.learn();
+		TTRWordLearner learner = new TTRWordLearner(babyDSPath, corpusPath);
 
-			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 1);  // Testing if top-1 can be a thing here:
-			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 2);
-			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 3);
-			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 4);
-			learner.getHypothesisBase().saveLearnedLexicon(lexiconPath, 5);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		learner.learn();
+		//System.out.println(learner.hypothesiser.targetIndependentHyps);
 	}
+
+
 }

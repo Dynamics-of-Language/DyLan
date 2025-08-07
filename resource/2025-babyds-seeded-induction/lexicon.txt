@@ -1,6 +1,6 @@
 //door                        count                          obj_door
 //ball                        count                          obj_ball
-//box                         count                          obj_box
+box                         count                          obj_box
 //key                         count                          obj_key
 //pickup                      verb                           state_holding
 //goto                        verb                           state_beside

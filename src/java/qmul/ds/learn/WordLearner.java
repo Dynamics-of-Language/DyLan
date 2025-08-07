@@ -101,6 +101,7 @@ public abstract class WordLearner<T> {
 		}
 		int i=0;
 		int corpusSize = corpus.size();
+
 		try (ProgressBar pb = new ProgressBar("Learning progress", corpusSize)) {
 			while (learnOnce()) {
 				i++;

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import qmul.ds.ParserTuple;
 import qmul.ds.action.Action;
 import qmul.ds.action.ComputationalAction;
+import qmul.ds.action.LexicalAction;
 import qmul.ds.tree.Tree;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Word;
@@ -190,6 +191,8 @@ public class CandidateSequence extends ArrayList<Action> {
 				if (lh.containsContentDecoration())
 					c++;
 			}
+			else if (a instanceof LexicalAction)
+				c++;
 		}
 		return c;
 	}
@@ -241,8 +244,25 @@ public class CandidateSequence extends ArrayList<Action> {
 	}
 
 
+	public String prettyPrintSplit(Set<List<CandidateSequence>> set)
+	{
+		String result = "";
+		for (List<CandidateSequence> li:set)
+		{
+			result+="[\n";
+
+			for(CandidateSequence cs: li)
+			{
+				result+=cs.toShortString();
+				result+="\n";
+			}
+			result+="]";
+		}
+		return result;
+	}
+
 	/**
-	 * AA: Below, SUQUENCES better be called subsequences, because they are.
+	 * AA: Below, SEQUENCES better be called subsequences, because they are.
 	 * splits this sequence recursively into n sequences where n is {@code this.words.size()}. follows the constraint
 	 * that each of these sequences must contain exactly one lexical hypothesis with formula decoration(s). Accordingly,
 	 * it assumes that in this candidate sequence for n words there are exactly n Lex Hyps with formula decorations.
@@ -253,7 +273,7 @@ public class CandidateSequence extends ArrayList<Action> {
 	 */
 	public Set<List<CandidateSequence>> split() {
 		int numFormulae = numFormulaDecorations();
-		logger.debug("Splitting: " + this);
+		logger.debug("Splitting: " + this.toShortString());
 		logger.debug("words are: " + this.words);
 
 		if (this.words.size() != numFormulae)
@@ -264,65 +284,111 @@ public class CandidateSequence extends ArrayList<Action> {
 		// __________________________________
 		// base case for recursion:
 		if (this.words.size() == 1) {
+			logger.debug("base case:"+this.words);
 			List<CandidateSequence> l = new ArrayList<CandidateSequence>();
-			l.add(this.removeComputationalFromRight());
+			CandidateSequence compRemoved = this.removeComputationalFromRight();
+			//if this is a known word sequence, return empty set.
+			if (compRemoved.get(compRemoved.size()-1) instanceof LexicalAction)
+			{
+				logger.debug("returning empty set");
+				return result;
+			}
+
+			l.add(compRemoved);
+
+
 			result.add(l);
 			return result;
 		}
 		// __________________________________
-		ParserTuple start = this.start;  // AA: What is this for?
-		Action a;  // AA: What is this for?
+		ParserTuple start = this.start;
+		Action a;
 		int i = 0;
-		// first find the first Lexical Hyp that contains a formula decoration.
+		// first either find the first Lexical Hyp that contains a formula decoration, or a LexicalAction.
 		for (; i < size(); i++) {
 			a = get(i);
-			logger.debug("applying " + a + " to:");
-			logger.debug(start);
+			logger.trace("applying " + a + " to:");
+			logger.trace(start);
 			Tree t = a.execTupleContext(start.getTree().clone(), start);
-			logger.debug("result was: " + t);
+			logger.trace("result was: " + t);
 			start = new ParserTuple(t);
 			if (a instanceof LexicalHypothesis) {
 				LexicalHypothesis lh = (LexicalHypothesis) a;
-				if (lh.containsContentDecoration())
+				if (lh.containsContentDecoration()) {
+					logger.debug("found lex hyp at:"+i);
 					break;
+				}
+			}
+			else if (a instanceof LexicalAction) {
+				logger.debug("found lex action at:"+i);
+				break;
 			}
 		}
-		// i is now the index of the first Lex Hyp that contains a formula decoration
+		// i is now the index of the first Semantic Hyp or the first Lexical Action
 
 		for (int j = i + 1; j < size() - 1; j++) {
 			if (get(j).getName().startsWith(TTRHypothesiser.HYP_ADJUNCTION_PREFIX))
 				continue;
+
+
 			CandidateSequence chopLeft = new CandidateSequence(this.start, this.subList(0, j), this.words.subList(0, 1));
+			logger.debug("chopleft:" + chopLeft.toShortString());
 			CandidateSequence rest = new CandidateSequence(start, this.subList(j, this.size()), this.words.subList(1,
 					this.words.size()));
+			logger.debug("rest:"+rest.toShortString());
+
 			// get all possible splits of the rest of this sequence recursively.
 			Set<List<CandidateSequence>> restSplits = rest.split();
 			// now merge chopLeft with the result of split(rest)
-			for (List<CandidateSequence> listRest : restSplits) {
-				List<CandidateSequence> li = new ArrayList<CandidateSequence>();
-				li.add(chopLeft);
-				li.addAll(listRest);
-				result.add(li);
+			// only if chopleft doesn't end with a lexical action; otherwise discard it, and return recursion on rest
+			if (!(chopLeft.get(chopLeft.size()-1) instanceof LexicalAction)) {
+				logger.debug("chopleft ends in lex hyp. Combining chopleft with rest.");
+
+
+				if (restSplits.isEmpty())
+				{
+					logger.debug("rest is empty");
+					List<CandidateSequence> li = new ArrayList<CandidateSequence>();
+					li.add(chopLeft);
+					result.add(li);
+				}
+
+				for (List<CandidateSequence> listRest : restSplits) {
+					List<CandidateSequence> li = new ArrayList<CandidateSequence>();
+					li.add(chopLeft);
+					li.addAll(listRest);
+					result.add(li);
+				}
+			}
+			else {
+				logger.debug("chopleft ends in lex action. not combining.");
+				result.addAll(restSplits);
+				break;
 			}
 			// skip current sequence of computational actions, if any
 			while (j < size() && (get(j) instanceof ComputationalAction || get(j).getName().startsWith(TTRHypothesiser.HYP_ADJUNCTION_PREFIX))) {
 				Tree clone = start.getTree().clone();
-				logger.debug("applying " + get(j) + " to " + clone);
-				logger.debug("action: " + get(j) + " to " + clone);  // AA: Unnecessary log, same as above.
+				logger.trace("applying " + get(j) + " to " + clone);
+				logger.trace("action: " + get(j) + " to " + clone);  // AA: Unnecessary log, same as above.
 				Tree res = get(j).execTupleContext(clone, start);
-				logger.debug("result was:" + res);
+				logger.trace("result was:" + res);
 				if (res == null)
 					throw new IllegalStateException("Result of action application was null");
 				start = new ParserTuple(res);
 				j++;
 			}
 			start = new ParserTuple(get(j).execTupleContext(start.getTree().clone(), start));
-			// we want to end the process if we've reached a second formula decoration:
+			logger.debug("skipped comp actions, now at:"+get(j));
+
+			// we want to end the process if we've reached a second formula decoration, or a LexicalAction:
 			if (get(j) instanceof LexicalHypothesis) {
 				LexicalHypothesis lh = (LexicalHypothesis) get(j);
 				if (lh.containsContentDecoration())
 					break;
 			}
+			else if (get(j) instanceof LexicalAction)
+				break;
+
 		}
 		return result;
 	}

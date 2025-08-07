@@ -72,11 +72,13 @@ public class Hypothesiser {
 		this.target = target;
 		this.state = new DAGInductionState(start);
 		this.seedLexicon = seedLexicon;
+		logger.info("Loaded seed lexicon with # entries: "+seedLexicon.keySet().size());
 		separateGrammars(grammar);
 	}
 
 	public Hypothesiser(String resourceDirOrURL) {
 		this.seedLexicon = new Lexicon(resourceDirOrURL);
+		logger.info("Loaded seed lexicon with # entries: "+seedLexicon.keySet().size());
 		separateGrammars(new Grammar(resourceDirOrURL));
 		this.state = new DAGInductionState(new Tree());
 	}
@@ -213,6 +215,8 @@ public class Hypothesiser {
 				logger.info("got to complete tree:" + state.getCurrentTuple().getTree());
 				logger.info("no equality. target is:" + this.target);
 			}
+
+
 			if (!state.wordStack().isEmpty()) {
 				logger.debug("Word stack is not empty, it is:" + state.wordStack());
 				if (this.seedLexicon.containsKey(state.wordStack().peek())) {
@@ -272,7 +276,8 @@ public class Hypothesiser {
 
 	// assumes word stack non-empty. applies top(wordStack)
 	public void applyKnownLexical() {
-		for (Action a : this.seedLexicon.get(state.wordStack().peek())) {
+		logger.info("Applying known lexical");
+		for (Action a : this.seedLexicon.get(state.wordStack().peek().word())) {
 			// if a non-optional action can be carried out, it has to be, with
 			// no other computational possibilities
 			// on this node
@@ -287,8 +292,8 @@ public class Hypothesiser {
 				logger.debug("failed subsumption result was:" + result);
 				logger.debug("Target:" + target);
 			} else {
-				logger.debug("applied action " + a + " to " + t);
-				logger.debug("result was:" + result);
+				logger.info("applied action " + a + " to " + t);
+				logger.info("result was:" + result);
 				state.addChild(result, a.instantiate(), state.wordStack().peek());
 			}
 		}
@@ -358,6 +363,8 @@ public class Hypothesiser {
 	}
 
 	public void applyLexicalHypotheses(Tree target) {
+		logger.info("Applying lexical hypotheses");
+
 		for (LexicalHypothesis a : this.localLexicalHyps(target)) {
 			// if a non-optional action can be carried out, it has to be, with
 			// no other computational possibilities
@@ -386,8 +393,8 @@ public class Hypothesiser {
 						logger.debug("failed subsumption result was:" + pair.second());
 						logger.debug("Action instance was:" + pair.first);
 					} else {
-						logger.debug("Success, result was:" + pair.second());
-						logger.debug("Action instance was:" + pair.first());
+						logger.info("Successfully applied:" + pair.first());
+						logger.info("Result was:" + pair.second());
 						state.addChild(pair.second(), pair.first(), new UtteredWord(this.curUnknownSubstring));
 					}
 				}
@@ -456,7 +463,7 @@ public class Hypothesiser {
 	}
 
 	protected Set<LexicalHypothesis> localLexicalHyps(Tree target) {
-		logger.info("Hypothesising local lexical actions");
+
 		Tree t = state.getCurrentTuple().getTree();
 		NodeAddress pointer = t.getPointer();
 
@@ -507,9 +514,14 @@ public class Hypothesiser {
 		Node targetNode = target.get(fixedOnTarget);
 		Set<LexicalHypothesis> set = new HashSet<LexicalHypothesis>(targetIndependentHyps);
 		// logger.info("Supposedly fixed pointer address on target:"+fixedOnTarget);
-		if (node.hasType() || !isTerminalIn(t, t.getPointer())) {
+		logger.info("top of stack:"+state.wordStack().peek().word());
+
+		if (seedLexicon.containsKey(state.wordStack().peek().word()) ||
+				node.hasType() ||
+				!isTerminalIn(t, t.getPointer())) {
 			return set;
 		}
+
 		if (isTerminalIn(target, fixedOnTarget)) {
 
 			// only if terminal will we hypothesise copying action
@@ -535,7 +547,7 @@ public class Hypothesiser {
 				logger.info("no unification hyps");
 				// return new HashSet<LexicalHypothesis>();
 			} else {
-				set.add(new LexicalHypothesis("hyp-sem(" + f + ")", putList, manifest));
+				set.add(new LexicalHypothesis(HYP_SEM_PREFIX+"(" + f + ")", putList, manifest));
 				// return set;
 			}
 		} else {
