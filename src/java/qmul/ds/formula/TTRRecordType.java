@@ -6,10 +6,8 @@ import java.awt.Graphics2D;
 import java.util.*;
 import java.util.regex.Matcher;
 
-import org.apache.jena.sparql.core.Var;
 import org.apache.log4j.Logger;
 
-import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.util.Pair;
 import qmul.ds.Context;
 import qmul.ds.action.meta.Meta;
@@ -17,7 +15,6 @@ import qmul.ds.action.meta.MetaElement;
 import qmul.ds.action.meta.MetaFormula;
 import qmul.ds.dag.DAGEdge;
 import qmul.ds.dag.DAGTuple;
-import qmul.ds.learn.RecordTypeCorpus;
 import qmul.ds.learn.TreeFilter;
 import qmul.ds.tree.BasicOperator;
 import qmul.ds.tree.Node;
@@ -2297,80 +2294,97 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	public String toPythonDictString() {
 		logger.trace("Building python dictionary string for: " + this);
 		TTRRecordType rtCopy = this.clone();
-		String s = "";
-		Set<TTRLabel> processedLabels = new HashSet<>();
-//		Set<TTRLabel> labels = this.getLabels();
 		List<TTRField> fields = rtCopy.getFields();
 		boolean hasBefore = false;
+		List<String> dictEntries = new ArrayList<>();
+		
 		for (TTRField field: fields) {  // Reminder: has label, type, and dsType
 			TTRLabel label = field.getLabel();
 			logger.trace("Label: " + label);
-			if (label.toString().startsWith("head")) {
-				continue;
-			} else if (label.toString().startsWith("r")) {
-				continue;  //todo
-			} else if (label.toString().startsWith("e")) {
-				// for babyDS has the event term in it.
-				String type = field.getType().toString();
-				if (type.startsWith("state_")) {
-					String state = type.substring(6);
-					logger.trace("State: " + state);
-					s += "'state': '" + state + "', ";
-					rtCopy = rtCopy.removeField(field);
+			
+			try {
+				if (label.toString().startsWith("head")) {
+					continue;
+				} else if (label.toString().startsWith("r")) {
+					continue;  //todo
+				} else if (label.toString().startsWith("e")) {
+					// for babyDS has the event term in it.
+					String type = field.getType().toString();
+					if (type.startsWith("state_")) {
+						String state = type.substring(6);
+						logger.trace("State: " + state);
+						dictEntries.add("'state': '" + state + "'");
+						rtCopy = rtCopy.removeField(field);
+					} else {
+						logger.warn("Unhandled type for e: " + type);
+					}
+				} else if (label.toString().startsWith("p")) {
+					String type = field.getType().toString();
+					if (type.startsWith("obj(")) {
+						try {
+							String objectEpsilonIndex = type.substring(type.indexOf(",") + 1, type.indexOf(")")).trim();
+							logger.trace("Object epsilon index: " + objectEpsilonIndex);
+							rtCopy = rtCopy.removeField(field);
+							
+							Formula correspondingEpsilonFormula = rtCopy.getType(new TTRLabel(objectEpsilonIndex));
+							if (correspondingEpsilonFormula != null) {
+								String correspondingEpsilonType = correspondingEpsilonFormula.toString();
+								String correspondingR = correspondingEpsilonType.substring(correspondingEpsilonType.indexOf(",") + 1, correspondingEpsilonType.indexOf(")")).trim();
+								logger.trace("Corresponding r: " + correspondingR);
+								
+								TTRField rField = rtCopy.getField(new TTRLabel(correspondingR));
+								if (rField != null && rField.getType() != null) {
+									String objectAttributesRT = rField.getType().toString();
+									logger.trace("Object attributes RT: " + objectAttributesRT);
+									// Now have to get the attributes of the object
+									String objAttributes = TTRRecordType.parse(objectAttributesRT).toPythonDictString();
+									logger.trace("Attributes of object: " + objAttributes);
+									if (!objAttributes.trim().isEmpty()) {
+										dictEntries.add(objAttributes);
+									}
+								}
+							}
+						} catch (Exception e) {
+							logger.warn("Error processing obj field: " + e.getMessage());
+						}
+					} else if (type.startsWith("before")) {
+						hasBefore = true;
+						continue; // TODO
+					} else if (type.startsWith("col_")) {
+						String color = type.substring(4, type.indexOf("("));
+						logger.trace("Object Color: " + color);
+						dictEntries.add("'color': '" + color + "'");
+					} else if (type.startsWith("obj_")) {
+						String shape = type.substring(4, type.indexOf("("));
+						logger.trace("Object shape: " + shape);
+						dictEntries.add("'type': '" + shape + "'");
+					} else {
+						logger.warn("Unhandled type for p: " + type);
+					}
+				} else if (label.toString().startsWith("x")) {
+					continue;  //todo
 				} else {
-					logger.warn("Unhandled type for e: " + type);
+					logger.warn("Unhandled label: " + label);
 				}
-			} else if (label.toString().startsWith("p")) {
-				String type = field.getType().toString();
-				if (type.startsWith("obj(")) {
-					String objectEpsilonIndex = type.substring(type.indexOf(",") + 1, type.indexOf(")")).trim();
-//					System.out.println(rtCopy.getDependents(label));
-					logger.trace("Object epsilon index: " + objectEpsilonIndex);
-					rtCopy = rtCopy.removeField(field);
-					String correspondingEpsilonType = rtCopy.getType(new TTRLabel(objectEpsilonIndex)).toString();
-					String correspondingR = correspondingEpsilonType.substring(correspondingEpsilonType.indexOf(",") + 1, correspondingEpsilonType.indexOf(")")).trim();
-					logger.trace("Corresponding r: " + correspondingR);
-//					rtCopy = rtCopy.removeField(field); //todo fix which field to remove!
-					String objectAttributesRT = rtCopy.getField(new TTRLabel(correspondingR)).getType().toString();
-					logger.trace("Object attributes RT: " + objectAttributesRT);
-//					rtCopy = rtCopy.removeField(field); //todo fix which field to remove
-					// Now have to get the attributes of the object
-					String objAttributes = TTRRecordType.parse(objectAttributesRT).toPythonDictString();
-					logger.trace("Attributes of object: " + objAttributes);
-					s += objAttributes;
-
-				} else if (type.startsWith("before")) {
-					hasBefore = true;
-					continue; // TODO
-				} else if (type.startsWith("col_")) {
-					String color = type.substring(4, type.indexOf("("));
-					logger.trace("Object Color: " + color);
-					s += "'color': '" + color + "', ";
-				} else if (type.startsWith("obj_")) {
-					String shape = type.substring(4, type.indexOf("("));
-					logger.trace("Object shape: " + shape);
-					s += "'type': '" + shape + "', ";
-				} else {
-					logger.warn("Unhandled type for p: " + type);
-				}
-			} else if (label.toString().startsWith("x")) {
-				continue;  //todo
-			} else {
-				logger.warn("Unhandled label: " + label);
+			} catch (Exception e) {
+				logger.warn("Error processing field " + label + ": " + e.getMessage());
 			}
 		}
+		
 		if (hasBefore) {
-			s += "'is_before': " + "None";
+			dictEntries.add("'is_before': None");
 		}
-//		for (TTRField f : fields) {
-//			if (f.isHead())
-//				continue;
-//			else if (f.isManifest()) {  // deal with embedded recursively
-//				continue; // todo
-//			}
-//			s += f.getType() + ", ";
-//		}
-		return s;//s.substring(0, s.length() - 2) + "}"; //todo maybe no curly braces?
+		
+		// Join all dictionary entries with commas
+		String result = String.join(", ", dictEntries);
+		
+		// If no entries were found, return empty string instead of malformed dict
+		if (result.trim().isEmpty()) {
+			logger.warn("No dictionary entries found for TTRRecordType: " + this);
+			return "'empty': True";
+		}
+		
+		return result;
 	}
 
 
@@ -4245,6 +4259,27 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 	}
 
 
+    public boolean isIsomorphicTo(TTRRecordType other) {
+        return (this.subsumes(other) && other.subsumes(this));
+    }
+
+
+    /**
+     * TODO to be made parallel
+     * @param others
+     * @return
+     */
+    public boolean isIn(List<TTRRecordType> others) {
+        for (TTRRecordType other : others) {
+            if (this.isIsomorphicTo(other)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
 
 //	public boolean equals(Object o){
 //		if (o instanceof TTRRecordType)
@@ -4298,7 +4333,7 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 		// ==================  BabyDS semantics:
 		// Subj-0, Obj-1: Pickup a box
-		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
+		TTRRecordType b1 = TTRRecordType.parse("[r : [x13 : e|head==x13 : e|p13==obj_box(x13) : t|p14==col_red(x13) : t]|x14==epsilon(r.head, r) : e|e7==state_holding : es|head==e7 : es|p14==obj(e7, x14) : t]");
 
 		// go to a key
 		TTRRecordType bds_c1_0 = TTRRecordType.parse("[r : [x215 : e|head==x215 : e|p322==obj_key(x215) : t]|x216==epsilon(r.head, r) : e|e108==state_facing : es|head==e108 : es|p324==obj(e108,x216) : t]");
@@ -4349,35 +4384,36 @@ public class TTRRecordType extends TTRFormula implements Meta<TTRRecordType>, Co
 
 		// Testing getFilteredAbstractions
 //		List<Tree> trees = b2.getFilteredAbstractions(new NodeAddress("0"), DSType.t, false);
-		List<Tree> trees = bds_c2_01.getFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
-		List<Tree> treesWO = bds_c2_01.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
+
+		// List<Tree> trees = bds_c2_01.getFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
+		// List<Tree> treesWO = bds_c2_01.getMaximalFilteredAbstractions(new NodeAddress("0"), DSType.t, true);
 
 
-		int i = 1;
-		String s = "Got " + trees.size() + " abstractions FILTERING TRUE";
-		System.out.println(new String(new char[s.length()]).replace("\0", "="));
-		System.out.println(s);
-		System.out.println(new String(new char[s.length()]).replace("\0", "="));
-		for(Tree abs: trees) {
-			System.out.println("<Abstraction " + i + ">");
-			System.out.println(abs);
-			i++;
-			System.out.println(" ------------ ");
-		}
+		// int i = 1;
+		// String s = "Got " + trees.size() + " abstractions FILTERING TRUE";
+		// System.out.println(new String(new char[s.length()]).replace("\0", "="));
+		// System.out.println(s);
+		// System.out.println(new String(new char[s.length()]).replace("\0", "="));
+		// for(Tree abs: trees) {
+		// 	System.out.println("<Abstraction " + i + ">");
+		// 	System.out.println(abs);
+		// 	i++;
+		// 	System.out.println(" ------------ ");
+		// }
 
-		int i2 = 1;
-		String s2 = "Got " + treesWO.size() + " abstractions FILTERING TRUE";
-		System.out.println(new String(new char[s2.length()]).replace("\0", "="));
-		System.out.println(s2);
-		System.out.println(new String(new char[s2.length()]).replace("\0", "="));
-		for(Tree abs: treesWO) {
-			System.out.println("<Abstraction " + i2 + ">");
-			System.out.println(abs);
-			i2++;
-			System.out.println(" ------------ ");
-		}
+		// int i2 = 1;
+		// String s2 = "Got " + treesWO.size() + " abstractions FILTERING TRUE";
+		// System.out.println(new String(new char[s2.length()]).replace("\0", "="));
+		// System.out.println(s2);
+		// System.out.println(new String(new char[s2.length()]).replace("\0", "="));
+		// for(Tree abs: treesWO) {
+		// 	System.out.println("<Abstraction " + i2 + ">");
+		// 	System.out.println(abs);
+		// 	i2++;
+		// 	System.out.println(" ------------ ");
+		// }
 
-//		System.out.println(b1.toPythonDictString());
+		System.out.println(b1.toPythonDictString());
 
 		// NN to RT and RT to NN tests:
 //		String first = "[e0==state_beside : es|r1 : [x2 : e|p2==col_grey(x2) : t|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p5==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p4==ind_obj(e0, x3) : t|p3==obj(e0, x1) : t]";
