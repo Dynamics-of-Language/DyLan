@@ -79,8 +79,10 @@ public class BabyDS {
                             output.flush();
                             break;
                         }
+                        InteractiveContextParser babydsParser = new InteractiveContextParser(modelPath, 3); //TODO
+                        logger.info("BabyDS top-" + 3 + " actions loaded from: " + modelPath); //TODO
 
-                        List<TTRRecordType> allSems = processInstruction(fullInstruction);
+                        List<TTRRecordType> allSems = processInstruction(fullInstruction, babydsParser);
                         StringBuilder response = new StringBuilder();
 
                         // Handle case where parsing fails or returns empty list
@@ -213,7 +215,7 @@ public class BabyDS {
      * @param instruction The instruction string to process
      * @return List of semantic interpretations, or empty list if parsing fails
      */
-    public static List<TTRRecordType> processInstruction(String instruction) {
+    public static List<TTRRecordType> processInstruction(String instruction, InteractiveContextParser babydsParser) {
         if (instruction == null || instruction.trim().isEmpty()) {
             logger.warn("Empty or null instruction provided");
             return new ArrayList<>();
@@ -233,19 +235,19 @@ public class BabyDS {
         logger.info("Raw instruction: " + String.join(" ", rawWords));
         logger.info("Tokenized instruction: " + String.join(" ", tokenizedWords));
 
-        return parseInstruction(tokenizedWords);
+        return parseInstruction(tokenizedWords, babydsParser);
     }
 
     /**
      * Parse the instruction and return the semantic representation.
      * This is the internal implementation used by both socket and direct processing paths.
      */
-    private static List<TTRRecordType> parseInstruction(List<String> words) {
+    private static List<TTRRecordType> parseInstruction(List<String> words, InteractiveContextParser babydsParser) {
         Sentence<Word> instruction = Sentence.toSentence(words);
         List<TTRRecordType> allInterpretations = new ArrayList<>();
-        InteractiveContextParser babydsParser;
-        babydsParser = new InteractiveContextParser(modelPath, 3); //TODO
-        logger.info("BabyDS top-" + 3 + " actions loaded from: " + modelPath);
+        // InteractiveContextParser babydsParser;
+        // babydsParser = new InteractiveContextParser(modelPath, 3); //TODO
+        // logger.info("BabyDS top-" + 3 + " actions loaded from: " + modelPath);
         babydsParser.init();
         try {
             boolean isParsed = babydsParser.parse(instruction);
@@ -308,55 +310,25 @@ public class BabyDS {
     }
 
     public static void main(String[] args) {
-        if (directInstruction != null && !directInstruction.trim().isEmpty()) {
-            // Process the direct instruction
-            System.out.println("Processing direct instruction: " + directInstruction);
-            List<TTRRecordType> interpretations = processInstruction(directInstruction);
-            
-            if (interpretations.isEmpty()) {
-                System.out.println("No interpretations found.");
-            } else {
-                System.out.println("Found " + interpretations.size() + " interpretation(s):");
-                for (int i = 0; i < interpretations.size(); i++) {
-                    System.out.println("\nInterpretation " + (i + 1) + ":");
-                    System.out.println("Standard format: " + interpretations.get(i));
-                    
-                    // Get Python dictionary representation
-                                                        String pythonDict;
-                    try {
-                        String rawPythonDict = interpretations.get(i).toPythonDictString();
-                        // Remove trailing comma if present
-                        rawPythonDict = removeCharFromEnd(rawPythonDict, ',').trim();
-                        pythonDict = "{'x1': {" + rawPythonDict + "}}";
-                    } catch (Exception e) {
-                        pythonDict = "{'x1': {'error': 'Could not convert to Python format'}}";
-                        logger.warn("Could not convert interpretation to Python format: " + e.getMessage());
-                    }
-                    System.out.println("Python format:  " + pythonDict);
+        // Run in server mode (default)
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("BabyDS Parser Server started on port " + PORT);
+            while (running) {
+                try (Socket clientSocket = serverSocket.accept()) {
+                    System.out.println("Client connected from " + clientSocket.getInetAddress());
+                    handleClient(clientSocket);
+                    System.out.println("Client request handled successfully");
+                } catch (IOException e) {
+                    System.err.println("Error handling client connection: " + e.getMessage());
+                    logger.error("IOException in client handling: " + e.getMessage(), e);
+                } catch (Exception e) {
+                    System.err.println("Unexpected error handling client: " + e.getMessage());
+                    logger.error("Unexpected error in client handling: " + e.getMessage(), e);
                 }
             }
-        } else {
-            // Run in server mode (default)
-            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-                System.out.println("BabyDS Parser Server started on port " + PORT);
-
-                while (running) {
-                    try (Socket clientSocket = serverSocket.accept()) {
-                        System.out.println("Client connected from " + clientSocket.getInetAddress());
-                        handleClient(clientSocket);
-                        System.out.println("Client request handled successfully");
-                    } catch (IOException e) {
-                        System.err.println("Error handling client connection: " + e.getMessage());
-                        logger.error("IOException in client handling: " + e.getMessage(), e);
-                    } catch (Exception e) {
-                        System.err.println("Unexpected error handling client: " + e.getMessage());
-                        logger.error("Unexpected error in client handling: " + e.getMessage(), e);
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Could not listen on port " + PORT);
-                System.exit(-1);
-            }
+        } catch (IOException e) {
+            System.err.println("Could not listen on port " + PORT);
+            System.exit(-1);
         }
     }
 }
