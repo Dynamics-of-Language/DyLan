@@ -5,3 +5,11 @@ Num : 111 - Class: 1
 //Sent : open the door
 //Sem : [r : [x223 : e|head==x223 : e|p223==obj_door(x223) : t]|x224==epsilon(r.head, r) : e|e112==state_opened : es|head==e112 : es|p224==obj(e112, x224) : t]
 //Num : 112 - Class: 1
+
+Sent : pickup the blue box
+Sem : [r : [x221 : e|head==x221 : e|p221==obj_box(x221) : t|p37==col_blue(x221) : t]|x222==iota(r.head, r) : e|e111==state_holding : es|head==e111 : es|p222==obj(e111, x222) : t]
+Num : 111 - Class: 1
+
+Sent : putnextto a box the door
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_door(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p3==obj(e0, x1) : t|p4==ind_obj(e0, x3) : t]
+Num : 24 - Class: 2
