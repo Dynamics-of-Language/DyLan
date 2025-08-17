@@ -24,13 +24,12 @@ THEN  make(\/0)
       go(</\0>)
       make(\/1)
       go(<\/1>)
-      put(?Ty(cn>cn))
       ttrput(R2^(R2 ++ [p140==PRED(R2.head) : t|head==R2.head : e]))
       put(Ty(cn>cn))
 ELSE  abort
 
 
-verb(PRED)
+v_intran_imper(PRED)
 IF    ?Ty(e>t)
 THEN  put(Ty(e>t))
       ttrput(R1^(R1 ++ [e70==PRED : es|head==e70 : es|p140==obj(e70, R1.head) : t]))
@@ -39,6 +38,20 @@ THEN  put(Ty(e>t))
       go(\/0)
 ELSE  abort
 
+v_tran_imper(PRED)
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(Ty(e>(e>t)))
+      ttrput(R2^R1^(R1 ++ (R2 ++ [e0==PRED : es|head==e0 : es|p4==ind_obj(e0, R1.head) : t|p3==obj(e0, R2.head) : t])))
+ELSE  abort
 
 det(PRED)
 IF    ?Ty(e)

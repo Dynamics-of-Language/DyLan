@@ -110,7 +110,7 @@ public class TTRHypothesiser extends Hypothesiser {
 			for (Tree tree : trees) {
 				//logger.info(tree);
 				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree); /// AE: is actually an action, doesn't' do anythign tho
-				logger.debug("Adding tree hyp child: " + treeHyp); // AA Kind of an edge
+				logger.info("Adding tree hyp child: " + treeHyp); // AA Kind of an edge
 				DAGInductionTuple child = new DAGInductionTuple(state.getCurrentTuple().getTree().clone());
 				Tree mergedInc = state.getCurrentTuple().getTargetTree().merge(treeHyp.getTree());
 				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget().merge(treeHyp.getTree());  // AA
@@ -253,9 +253,13 @@ public class TTRHypothesiser extends Hypothesiser {
 		Node node = t.get(pointer);
 		Node targetNode = target.get(fixedOnTarget);
 		Set<LexicalHypothesis> set = new HashSet<LexicalHypothesis>(targetIndependentHyps);
-		// logger.info("Supposedly fixed pointer address on target:"+fixedOnTarget);
-		if (seedLexicon.containsKey(state.wordStack().peek().word()) ||
-				node.hasType()
+		//even if next word is known, we still want to be applying the targetIndependentHyps
+		if (!state.wordStack().isEmpty() && seedLexicon.containsKey(state.wordStack().peek().word()))
+		{
+			return set;
+		}
+
+		if (node.hasType()
 				|| !isTerminalIn(t, t.getPointer())) {
 			return set;
 		}
@@ -420,7 +424,7 @@ public class TTRHypothesiser extends Hypothesiser {
 				//logger.warn("words: " + state.wordStack());
 			} else {
 				logger.info("Good. Word stack is empty.");
-				logger.info("Have seen enough semantic hyps!");
+				logger.info("Have seen enough semantic hyps");
 				logger.info("extracting candidate sequence now");
 				CandidateSequence result = this.extractSequence();
 				logger.info(ANSI_PURPLE + "got sequence:\n" + result + ANSI_RESET);
