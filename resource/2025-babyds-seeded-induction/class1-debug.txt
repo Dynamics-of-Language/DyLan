@@ -13,3 +13,11 @@
 Sent : putnextto a box the door
 Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_door(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p3==obj(e0, x1) : t|p4==ind_obj(e0, x3) : t]
 Num : 24 - Class: 2
+
+//Sent : putnextto a blue box the red door
+//Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t|p100==col_blue(x0) : t]|x1==epsilon(r0.head, r0) : e|r1 : [x2 : e|head==x2 : e|p2==obj_door(x2) : t|p101==col_red(x2) : t]|x3==iota(r1.head, r1) : e|e0==state_beside : es|head==e0 : es|p3==obj(e0, x1) : t|p4==ind_obj(e0, x3) : t]
+//Num : 24 - Class: 2
+
+//Sent : goto a key and open the door
+//Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t|r1 : [x2 : e|head==x2 : e|p2==obj_door(x2) : t]|x3==iota(r1.head, r1) : e|e1==state_opened : es|p3==obj(e1, x3) : t|p4==before(e0, e1) : t]
+//Num : 1 - Class: 3
