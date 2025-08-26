@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -79,7 +80,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         protected LexicalAction create(String word, List<String> metavals) { // TODO should work for all versions
             ArrayList<String> lines = new ArrayList<String>();
             logger.trace("metavars for word : " + word + " of type " + name);
-            logger.info("creating lexical action for " + word + " using template " + name);
+            logger.info("creating lexical action for \"" + word + "\" using template " + name);
             for (String line : this.lines) {
                 for (int i = 0; i < metavals.size(); i++) {
                     line = line.replaceAll(metavars.get(i), metavals.get(i));
@@ -154,17 +155,22 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         this(dirNameOrURL, 3);
     }
 
+    public Lexicon(String dirNameOrURL, int topN) {
+        this(dirNameOrURL, topN, false);
+    }
+
 
     /**
      * @param dirNameOrURL containing at least the lexical-actions.txt and lexicon.txt files,
      *                     or newly, lexicon.lex-top-N.txt files.
      * @param topN         the number of most probable lexical actions to be read from the learnt lexicon files.
-     * @author Arash Ash & Arash Eshghi (modifications)
+     * @param loadLearntLexicon if true, load the learnt lexicon files rather than the rule-based actions.
+     * @author AA & Arash Eshghi (modifications)
      * (Added support for loading lexical actions learnt by Eshghi et al. (2013b))
-     *
+     * TODO Add option to load exactly lexicon.lex files or exactly lexicon.txt + templates. And handle the case where both exist in the same directory.
      * Read a set of {@link LexicalAction}s from file
      */
-    public Lexicon(String dirNameOrURL, int topN) {
+    public Lexicon(String dirNameOrURL, int topN, boolean loadLearntLexicon) {
         // System.out.println(" dirNameOrURL = " + dirNameOrURL + "\n topN = " + topN);     // Added by Arash A.
         // TODO suggestion by AA: if both learned actions and rule-based action files were found, raise an error and
         //  don't go with the rule-based actions by default (to avoid confusion).
@@ -173,7 +179,8 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
             // Adds support for initialising a lexicon object from the learnt lexical actions by
             // Eshghi et al. (2013b) instead of using macro files as templates.
             File f = new File(dirNameOrURL + File.separator + "lexicon.txt");
-            if (f.exists() && !f.isDirectory()) { // If lexicon.txt exists, load normally. Otherwise, use learnt files.
+            // Condition added by AA: forcing condition if topN was given, load the learnt files rather than the rule-based actions.
+            if (f.exists() && !f.isDirectory() && !loadLearntLexicon) { // If lexicon.txt exists, load normally. Otherwise, use learnt files.
                 if (dirNameOrURL.matches("(https?|file):.*")) {
                     reader = new BufferedReader(new InputStreamReader(
                             new URL(dirNameOrURL.replaceAll("/?$", "/") + MACRO_FILE_NAME).openStream()));
@@ -202,7 +209,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                 }
                 readWords(reader);
             } else {
-                logger.debug("Trying to load top-" + topN + " learned actions' files...");
+                System.out.println("Trying to load top-" + topN + " learned actions' files from " + dirNameOrURL);
                 loadLearntLexiconTxt(dirNameOrURL, topN);
             }
 
@@ -284,12 +291,28 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
         return lex;
     }
 
+    /**
+     * Save the lexicon to a text file.
+     * Lexical actions for each word are written in order of decreasing probability.
+     * @param fileName
+     * @throws IOException
+     */
     public void writeToTextFile(String fileName) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
         // Modified by Arash A. to write the effects in file correctly.
         for (String word : keySet()) {
-            for (LexicalAction la : get(word)) {
-                logger.debug("word: " + word + " | la: " + la);  // AA this should be debug, not info.
+            // Sort lexical actions by probability (highest first)
+            List<LexicalAction> sortedActions = new ArrayList<>(get(word));
+            Collections.sort(sortedActions, new Comparator<LexicalAction>() {
+                @Override
+                public int compare(LexicalAction la1, LexicalAction la2) {
+                    // Sort by probability descending (highest first)
+                    return Double.compare(la2.getProb(), la1.getProb());
+                }
+            });
+            
+            for (LexicalAction la : sortedActions) {
+                logger.debug("word: " + word + " | la: " + la + " | prob: " + la.getProb());
                     out.write("[" + la.getProb() + "," + la.getRank() + "]");
                     out.newLine();
                     out.write(la.toString());
@@ -698,14 +721,11 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
 
     /**
      * Loads learnt lexical actions by Eshghi et al. (2013b) from a text file.
-     * The format is different as it includes probabilities and does not use lexical templates.
+     * The format includes probabilities and ranks in the format [prob,rank] and does not use lexical templates.
      *
      * @param grammarPath path that contains lexicon.lex-top-N.txt files.
      * @param topN        the number of most probable lexical actions to be read from the learnt lexicon files.
      * @author Arash Ash & Arash Eshghi
-     * TODO what's exactly in `prob`? add necessary logs/docs
-     * TODO initLexicalTemplates add necessary try-catches
-     * TODO needs a better name, as there is another method called readLexTxt.
      */
     public void loadLearntLexiconTxt(String grammarPath, int topN) {
         //AA: THIS SHOULD BE FIXED LATER: any name should be possible!
@@ -723,16 +743,40 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                     continue;
 
                 if (line.isEmpty() && !lines.isEmpty()) { // means the end of a lexical action
-                    String prob = lines.get(0); // Not being used anywhere, for now.
+                    String probRankLine = lines.get(0);
                     String word = lines.get(1);
                     List<String> actionStr = lines.subList(2, lines.size());
                     LexicalAction lexAct = new LexicalAction(word, actionStr);
-                    // TODO add log "created lexical action lexAct"
+                    
+                    // Parse probability and rank from format [prob,rank]
+                    double probability = 0.0;
+                    int rank = 0;
+                    try {
+                        if (probRankLine.startsWith("[") && probRankLine.endsWith("]")) {
+                            String probRankContent = probRankLine.substring(1, probRankLine.length() - 1);
+                            String[] parts = probRankContent.split(",");
+                            if (parts.length == 2) {
+                                probability = Double.parseDouble(parts[0].trim());
+                                rank = Integer.parseInt(parts[1].trim());
+                                lexAct.setProb(probability);
+                                lexAct.setRank(rank);
+                                logger.debug("Set probability " + probability + " and rank " + rank + " for lexical action of word: " + word);
+                            } else {
+                                logger.warn("Malformed probability/rank line: " + probRankLine + " for word: " + word);
+                            }
+                        } else {
+                            logger.warn("Probability/rank line does not have expected format [prob,rank]: " + probRankLine + " for word: " + word);
+                        }
+                    } catch (NumberFormatException e) {
+                        logger.warn("Could not parse probability/rank from line: " + probRankLine + " for word: " + word + ". Error: " + e.getMessage());
+                    }
+                    
+                    logger.debug("Created lexical action for word: " + word + " with probability: " + probability + " and rank: " + rank);
 
-                    if (this.containsKey(word))
+                    if (this.containsKey(word)) {
                         this.get(word).add(lexAct);
-                        // TODO log here
-                    else {
+                        logger.debug("Added additional lexical action for existing word: " + word);
+                    } else {
                         HashSet<LexicalAction> lexActs = new HashSet<LexicalAction>();
                         lexActs.add(lexAct);
                         this.put(word, lexActs);
@@ -861,6 +905,37 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
             }
         }
         this.lexiconEntropy = entropyMap;
+    }
+
+
+    /**
+     * Merge the other lexicon into this lexicon.
+     * The merged actions maintain probability ordering for proper output formatting.
+     * @param otherLexicon
+     */
+    public void mergeLexicon(Lexicon otherLexicon) {
+        for (String word : otherLexicon.keySet()) {
+            if (this.containsKey(word)) {
+                // Add all actions from other lexicon
+                this.get(word).addAll(otherLexicon.get(word));
+                
+                // Convert to list and sort by probability (highest first) to maintain order
+                List<LexicalAction> allActions = new ArrayList<>(this.get(word));
+                Collections.sort(allActions, new Comparator<LexicalAction>() {
+                    @Override
+                    public int compare(LexicalAction la1, LexicalAction la2) {
+                        // Sort by probability descending (highest first)
+                        return Double.compare(la2.getProb(), la1.getProb());
+                    }
+                });
+                
+                // Replace with sorted list
+                this.put(word, allActions);
+            } else {
+                // For new words, convert to ArrayList to ensure consistent collection type
+                this.put(word, new ArrayList<>(otherLexicon.get(word)));
+            }
+        }
     }
 
 
