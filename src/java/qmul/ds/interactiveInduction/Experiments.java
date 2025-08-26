@@ -26,23 +26,27 @@ public class Experiments {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_RED = "\u001B[31m";
 
-    static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
+    static final String SEED_GRAMMAR_PATH = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
+    static final String SEED_GRAMMAR_PATH_NEW = "resource\\2025-babyds-seeded-induction2\\".replace("\\", File.separator); // The dir that works!
+
+    static final String SEED_GRAMMAR_PATH_RQ2 = "resource\\2025-babyds-seeded-induction2\\".replace("\\", File.separator); // The dir that works for RQ2
     static final String modelPath = "resource\\2025-babyds-RQ2\\minimal_data\\".replace("\\", File.separator);  //the dir that works!
     static final String rq1path = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);
     static final String RQ1CLASS1HB = "resource\\2025-babyds-RQ1\\class1HB\\".replace("\\", File.separator);
     static final String RQ1CLASS2HB = "resource\\2025-babyds-RQ1\\class2hb\\".replace("\\", File.separator);
 
     static final String rq2path = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
-    static final String forgettingPath = "resource\\2025-babyds-RQ2\\forgetting\\".replace("\\", File.separator);
-    static final String generalisationPath = "resource\\2025-babyds-RQ2\\generalisation\\".replace("\\", File.separator);
+    static final String forgettingPath = "resource\\2025-babyds-RQ2\\first-test\\".replace("\\", File.separator);
     static final String NTR_RQ1_CLASS1_PATH = "resource\\2025-babyds-RQ1\\c1_data\\BDS-TTR\\".replace("\\", File.separator);
     static final String NTR_RQ1_CLASS2_PATH = "resource\\2025-babyds-RQ1\\c2_data\\".replace("\\", File.separator);
 
     static final String NTR_RQ1_PATH = "resource\\2025-babyds-RQ1\\results_NTR\\".replace("\\", File.separator);
     static final String NN_DATA_OUTPUT_FOLDER_NAME = "NTR-larger-batches-10";
+    static final String C1_BDS_TRAINED_MODELS_DIR = "resource\\2025-babyds-RQ1\\class1HB\\".replace("\\", File.separator);
 
 
-    public static final int SEED = 48; // Set a constant seed for reproducibility
+
+    public static final int SEED = 46; // Set a constant seed for reproducibility
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
     public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
     public static final String CORPUS_NAME = "class1";
@@ -56,6 +60,18 @@ public class Experiments {
     public static final int MINIMUM_CLASS1_BATCHES = 3;  // Minimum number of class1 batches to start with in RQ2 tests.
     public static final double EARLY_STOPPING_MIN_THRESHOLD = 99.0;  // Minimum F1 threshold that must be reached before checking delta
     public static final double EARLY_STOPPING_DELTA = 0.01;  // Minimum improvement required between consecutive runs
+
+    private static final int[] SEEDS = {46, 48, 50, 52, 56};
+    private static final int[] MAX_BATCHES = {3, 4, 8, 4, 3};
+    private static final List<AbstractMap.SimpleEntry<Integer, Integer>> SEED_BATCH_PAIRS = new ArrayList<>();
+    
+    static {
+        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(46, 3));
+        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(48, 4));
+        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(50, 8));
+        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(52, 4));
+        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(56, 3));
+    }
 
 
     /**
@@ -153,81 +169,6 @@ public class Experiments {
 
 
     /**
-     * todo fix doc
-     * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more. TODO
-     * @param startClass
-     * @param endClass
-     */
-    public void test_generalisation(int startClass, int endClass) {
-        BabyDSInduction bds = new BabyDSInduction(generalisationPath);
-        File data1 = new File(seedGrammarPath + "class" + startClass + ".txt");
-        File data2 = new File(seedGrammarPath + "class" + endClass + ".txt");
-        RecordTypeCorpus corpus1 = new RecordTypeCorpus();
-        RecordTypeCorpus corpus2 = new RecordTypeCorpus();
-        try {
-            corpus1.loadCorpus(data1);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            corpus2.loadCorpus(data2);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // TODO actually get minimum viable data of class 1, and not just train test split.
-
-        // First, grab the minimum and enough data of class 1, and add batches of class 2 to it (and then more batches
-        // of class 1, and also a mix of these), and train a model on it:
-//        RecordTypeCorpus class1_minimum_data = new RecordTypeCorpus();  //TODO and more because I want to add batches
-        // First shuffle class 1 data
-        Random random = new Random(SEED);
-        Collections.shuffle(corpus1, random);
-        List<RecordTypeCorpus> training_batches_class1 = bds.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);
-        int minimum_data_class1_index = 6;  // TODO fix
-        RecordTypeCorpus class1_minimum_data = training_batches_class1.get(minimum_data_class1_index);
-        // anything after it will be added as batches.
-        List<RecordTypeCorpus> class1_batches = training_batches_class1.subList(minimum_data_class1_index + 1, training_batches_class1.size());
-        // Select the minimum data of class 1 (based on previous experiments - using indices) and add keep the rest as batches to be added later.
-
-        // train test split class 2
-        Pair<RecordTypeCorpus, RecordTypeCorpus> train_test_pair_class2 = bds.train_test_split("class" + endClass, TRAIN_TEST_RATIO, SAVE_TO_FILE, "", SEED);
-        RecordTypeCorpus test_data = train_test_pair_class2.second();
-        List<RecordTypeCorpus> training_batches_class2 = bds.prepare_batches(train_test_pair_class2.first(), INIT_BATCH_RATIO, INC_BATCH_RATIO);
-
-        // Merging here probably has to happen inside a loop, as I need to combine batches of class 1 and 2.
-        String mergedCorpusName = "merged_" + startClass + "_" + endClass;  // TODO come up with a better name convention, as I will need a reflection of the batch sizes in the name.
-        try {
-            //todo make a proper method for the below.
-            mergeFiles(new File(seedGrammarPath + train_test_pair_class2.first.corpusName), data2, new File(seedGrammarPath + mergedCorpusName + ".txt")); //todo fix
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        RecordTypeCorpus merged_corpus = new RecordTypeCorpus();
-        try {
-            merged_corpus.loadCorpus(new File(seedGrammarPath + mergedCorpusName + ".txt")); //todo fix
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        // TODO shuffle training data here (so that later on I can show the effect of curriculum learning).
-        bds.train_model(seedGrammarPath + mergedCorpusName + ".txt", "model_" + startClass + "_" + endClass, seedGrammarPath);  //todo fix
-        // Now that we have both models, evaluate them on the test set of class 1:
-        EvalResult ttsResults = bds.evaluate_model(0);
-
-//        evaluate_model(test_data);
-        // Now time to train on the batches of class 2 only, and evaluate on the same test set.
-        // for batch in training_batches_class2
-        for(RecordTypeCorpus batch : training_batches_class2) {
-            bds.train_model(batch.corpusName, "", seedGrammarPath);  //todo fix
-            EvalResult ttsResults2 = bds.evaluate_model(0);
-            // write to file the model.
-//            bds.evaluate_model(test_data);
-            // write to file the results.
-        }
-    }
-
-
-    /**
      * Prepares RQ2 data.
      * Reads in class 1 and class 2 data, creates batches from each, and uses the last batch of class1 as the forgetting
      * test set and last batch of class 2 as the generalisation test set. Returns all of these.
@@ -235,13 +176,14 @@ public class Experiments {
      * @param startClass index of the first class to be used (inclusive)
      * @param endClass index of the last class to be used (inclusive)
      * @param seed the seed for reproducibility (used in shuffling)
+     * @param savePath the path to save the data to
      * @return a list of lists of RecordTypeCorpus (size=4) in this order:
      *          1- class1 batches,
      *          2- class2 batches,
      *          3- forgetting test set (size=1),
      *          4- generalisation test set (size=1).
      */
-    public List<List<RecordTypeCorpus>> getRQ2Data(int startClass, int endClass, int seed) {
+    public List<List<RecordTypeCorpus>> getRQ2Data(int startClass, int endClass, int seed, String savePath) {
     List<List<RecordTypeCorpus>> rq2Data = new ArrayList<>();
         File corpusFile1 = new File(rq2path + "class" + startClass + ".txt");
         File corpusFile2 = new File(rq2path + "class" + endClass + ".txt");
@@ -267,7 +209,7 @@ public class Experiments {
         RecordTypeCorpus forgetting_test_data = class1_batches.get(class1_batches.size()-1);
         forgetting_test_data.corpusName = "babyds_forgetting_test_" + startClass + "_" + forgetting_test_data.size() + ".txt";
         try {
-            forgetting_test_data.saveCorpus(rq2path + forgetting_test_data.corpusName);  //todo is rq2path here ok?
+            forgetting_test_data.saveCorpus(savePath + forgetting_test_data.corpusName);  //todo is rq2path here ok?
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -280,7 +222,7 @@ public class Experiments {
         RecordTypeCorpus generalisation_test_data = class2_batches.get(class2_batches.size()-1);
         generalisation_test_data.corpusName = "babyds_generalisation_test_" + startClass + "_" + generalisation_test_data.size() + ".txt";
         try {
-            generalisation_test_data.saveCorpus(rq2path + generalisation_test_data.corpusName); //todo is rq2path here ok?
+            generalisation_test_data.saveCorpus(savePath + generalisation_test_data.corpusName); //todo is rq2path here ok?
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -301,27 +243,31 @@ public class Experiments {
      * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more. TODO
      * @param startClass
      * @param endClass
-     * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both". //todo extend to full classes scenario.
+     * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both". // TODO extend to full classes scenario.
      * @param withCurriculum specifies if curriculum learning is used or not (sorts data or shuffles it based on the boolean value provided).
      * TODO rename format to something more meaningful.
      * todo add also "C" for curriculum learning tests, and "R" for random learning tests.
      * todo rename to rq2 and remove generalisation as a separate method!
+     * TODO better make a "extra/moreData" list here, so the switch-case can only act on data, not full training+testing part.
      */
-    public RQ2SeedResult test_generalisation_forgetting(int startClass, int endClass, String setting, boolean withCurriculum, int seed) {
+    public RQ2SeedResult testGeneralisationForgetting(int startClass, int endClass, String setting, boolean withCurriculum, int seed, int topN) {
         logger.info("Initiating forgetting experiments...");
         RQ2SeedResult results = new RQ2SeedResult();
 
-        BabyDSInduction ds = new BabyDSInduction(forgettingPath); //todo is this correct
+        // BabyDSInduction ds = new BabyDSInduction(forgettingPath); // TODO is this correct
 //        ds.verify_model_path(forgettingPath);
         logger.debug("BabyDSInduction instance created.");
         //todo better handle file names based on startswith, than pure names...
 
-        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(startClass, endClass, seed);
+        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(startClass, endClass, seed, forgettingPath);
         List<RecordTypeCorpus> class1_batches = rq2Data.get(0);
         List<RecordTypeCorpus> class2_batches = rq2Data.get(1);
         RecordTypeCorpus forgetting_test_data = rq2Data.get(2).get(0);
         RecordTypeCorpus generalisation_test_data = rq2Data.get(3).get(0);
 
+        /// fix HERE
+        class2_batches = class2_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+//        class2_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
         // First, grab the minimum and enough data of class 1 (number of batches to reach mastery from RQ1 basically),
         // and add batches of class1 or class2 or their mix, and train a model on it:
         int minimum_data_class1_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
@@ -358,12 +304,12 @@ public class Experiments {
                     String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
                     // REMEMBER: the training results to be considered should be only the ones with the cumulative batch (potentially the second call to trainTestBatchWithHB) and not the ones with the non-cumulative batch.
                     // EvalResult generalisationResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens");  //todo fix
-                    Pair<EvalResult, WordHypothesisBase> generalisationResultHB = trainTestBatchWithHB(rq2path, currentFolderName, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel);  //todo fix
+                    Pair<EvalResult, WordHypothesisBase> generalisationResultHB = trainTestBatchWithHB(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel);  //todo fix
                     EvalResult generalisationResult = generalisationResultHB.first();
                     previousModel = generalisationResultHB.second();  // Store the model for the next iteration
 
                     // EvalResult forgettingResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg");  //todo fix
-                    Pair<EvalResult, WordHypothesisBase> forgettingResultHB = trainTestBatchWithHB(rq2path, currentFolderName, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel);  //todo fix
+                    Pair<EvalResult, WordHypothesisBase> forgettingResultHB = trainTestBatchWithHB(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel);  //todo fix
                     EvalResult forgettingResult = forgettingResultHB.first();
 //                    EvalResult forgettingResult = ds.evaluate_model(0, forgettingPath, "babyds", "_forg", N);  //todo fix I think I should add a "force test data" param!
 
@@ -376,12 +322,17 @@ public class Experiments {
                     results.getGeneralisationResults().add(generalisationResult);
                     results.getForgettingResults().add(forgettingResult);
                 }
+                break;
             }
             case "second": {
                 int currentMergedBatchIndex = minimum_data_class1_index; //TODO change for class 2
                 System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
+                WordHypothesisBase previousModel = null;
                 for (RecordTypeCorpus batch : class2_batches) {  // TODO same thing has to happen with class 1 batches and mix of class 1 and 2 batches.
-                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
+                    RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // reset for non-cumulative
+                    nonCumulativeTrainingData.addAll(batch);
+                    cumulativeTrainingData.addAll(batch); //TODO NEWLY added by AA: IT'S SIMILAR TO RQ1, but wasn't here. To be tested.
+//                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
                     logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
                     if (withCurriculum) {  //todo test + provide our proper way for curriculum learning.
                     } else {
@@ -389,17 +340,28 @@ public class Experiments {
                     }
                     cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
                     String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
-                    EvalResult generalisationResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens");  //todo fix
-                    EvalResult forgettingResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg");  //todo fix
+                    String currentOutputPath = forgettingPath + currentFolderName + File.separator;
+                    Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
+                    EvalResult generalisationResult = generalisationOutput.first;
+                    previousModel = generalisationOutput.second;
+                    logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
+
+                    //TODO Missing dev test here. tHINK IT CAN COME INTO PLAY.
+                    Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
+                    EvalResult forgettingResult = forgettingOutput.first;
                     logger.info("Eval for batch number: ");
                     logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
                     logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
                     logger.info(forgettingResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
                     logger.info(forgettingResult.getSemanticAccResultsTable("")); // todo fix
+
                     currentMergedBatchIndex++;
                     results.getGeneralisationResults().add(generalisationResult);
                     results.getForgettingResults().add(forgettingResult);
+                    //TODO fix write to file/ relevant data structure here (with RQ1)
+//                    break;
                 }
+                break;
             }
             case "both": {
                 int currentMergedBatchIndex = minimum_data_class1_index; //TODO change for class 2
@@ -417,8 +379,8 @@ public class Experiments {
                     }
                     cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
                     String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
-                    EvalResult generalisationResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens");  //todo fix
-                    EvalResult forgettingResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg");  //todo fix
+                    EvalResult generalisationResult = trainTestBatch(currentFolderName, forgettingPath , cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens");  //todo fix
+                    EvalResult forgettingResult = trainTestBatch(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg");  //todo fix
                     logger.info("Eval for batch number: ");
                     logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
                     logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
@@ -745,9 +707,9 @@ public class Experiments {
 
     /**
      * Conducts Research Question 1 (RQ1) experiments using Hypothesis Base (HB) incremental learning.
-     * This method trains BabyDS models incrementally on data batches, where each new model builds upon 
+     * This method trains BabyDS models incrementally on data batches, where each new model builds upon
      * the previous one (hypothesis base), and evaluates performance with early stopping mechanisms.
-     * 
+     *
      * The workflow for each repeat includes:
      * 1. Load and shuffle corpus data with a deterministic seed
      * 2. Split data into training batches, development set (second-to-last batch), and test set (last batch)
@@ -755,7 +717,7 @@ public class Experiments {
      * 4. Evaluate each trained model on both development and test sets
      * 5. Apply early stopping based on development set F1 score improvement threshold
      * 6. Report final results on test set and save all results to TSV files for analysis
-     * 
+     *
      * @param corpusName: The name of the corpus file (without extension) to load for training
      * @param modelDir: The root directory path where models, batches, and results will be saved
      * @param repeatCount: The number of experimental repeats to perform with different seeds
@@ -784,7 +746,7 @@ public class Experiments {
                 currentSeedFolder.mkdirs();
             } else
                 logger.warn("Folder already exists: " + currentSeedFolder.getAbsolutePath());
-            
+
             // Extract test set (last batch) and dev set (second-to-last batch)
             RecordTypeCorpus testSet = trainingBatches.get(trainingBatches.size()-1);
             testSet.corpusName = corpus.corpusName+"_test";
@@ -797,7 +759,7 @@ public class Experiments {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            
+
             // Remove both test and dev sets from training batches (works in-place)
             trainingBatches.remove(trainingBatches.size()-1); // Remove test set
             trainingBatches.remove(trainingBatches.size()-1); // Remove dev set
@@ -835,19 +797,19 @@ public class Experiments {
                 Pair<EvalResult, WordHypothesisBase> devOutput = trainTestBatchWithHB(currentFolderName, modelDir, nonCumulativeTrainingData, devSet, currentMergedBatchIndex, "_dev", previousModel);
                 EvalResult devResult = devOutput.first;
                 previousModel = devOutput.second;
-                
+
                 // IMPORTANT NOTE: cumulative training set will overwrite the non-cumulative one in this process below, but no problem.
                 logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
 
                 // Evaluate on test set using the same trained model (reminder: won't train the model again)
                 Pair<EvalResult, WordHypothesisBase> testOutput = trainTestBatchWithHB(currentFolderName, modelDir, cumulativeTrainingData, testSet, currentMergedBatchIndex, "", previousModel);
                 EvalResult testResult = testOutput.first;
-                
+
                 // Get dev set F1 score for early stopping check (based on top-1 actions)
                  double currentDevF1Score = devResult.getTestAccuracy(1, "f1");
                  double currentDevCoverage = devResult.getTestCoverage(1);
 //                double currentDevF1Score = devResult.getTestEM(1); // So it is actually a bad variable name since it's em and not f1 anymore.
-                
+
                 // Check early stopping condition based on dev set performance
                 if (checkEarlyStoppingCondition(currentDevF1Score, previousF1Score, EARLY_STOPPING_MIN_THRESHOLD, EARLY_STOPPING_DELTA, currentDevCoverage, previousCoverage, EARLY_STOPPING_MIN_THRESHOLD, EARLY_STOPPING_DELTA)) {
                     System.out.printf("Early stopping triggered at batch %d for seed %d. Dev F1 score: %.3f%n",
@@ -857,12 +819,12 @@ public class Experiments {
                     addResultsToTSV(currentSeed, testResult, modelDir + "fullResultsHB.tsv");
                     break;  // Exit the training loop
                 }
-                
+
                 currentMergedBatchIndex++;
                 resultInSeed.add(testResult); // Add test result to final results
                 fullResults.put(i, resultInSeed);
                 addResultsToTSV(currentSeed, testResult, modelDir + "fullResultsHB.tsv");
-                
+
                 // Update previous dev F1 score for next iteration (for early stopping)
                 previousF1Score = currentDevF1Score;
                 previousCoverage = currentDevCoverage;
@@ -914,11 +876,11 @@ public class Experiments {
                 System.out.println("Skipping training...");
             } else {
                 logger.info("Training model...");
-                ds.train_model(trainingBatch, folderPath, seedGrammarPath);
+                ds.train_model(trainingBatch, folderPath, SEED_GRAMMAR_PATH);
             }
         } else {
             logger.info("Training model...");
-            ds.train_model(trainingBatch, folderPath, seedGrammarPath);
+            ds.train_model(trainingBatch, folderPath, SEED_GRAMMAR_PATH);
         }
         EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, N);
         result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
@@ -932,10 +894,19 @@ public class Experiments {
 
 
     /**
+     * A wrapper for the method below, that uses the default seed grammar path.
+     */
+    public Pair<EvalResult, WordHypothesisBase> trainTestBatchWithHB(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel) {
+        return trainTestBatchWithHB(folderName, modelDir, trainingBatch, testingData, batchNumber, testSetSuffix, previousModel, SEED_GRAMMAR_PATH_NEW);
+    }
+
+
+    /**
+     * TODO Make this use the below trainTestBatchHBSeeded method with default values. But for now just get things working!
      * TODO trainingBatch should be renamed to just trainingData. Batch should be used in the upper method!
      * TODO Add documnetation here.
      */
-    public Pair<EvalResult, WordHypothesisBase> trainTestBatchWithHB(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel) {
+    public Pair<EvalResult, WordHypothesisBase> trainTestBatchWithHB(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath) {
         // todo properly test this method
         WordHypothesisBase newModel = null;
         // make foldername under modelDir and copy the computational action files there:
@@ -985,6 +956,74 @@ public class Experiments {
             newModel = ds.trainBabyDSwithHB(trainingBatch, folderPath, seedGrammarPath, previousModel);
         }
         EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, N);  //TODO I think I should add the capability of passing trainign data directly (check if it is string or data)
+        // TODO then I can send in training data as full, train on the part I want, and test on full (so I get the same numbers as before HB)
+        result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
+        result.setDatasetSizes(trainingBatch.size(), testingData.size());
+        System.out.println("\nEvaluation results for batch: " + batchNumber  + " are:");
+        System.out.println(result.getSemanticAccResultsTable(String.format("Batch %d", batchNumber)));
+        System.out.println(result.getParsingCoverageResultsTable(""));  //todo add proper info
+        logger.trace(result.getDiagnosticResults());
+
+        return new Pair<>(result, newModel);
+    }
+
+
+    /**
+     * TODO trainingBatch should be renamed to just trainingData. Batch should be used in the upper method!
+     * TODO Add documnetation.
+     * TODO many of the stuff being done below better be in one other method so it's tidier (loading data, and paths and copying files)
+     */
+    public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
+        // todo properly test this method
+        WordHypothesisBase newModel = null;
+        String currentSeedModelDir = C1_BDS_TRAINED_MODELS_DIR + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator; //TODO change this to the actual seed model dir
+        // make foldername under modelDir and copy the computational action files there:
+        String folderPath = modelDir + folderName + File.separator;
+        File folder = new File(folderPath);
+        if (!folder.exists()) {
+            if (!folder.mkdirs()) {
+                throw new RuntimeException("Could not create directory: " + folderPath);
+            }
+        }
+
+        // Copy the comp-action file from current dir (model dir) to this folder:
+        File sourceFile = new File(modelDir + "computational-actions.txt");
+        if (!sourceFile.exists()) {
+            throw new RuntimeException("Source file does not exist: " + sourceFile.getAbsolutePath());
+        }
+
+        File destFile = new File(folder + File.separator + "computational-actions.txt");
+        try {
+            Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to copy computational-actions.txt: " + e.getMessage());
+        }
+
+        // save training set and test set to this folder:
+        try {
+            trainingBatch.saveCorpus(folder + File.separator + "_train.txt");  //todo set their names?
+            testingData.saveCorpus(folder + File.separator + "_test"+testSetSuffix+".txt");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save corpus files: " + e.getMessage());
+        }
+
+        BabyDSInduction ds = new BabyDSInduction();
+        System.out.println(ANSI_CYAN + "******** Batch " + batchNumber + " ********" + ANSI_RESET);
+        // If the model exists and skip is true, then skip!
+        if (modelExists(folderPath)) {
+            System.out.println("Model already exists in " + folderPath);
+            if (SKIP_RETRAINING) {
+                System.out.println("Skipping training...");
+                logger.warn("new model (HB) will be null, as a model already exists in the given directory!");
+            } else {
+                logger.info("Training model...");
+                newModel = ds.trainBabyDSHBSeeded(currentSeedModelDir, trainingBatch, seedGrammarPath, previousModel, topN, outputModelDir);
+            }
+        } else {
+            logger.info("Training model...");
+            newModel = ds.trainBabyDSHBSeeded(currentSeedModelDir, trainingBatch, seedGrammarPath, previousModel, topN, outputModelDir);
+        }
+        EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, topN, topN);  //TODO I think I should add the capability of passing trainign data directly (check if it is string or data)
         // TODO then I can send in training data as full, train on the part I want, and test on full (so I get the same numbers as before HB)
         result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
         result.setDatasetSizes(trainingBatch.size(), testingData.size());
@@ -1233,13 +1272,13 @@ public class Experiments {
     public void runRQ2(int repeatCount, int seed) {
         // todo maybe define the lists that we have below up in the class.
         RQ2FullResults fullResults = new RQ2FullResults();  //TODO refactor to include all the info above...
-        for (int i = 0; i <= repeatCount; i++) {
-            int currentSeed = seed + i;
-            for (int j = i + 1; j <= 4; j++) {
-                for (String setting : new String[]{"first", "second", "both"}) {
-                    for (boolean withCurriculum : new boolean[]{true, false}) {
-                        RQ2SeedResult resultInSeed = test_generalisation_forgetting(i, j, setting, withCurriculum, currentSeed);  ///TODO i & j are wrong.
-                        fullResults.addResult(currentSeed, withCurriculum, resultInSeed);
+        for (int i = 0; i < repeatCount; i++) {
+            int currentSeed = SEEDS[i];
+            for (int n = 3; n <= N; n++) { //TODO change this to 1
+                for (String setting : new String[]{"second"}) {  // Options: "first", "second", "both"
+                    for (boolean withCurriculum : new boolean[]{false}) {  // Options: true, false
+                        RQ2SeedResult resultInSeed = testGeneralisationForgetting(1, 2, setting, withCurriculum, currentSeed, n);
+                        fullResults.addResult(currentSeed, withCurriculum, resultInSeed); //TODO add n to the result!
 //                        addResultsToTSV(currentSeed, batchtResult, modelDir + "fullResults.tsv");  // TODO
                     }
                 }
@@ -1253,7 +1292,10 @@ public class Experiments {
         Experiments exp = new Experiments();
 
         // To run RQ1 (check inside for params)
-//         exp.runRQ1();
+        // exp.runRQ1();
+
+        // To run RQ2 (check inside for params)
+        exp.runRQ2(REPEAT, SEED);
 
          // To generate data in folders for RQ1:
 //        exp.generateDataFolders("c2", NTR_RQ1_CLASS2_PATH, REPEAT, SEED, INIT_BATCH_RATIO, INC_BATCH_RATIO);
@@ -1264,15 +1306,15 @@ public class Experiments {
 
 
         // To evaluate NeuralTTR:
-        String ntr_eval_address = NTR_RQ1_PATH + "NTR-CUR" + File.separator;
-        System.out.println(exp.evalNeuralTTR(ntr_eval_address, "NTR-CUR"));
+        // String ntr_eval_address = NTR_RQ1_PATH + "NTR-CUR" + File.separator;
+        // System.out.println(exp.evalNeuralTTR(ntr_eval_address, "NTR-CUR"));
 
 
 //        exp.test_generalisation_forgetting(1, 2, "second", false, SEED);
     //    HashMap<Integer, List<EvalResult>> minData = exp.findMinimumMasteryData(CORPUS_NAME, modelPath, REPEAT, SEED);
     //    exp.allResultsToTSV(minData);
 
-        // HashMap<Integer, List<EvalResult>> rq1hbResults = exp.rq1HB(CORPUS_NAME, RQ1CLASS1HB, REPEAT, SEED);
+        //  HashMap<Integer, List<EvalResult>> rq1hbResults = exp.rq1HB(CORPUS_NAME, RQ1CLASS1HB, REPEAT, SEED);
         // exp.addResultsToTSV(rq1hbResults);
 
     }
