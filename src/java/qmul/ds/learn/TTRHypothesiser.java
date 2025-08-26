@@ -63,6 +63,18 @@ public class TTRHypothesiser extends Hypothesiser {
 		super(seedResourceDir);
 	}
 
+	public TTRHypothesiser(String resourceDirOrURL, int topN) {
+		super(resourceDirOrURL, topN);
+	}
+
+	public TTRHypothesiser(String learnerCompActionsPath, String resourceDirOrURL, int topN) {
+		super(learnerCompActionsPath, resourceDirOrURL, topN);
+	}
+
+	public TTRHypothesiser(String learnerCompActionsPath, String resourceDirOrURL, int topN, boolean loadLearntLexicon) {
+		super(learnerCompActionsPath, resourceDirOrURL, topN, loadLearntLexicon);
+	}
+
 
 	public void loadTrainingExample(String sentence, TTRRecordType target) {
 		this.allWords.clear();
@@ -109,8 +121,8 @@ public class TTRHypothesiser extends Hypothesiser {
 					.getCurrentTuple().getTree().getPointer(), DSType.t, filtered);
 			for (Tree tree : trees) {
 				//logger.info(tree);
-				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree); /// AE: is actually an action, doesn't' do anythign tho
-				logger.info("Adding tree hyp child: " + treeHyp); // AA Kind of an edge
+				TreeHypothesis treeHyp = new TreeHypothesis(inc, tree); /// AE: is actually an action, doesn't' do anything tho
+				logger.info("Adding tree hyp child: " + treeHyp); // AA Kind of an edge -> Too low level to be info, better be debug!
 				DAGInductionTuple child = new DAGInductionTuple(state.getCurrentTuple().getTree().clone());
 				Tree mergedInc = state.getCurrentTuple().getTargetTree().merge(treeHyp.getTree());
 				Tree mergedNonHead = state.getCurrentTuple().getNonHeadTarget().merge(treeHyp.getTree());  // AA

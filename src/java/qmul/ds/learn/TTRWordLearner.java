@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.stanford.nlp.ling.HasWord;
-import org.apache.jena.tdb.store.Hash;
+
 import org.apache.log4j.Logger;
 
 import qmul.ds.formula.TTRRecordType;
+import qmul.ds.action.Lexicon;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.util.Pair;
@@ -46,9 +46,67 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		corpus = c;
 		this.corpusIterator = corpus.iterator();
 	}
-	
-	public TTRWordLearner(String resourceDir, String corpusFileName) {
-		this(resourceDir);
+
+
+	/**
+	 * TODO this can be improved in terms of the use of topN vs loadLearntLexicon (e.g. if topN is 1,2,3, then loadLearntLexicon should be true, or if it's 0, then loadLearntLexicon should be false)
+	 * TODO it would be cleaner if I change the order of the arguments here so it matches the one in TTRHypothesiser.
+	 * @param seedGrammarPath the seed grammar file address (used by Lexicon, so can be lexicon.lex or lexicon.txt files)
+     * @param trainingCorpus the corpus to learn from
+	 * @param learnerCompActionsPath the bigger computational actions file address
+	 * @param whb the word hypothesis base to use
+	 * @param topN the number of most probable lexical actions to be read from the learnt lexicon files.
+	 * @param loadLearntLexicon whether to force load the learnt lexicon from the file or normally use the rule-based lexicon.
+	 */
+	public TTRWordLearner(String seedGrammarPath, RecordTypeCorpus trainingCorpus, String learnerCompActionsPath, WordHypothesisBase whb, int topN, boolean loadLearntLexicon) {
+		super(true); // Use protected constructor to avoid double initialization
+		hypothesiser = new TTRHypothesiser(learnerCompActionsPath, seedGrammarPath, topN, loadLearntLexicon);
+
+		this.corpus = trainingCorpus;
+		this.corpusIterator = corpus.iterator();
+		
+		if (whb != null) {
+			this.hb = whb;
+		} else {
+			this.hb = new WordHypothesisBase();
+		}
+	}
+
+
+	/**
+     * @author AA
+	 * The nicest constructor for the learner (since it doesn't assume everything is in the same directory)
+	 * Supports separate directories for everything, as specified below.
+     * @param seedGrammarPath the seed grammar file address (used by Lexicon, so can be lexicon.lex or lexicon.txt files)
+     * @param trainingCorpus the corpus to learn from
+	 * @param learnerCompActionsPath the bigger computational actions file address
+	 * @param whb the word hypothesis base to use
+	 * @param topN the number of most probable lexical actions to be read from the learnt lexicon files.
+	 * TODO re-arrange parameters so it becomes even nicer.
+     */
+	public TTRWordLearner(String seedGrammarPath, RecordTypeCorpus trainingCorpus, String learnerCompActionsPath, WordHypothesisBase whb, int topN) {
+		super(true); // Use protected constructor to avoid double initialization
+		hypothesiser = new TTRHypothesiser(learnerCompActionsPath, seedGrammarPath, topN, true);
+
+		this.corpus = trainingCorpus;
+		this.corpusIterator = corpus.iterator();
+		
+		if (whb != null) {
+			this.hb = whb;
+		} else {
+			this.hb = new WordHypothesisBase();
+		}
+	}
+
+	    /**
+     * The one used by AE.
+	 * AA Comment: not a good constructor, because it uses the default seed directory in WordLearner (widely used in code, so be careful).
+     * @param resourceDir
+     * @param corpusFileName
+     */
+	public TTRWordLearner(String resourceDir, String corpusFileName, int topN) {
+		super(resourceDir);  // Call the parent constructor with the correct parameter
+		hypothesiser = new TTRHypothesiser(resourceDir, topN);
 		try {
 			this.loadCorpus(new File(corpusFileName));
 		} catch (IOException e) {
@@ -58,9 +116,24 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		}
 	}
 
+    /**
+     * The one used by AE. (later modified by me - added topN parameter)
+	 * AA Comment: not a good constructor, because it uses the default seed directory in WordLearner (widely used in code, so be careful).
+     * @param resourceDir
+     * @param corpusFileName
+     */
+	public TTRWordLearner(String resourceDir, String corpusFileName) {
+		this(resourceDir, corpusFileName, 3);
+	}
 
+    /**
+     * The one used by trainTestWithHB
+     * @param seedResourceDir
+     * @param trainingCorpus
+     * @param whb
+     */
 	public TTRWordLearner(String seedResourceDir, RecordTypeCorpus trainingCorpus, WordHypothesisBase whb) {
-		this.seedResourceDir = seedResourceDir;
+		super(seedResourceDir);  // Call the parent constructor with the correct parameter
 		hypothesiser = new TTRHypothesiser(seedResourceDir);
 		this.corpus = trainingCorpus;
 		this.corpusIterator = corpus.iterator();
@@ -73,10 +146,9 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 
 
 	public TTRWordLearner(String seedResourceDir) {
-		this.seedResourceDir= seedResourceDir; //"resource" + File.separator + "2013-english-ttr-induction-seed";
+		super(seedResourceDir);  // Call the parent constructor with the correct parameter
 		hypothesiser = new TTRHypothesiser(seedResourceDir);
 		corpus = null;
-
 	}
 
 	/**
@@ -84,7 +156,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 	 * Default constructor for the TTRWordLearner class.
 	 * Initializes the seedResourceDir with a predefined path to the seed resource directory.
 	 * Creates a new TTRHypothesiser with the seed resource directory.
-	 * `seed` here refers to a beginning point for the lexicon and grammar (to not start from zero!): Ash
+	 * `seed` here refers to a beginning point for the lexicon and grammar (to not start from zero!): AA
 	 */
 	public TTRWordLearner() {
 		seedResourceDir="resource" + File.separator + "2013-english-ttr-induction-seed";
@@ -162,7 +234,7 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 
 			logger.info("\n");
 			this.hb.updateDistsEndOfExample(unknownWords);
-			logger.info("Processing took:"+ (System.currentTimeMillis()-time)/1000 + " seconds");  // AA Not working correctly!
+			logger.info("Processing took: "+ (System.currentTimeMillis()-time)/1000 + " seconds");  // AA Not working correctly!
 		} catch (Exception e) {
 			logger.fatal("problem while updating distributions on sentence:" + entry);
 			logger.fatal("this is fatal :(");
@@ -200,16 +272,65 @@ public class TTRWordLearner extends WordLearner<TTRRecordType>{
 		this.corpusIterator=this.corpus.iterator();
 	}
 
-	
-	public static void main(String[] args) {
-		String babyDSPath = "resource\\2025-babyds-seeded-induction\\".replace("\\", File.separator);  // fix later
-		String corpusPath = babyDSPath + "class1-debug.txt";
 
-		TTRWordLearner learner = new TTRWordLearner(babyDSPath, corpusPath);
+	public Lexicon getSeedLexicon() {
+		return this.hypothesiser.getSeedLexicon();
+	}
 
-		learner.learn();
-		//System.out.println(learner.hypothesiser.targetIndependentHyps);
+	/**
+	 * A wrapper for the below method, with default value for saveTopNStart.
+	 * @param savePath
+	 * @param topN
+	 */
+	public void saveModel(String savePath, int topN) {
+		this.saveModel(savePath, topN, 1);
 	}
 
 
+	/**
+	 * Saves the model to a file. Another nice method by AA ;)
+	 * @param savePath
+	 * @param topN
+	 */
+	public void saveModel(String savePath, int topN, int saveTopNStart) {
+		try {
+			for (int i = saveTopNStart; i <= topN; i++) {
+				this.getHypothesisBase().saveLearnedLexicon(savePath, i, this.getSeedLexicon());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	public static void main(String[] args) {
+		// String babyDSPath = "resource\\2025-babyds-seeded-induction\\".replace("\\", File.separator);  // This works (by AE).
+		String babyDSPath = "resource\\2025-babyds-RQ1\\class1HB\\S46_B3\\".replace("\\", File.separator);  // Test
+
+        // String learnerCompActionsPath = "resource\\2025-x\\".replace("\\", File.separator);
+		String learnerCompActionsPath = "resource\\2025-babyds-seeded-induction2\\".replace("\\", File.separator);
+
+		String corpusPath = babyDSPath + "class1-debug.txt";  // This works (by AE).
+//        String corpusPath = babyDSPath + "class1.txt";
+		String savePath = "resource\\2025-babyds-seeded-induction-output\\".replace("\\", File.separator);
+       
+		RecordTypeCorpus cp = new RecordTypeCorpus();
+		try {
+			cp.loadCorpus(new File(corpusPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		// TTRWordLearner learner = new TTRWordLearner(babyDSPath, cp, learnerCompActionsPath, null, 1);
+		TTRWordLearner learner = new TTRWordLearner(babyDSPath, cp, learnerCompActionsPath, null, 3, true);
+
+    //    TTRWordLearner learner = new TTRWordLearner(learnerCompActionsPath, cp, null);
+		
+	// TTRWordLearner learner = new TTRWordLearner(learnerCompActionsPath, corpusPath, 3);
+		learner.learn();
+		learner.saveModel(savePath, 3);
+
+		//System.out.println(learner.hypothesiser.targetIndependentHyps);
+	}
 }

@@ -78,9 +78,40 @@ public class Hypothesiser {
 
 	public Hypothesiser(String resourceDirOrURL) {
 		this.seedLexicon = new Lexicon(resourceDirOrURL);
-		logger.info("Loaded seed lexicon with # entries: "+seedLexicon.keySet().size());
+		logger.info("Loaded seed lexicon with # entries: " + seedLexicon.keySet().size());
 		separateGrammars(new Grammar(resourceDirOrURL));
 		this.state = new DAGInductionState(new Tree());
+	}
+
+	public Hypothesiser(String learnerCompActionsPath, String resourceDirOrURL, int topN, boolean loadLearntLexicon) {
+		this.seedLexicon = new Lexicon(resourceDirOrURL, topN, loadLearntLexicon);
+		logger.info("Loaded seed lexicon with # entries: " + seedLexicon.keySet().size());
+		separateGrammars(new Grammar(learnerCompActionsPath));
+		this.state = new DAGInductionState(new Tree());
+	}
+
+	public Hypothesiser(String resourceDirOrURL, int topN, boolean loadLearntLexicon) {
+		this.seedLexicon = new Lexicon(resourceDirOrURL, topN, loadLearntLexicon);
+		logger.info("Loaded seed lexicon with # entries: " + seedLexicon.keySet().size());
+		separateGrammars(new Grammar(resourceDirOrURL));
+		this.state = new DAGInductionState(new Tree());
+	}
+
+
+	public Hypothesiser(String resourceDirOrURL, int topN) {
+		this(resourceDirOrURL, topN, false);
+	}
+
+	public Hypothesiser(String learnerCompActionsPath, String resourceDirOrURL, int topN) {
+		this(learnerCompActionsPath, resourceDirOrURL, topN, false);
+	}
+
+	/**
+	 * @return the seed lexicon
+	 * @author: AA
+	 */
+	public Lexicon getSeedLexicon() {
+		return this.seedLexicon;
 	}
 
 	

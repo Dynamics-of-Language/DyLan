@@ -41,8 +41,13 @@ public abstract class WordLearner<T> {
 	public String parserResourceDir = "resource" + File.separator + "2009-english-test-induction";
 	public String aaDir = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);
 //	public static String seedResourceDir = "resource" + File.separator + "2009-english-test-induction-seed"; // commented out by Arash A.
-	public String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A. // THE SEED DIR IS THIS!
+
+    // IMPORTANT THIS USED TO WORK FOR RQ1 EXPERIMENTS. NOW CHANGING IT FOR RQ2.
+//	public String seedResourceDir = "resource\\2023-english-ttr-induction-seed".replace("\\", File.separator);  // added by Arash A. // THE SEED DIR IS THIS!
 	// TODO This shouldn't be hardcoded here
+	// public String seedResourceDir = "resource\\2025-babyds-seeded-induction".replace("\\", File.separator);  // added by Arash A. // THE SEED DIR IS THIS!
+   public String seedResourceDir = "resource\\2025-x".replace("\\", File.separator);  // added by Arash A. // THE SEED DIR IS THIS!
+
 
 
 	Corpus<T> skipped=new Corpus<T>();
@@ -65,18 +70,38 @@ public abstract class WordLearner<T> {
 		writer.close();
 	}
 
-	public WordLearner(String seedResourceDir) {
-		hypothesiser = new Hypothesiser(seedResourceDir);
+
+	public WordLearner(String seedResourceDir, int topN) {
+		System.out.println("Using non-default seed directory: " + seedResourceDir);
+		hypothesiser = new Hypothesiser(seedResourceDir, topN);
 		corpus = null;
 	}
 
-	public WordLearner() {
+	public WordLearner(String seedResourceDir) {
+		System.out.println("Using non-default seed directory: " + seedResourceDir);
 		hypothesiser = new Hypothesiser(seedResourceDir);
 		corpus = null;
 	}
 
 	
+	public WordLearner() {
+        System.out.println("Using default seed directory in WordLearner: " + seedResourceDir);
+		hypothesiser = new Hypothesiser(seedResourceDir);
+		corpus = null;
+	}
 
+	/**
+	 * Protected constructor that doesn't initialize hypothesiser.
+	 * This prevents double loading of lexical actions when used with TTRHypothesiser.
+	 * The subclass is responsible for proper hypothesiser initialization.
+	 */
+	protected WordLearner(boolean skipInitialization) {
+		System.out.println("Using protected constructor - hypothesiser will be initialized by subclass");
+		corpus = null;
+	}
+
+	
+	
 	public void loadAndParseCorpus(File sentences) throws IOException {
 		
 	}

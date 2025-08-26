@@ -284,13 +284,26 @@ public class WordHypothesisBase {
 		return l;
 	}
 
+
+	/**
+	 * Overloads the below method, with default value for includeSeedLexicon.
+	 * @param topN
+	 * @return
+	 * @author: AA
+	 */
+	public Lexicon getLearnedLexiconAA(int topN) {
+		return getLearnedLexiconAA(topN, null);
+	}
+
+
 	/**
 	 * Copilot-generated fix for the getLearnedLexicon method (for correct rank assignment).
+	 * AA latest update: I think it works correctly so we better simply replace it with the above.
 	 * @param topN top-N actions
 	 * @return Lexicon object containing the top-N actions for each word in the lexicon
 	 * @author: AA + Copilot
 	 */
-	public Lexicon getLearnedLexiconAA(int topN) {
+	public Lexicon getLearnedLexiconAA(int topN, Lexicon seedLexicon) {
 		logger.info("Getting learned lexicon with topN=" + topN + " from the model...");
 		Lexicon l = new Lexicon();
 		for (HasWord w : priorDist.keySet()) {
@@ -316,19 +329,36 @@ public class WordHypothesisBase {
 				l.get(w.word()).add(act);
 			}
 		}
+
+		if (seedLexicon != null) {
+			l.mergeLexicon(seedLexicon);
+		}
 		return l;
 	}
+
+
+	/**
+	 * Overloads the below method, with default value for seedLexicon (null, meaning not to include it - and save just the learned lexicon).
+	 * @param f
+	 * @param topN
+	 * @throws IOException
+	 */
+	public void saveLearnedLexicon(String f, int topN) throws IOException {
+		saveLearnedLexicon(f, topN, null);
+	}
+
 
 	/**
 	 * @param f file name
 	 * @param topN top-N actions
 	 * @throws IOException
+	 * TODO add ability to save the seed lexicon with it as well, as a boolean parameter.
 	 */
-	public void saveLearnedLexicon(String f, int topN) throws IOException {
+	public void saveLearnedLexicon(String f, int topN, Lexicon seedLexicon) throws IOException {
 		//TODO why are we still creating the binary lexicon files? It should be only text files, as the others are not being used anymore.
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f+"-top-"+topN));
 		
-		Lexicon lex = this.getLearnedLexiconAA(topN);  // AA NEW dangerous...
+		Lexicon lex = this.getLearnedLexiconAA(topN, seedLexicon);  // AA NEW dangerous...
 		logger.info(ANSI_BLUE + "Lexicon size: " + lex.size()+  ANSI_RESET);
 		logger.debug(ANSI_BLUE + "Lexicon is: " + lex + ANSI_RESET);
 		out.writeObject(lex);
@@ -337,6 +367,7 @@ public class WordHypothesisBase {
 		lex.writeToTextFile(f + "-top-"+topN +".txt");
 		logger.info("Saved top-" + topN + " lexicon to " + f);
 	}
+
 
 	private void loadPriorIntoCur(Collection<Word> sw) {
 		// remove duplicate
@@ -353,6 +384,7 @@ public class WordHypothesisBase {
 						+ " but this does not exist in the current Distribution");
 		}
 	}
+
 
 	/**
 	 * utility method for the calculation of the (log) sum of a set of probabilities.
