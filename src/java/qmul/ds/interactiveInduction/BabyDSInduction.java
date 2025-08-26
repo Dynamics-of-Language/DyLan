@@ -39,6 +39,7 @@ public class BabyDSInduction {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_RED = "\u001B[31m";
 
+    static final String seedGrammarPath2 = "resource\\2025-babyds-seeded-induction\\".replace("\\", File.separator); // The dir that works!
     static final String seedGrammarPath = "resource\\2023-babyds-induction-output\\".replace("\\", File.separator); // The dir that works!
 //    static final String seedGrammarPath = "resource\\2023-english-ttr-induction-seed\\".replace("\\", File.separator); // The dir that works!
 
@@ -48,6 +49,8 @@ public class BabyDSInduction {
      static final String c2full = "resource\\2025-babyds-RQ1\\class2full\\".replace("\\", File.separator);  //the dir that works!
     static final String BDS_RQ1_CLASS2_PATH = "resource\\2025-babyds-RQ1\\c2-s47-debug\\".replace("\\", File.separator);
     static final String RQ1_C2_NTR_PATH = "resource\\2025-babyds-RQ1\\c2_ntr_data_newseed\\".replace("\\", File.separator);
+    static final String rq1path = "resource\\2025-babyds-RQ1\\class1HB\\".replace("\\", File.separator);  //the dir that works!
+
 
     static final String DATASET_NAME = "oat";
 //    static final String NN_FOLDER_NAME = "nn_data";  //TODO add comment on what this is used for
@@ -86,13 +89,16 @@ public class BabyDSInduction {
 
 
     /**
-     * Overloads the below method, with default values for modelAddress and datasetName.
-     * @param kfcv The number of folds for k-fold cross-validation. If 0, a train-test split is performed.
-     * @return A pair of semantic accuracy and parsing coverage results.
-     * @author: AA
+     * Overloads the below method, with default value for topNstart. Added by AA so that I can evaluate only one topN (by providing topNstart=topN).
+     * @param kfcv
+     * @param modelAddress
+     * @param datasetFileName
+     * @param testSetSuffix
+     * @param topN
+     * @return
      */
-    public EvalResult evaluate_model(int kfcv) {
-        return evaluate_model(kfcv, "", "", "", TOP_N);
+    public EvalResult evaluate_model(int kfcv, String modelAddress, String datasetFileName, String testSetSuffix, int topN) {
+        return evaluate_model(kfcv, modelAddress, datasetFileName, testSetSuffix, topN, 1);
     }
 
 
@@ -112,7 +118,7 @@ public class BabyDSInduction {
      * @param topN The top-N actions/models to evaluate.
      * @return An EvalResult object containing the evaluation results.
      */
-    public EvalResult evaluate_model(int kfcv, String modelAddress, String datasetFileName, String testSetSuffix, int topN) {
+    public EvalResult evaluate_model(int kfcv, String modelAddress, String datasetFileName, String testSetSuffix, int topN, int topNstart) {
         logger.info("Evaluating BabyDS model...");
 
         EvalResult evalResult = new EvalResult();
@@ -122,7 +128,7 @@ public class BabyDSInduction {
         HashMap<Integer, HashMap<String, HashMap<String, Double>>> semanticAccuracy = new HashMap<>();
         HashMap<Integer, HashMap<String, ArrayList<Double>>> parsingCoverage = new HashMap<>();  // Should have used double[] instead of ArrayList<Double>... Anyways.
         Evaluation eval = new Evaluation();  // AA: For semantic accuracy - based on Julian's code.
-        for (int n = 1; n <= topN; n++) {  //TODO SHOULD be made parallel
+        for (int n = topNstart; n <= topN; n++) {  //TODO SHOULD be made parallel
             logger.info("Loading parser with top-" + n + " learned actions...");
             InteractiveContextParser parser;
             parser = new InteractiveContextParser(modelAddress, n);
@@ -539,6 +545,9 @@ public class BabyDSInduction {
     }
 
 
+    /**
+     * TODO Make this use the below trainBabyDSHBSeeded method with default values. But for now just get things working!
+     */
     public WordHypothesisBase trainBabyDSwithHB(RecordTypeCorpus trainingCorpus, String modelDir, String seedGrammarAddress, WordHypothesisBase previousModel) {
         WordHypothesisBase newModel = null;
         logger.info("Training BabyDS model...");
@@ -591,6 +600,55 @@ public class BabyDSInduction {
                     newModel = babyDS.getHypothesisBase();
                     newModel.saveLearnedLexicon(modelDir + "lexicon.lex", i);
                 }
+            } catch(Exception e) {
+                throw new RuntimeException("Failed during training: " + e.getMessage(), e);
+            }
+        }
+        if (newModel == null) {
+            logger.error(ANSI_RED + "New model is null!!!" + ANSI_RESET);
+        }
+        return newModel;
+    }
+
+
+    /**
+     * A BabyDS trainer, that supports seeded induction.
+     * @param seedModelDir The directory to load a seed model from.
+     * @param trainingCorpus The training data to train the model on.
+     * @param learnerCompActionsPath The path to the learner computational actions file.
+     * @param previousModel The previous model to use as a starting point.
+     * @param topN The number of top-N models to learn.
+     * @param outputModelDir The directory to save the learned lexicon to.
+     * TODO properly distinguish between previousModel and seedModelDir.
+     * @return The new model.
+     */
+    public WordHypothesisBase trainBabyDSHBSeeded(String seedModelDir,RecordTypeCorpus trainingCorpus, String learnerCompActionsPath, WordHypothesisBase previousModel, int topN, String outputModelDir) {
+        WordHypothesisBase newModel = null;
+        logger.info("Training BabyDS model...");
+        // Check if a trained model already exists, and if so, prompt user to see if they want to use it or learn another one:
+        String[] files = new File(seedModelDir).list();
+        if (files != null) {
+            for (String file : files) {
+                if (file.startsWith("lexicon.lex-top-" + topN)) {
+                    logger.info("Seed model found in the given directory with name: " + file);
+                }
+            }
+            // Verify model directory exists
+            File modelDirFile = new File(seedModelDir);
+            if (!modelDirFile.exists()) {
+                if (!modelDirFile.mkdirs()) {
+                    throw new RuntimeException("Could not create model directory: " + seedModelDir);
+                }
+            }
+            // Initialise learner:
+            TTRWordLearner babyDS = new TTRWordLearner(seedModelDir, trainingCorpus, learnerCompActionsPath, previousModel, topN);
+            try {
+                logger.info("BabyDS HB seeded training starting...");
+                babyDS.learn();
+                // Writing models to file:
+                newModel = babyDS.getHypothesisBase();
+                // newModel.saveLearnedLexicon(outputModelDir + File.separator + "lexicon.lex", topN);
+                babyDS.saveModel(outputModelDir + File.separator + "lexicon.lex", topN, topN);
             } catch(Exception e) {
                 throw new RuntimeException("Failed during training: " + e.getMessage(), e);
             }
@@ -786,14 +844,14 @@ public class BabyDSInduction {
 //        String dtsName = args.length > 0 ? args[0] : DATASET_NAME;
 // ----------------------------- UNCOMMENT BELOW
        BabyDSInduction testInduction = new BabyDSInduction();
-       testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, BDS_RQ1_CLASS2_PATH, "_train", SEED, seedGrammarPath, TOP_N);
+       testInduction.full_pipeline(FOLDS, TRAIN_TEST_RATIO, SAVE_TO_FILE, rq1path, "_train", SEED, seedGrammarPath2, TOP_N);
 
         // training only
 //        BabyDSInduction bbds = new BabyDSInduction();
 //        bbds.train_model(corpusPath + datasetName);
 
         // To make neural parsing corpus:
-         BabyDSInduction test = new BabyDSInduction();
+//         BabyDSInduction test = new BabyDSInduction();
 //         test.makeNeuralParsingCorpus(DATASET_NAME, c2full, "");
 //        test.convertCurrentCorpusToNN(RQ1_C2_NTR_PATH);
 
