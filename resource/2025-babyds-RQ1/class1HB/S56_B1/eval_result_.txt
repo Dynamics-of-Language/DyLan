@@ -1,0 +1,106 @@
+
+sem acc | train size: 11 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  88.39 |  82.50 |  85.25 |  81.43 |  79.46 |  80.38 |
+| Top-2           |  94.21 |  89.50 |  91.70 |  88.04 |  85.68 |  86.78 |
+| Top-3           |  95.78 |  93.64 |  94.64 |  87.11 |  85.15 |  86.07 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      18.18 |        0.00 |      46.15 |        0.00 |
+| Top-2           |      45.45 |       40.00 |      76.92 |       20.00 |
+| Top-3           |     100.00 |       63.64 |      92.31 |       16.67 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+goto a red door
+open the green door
+pickup the blue ball
+>>> Dataset: test | Top-3 | Failed Parses:
+pickup the blue ball
+>>> Dataset: test | Top-1 | Failed Parses:
+goto a red door
+goto a red key
+open the green door
+goto a box
+pickup the blue ball
+pickup a red key
+pickup the grey key
+>>> Dataset: train | Top-1 | Failed Parses:
+goto the red key
+goto a blue box
+goto a yellow ball
+open a purple door
+open the yellow door
+pickup a yellow key
+goto the key
+goto a grey box
+goto the yellow box
+>>> Dataset: train | Top-2 | Failed Parses:
+goto a blue box
+goto a yellow ball
+open a purple door
+open the yellow door
+pickup a yellow key
+goto the yellow box
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto a ball
+goto a red key
+goto the green ball
+goto a red box
+goto the red box
+pickup a red key
+pickup the grey key
+pickup the purple ball
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto a ball
+goto a red door
+goto a red key
+goto the green ball
+goto a red box
+open the green door
+goto the red box
+pickup a red key
+pickup the grey key
+pickup the purple ball
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+goto a ball
+goto the green ball
+goto a red box
+goto the red ball
+goto the red box
+pickup the purple ball
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+pickup a green ball
+pickup a red ball
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+goto the red key
+pickup a green ball
+goto a grey box
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto the red key
+goto a yellow ball
+pickup a green ball
+open the yellow door

@@ -1,3 +1,5 @@
+// no adjective class 2 data
+
 Sent : putnextto a key a key
 Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_key(x1) : t]|x2==epsilon(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_key(x3) : t]|x4==epsilon(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
 Num : 1 - Class: 2
@@ -189,4 +191,3 @@ Num : 47 - Class: 2
 Sent : putnextto the box the door
 Sem : [r1 : [x1 : e|head==x1 : e|p1==obj_box(x1) : t]|x2==iota(r1.head, r1) : e|r2 : [x3 : e|head==x3 : e|p3==obj_door(x3) : t]|x4==iota(r2.head, r2) : e|e1==state_beside : es|head==e1 : es|p5==obj(e1, x2) : t|p6==ind_obj(e1, x4) : t]
 Num : 48 - Class: 2
-

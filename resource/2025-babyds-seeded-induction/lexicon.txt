@@ -1,4 +1,4 @@
-door                        count                          obj_door
+//door                        count                          obj_door
 //ball                        count                          obj_ball
 box                         count                          obj_box
 //key                         count                          obj_key

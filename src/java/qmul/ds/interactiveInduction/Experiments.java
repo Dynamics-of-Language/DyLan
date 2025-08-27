@@ -63,14 +63,14 @@ public class Experiments {
 
     private static final int[] SEEDS = {46, 48, 50, 52, 56};
     private static final int[] MAX_BATCHES = {3, 4, 8, 4, 3};
-    private static final List<AbstractMap.SimpleEntry<Integer, Integer>> SEED_BATCH_PAIRS = new ArrayList<>();
+    private static final HashMap<Integer, Integer> SEED_BATCH_PAIRS = new HashMap<>();
     
     static {
-        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(46, 3));
-        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(48, 4));
-        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(50, 8));
-        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(52, 4));
-        SEED_BATCH_PAIRS.add(new AbstractMap.SimpleEntry<>(56, 3));
+        SEED_BATCH_PAIRS.put(46, 3);
+        SEED_BATCH_PAIRS.put(48, 4);
+        SEED_BATCH_PAIRS.put(50, 8);
+        SEED_BATCH_PAIRS.put(52, 4);
+        SEED_BATCH_PAIRS.put(56, 3);
     }
 
 
@@ -280,121 +280,77 @@ public class Experiments {
 
         // Now based on the setting, create the "training set".
         RecordTypeCorpus cumulativeTrainingData = class1_minimum_data.mergeCorpora(new RecordTypeCorpus());  // basically just class 1 minimal data so making a copy of it.
-        //TODO replace the below with a method call, obviously!
+
+        List<RecordTypeCorpus> trainingDataBatches = new ArrayList<>();
         switch (setting) {
             case "first": {
-                int currentMergedBatchIndex = minimum_data_class1_index;
-                WordHypothesisBase previousModel = null;
-                System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
-                // TODO control for the size / num batches here...
-                for (RecordTypeCorpus batch : class1_extra_batches) {  // TODO same thing has to happen with class 1 batches and mix of class 1 and 2 batches.
-                    RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // reset for non-cumulative
-                    nonCumulativeTrainingData.addAll(batch);
-                    cumulativeTrainingData.addAll(batch);
-                    // cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well
-                    //TODO IS THSI CORERCTcomapred to RQ1?
-                    // is the above the same as cumulativeTrainingData.addAll(batch)?
-                    logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
-                    if (withCurriculum) {  //TODO test + provide our proper way for curriculum learning.
-//                        cumulativeTrainingData.sort(new RecordTypeCorpus.RecordTypeComparator());
-                    } else {
-                        Collections.shuffle(cumulativeTrainingData, new Random(seed));
-                    }
-                    cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
-                    String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
-                    // REMEMBER: the training results to be considered should be only the ones with the cumulative batch (potentially the second call to trainTestBatchWithHB) and not the ones with the non-cumulative batch.
-                    // EvalResult generalisationResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens");  //todo fix
-                    Pair<EvalResult, WordHypothesisBase> generalisationResultHB = trainTestBatchWithHB(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel);  //todo fix
-                    EvalResult generalisationResult = generalisationResultHB.first();
-                    previousModel = generalisationResultHB.second();  // Store the model for the next iteration
-
-                    // EvalResult forgettingResult = trainTestBatch(rq2path, currentFolderName, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg");  //todo fix
-                    Pair<EvalResult, WordHypothesisBase> forgettingResultHB = trainTestBatchWithHB(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel);  //todo fix
-                    EvalResult forgettingResult = forgettingResultHB.first();
-//                    EvalResult forgettingResult = ds.evaluate_model(0, forgettingPath, "babyds", "_forg", N);  //todo fix I think I should add a "force test data" param!
-
-                    logger.info("Eval for batch number: ");
-                    logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
-                    logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
-                    logger.info(forgettingResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
-                    logger.info(forgettingResult.getSemanticAccResultsTable("")); // todo fix
-                    currentMergedBatchIndex++;
-                    results.getGeneralisationResults().add(generalisationResult);
-                    results.getForgettingResults().add(forgettingResult);
-                }
+                trainingDataBatches = class1_extra_batches;
+                logger.debug("Class 1 extra batches size: " + class1_extra_batches.size());
                 break;
             }
             case "second": {
-                int currentMergedBatchIndex = minimum_data_class1_index; //TODO change for class 2
-                System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
-                WordHypothesisBase previousModel = null;
-                for (RecordTypeCorpus batch : class2_batches) {  // TODO same thing has to happen with class 1 batches and mix of class 1 and 2 batches.
-                    RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // reset for non-cumulative
-                    nonCumulativeTrainingData.addAll(batch);
-                    cumulativeTrainingData.addAll(batch); //TODO NEWLY added by AA: IT'S SIMILAR TO RQ1, but wasn't here. To be tested.
-//                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
-                    logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
-                    if (withCurriculum) {  //todo test + provide our proper way for curriculum learning.
-                    } else {
-                        Collections.shuffle(cumulativeTrainingData, new Random(seed));  //TODO should not happen if curriculum learning is used.
-                    }
-                    cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
-                    String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
-                    String currentOutputPath = forgettingPath + currentFolderName + File.separator;
-                    Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
-                    EvalResult generalisationResult = generalisationOutput.first;
-                    previousModel = generalisationOutput.second;
-                    logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
-
-                    //TODO Missing dev test here. tHINK IT CAN COME INTO PLAY.
-                    Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
-                    EvalResult forgettingResult = forgettingOutput.first;
-                    logger.info("Eval for batch number: ");
-                    logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
-                    logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
-                    logger.info(forgettingResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
-                    logger.info(forgettingResult.getSemanticAccResultsTable("")); // todo fix
-
-                    currentMergedBatchIndex++;
-                    results.getGeneralisationResults().add(generalisationResult);
-                    results.getForgettingResults().add(forgettingResult);
-                    //TODO fix write to file/ relevant data structure here (with RQ1)
-//                    break;
-                }
+                trainingDataBatches = class2_batches;
+                logger.debug("Class 2 batches size: " + class2_batches.size());
                 break;
             }
             case "both": {
-                int currentMergedBatchIndex = minimum_data_class1_index; //TODO change for class 2
-                System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
-                RecordTypeCorpus next_class1_batch = class1_extra_batches.iterator().next();
-                RecordTypeCorpus next_class2_batch = class2_batches.iterator().next();
-                RecordTypeCorpus batch = next_class1_batch.mergeCorpora(next_class2_batch);
-                  // TODO same thing has to happen with class 1 batches and mix of class 1 and 2 batches.
-                //TODO this cumulativeBatch is wrong and has to be properly initiated.
-                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
-                    logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
-                    if (withCurriculum) {  //todo test + provide our proper way for curriculum learning.
-                    } else {
-                        Collections.shuffle(cumulativeTrainingData, new Random(seed));  //TODO should not happen if curriculum learning is used.
-                    }
-                    cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
-                    String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
-                    EvalResult generalisationResult = trainTestBatch(currentFolderName, forgettingPath , cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens");  //todo fix
-                    EvalResult forgettingResult = trainTestBatch(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg");  //todo fix
-                    logger.info("Eval for batch number: ");
-                    logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
-                    logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
-                    logger.info(forgettingResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
-                    logger.info(forgettingResult.getSemanticAccResultsTable("")); // todo fix
-                    currentMergedBatchIndex++;
-                    results.getGeneralisationResults().add(generalisationResult);
-                    results.getForgettingResults().add(forgettingResult);
-
+                //TODO Double-check this.
+                // Create batches that are half class1 and half class2
+                int numBatches = Math.min(class1_extra_batches.size(), class2_batches.size());
+                for (int i = 0; i < numBatches; i++) {
+                    RecordTypeCorpus class1_batch = class1_extra_batches.get(i);
+                    RecordTypeCorpus class2_batch = class2_batches.get(i);
+                    RecordTypeCorpus mergedBatch = class1_batch.mergeCorpora(class2_batch);
+                    trainingDataBatches.add(mergedBatch);
+                }
+                logger.debug("Both classes batches size: " + trainingDataBatches.size());
+                break;
             }
             default: logger.error("Invalid setting provided. Please use 'first', 'second' or 'both'.");
         }
+
+        int currentMergedBatchIndex = minimum_data_class1_index; //TODO double-check
+        System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
+        WordHypothesisBase previousModel = null;
+
+        for (RecordTypeCorpus batch : trainingDataBatches) {  // TODO same thing has to happen with class 1 batches and mix of class 1 and 2 batches.
+            RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // reset for non-cumulative
+            nonCumulativeTrainingData.addAll(batch);
+            cumulativeTrainingData.addAll(batch); //TODO NEWLY added by AA: IT'S SIMILAR TO RQ1, but wasn't here. To be tested.
+//                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
+            logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
+            if (withCurriculum) {  //todo test + provide our proper way for curriculum learning.
+            } else {
+                Collections.shuffle(cumulativeTrainingData, new Random(seed));  //TODO should not happen if curriculum learning is used.
+            }
+            cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name 
+            String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;  // TODO Update to include setting here (cumulative/not + first/second/both)
+            String currentOutputPath = forgettingPath + currentFolderName + File.separator;
+            
+            //TODO Missing dev test here. THINK IT CAN COME INTO PLAY.
+            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
+            EvalResult generalisationResult = generalisationOutput.first;
+            previousModel = generalisationOutput.second;
+            logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
+
+            //TODO Missing dev test here. tHINK IT CAN COME INTO PLAY.
+            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
+            EvalResult forgettingResult = forgettingOutput.first;
+            logger.info("Eval for batch number: ");
+            logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
+            logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
+            logger.info(forgettingResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
+            logger.info(forgettingResult.getSemanticAccResultsTable("")); // todo fix
+
+            currentMergedBatchIndex++;
+            results.getGeneralisationResults().add(generalisationResult);
+            results.getForgettingResults().add(forgettingResult);
+            //TODO fix write to file/ relevant data structure here (with RQ1)
+        }
+
         return results;
     }
+
 
 
     /**

@@ -1,0 +1,66 @@
+
+sem acc | train size: 33 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  96.97 |  96.97 |  96.97 |  86.15 |  86.15 |  86.15 |
+| Top-2           |  98.59 |  97.88 |  98.21 |  92.83 |  91.92 |  92.35 |
+| Top-3           |  99.47 |  99.47 |  99.47 |  97.31 |  97.31 |  97.31 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |     100.00 |       87.88 |     100.00 |       53.85 |
+| Top-2           |     100.00 |       87.88 |     100.00 |       53.85 |
+| Top-3           |     100.00 |       96.97 |     100.00 |       84.62 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+No failed parses.
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto a red door
+goto a red key
+goto a red box
+goto the red ball
+goto the red box
+pickup a red key
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto a red key
+pickup a red key
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+goto a red door
+goto a red key
+goto a red box
+goto the red ball
+goto the red box
+pickup a red key
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+goto the red key
+pickup a red ball
+goto a red ball
+goto the red door
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+goto the red key
+pickup a red ball
+goto a red ball
+goto the red door
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto the red key
