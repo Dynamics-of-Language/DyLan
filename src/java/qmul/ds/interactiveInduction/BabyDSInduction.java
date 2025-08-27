@@ -234,6 +234,7 @@ public class BabyDSInduction {
                 logger.info("Parsing coverage for " + dataset_name + ": " + parsedCount + " out of " + corpus.size());  // AA MODIFIED FROM parsedCount
             }
         }
+        evalResult.setDatasetNames("train", "test"+testSetSuffix);
         evalResult.setDatasetSizes(trainingSize, testingSize);
         evalResult.writeResultsToFile(modelAddress, datasetFileName);
         return evalResult;
@@ -799,45 +800,88 @@ public class BabyDSInduction {
 
     /**
      * Overloads the method above for fixed batch sizes.
-     * @param corpus
+     * @param corpus The corpus to split into batches.
      * @param init_batch_size The size of the first batch.
      * @param inc_batch_size The size of the incremental batches.
-     * @return
+     * @param last_batch_size The size of the last batch. If 0, no last batch is reserved.
+     * @return List of RecordTypeCorpus batches.
      */
-    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, int init_batch_size, int inc_batch_size) {
-        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_SIZE: " + init_batch_size + " | INC_BATCH_SIZE: " + inc_batch_size);
+    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, int init_batch_size, int inc_batch_size, int last_batch_size) {
+        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_SIZE: " + init_batch_size + " | INC_BATCH_SIZE: " + inc_batch_size + " | LAST_BATCH_SIZE: " + last_batch_size);
         List<RecordTypeCorpus> batches = new ArrayList<>();
         int corpus_size = corpus.size();
         int batch_count = 1;
-        int init_size = init_batch_size;
-        int inc_size = inc_batch_size;
-        // The first init_size elements of corpus go to the first batch. The rest are divided into inc_size batches
-        // and added to the list.
+
+        // Calculate the available size for initial and incremental batches
+        // Reserve samples for the last batch if last_batch_size > 0
+        int available_for_splitting = last_batch_size > 0 ? corpus_size - last_batch_size : corpus_size;
+        
+        // Ensure we have enough samples for the initial batch
+        if (available_for_splitting < init_batch_size) {
+            logger.warn("Not enough samples available for initial batch after reserving last batch. Adjusting initial batch size.");
+            init_batch_size = Math.max(0, available_for_splitting);
+        }
+
+        // Create initial batch
         RecordTypeCorpus init_batch = new RecordTypeCorpus();
-        for (int i = 0; i < init_size; i++) {
+        for (int i = 0; i < init_batch_size; i++) {
             init_batch.add(corpus.get(i));
         }
         logger.debug("Added batch " + batch_count + " with size: " + init_batch.size());
         batches.add(init_batch);
         batch_count++;
 
+        // Create incremental batches from the remaining available samples
         RecordTypeCorpus inc_batch = new RecordTypeCorpus();
-        for (int i = init_size; i < corpus_size; i++) {
+        for (int i = init_batch_size; i < available_for_splitting; i++) {
             inc_batch.add(corpus.get(i));
-            if (inc_batch.size() == inc_size) {
+            if (inc_batch.size() == inc_batch_size) {
                 batches.add(inc_batch);
                 logger.debug("Added batch " + batch_count + " with size: " + inc_batch.size());
                 batch_count++;
                 inc_batch = new RecordTypeCorpus();
             }
         }
-        if (!inc_batch.isEmpty()) {  // If there are any remaining elements in the last batch, add it to the list.
-            // Add remaining elements to the last existing batch and not create a new one.
-            batches.get(batches.size()-1).addAll(inc_batch);
-            logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.get(batches.size()-1).size());
+        
+        // Create the last batch if last_batch_size > 0
+        if (last_batch_size > 0) {
+            RecordTypeCorpus last_batch = new RecordTypeCorpus();
+            // Add the reserved samples to the last batch
+            for (int i = available_for_splitting; i < corpus_size; i++) {
+                last_batch.add(corpus.get(i));
+            }
+            
+            // If there were leftover samples from incremental batching, add them to the last batch
+            if (!inc_batch.isEmpty()) {
+                last_batch.addAll(inc_batch);
+                logger.debug("Added leftover samples of size " + inc_batch.size() + " to the last batch");
+            }
+            
+            batches.add(last_batch);
+            logger.debug("Added last batch " + batch_count + " with size: " + last_batch.size());
+        } else {
+            // If no last batch is needed, handle any leftover samples from incremental batching
+            // Add remaining elements to the last existing batch (original behavior)
+            if (!inc_batch.isEmpty()) {
+                batches.get(batches.size()-1).addAll(inc_batch);
+                logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.get(batches.size()-1).size());
+            }
         }
+        
         logger.info("Batches prepared: " + batches.size());
         return batches;
+    }
+
+
+    /**
+     * Overloads the method above for the case where the last batch size is 0 (to basically ignore making a special-sized last batch).
+     * @param corpus
+     * @param init_batch_size
+     * @param inc_batch_size
+     * @return
+     */
+    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, int init_batch_size, int inc_batch_size) {
+        return prepare_batches(corpus, init_batch_size, inc_batch_size, 0);
     }
 
 
