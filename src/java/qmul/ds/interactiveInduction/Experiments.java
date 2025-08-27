@@ -58,6 +58,7 @@ public class Experiments {
     public static final double INC_BATCH_RATIO = 0.1; // Size of the incremental data batches for evaluation - used in prepare_batch().
     public static final int INC_BATCH_SIZE = 1;  // Number of samples to use for each training batch (fixed size, instead of the ratios above)
     public static final boolean USE_FIXED_BATCH_SIZE = true;  // If true, use fixed batch size, otherwise use ratio.
+    public static final int RQ2_LAST_BATCH_SIZE = 11;  // Size of the last batch for RQ2 (Therefore the size of forgetting and generalisation test sets)
 
     public static final boolean SKIP_RETRAINING = true;  // If a model exists, and we don't want to get the "do you want to load it" message.
     public static final int MINIMUM_CLASS1_BATCHES = 3;  // Minimum number of class1 batches to start with in RQ2 tests.
@@ -220,7 +221,7 @@ public class Experiments {
         List<RecordTypeCorpus> class1_batches;
 
         if (USE_FIXED_BATCH_SIZE) {
-            class1_batches = BabyDSInduction.prepare_batches(corpus1, INC_BATCH_SIZE, INC_BATCH_SIZE);
+            class1_batches = BabyDSInduction.prepare_batches(corpus1, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
         } else {
             class1_batches = BabyDSInduction.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);
         }
@@ -238,7 +239,7 @@ public class Experiments {
         Collections.shuffle(corpus2, new Random(seed));
         List<RecordTypeCorpus> class2_batches;
         if (USE_FIXED_BATCH_SIZE) {
-            class2_batches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE);
+            class2_batches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
         } else {
             class2_batches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);
         }
@@ -970,7 +971,11 @@ public class Experiments {
 
         // save training set and test set to this folder:
         try {
-            trainingBatch.saveCorpus(folder + File.separator + "_train.txt");  //todo set their names?
+            String trainFilePath = folder + File.separator + "_train.txt";
+            File trainFile = new File(trainFilePath);
+            if (!trainFile.exists()) {
+                trainingBatch.saveCorpus(trainFilePath);
+            }
             trainingBatch.corpusName = "_train"; // to avoid long names in results files
             testingData.saveCorpus(folder + File.separator + "_test"+testSetSuffix+".txt");
             testingData.corpusName = "_test"+testSetSuffix; // to avoid long names in results files
