@@ -17,3 +17,7 @@ The bad things:
 - It is very untidy and doesn't properly follow what we had in the previous branches like arash_dsttr or babyDS.
 
 Anyway, I think DS code clean up should happen at all levels, not just this.
+
+---
+
+If you are trying to extend the induction code, please see some tips in the `InductionGuide.MD file` in `src/java/qmul/ds/learn`. And if it saved you, you're welcome!
