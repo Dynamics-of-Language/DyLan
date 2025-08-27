@@ -260,47 +260,47 @@ public class Experiments {
         //todo better handle file names based on startswith, than pure names...
 
         List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(startClass, endClass, seed, forgettingPath);
-        List<RecordTypeCorpus> class1_batches = rq2Data.get(0);
-        List<RecordTypeCorpus> class2_batches = rq2Data.get(1);
+        List<RecordTypeCorpus> sourceClass_batches = rq2Data.get(0);
+        List<RecordTypeCorpus> targetClass_batches = rq2Data.get(1);
         RecordTypeCorpus forgetting_test_data = rq2Data.get(2).get(0);
         RecordTypeCorpus generalisation_test_data = rq2Data.get(3).get(0);
 
         /// fix HERE
-        class2_batches = class2_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
-//        class2_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+        targetClass_batches = targetClass_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+//        targetClass_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
         // First, grab the minimum and enough data of class 1 (number of batches to reach mastery from RQ1 basically),
         // and add batches of class1 or class2 or their mix, and train a model on it:
-        int minimum_data_class1_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
+        int min_data_source_class_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
 
-        RecordTypeCorpus class1_minimum_data = RecordTypeCorpus.mergeAllCorpora(class1_batches.subList(0, minimum_data_class1_index)); // This is exclusive.
-        logger.info("Class 1 minimum data size: " + class1_minimum_data.size());
+        RecordTypeCorpus sourceClass_minimum_data = RecordTypeCorpus.mergeAllCorpora(sourceClass_batches.subList(0, min_data_source_class_index)); // This is exclusive.
+        logger.info("Class 1 minimum data size: " + sourceClass_minimum_data.size());
         // anything after it will be added as batches.
-        List<RecordTypeCorpus> class1_extra_batches = class1_batches.subList(minimum_data_class1_index + 1, class1_batches.size());
-        class1_extra_batches.add(0,new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+        List<RecordTypeCorpus> sourceClass_extra_batches = sourceClass_batches.subList(min_data_source_class_index + 1, sourceClass_batches.size());
+        sourceClass_extra_batches.add(0,new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
 
         // Now based on the setting, create the "training set".
-        RecordTypeCorpus cumulativeTrainingData = class1_minimum_data.mergeCorpora(new RecordTypeCorpus());  // basically just class 1 minimal data so making a copy of it.
+        RecordTypeCorpus cumulativeTrainingData = sourceClass_minimum_data.mergeCorpora(new RecordTypeCorpus());  // basically just class 1 minimal data so making a copy of it.
 
         List<RecordTypeCorpus> trainingDataBatches = new ArrayList<>();
         switch (setting) {
             case "first": {
-                trainingDataBatches = class1_extra_batches;
-                logger.debug("Class 1 extra batches size: " + class1_extra_batches.size());
+                trainingDataBatches = sourceClass_extra_batches;
+                logger.debug("source class extra batches size: " + sourceClass_extra_batches.size());
                 break;
             }
             case "second": {
-                trainingDataBatches = class2_batches;
-                logger.debug("Class 2 batches size: " + class2_batches.size());
+                trainingDataBatches = targetClass_batches;
+                logger.debug("Target class batches size: " + targetClass_batches.size());
                 break;
             }
             case "both": {
                 //TODO Double-check this.
                 // Create batches that are half class1 and half class2
-                int numBatches = Math.min(class1_extra_batches.size(), class2_batches.size());
+                int numBatches = Math.min(sourceClass_extra_batches.size(), targetClass_batches.size());
                 for (int i = 0; i < numBatches; i++) {
-                    RecordTypeCorpus class1_batch = class1_extra_batches.get(i);
-                    RecordTypeCorpus class2_batch = class2_batches.get(i);
-                    RecordTypeCorpus mergedBatch = class1_batch.mergeCorpora(class2_batch);
+                    RecordTypeCorpus sourceClass_batch = sourceClass_extra_batches.get(i);
+                    RecordTypeCorpus targetClass_batch = targetClass_batches.get(i);
+                    RecordTypeCorpus mergedBatch = sourceClass_batch.mergeCorpora(targetClass_batch);
                     trainingDataBatches.add(mergedBatch);
                 }
                 logger.debug("Both classes batches size: " + trainingDataBatches.size());
@@ -309,7 +309,7 @@ public class Experiments {
             default: logger.error("Invalid setting provided. Please use 'first', 'second' or 'both'.");
         }
 
-        int currentMergedBatchIndex = minimum_data_class1_index; //TODO double-check
+        int currentMergedBatchIndex = min_data_source_class_index; //TODO double-check
         System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
 
@@ -320,6 +320,7 @@ public class Experiments {
 //                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
             logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
             if (withCurriculum) {  //todo test + provide our proper way for curriculum learning.
+                // TODO implement curriculum learning sorting here.
             } else {
                 Collections.shuffle(cumulativeTrainingData, new Random(seed));  //TODO should not happen if curriculum learning is used.
             }
@@ -328,13 +329,13 @@ public class Experiments {
             String currentOutputPath = forgettingPath + currentFolderName + File.separator;
             
             //TODO Missing dev test here. THINK IT CAN COME INTO PLAY.
-            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
+            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult generalisationResult = generalisationOutput.first;
 //            previousModel = generalisationOutput.second;
             logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
 
             //TODO Missing dev test here. tHINK IT CAN COME INTO PLAY.
-            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
+            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult forgettingResult = forgettingOutput.first;
             previousModel = generalisationOutput.second;
             logger.info("Eval for batch number: ");
@@ -931,9 +932,8 @@ public class Experiments {
      * TODO many of the stuff being done below better be in one other method so it's tidier (loading data, and paths and copying files)
      */
     public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
-        // todo properly test this method
         WordHypothesisBase newModel = null;
-        String currentSeedModelDir = C1_BDS_TRAINED_MODELS_DIR + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator; //TODO change this to the actual seed model dir
+        String currentSeedModelDir = C1_BDS_TRAINED_MODELS_DIR + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator;
         // make foldername under modelDir and copy the computational action files there:
         String folderPath = modelDir + folderName + File.separator;
         File folder = new File(folderPath);
