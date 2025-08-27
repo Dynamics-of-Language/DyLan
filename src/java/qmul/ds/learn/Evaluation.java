@@ -652,7 +652,7 @@ public class Evaluation {
 	 */
 	public TTRRecordType findBestTTRInterpretation(List<TTRRecordType> predictions, TTRRecordType goldRT) {
 		logger.info("Finding best interpretation given the gold RT: " + goldRT);
-		logger.info("Checking against " +predictions.size()+ " predictions...");
+		logger.info("Checking against " + predictions.size() + " predictions...");
 		EvaluationResult bestEval = null;
 		TTRRecordType bestPred = null;
 		for (TTRRecordType predRT : predictions) {
@@ -662,18 +662,16 @@ public class Evaluation {
 				bestPred = predRT;
 				logger.info("Found perfect match: " + predRT);
 				return bestPred;
-			}
-		}
-		// no perfect match, find the one with the best f-score
-		for (TTRRecordType predRT : predictions) {
-			EvaluationResult eval = precisionRecall(predRT, goldRT);
-			if (bestEval == null || eval.getFScore() > bestEval.getFScore()) {
-				bestEval = eval;
-				bestPred = predRT;
-				logger.info("New best prediction: " + predRT + " with f-score: " + eval.getFScore());
 			} else {
-				logger.info("Skipping prediction: " + predRT + " with f-score: " + eval.getFScore());
-			}
+                EvaluationResult eval = precisionRecall(predRT, goldRT);
+                if (bestEval == null || eval.getFScore() > bestEval.getFScore()) {
+                    bestEval = eval;
+                    bestPred = predRT;
+                    logger.info("New best prediction: " + predRT + " with f-score: " + eval.getFScore());
+                } else {
+                    logger.info("Skipping prediction (we've had better!): " + predRT + " with f-score: " + eval.getFScore());
+                }
+            }
 		}
 		return bestPred;
 	}
