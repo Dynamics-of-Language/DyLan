@@ -168,6 +168,17 @@ public class Experiments {
    }
 
 
+   public List<List<RecordTypeCorpus>> getRQ2Data(int startClass, int endClass, int seed, String savePath) {
+       return getRQ2Data(rq2path, startClass, endClass, seed, savePath);
+   }
+
+   public List<List<RecordTypeCorpus>> getRQ2Data(String rootDirectory, int sourceClassId, int targetClassId, int seed, String savePath) {
+       String sourceClassFileName = "class" + sourceClassId;
+       String targetClassFileName = "class" + targetClassId;
+       return getRQ2Data(rootDirectory, sourceClassFileName, targetClassFileName, seed, savePath);
+   }
+
+
     /**
      * Prepares RQ2 data.
      * Reads in class 1 and class 2 data, creates batches from each, and uses the last batch of class1 as the forgetting
@@ -183,10 +194,10 @@ public class Experiments {
      *          3- forgetting test set (size=1),
      *          4- generalisation test set (size=1).
      */
-    public List<List<RecordTypeCorpus>> getRQ2Data(int startClass, int endClass, int seed, String savePath) {
+    public List<List<RecordTypeCorpus>> getRQ2Data(String rootDirectory, String sourceClassFileName, String targetClassFileName, int seed, String savePath) {
     List<List<RecordTypeCorpus>> rq2Data = new ArrayList<>();
-        File corpusFile1 = new File(rq2path + "class" + startClass + ".txt");
-        File corpusFile2 = new File(rq2path + "class" + endClass + ".txt");
+        File corpusFile1 = new File(rootDirectory + sourceClassFileName + ".txt");
+        File corpusFile2 = new File(rootDirectory + targetClassFileName + ".txt");
         RecordTypeCorpus corpus1 = new RecordTypeCorpus();
         RecordTypeCorpus corpus2 = new RecordTypeCorpus();
         try {
@@ -207,7 +218,7 @@ public class Experiments {
         List<RecordTypeCorpus> class1_batches = BabyDSInduction.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);  //todo this is not ok that babyds is doing this! Has to be RTCorpus!
         // get the test data
         RecordTypeCorpus forgetting_test_data = class1_batches.get(class1_batches.size()-1);
-        forgetting_test_data.corpusName = "babyds_forgetting_test_" + startClass + "_" + forgetting_test_data.size() + ".txt";
+        forgetting_test_data.corpusName = "forgetting_test_" + sourceClassFileName + "_" + forgetting_test_data.size() + ".txt";
         try {
             forgetting_test_data.saveCorpus(savePath + forgetting_test_data.corpusName);  //todo is rq2path here ok?
         } catch (IOException e) {
@@ -220,7 +231,7 @@ public class Experiments {
         List<RecordTypeCorpus> class2_batches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);  //todo this is not ok that babyds is doing this! Has to be RTCorpus!
         // get the test data
         RecordTypeCorpus generalisation_test_data = class2_batches.get(class2_batches.size()-1);
-        generalisation_test_data.corpusName = "babyds_generalisation_test_" + startClass + "_" + generalisation_test_data.size() + ".txt";
+        generalisation_test_data.corpusName = "generalisation_test_" + targetClassFileName + "_" + generalisation_test_data.size() + ".txt";
         try {
             generalisation_test_data.saveCorpus(savePath + generalisation_test_data.corpusName); //todo is rq2path here ok?
         } catch (IOException e) {
@@ -959,7 +970,9 @@ public class Experiments {
         // save training set and test set to this folder:
         try {
             trainingBatch.saveCorpus(folder + File.separator + "_train.txt");  //todo set their names?
+            trainingBatch.corpusName = "_train"; // to avoid long names in results files
             testingData.saveCorpus(folder + File.separator + "_test"+testSetSuffix+".txt");
+            testingData.corpusName = "_test"+testSetSuffix; // to avoid long names in results files
         } catch (IOException e) {
             throw new RuntimeException("Failed to save corpus files: " + e.getMessage());
         }
@@ -982,7 +995,7 @@ public class Experiments {
         }
         EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, topN, topN);  //TODO I think I should add the capability of passing trainign data directly (check if it is string or data)
         // TODO then I can send in training data as full, train on the part I want, and test on full (so I get the same numbers as before HB)
-        result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
+//        result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
         result.setDatasetSizes(trainingBatch.size(), testingData.size());
         System.out.println("\nEvaluation results for batch: " + batchNumber  + " are:");
         System.out.println(result.getSemanticAccResultsTable(String.format("Batch %d", batchNumber)));
