@@ -4,6 +4,7 @@ package qmul.ds.interactiveInduction;
 import edu.stanford.nlp.util.Pair;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -221,18 +222,23 @@ public class EvalResult {
 
 
     /**
-     * Writes the evaluation results to a file.
+     * Writes the evaluation results to a file (appends to existing file).
+     * @param resultsPath   The directory path where the results file will be saved.
+     * @param outputFileName The name identifier for the output file.
      */
     public void writeResultsToFile(String resultsPath, String outputFileName) {
         FileWriter fw;
-        // Report file:
+        // Report file (append mode):
         try {
-            fw = new FileWriter(resultsPath +"eval_result_" + outputFileName + ".txt");
+            fw = new FileWriter(resultsPath +"eval_result_" + outputFileName + ".txt", true); // true enables append mode
             fw.write(getSemanticAccResultsTable("sem acc"));  //todo fix
             fw.write("\n\n\n");
             fw.write(getParsingCoverageResultsTable("coverage"));
             fw.write("\n\n\n");
             fw.write(getDiagnosticResults());
+            fw.write("\n\n\n");
+            fw.write("--------------------------------------------------------------------");
+            fw.write("\n\n\n");
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,10 +257,25 @@ public class EvalResult {
     }
 
 
+    /**
+     * Converts evaluation results to TSV format and optionally saves to file.
+     * @param saveToFile whether to save the results to a TSV file (appends to existing file)
+     * @param addHeader whether to include column headers in the output
+     * @param savePath the directory path where the TSV file will be saved
+     * @return the results as TSV string
+     */
     public String toTSVString(boolean saveToFile, boolean addHeader, String savePath) {
         StringBuilder sb = new StringBuilder();
         String header = "TopN\tResultsOn\tTrainName\tTrainSize\tTestName\tTestSize\tPrecision\tRecall\tF1\tCoverage\tExactMatch\n";
-        if(addHeader)
+        
+        // When saving to file, check if file exists and is not empty to determine header inclusion
+        boolean shouldAddHeader = addHeader;
+        if (saveToFile) {
+            File tsvFile = new File(savePath + "eval_result.tsv");
+            shouldAddHeader = addHeader && (!tsvFile.exists() || tsvFile.length() == 0);
+        }
+        
+        if(shouldAddHeader)
             sb.append(header);
 
         for (int topN : semanticAccuracy.keySet()) {
@@ -290,10 +311,10 @@ public class EvalResult {
         }
         logger.trace("Results in TSV format:\n" + sb);
 
-        // Save to file:
+        // Save to file (append mode):
         if (saveToFile) {
             try {
-                FileWriter fw = new FileWriter(savePath + "eval_result.tsv");
+                FileWriter fw = new FileWriter(savePath + "eval_result.tsv", true); // true enables append mode
                 fw.write(sb.toString());
                 fw.close();
             } catch (Exception e) {
