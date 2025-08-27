@@ -53,18 +53,19 @@ public class Experiments {
     public static final int REPEAT = 1;  // Increments the seed for each repeat
     public static final int N = 3; // TopN actions to use.
 
-    // BATCH_RATIO for class2: 0.02 | class1: 0.1
+    // Info: BATCH_RATIO for class2: 0.02 | class1: 0.1
     public static final double INIT_BATCH_RATIO = 0.1;  // Size of the initial data batch for evaluation - used in prepare_batch().
     public static final double INC_BATCH_RATIO = 0.1; // Size of the incremental data batches for evaluation - used in prepare_batch().
+    public static final int INC_BATCH_SIZE = 1;  // Number of samples to use for each training batch (fixed size, instead of the ratios above)
+    public static final boolean USE_FIXED_BATCH_SIZE = true;  // If true, use fixed batch size, otherwise use ratio.
+
     public static final boolean SKIP_RETRAINING = true;  // If a model exists, and we don't want to get the "do you want to load it" message.
     public static final int MINIMUM_CLASS1_BATCHES = 3;  // Minimum number of class1 batches to start with in RQ2 tests.
     public static final double EARLY_STOPPING_MIN_THRESHOLD = 99.0;  // Minimum F1 threshold that must be reached before checking delta
     public static final double EARLY_STOPPING_DELTA = 0.01;  // Minimum improvement required between consecutive runs
 
     private static final int[] SEEDS = {46, 48, 50, 52, 56};
-    private static final int[] MAX_BATCHES = {3, 4, 8, 4, 3};
-    private static final HashMap<Integer, Integer> SEED_BATCH_PAIRS = new HashMap<>();
-    
+    private static final HashMap<Integer, Integer> SEED_BATCH_PAIRS = new HashMap<>(); // Used for loading the best class1 models trained in RQ1.
     static {
         SEED_BATCH_PAIRS.put(46, 3);
         SEED_BATCH_PAIRS.put(48, 4);
@@ -193,6 +194,7 @@ public class Experiments {
      *          2- class2 batches,
      *          3- forgetting test set (size=1),
      *          4- generalisation test set (size=1).
+     * TODO replace class1 and class2 with sourceClass and targetClass in variables and in naming!
      */
     public List<List<RecordTypeCorpus>> getRQ2Data(String rootDirectory, String sourceClassFileName, String targetClassFileName, int seed, String savePath) {
     List<List<RecordTypeCorpus>> rq2Data = new ArrayList<>();
@@ -215,7 +217,13 @@ public class Experiments {
 
         // First deal with class 1 batches
         Collections.shuffle(corpus1, new Random(seed));
-        List<RecordTypeCorpus> class1_batches = BabyDSInduction.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);  //todo this is not ok that babyds is doing this! Has to be RTCorpus!
+        List<RecordTypeCorpus> class1_batches;
+
+        if (USE_FIXED_BATCH_SIZE) {
+            class1_batches = BabyDSInduction.prepare_batches(corpus1, INC_BATCH_SIZE, INC_BATCH_SIZE);
+        } else {
+            class1_batches = BabyDSInduction.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);
+        }
         // get the test data
         RecordTypeCorpus forgetting_test_data = class1_batches.get(class1_batches.size()-1);
         forgetting_test_data.corpusName = "forgetting_test_" + sourceClassFileName + "_" + forgetting_test_data.size() + ".txt";
@@ -228,7 +236,12 @@ public class Experiments {
 
         // Now deal with class 2 batches
         Collections.shuffle(corpus2, new Random(seed));
-        List<RecordTypeCorpus> class2_batches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);  //todo this is not ok that babyds is doing this! Has to be RTCorpus!
+        List<RecordTypeCorpus> class2_batches;
+        if (USE_FIXED_BATCH_SIZE) {
+            class2_batches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE);
+        } else {
+            class2_batches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);
+        }
         // get the test data
         RecordTypeCorpus generalisation_test_data = class2_batches.get(class2_batches.size()-1);
         generalisation_test_data.corpusName = "generalisation_test_" + targetClassFileName + "_" + generalisation_test_data.size() + ".txt";
@@ -252,8 +265,8 @@ public class Experiments {
     /**
      * Tests a BabyDS model for forgetting and generalisation on lower and higher classes.
      * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more.
-     * @param sourceClassName name of the first class to be used (inclusive)
-     * @param targetClassName name of the last class to be used (inclusive)
+     * @param sourceClassName name of the first class to be used
+     * @param targetClassName name of the last class to be used
      * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both".
      * @param withCurriculum specifies if curriculum learning is used or not (sorts data or shuffles it based on the boolean value provided).
      */
@@ -295,7 +308,7 @@ public class Experiments {
                 break;
             }
             case "both": {
-                //TODO Double-check this.
+                // TODO Double-check this.
                 // Create batches that are half class1 and half class2
                 int numBatches = Math.min(sourceClass_extra_batches.size(), targetClass_batches.size());
                 for (int i = 0; i < numBatches; i++) {
@@ -310,7 +323,7 @@ public class Experiments {
             default: logger.error("Invalid setting provided. Please use 'first', 'second' or 'both'.");
         }
 
-        int currentMergedBatchIndex = min_data_source_class_index; //TODO double-check
+        int currentMergedBatchIndex = min_data_source_class_index; // TODO double-check
         System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
 

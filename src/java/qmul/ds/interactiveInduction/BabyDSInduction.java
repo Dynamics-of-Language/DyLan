@@ -756,6 +756,7 @@ public class BabyDSInduction {
     /**
      * Based on INIT_BATCH_SIZE and INC_BATCH_SIZE, splits the dataset into batches and returns them as a list.
      * For model training purposes, the input corpus should be shuffled first.
+     * There is a fixed version of this method that uses fixed batch sizes instead of ratios (see below).
      * @return A list of data batches.
      * @author: AA
      * todo maybe add SaveToFile as a parameter/option?
@@ -767,6 +768,49 @@ public class BabyDSInduction {
         int batch_count = 1;
         int init_size = (int) (corpus_size * init_batch_ratio);
         int inc_size = (int) (corpus_size * inc_batch_ratio);
+        // The first init_size elements of corpus go to the first batch. The rest are divided into inc_size batches
+        // and added to the list.
+        RecordTypeCorpus init_batch = new RecordTypeCorpus();
+        for (int i = 0; i < init_size; i++) {
+            init_batch.add(corpus.get(i));
+        }
+        logger.debug("Added batch " + batch_count + " with size: " + init_batch.size());
+        batches.add(init_batch);
+        batch_count++;
+
+        RecordTypeCorpus inc_batch = new RecordTypeCorpus();
+        for (int i = init_size; i < corpus_size; i++) {
+            inc_batch.add(corpus.get(i));
+            if (inc_batch.size() == inc_size) {
+                batches.add(inc_batch);
+                logger.debug("Added batch " + batch_count + " with size: " + inc_batch.size());
+                batch_count++;
+                inc_batch = new RecordTypeCorpus();
+            }
+        }
+        if (!inc_batch.isEmpty()) {  // If there are any remaining elements in the last batch, add it to the list.
+            // Add remaining elements to the last existing batch and not create a new one.
+            batches.get(batches.size()-1).addAll(inc_batch);
+            logger.debug("Added last remaining elements with size: " + inc_batch.size() + " to the last batch. Updated size: " + batches.get(batches.size()-1).size());
+        }
+        logger.info("Batches prepared: " + batches.size());
+        return batches;
+    }
+
+    /**
+     * Overloads the method above for fixed batch sizes.
+     * @param corpus
+     * @param init_batch_size The size of the first batch.
+     * @param inc_batch_size The size of the incremental batches.
+     * @return
+     */
+    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, int init_batch_size, int inc_batch_size) {
+        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_SIZE: " + init_batch_size + " | INC_BATCH_SIZE: " + inc_batch_size);
+        List<RecordTypeCorpus> batches = new ArrayList<>();
+        int corpus_size = corpus.size();
+        int batch_count = 1;
+        int init_size = init_batch_size;
+        int inc_size = inc_batch_size;
         // The first init_size elements of corpus go to the first batch. The rest are divided into inc_size batches
         // and added to the list.
         RecordTypeCorpus init_batch = new RecordTypeCorpus();
