@@ -184,8 +184,8 @@ public class Experiments {
      * Reads in class 1 and class 2 data, creates batches from each, and uses the last batch of class1 as the forgetting
      * test set and last batch of class 2 as the generalisation test set. Returns all of these.
      * TODO add proper messages to errors in reading files here
-     * @param startClass index of the first class to be used (inclusive)
-     * @param endClass index of the last class to be used (inclusive)
+     * @param sourceClassFileName name of the first class to be used (inclusive)
+     * @param targetClassFileName name of the last class to be used (inclusive)
      * @param seed the seed for reproducibility (used in shuffling)
      * @param savePath the path to save the data to
      * @return a list of lists of RecordTypeCorpus (size=4) in this order:
@@ -251,32 +251,22 @@ public class Experiments {
 
     /**
      * Tests a BabyDS model for forgetting and generalisation on lower and higher classes.
-     * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more. TODO
-     * @param startClass
-     * @param endClass
-     * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both". // TODO extend to full classes scenario.
+     * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more.
+     * @param sourceClassName name of the first class to be used (inclusive)
+     * @param targetClassName name of the last class to be used (inclusive)
+     * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both".
      * @param withCurriculum specifies if curriculum learning is used or not (sorts data or shuffles it based on the boolean value provided).
-     * TODO rename format to something more meaningful.
-     * todo add also "C" for curriculum learning tests, and "R" for random learning tests.
-     * todo rename to rq2 and remove generalisation as a separate method!
-     * TODO better make a "extra/moreData" list here, so the switch-case can only act on data, not full training+testing part.
      */
-    public RQ2SeedResult testGeneralisationForgetting(int startClass, int endClass, String setting, boolean withCurriculum, int seed, int topN) {
+    public RQ2SeedResult testGeneralisationForgetting(String sourceClassName, String targetClassName, String setting, boolean withCurriculum, int seed, int topN) {
         logger.info("Initiating forgetting experiments...");
         RQ2SeedResult results = new RQ2SeedResult();
-
-        // BabyDSInduction ds = new BabyDSInduction(forgettingPath); // TODO is this correct
-//        ds.verify_model_path(forgettingPath);
-        logger.debug("BabyDSInduction instance created.");
-        //todo better handle file names based on startswith, than pure names...
-
-        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(startClass, endClass, seed, forgettingPath);
+        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(forgettingPath, sourceClassName, targetClassName, seed, forgettingPath);  //TODO Fix to proper paths
         List<RecordTypeCorpus> sourceClass_batches = rq2Data.get(0);
         List<RecordTypeCorpus> targetClass_batches = rq2Data.get(1);
         RecordTypeCorpus forgetting_test_data = rq2Data.get(2).get(0);
         RecordTypeCorpus generalisation_test_data = rq2Data.get(3).get(0);
 
-        /// fix HERE
+        // TODO fix HERE
         targetClass_batches = targetClass_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
 //        targetClass_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
         // First, grab the minimum and enough data of class 1 (number of batches to reach mastery from RQ1 basically),
@@ -324,18 +314,18 @@ public class Experiments {
         System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
 
-        for (RecordTypeCorpus batch : trainingDataBatches) {  // TODO same thing has to happen with class 1 batches and mix of class 1 and 2 batches.
+        for (RecordTypeCorpus batch : trainingDataBatches) {
             RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // reset for non-cumulative
             nonCumulativeTrainingData.addAll(batch);
             cumulativeTrainingData.addAll(batch); //TODO NEWLY added by AA: IT'S SIMILAR TO RQ1, but wasn't here. To be tested.
 //                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
             logger.debug("Current merged corpus size: " + cumulativeTrainingData.size());
-            if (withCurriculum) {  //todo test + provide our proper way for curriculum learning.
+            if (withCurriculum) {
                 // TODO implement curriculum learning sorting here.
             } else {
-                Collections.shuffle(cumulativeTrainingData, new Random(seed));  //TODO should not happen if curriculum learning is used.
+                Collections.shuffle(cumulativeTrainingData, new Random(seed));
             }
-            cumulativeTrainingData.corpusName = "merged_" + startClass + "_" + endClass + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name 
+            cumulativeTrainingData.corpusName = "merged_" + sourceClassName + "_" + targetClassName + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
             String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;  // TODO Update to include setting here (cumulative/not + first/second/both)
             String currentOutputPath = forgettingPath + currentFolderName + File.separator;
             
@@ -345,7 +335,6 @@ public class Experiments {
 //            previousModel = generalisationOutput.second;
             logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
 
-            //TODO Missing dev test here. tHINK IT CAN COME INTO PLAY.
             Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult forgettingResult = forgettingOutput.first;
             previousModel = generalisationOutput.second;
@@ -360,7 +349,6 @@ public class Experiments {
             results.getForgettingResults().add(forgettingResult);
             //TODO fix write to file/ relevant data structure here (with RQ1)
         }
-
         return results;
     }
 
@@ -924,7 +912,7 @@ public class Experiments {
             logger.info("Training model...");
             newModel = ds.trainBabyDSwithHB(trainingBatch, folderPath, seedGrammarPath, previousModel);
         }
-        EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, N);  //TODO I think I should add the capability of passing trainign data directly (check if it is string or data)
+        EvalResult result = ds.evaluate_model(0, folderPath, "", testSetSuffix, N);  //TODO I think I should add the capability of passing training data directly (check if it is string or data)
         // TODO then I can send in training data as full, train on the part I want, and test on full (so I get the same numbers as before HB)
         result.setDatasetNames(trainingBatch.corpusName, testingData.corpusName);
         result.setDatasetSizes(trainingBatch.size(), testingData.size());
@@ -1234,20 +1222,19 @@ public class Experiments {
     /**
      * Runs all of RQ2 (generalisation and forgetting) experiments.
      * Loops through:
-     * - classes -> 1..4
-     * - settings -> F, S, B
-     * - withCurriculum -> true/false
+     * - classes -> "class1", "class2"
+     * - settings -> "first", "second", "both"
+     * - withCurriculum -> false
      * - seed -> 45..45+REPEAT
      */
     public void runRQ2(int repeatCount, int seed) {
-        // todo maybe define the lists that we have below up in the class.
         RQ2FullResults fullResults = new RQ2FullResults();  //TODO refactor to include all the info above...
         for (int i = 0; i < repeatCount; i++) {
             int currentSeed = SEEDS[i];
-            for (int n = 3; n <= N; n++) { //TODO change this to 1
+            for (int n = 3; n <= N; n++) { // TODO change this to 1
                 for (String setting : new String[]{"second"}) {  // Options: "first", "second", "both"
-                    for (boolean withCurriculum : new boolean[]{false}) {  // Options: true, false
-                        RQ2SeedResult resultInSeed = testGeneralisationForgetting(1, 2, setting, withCurriculum, currentSeed, n);
+                    for (boolean withCurriculum : new boolean[]{false}) {  // Options: false [`true` is not an option!]
+                        RQ2SeedResult resultInSeed = testGeneralisationForgetting("class1", "class2", setting, withCurriculum, currentSeed, n);  //TODO fix how N is used here...
                         fullResults.addResult(currentSeed, withCurriculum, resultInSeed); //TODO add n to the result!
 //                        addResultsToTSV(currentSeed, batchtResult, modelDir + "fullResults.tsv");  // TODO
                     }
