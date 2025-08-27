@@ -330,12 +330,13 @@ public class Experiments {
             //TODO Missing dev test here. THINK IT CAN COME INTO PLAY.
             Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
             EvalResult generalisationResult = generalisationOutput.first;
-            previousModel = generalisationOutput.second;
+//            previousModel = generalisationOutput.second;
             logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
 
             //TODO Missing dev test here. tHINK IT CAN COME INTO PLAY.
             Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);  //todo fix
             EvalResult forgettingResult = forgettingOutput.first;
+            previousModel = generalisationOutput.second;
             logger.info("Eval for batch number: ");
             logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
             logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
