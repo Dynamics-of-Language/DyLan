@@ -884,6 +884,173 @@ public class BabyDSInduction {
         return prepare_batches(corpus, init_batch_size, inc_batch_size, 0);
     }
 
+    /**
+     * Overloaded version that ensures at least a minimum number of batches are created.
+     * This is useful when we need to guarantee we have enough batches for dev/test splitting.
+     * @param corpus The corpus to split into batches
+     * @param init_batch_ratio The ratio for the initial batch
+     * @param inc_batch_ratio The ratio for incremental batches  
+     * @param min_batches The minimum number of batches that must be created
+     * @return List of RecordTypeCorpus batches (at least min_batches)
+     */
+    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, double init_batch_ratio, double inc_batch_ratio, int min_batches) {
+        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_RATIO: " + init_batch_ratio + " | INC_BATCH_RATIO: " + inc_batch_ratio + " | MIN_BATCHES: " + min_batches);
+        List<RecordTypeCorpus> batches = new ArrayList<>();
+        int corpus_size = corpus.size();
+        int batch_count = 1;
+        
+        // If minimum batches is specified and greater than what we'd naturally create, adjust batch sizes
+        if (min_batches > 1) {
+            // Calculate what we'd get with normal ratios
+            int init_size = (int) (corpus_size * init_batch_ratio);
+            int inc_size = (int) (corpus_size * inc_batch_ratio);
+            int remaining_after_init = corpus_size - init_size;
+            int natural_batch_count = 1 + (remaining_after_init > 0 ? Math.max(1, (remaining_after_init + inc_size - 1) / inc_size) : 0);
+            
+            // If we naturally create fewer batches than required minimum, adjust the incremental size
+            if (natural_batch_count < min_batches) {
+                logger.info("Adjusting batch sizes to ensure minimum " + min_batches + " batches");
+                // Recalculate inc_size to create exactly min_batches
+                inc_size = Math.max(1, remaining_after_init / (min_batches - 1));
+                logger.debug("Adjusted incremental batch size to: " + inc_size);
+            }
+            
+            // Create initial batch
+            RecordTypeCorpus init_batch = new RecordTypeCorpus();
+            for (int i = 0; i < init_size; i++) {
+                init_batch.add(corpus.get(i));
+            }
+            logger.debug("Added batch " + batch_count + " with size: " + init_batch.size());
+            batches.add(init_batch);
+            batch_count++;
+
+            // Create incremental batches
+            RecordTypeCorpus inc_batch = new RecordTypeCorpus();
+            for (int i = init_size; i < corpus_size; i++) {
+                inc_batch.add(corpus.get(i));
+                if (inc_batch.size() == inc_size || (batches.size() < min_batches - 1 && i == corpus_size - 1)) {
+                    batches.add(inc_batch);
+                    logger.debug("Added batch " + batch_count + " with size: " + inc_batch.size());
+                    batch_count++;
+                    inc_batch = new RecordTypeCorpus();
+                    
+                    // If we've reached the minimum number of batches, add remaining samples to the last batch
+                    if (batches.size() == min_batches - 1 && i < corpus_size - 1) {
+                        // Add all remaining samples to the final batch
+                        for (int j = i + 1; j < corpus_size; j++) {
+                            inc_batch.add(corpus.get(j));
+                        }
+                        if (!inc_batch.isEmpty()) {
+                            batches.add(inc_batch);
+                            logger.debug("Added final batch " + batch_count + " with size: " + inc_batch.size());
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            // Handle any remaining samples
+            if (!inc_batch.isEmpty() && batches.size() < min_batches) {
+                batches.add(inc_batch);
+                logger.debug("Added remaining batch " + batch_count + " with size: " + inc_batch.size());
+            }
+        } else {
+            // Use the original logic when no minimum is specified
+            return prepare_batches(corpus, init_batch_ratio, inc_batch_ratio);
+        }
+        
+        logger.info("Batches prepared: " + batches.size() + " (minimum required: " + min_batches + ")");
+        return batches;
+    }
+
+    /**
+     * Overloaded version that ensures at least a minimum number of batches are created for fixed sizes.
+     * @param corpus The corpus to split into batches
+     * @param init_batch_size The size of the first batch
+     * @param inc_batch_size The size of incremental batches
+     * @param last_batch_size The size of the last batch
+     * @param min_batches The minimum number of batches that must be created
+     * @return List of RecordTypeCorpus batches (at least min_batches)
+     */
+    public static List<RecordTypeCorpus> prepare_batches(RecordTypeCorpus corpus, int init_batch_size, int inc_batch_size, int last_batch_size, int min_batches) {
+        logger.info("Preparing batches for corpus " + corpus.corpusName + " with size: " + corpus.size() + " | INIT_BATCH_SIZE: " + init_batch_size + " | INC_BATCH_SIZE: " + inc_batch_size + " | LAST_BATCH_SIZE: " + last_batch_size + " | MIN_BATCHES: " + min_batches);
+        
+        // If minimum batches is not specified or is 1, use the original method
+        if (min_batches <= 1) {
+            return prepare_batches(corpus, init_batch_size, inc_batch_size, last_batch_size);
+        }
+        
+        List<RecordTypeCorpus> batches = new ArrayList<>();
+        int corpus_size = corpus.size();
+        int batch_count = 1;
+
+        // Calculate available size considering the last batch reservation
+        int available_for_splitting = last_batch_size > 0 ? corpus_size - last_batch_size : corpus_size;
+        
+        // Adjust batch sizes if needed to ensure minimum number of batches
+        int remaining_after_init = available_for_splitting - init_batch_size;
+        int natural_batch_count = 1 + (remaining_after_init > 0 ? Math.max(1, (remaining_after_init + inc_batch_size - 1) / inc_batch_size) : 0);
+        if (last_batch_size > 0) natural_batch_count++; // Account for the last batch
+        
+        if (natural_batch_count < min_batches) {
+            logger.info("Adjusting batch sizes to ensure minimum " + min_batches + " batches");
+            // Adjust incremental batch size to create more batches
+            int needed_inc_batches = min_batches - 1 - (last_batch_size > 0 ? 1 : 0);
+            if (needed_inc_batches > 0) {
+                inc_batch_size = Math.max(1, remaining_after_init / needed_inc_batches);
+                logger.debug("Adjusted incremental batch size to: " + inc_batch_size);
+            }
+        }
+        
+        // Ensure we have enough samples for the initial batch
+        if (available_for_splitting < init_batch_size) {
+            logger.warn("Not enough samples available for initial batch after reserving last batch. Adjusting initial batch size.");
+            init_batch_size = Math.max(0, available_for_splitting);
+        }
+
+        // Create initial batch
+        RecordTypeCorpus init_batch = new RecordTypeCorpus();
+        for (int i = 0; i < init_batch_size; i++) {
+            init_batch.add(corpus.get(i));
+        }
+        logger.debug("Added batch " + batch_count + " with size: " + init_batch.size());
+        batches.add(init_batch);
+        batch_count++;
+
+        // Create incremental batches from the remaining available samples
+        RecordTypeCorpus inc_batch = new RecordTypeCorpus();
+        for (int i = init_batch_size; i < available_for_splitting; i++) {
+            inc_batch.add(corpus.get(i));
+            if (inc_batch.size() == inc_batch_size) {
+                batches.add(inc_batch);
+                logger.debug("Added batch " + batch_count + " with size: " + inc_batch.size());
+                batch_count++;
+                inc_batch = new RecordTypeCorpus();
+            }
+        }
+        
+        // Handle leftover incremental samples
+        if (!inc_batch.isEmpty()) {
+            batches.add(inc_batch);
+            logger.debug("Added remaining incremental batch " + batch_count + " with size: " + inc_batch.size());
+            batch_count++;
+        }
+        
+        // Create the last batch if last_batch_size > 0
+        if (last_batch_size > 0) {
+            RecordTypeCorpus last_batch = new RecordTypeCorpus();
+            // Add the reserved samples to the last batch
+            for (int i = available_for_splitting; i < corpus_size; i++) {
+                last_batch.add(corpus.get(i));
+            }
+            batches.add(last_batch);
+            logger.debug("Added last batch " + batch_count + " with size: " + last_batch.size());
+        }
+        
+        logger.info("Batches prepared: " + batches.size() + " (minimum required: " + min_batches + ")");
+        return batches;
+    }
+
 
     /**
      * Verifies the model path and creates the directory if it doesn't exist.
