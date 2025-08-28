@@ -77,6 +77,70 @@ public class Experiments {
 
 
     /**
+     * Scans a directory for folders with pattern S{seed}_B{batch} and finds the maximum batch number for each seed.
+     * This method dynamically discovers seed-to-batch mappings by examining folder names in the given directory.
+     * 
+     * @param directoryPath The path to the directory containing folders with S{seed}_B{batch} pattern
+     * @return A HashMap mapping each seed (Integer) to its maximum available batch number (Integer)
+     * @throws IllegalArgumentException if the directory path is null, empty, or doesn't exist
+     */
+    public HashMap<Integer, Integer> discoverSeedBatchPairs(String directoryPath) {
+        if (directoryPath == null || directoryPath.trim().isEmpty()) {
+            throw new IllegalArgumentException("Directory path cannot be null or empty");
+        }
+        
+        File directory = new File(directoryPath);
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IllegalArgumentException("Directory does not exist or is not a directory: " + directoryPath);
+        }
+        
+        HashMap<Integer, Integer> seedBatchMap = new HashMap<>();
+        File[] folders = directory.listFiles(File::isDirectory);
+        
+        if (folders == null) {
+            logger.warn("No folders found in directory: " + directoryPath);
+            return seedBatchMap;
+        }
+        
+        for (File folder : folders) {
+            String folderName = folder.getName();
+            
+            // Check if folder name matches pattern S{seed}_B{batch}
+            if (folderName.matches("S\\d+_B\\d+")) {
+                try {
+                    // Extract seed number (between 'S' and '_B')
+                    int seedStartIndex = folderName.indexOf('S') + 1;
+                    int batchStartIndex = folderName.indexOf("_B");
+                    int seed = Integer.parseInt(folderName.substring(seedStartIndex, batchStartIndex));
+                    
+                    // Extract batch number (after '_B')
+                    int batch = Integer.parseInt(folderName.substring(batchStartIndex + 2));
+                    
+                    // Update the maximum batch for this seed
+                    seedBatchMap.put(seed, Math.max(seedBatchMap.getOrDefault(seed, 0), batch));
+                    
+                    logger.debug("Found folder: " + folderName + " -> Seed: " + seed + ", Batch: " + batch);
+                    
+                } catch (NumberFormatException e) {
+                    logger.warn("Failed to parse seed or batch number from folder name: " + folderName);
+                } catch (StringIndexOutOfBoundsException e) {
+                    logger.warn("Invalid folder name format: " + folderName);
+                }
+            } else {
+                logger.trace("Folder name doesn't match S{seed}_B{batch} pattern: " + folderName);
+            }
+        }
+        
+        logger.info("Discovered " + seedBatchMap.size() + " seed-batch pairs from directory: " + directoryPath);
+        for (Map.Entry<Integer, Integer> entry : seedBatchMap.entrySet()) {
+            logger.info("Seed " + entry.getKey() + " -> Max Batch: " + entry.getValue());
+        }
+        
+        return seedBatchMap;
+    }
+
+
+    /**
      * Checks if early stopping condition is met based on F1 score and coverage criteria.
      * Early stopping is triggered when BOTH metrics are above their thresholds
      * both show small (not considerable) improvement compared to the previous iteration.
@@ -271,7 +335,7 @@ public class Experiments {
      * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both".
      * @param withCurriculum specifies if curriculum learning is used or not (sorts data or shuffles it based on the boolean value provided).
      */
-    public RQ2SeedResult testGeneralisationForgetting(String sourceClassName, String targetClassName, String setting, boolean withCurriculum, int seed, int topN) {
+    public RQ2SeedResult testGeneralisationForgetting(String seedModelsPath, String sourceClassName, String targetClassName, String setting, boolean withCurriculum, int seed, int topN) {
         logger.info("Initiating forgetting experiments...");
         RQ2SeedResult results = new RQ2SeedResult();
         List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(forgettingPath, sourceClassName, targetClassName, seed, forgettingPath);  //TODO Fix to proper paths
@@ -344,12 +408,12 @@ public class Experiments {
             String currentOutputPath = forgettingPath + currentFolderName + File.separator;
             
             //TODO Missing dev test here. THINK IT CAN COME INTO PLAY.
-            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult generalisationResult = generalisationOutput.first;
 //            previousModel = generalisationOutput.second;
             logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
 
-            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult forgettingResult = forgettingOutput.first;
             previousModel = generalisationOutput.second;
             logger.info("Eval for batch number: ");
@@ -944,9 +1008,9 @@ public class Experiments {
      * TODO Add documnetation.
      * TODO many of the stuff being done below better be in one other method so it's tidier (loading data, and paths and copying files)
      */
-    public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
+    public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String seedModelsPath, String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
         WordHypothesisBase newModel = null;
-        String currentSeedModelDir = C1_BDS_TRAINED_MODELS_DIR + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator;
+        String currentSeedModelDir = seedModelsPath + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator; //todo c1_bds_trained_models_dir should be a parameter!
         // make foldername under modelDir and copy the computational action files there:
         String folderPath = modelDir + folderName + File.separator;
         File folder = new File(folderPath);
@@ -1252,7 +1316,7 @@ public class Experiments {
             for (int n = 3; n <= N; n++) { // TODO change this to 1
                 for (String setting : new String[]{"second"}) {  // Options: "first", "second", "both"
                     for (boolean withCurriculum : new boolean[]{false}) {  // Options: false [`true` is not an option!]
-                        RQ2SeedResult resultInSeed = testGeneralisationForgetting("class1", "class2", setting, withCurriculum, currentSeed, n);  //TODO fix how N is used here...
+                        RQ2SeedResult resultInSeed = testGeneralisationForgetting(C1_BDS_TRAINED_MODELS_DIR, "class1", "class2", setting, withCurriculum, currentSeed, n);  //TODO fix how N is used here...
                         fullResults.addResult(currentSeed, withCurriculum, resultInSeed); //TODO add n to the result!
 //                        addResultsToTSV(currentSeed, batchtResult, modelDir + "fullResults.tsv");  // TODO
                     }
@@ -1270,7 +1334,8 @@ public class Experiments {
         // exp.runRQ1();
 
         // To run RQ2 (check inside for params)
-        exp.runRQ2(REPEAT, SEED);
+        // exp.runRQ2(REPEAT, SEED);
+        exp.discoverSeedBatchPairs(C1_BDS_TRAINED_MODELS_DIR);
 
          // To generate data in folders for RQ1:
 //        exp.generateDataFolders("c2", NTR_RQ1_CLASS2_PATH, REPEAT, SEED, INIT_BATCH_RATIO, INC_BATCH_RATIO);
