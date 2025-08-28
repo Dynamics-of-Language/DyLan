@@ -441,7 +441,7 @@ THEN  ttrput(R1^(R1 ++ [e0==state_facing : es|p2==obj(e0, R1.head) : t|head==e0 
       put(Ty(e>t))
 ELSE  abort
 
-[0.749377501513947,0]
+[0.6000000000000001,0]
 putnextto
 IF    ?Ty(e>t)
       ¬<\/1>Ex.x
@@ -460,49 +460,7 @@ THEN  ttrput(R2^R1^(R1 ++ (R2 ++ [e1==state_beside : es|head==e1 : es|p6==ind_ob
       put(Ty(e>(e>t)))
 ELSE  abort
 
-[0.10263893498524826,1]
-putnextto
-IF    ?Ty(e>t)
-      ¬<\/1>Ex.x
-      ¬<\/0>Ex.x
-      ¬</\1/\L>Ex.x
-THEN  make(\/0)
-      go(<\/0>)
-      put(?Ty(e))
-      go(</\0>)
-      make(\/1)
-      go(<\/1>)
-      put(?Ty(e>(e>t)))
-ELSE  abort
-IF    ?Ty(e>(e>t))
-THEN  ttrput(R2^R1^(R1 ++ (R2 ++ [e1==state_beside : es|head==e1 : es|p6==ind_obj(e1, R1.head) : t|p5==obj(e1, R2.head) : t])))
-      put(Ty(e>(e>t)))
-ELSE  abort
-IF    ?Ty(e>(e>t))
-      Ty(e>(e>t))
-THEN  delete(?Ty(e>(e>t)))
-ELSE  abort
-IF    Ty(e>(e>t))
-      ¬?Ty(e>(e>t))
-      </\>Ex.x
-THEN  go(</\>)
-ELSE  abort
-IF    <\/0>Ex.?x
-THEN  go(<\/0>)
-ELSE  abort
-IF    ?Ty(e)
-      ¬<\/1>Ex.x
-      ¬<\/0>Ex.x
-THEN  make(\/0)
-      go(<\/0>)
-      put(?Ty(cn))
-      go(</\0>)
-      make(\/1)
-      go(<\/1>)
-      put(?Ty(cn>e))
-ELSE  abort
-
-[0.08391087011776671,2]
+[0.2,1]
 putnextto
 IF    ?Ty(e>t)
       ¬<\/1>Ex.x
@@ -542,6 +500,48 @@ THEN  make(\/1)
       make(\/0)
       go(<\/0>)
       put(?Ty(cn))
+ELSE  abort
+
+[0.2,1]
+putnextto
+IF    ?Ty(e>t)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+      ¬</\1/\L>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(e))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(e>(e>t)))
+ELSE  abort
+IF    ?Ty(e>(e>t))
+THEN  ttrput(R2^R1^(R1 ++ (R2 ++ [e1==state_beside : es|head==e1 : es|p6==ind_obj(e1, R1.head) : t|p5==obj(e1, R2.head) : t])))
+      put(Ty(e>(e>t)))
+ELSE  abort
+IF    ?Ty(e>(e>t))
+      Ty(e>(e>t))
+THEN  delete(?Ty(e>(e>t)))
+ELSE  abort
+IF    Ty(e>(e>t))
+      ¬?Ty(e>(e>t))
+      </\>Ex.x
+THEN  go(</\>)
+ELSE  abort
+IF    <\/0>Ex.?x
+THEN  go(<\/0>)
+ELSE  abort
+IF    ?Ty(e)
+      ¬<\/1>Ex.x
+      ¬<\/0>Ex.x
+THEN  make(\/0)
+      go(<\/0>)
+      put(?Ty(cn))
+      go(</\0>)
+      make(\/1)
+      go(<\/1>)
+      put(?Ty(cn>e))
 ELSE  abort
 
 [0.16503257224722423,0]

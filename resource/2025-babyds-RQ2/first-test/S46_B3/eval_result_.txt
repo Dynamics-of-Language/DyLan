@@ -1,5 +1,5 @@
 
-sem acc | train size: 37 | test size: 13
+sem acc | training set name: train | testing set name: test_gens | train size: 1 | test size: 11
 
 ====================| Semantic Accuracy Results |====================
 
@@ -8,7 +8,7 @@ sem acc | train size: 37 | test size: 13
 |                 +--------------------------+--------------------------+
 |                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
 +-----------------+--------+--------+--------+--------+--------+--------+
-| Top-3           |  93.91 |  93.91 |  93.91 |  90.38 |  90.38 |  90.38 |
+| Top-3           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
 +-----------------+--------+--------+--------+--------+--------+--------+
 
 
@@ -20,7 +20,7 @@ coverage
 |                 +--------------------------+--------------------------+
 |                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
 +-----------------+------------+-------------+------------+-------------+
-| Top-3           |     100.00 |       62.16 |     100.00 |       38.46 |
+| Top-3           |     100.00 |      100.00 |     100.00 |      100.00 |
 +-----------------+------------+-------------+------------+-------------+
 
 
@@ -31,27 +31,50 @@ coverage
 No failed parses.
 
 ***** Failed Exact Matches *****
->>> Dataset: test | Top-3 | Failed Exact Matches:
-open the yellow door
-pickup the purple box
-open the red door
-open the blue door
-pickup the yellow box
-goto the red ball
-goto the blue door
-pickup the yellow ball
->>> Dataset: train | Top-3 | Failed Exact Matches:
-pickup the ball
-pickup the red key
-goto the ball
-pickup the green key
-goto the red key
-goto the blue key
-goto the yellow box
-pickup the yellow key
-goto the purple ball
-pickup the green ball
-pickup the red box
-open the purple door
-pickup the purple key
-goto the box
+No failed exact matches.
+
+
+
+--------------------------------------------------------------------
+
+
+
+sem acc | training set name: train | testing set name: test_forg | train size: 1 | test size: 11
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-3           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-3           |     100.00 |      100.00 |     100.00 |      100.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+No failed parses.
+
+***** Failed Exact Matches *****
+No failed exact matches.
+
+
+
+--------------------------------------------------------------------
+
+

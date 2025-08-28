@@ -66,14 +66,6 @@ public class Experiments {
     public static final double EARLY_STOPPING_DELTA = 0.01;  // Minimum improvement required between consecutive runs
 
     private static final int[] SEEDS = {46, 48, 50, 52, 56};
-    private static final HashMap<Integer, Integer> SEED_BATCH_PAIRS = new HashMap<>(); // Used for loading the best class1 models trained in RQ1.
-    static {
-        SEED_BATCH_PAIRS.put(46, 3);
-        SEED_BATCH_PAIRS.put(48, 4);
-        SEED_BATCH_PAIRS.put(50, 8);
-        SEED_BATCH_PAIRS.put(52, 4);
-        SEED_BATCH_PAIRS.put(56, 3);
-    }
 
 
     /**
@@ -1010,6 +1002,7 @@ public class Experiments {
      */
     public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String seedModelsPath, String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
         WordHypothesisBase newModel = null;
+        HashMap<Integer, Integer> SEED_BATCH_PAIRS = discoverSeedBatchPairs(seedModelsPath);
         String currentSeedModelDir = seedModelsPath + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator; //todo c1_bds_trained_models_dir should be a parameter!
         // make foldername under modelDir and copy the computational action files there:
         String folderPath = modelDir + folderName + File.separator;
