@@ -225,35 +225,26 @@ public class Experiments {
        }
    }
 
-
-   public List<List<RecordTypeCorpus>> getRQ2Data(int startClass, int endClass, int seed, String savePath) {
-       return getRQ2Data(rq2path, startClass, endClass, seed, savePath);
-   }
-
-   public List<List<RecordTypeCorpus>> getRQ2Data(String rootDirectory, int sourceClassId, int targetClassId, int seed, String savePath) {
-       String sourceClassFileName = "class" + sourceClassId;
-       String targetClassFileName = "class" + targetClassId;
-       return getRQ2Data(rootDirectory, sourceClassFileName, targetClassFileName, seed, savePath);
-   }
-
-
+   
     /**
      * Prepares RQ2 data.
      * Reads in class 1 and class 2 data, creates batches from each, and uses the last batch of class1 as the forgetting
-     * test set and last batch of class 2 as the generalisation test set. Returns all of these.
+     * test set and last batch of class 2 as the generalisation test set. When returnDevSet is true, uses the 
+     * second-to-last batch of class 2 as the generalisation dev set for early stopping.
      * @param rootDirectory the root directory of the data
      * @param sourceClassFileName name of the first class to be used (inclusive)
      * @param targetClassFileName name of the last class to be used (inclusive)
      * @param seed the seed for reproducibility (used in shuffling)
      * @param savePath the path to save the data to
-     * @return a list of lists of RecordTypeCorpus (size=4) in this order:
+     * @param returnDevSet if true, uses second-to-last batch as dev set and returns it as 5th element
+     * @return a list of lists of RecordTypeCorpus (size=4 or 5) in this order:
      *          1- class1 batches,
      *          2- class2 batches,
      *          3- forgetting test set (size=1),
-     *          4- generalisation test set (size=1).
-     * TODO replace class1 and class2 with sourceClass and targetClass in variables and in naming!
+     *          4- generalisation test set (size=1) - same size as before,
+     *          5- generalisation dev set (size=1) - only if returnDevSet is true, same size as test set.
      */
-    public List<List<RecordTypeCorpus>> getRQ2Data(String rootDirectory, String sourceClassFileName, String targetClassFileName, int seed, String savePath) {
+    public List<List<RecordTypeCorpus>> getRQ2Data(String rootDirectory, String sourceClassFileName, String targetClassFileName, int seed, String savePath, boolean returnDevSet) {
     List<List<RecordTypeCorpus>> rq2Data = new ArrayList<>();
         File corpusFile1 = new File(rootDirectory + sourceClassFileName + ".txt");
         File corpusFile2 = new File(rootDirectory + targetClassFileName + ".txt");
@@ -295,25 +286,69 @@ public class Experiments {
         Collections.shuffle(corpus2, new Random(seed));
         List<RecordTypeCorpus> targetClassBatches;
         if (USE_FIXED_BATCH_SIZE) {
-            targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
+            if (returnDevSet) {
+                // Need at least 2 batches for dev/test split, so use the new method with minimum batches
+                targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE, 2);
+            } else {
+                targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
+            }
         } else {
-            targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);
+            if (returnDevSet) {
+                // Need at least 2 batches for dev/test split, so use the new method with minimum batches
+                targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO, 2);
+            } else {
+                targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);
+            }
         }
-        // get the test data
-        RecordTypeCorpus generalisation_test_data = targetClassBatches.get(targetClassBatches.size()-1);
-        generalisation_test_data.corpusName = "generalisation_test_" + targetClassFileName + "_" + generalisation_test_data.size() + ".txt";
-        try {
-            generalisation_test_data.saveCorpus(savePath + generalisation_test_data.corpusName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        RecordTypeCorpus generalisation_final_test_data;
+        RecordTypeCorpus generalisation_dev_data = null;
+        
+        if (returnDevSet) {
+            // Take the last two batches: one for dev set, one for test set (same sizes as before)
+            // Note: We're guaranteed to have at least 2 batches since we used the minimum batches parameter
+            
+            // Get dev set (second-to-last batch) and test set (last batch)
+            generalisation_dev_data = targetClassBatches.get(targetClassBatches.size()-2);
+            generalisation_final_test_data = targetClassBatches.get(targetClassBatches.size()-1);
+            
+            // Set appropriate names
+            generalisation_dev_data.corpusName = "gens_dev_test" + targetClassFileName + "_" + generalisation_dev_data.size() + ".txt";
+            generalisation_final_test_data.corpusName = "genes_test_" + targetClassFileName + "_" + generalisation_final_test_data.size() + ".txt";
+            
+            // Remove both batches from the training batches list
+            targetClassBatches.remove(targetClassBatches.size()-1);  // Remove test set
+            targetClassBatches.remove(targetClassBatches.size()-1);  // Remove dev set
+            
+            // Save both dev and test sets
+            try {
+                generalisation_dev_data.saveCorpus(savePath + generalisation_dev_data.corpusName);
+                generalisation_final_test_data.saveCorpus(savePath + generalisation_final_test_data.corpusName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // Use last batch as test set when dev set is not requested (original behavior)
+            generalisation_final_test_data = targetClassBatches.get(targetClassBatches.size()-1);
+            generalisation_final_test_data.corpusName = "gens_test_" + targetClassFileName + "_" + generalisation_final_test_data.size() + ".txt";
+            targetClassBatches.remove(targetClassBatches.size()-1);  // Remove test set
+            
+            try {
+                generalisation_final_test_data.saveCorpus(savePath + generalisation_final_test_data.corpusName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        targetClassBatches.remove(targetClassBatches.size()-1);  // pop the last element from the list as it is used for test data.
 
         // At the end add these to the list and return.
         rq2Data.add(sourceClassBatches);
         rq2Data.add(targetClassBatches);
         rq2Data.add(Collections.singletonList(forgetting_test_data));  //todo what is this? is it correct?
-        rq2Data.add(Collections.singletonList(generalisation_test_data));
+        rq2Data.add(Collections.singletonList(generalisation_final_test_data));
+        
+        // Add dev set as 5th element if requested
+        if (returnDevSet) {
+            rq2Data.add(Collections.singletonList(generalisation_dev_data));
+        }
 
         return rq2Data;
     }
@@ -321,7 +356,16 @@ public class Experiments {
 
     /**
      * Tests a BabyDS model for forgetting and generalisation on lower and higher classes.
+     * This method now includes dev set evaluation and early stopping based on generalisation scores.
      * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more.
+     * 
+     * The workflow includes:
+     * 1. Load source and target class data, split into batches and test sets
+     * 2. Create a dev set from the generalisation test data for early stopping evaluation
+     * 3. Train models incrementally on batches using hypothesis base from previous iterations
+     * 4. Evaluate each model on both dev set (for early stopping) and test sets (for final results)
+     * 5. Apply early stopping based on dev set generalisation performance improvement threshold
+     * 
      * @param seedModelsPath path to the seed models.
      * @param sourceClassName name of the first class to be used
      * @param targetClassName name of the last class to be used
@@ -334,11 +378,12 @@ public class Experiments {
     public RQ2SeedResult testGeneralisationForgetting(String seedModelsPath, String sourceClassName, String targetClassName, String setting, boolean withCurriculum, int seed, int topN) {
         logger.info("Initiating geenralisation and forgetting experiments...");
         RQ2SeedResult results = new RQ2SeedResult();
-        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(forgettingPath, sourceClassName, targetClassName, seed, forgettingPath);  //TODO Fix to proper paths
+        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(forgettingPath, sourceClassName, targetClassName, seed, forgettingPath, true);
         List<RecordTypeCorpus> sourceClass_batches = rq2Data.get(0);
         List<RecordTypeCorpus> targetClass_batches = rq2Data.get(1);
         RecordTypeCorpus forgetting_test_data = rq2Data.get(2).get(0);
-        RecordTypeCorpus generalisation_test_data = rq2Data.get(3).get(0);
+        RecordTypeCorpus generalisation_test_data = rq2Data.get(3).get(0);  // This is now the final test set
+        RecordTypeCorpus generalisation_dev_data = rq2Data.get(4).get(0);  // Dev set from getRQ2Data
 
         // TODO fix HERE
         // targetClass_batches = targetClass_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
@@ -387,6 +432,10 @@ public class Experiments {
         int currentMergedBatchIndex = min_data_source_class_index; // TODO double-check
         System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
+        
+        // Early stopping variables for dev set evaluation
+        Double previousDevF1Score = null;  // Track previous dev F1 score for early stopping
+        Double previousDevCoverage = null;  // Track previous dev coverage for early stopping
 
         for (RecordTypeCorpus batch : trainingDataBatches) {
             RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // Resetting for non-cumulative.
@@ -403,15 +452,32 @@ public class Experiments {
             String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;  // TODO Update to include setting here (cumulative/not + first/second/both)
             String currentOutputPath = forgettingPath + currentFolderName + File.separator; // TODO fix this.
             
-            //TODO Missing dev test here. THINK IT CAN COME INTO PLAY.
-            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
-            EvalResult generalisationResult = generalisationOutput.first;
-//            previousModel = generalisationOutput.second;
+            // Evaluate on dev set (for early stopping) using non-cumulative training data
+            Pair<EvalResult, WordHypothesisBase> devOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_dev_data, currentMergedBatchIndex, "_dev", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            EvalResult devResult = devOutput.first;
+            previousModel = devOutput.second;
+            
             logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
+
+            // Evaluate on final test sets using cumulative training data and the same trained model
+            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            EvalResult generalisationResult = generalisationOutput.first;
 
             Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult forgettingResult = forgettingOutput.first;
-            previousModel = generalisationOutput.second;
+            
+            // Get dev set F1 score and coverage for early stopping check (based on top-1 actions)
+            double currentDevF1Score = devResult.getTestAccuracy(topN, "f1");
+            double currentDevCoverage = devResult.getTestCoverage(topN);
+            
+            // Check early stopping condition based on dev set performance
+            if (checkEarlyStoppingCondition(currentDevF1Score, previousDevF1Score, EARLY_STOPPING_MIN_THRESHOLD, EARLY_STOPPING_DELTA, currentDevCoverage, previousDevCoverage, EARLY_STOPPING_MIN_THRESHOLD, EARLY_STOPPING_DELTA)) {
+                System.out.printf("Early stopping triggered at batch %d for seed %d. Dev generalisation F1 score: %.3f%n",
+                    currentMergedBatchIndex, seed, currentDevF1Score);
+                results.getGeneralisationResults().add(generalisationResult); // Add final test results
+                results.getForgettingResults().add(forgettingResult);
+                break;  // Exit the training loop
+            }
             logger.info("Eval for batch number: ");
             logger.info(generalisationResult.getParsingCoverageResultsTable("test data size: "));  //todo add proper info
             logger.info(generalisationResult.getSemanticAccResultsTable("")); // todo fix
@@ -422,6 +488,10 @@ public class Experiments {
             results.getGeneralisationResults().add(generalisationResult);
             results.getForgettingResults().add(forgettingResult);
             //TODO fix write to file/ relevant data structure here (with RQ1)
+            
+            // Update previous dev scores for next iteration (for early stopping)
+            previousDevF1Score = currentDevF1Score;
+            previousDevCoverage = currentDevCoverage;
         }
         return results;
     }
