@@ -1,5 +1,0 @@
-TopN	ResultsOn	TrainName	TrainSize	TestName	TestSize	Precision	Recall	F1	Coverage	ExactMatch
-3	test	train	1	test_gens	11	100.0	100.0	100.0	100.0	100.0
-3	train	train	1	test_gens	11	100.0	100.0	100.0	100.0	100.0
-3	test	train	1	test_forg	11	100.0	100.0	100.0	100.0	100.0
-3	train	train	1	test_forg	11	100.0	100.0	100.0	100.0	100.0

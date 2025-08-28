@@ -341,21 +341,22 @@ public class Experiments {
         RecordTypeCorpus generalisation_test_data = rq2Data.get(3).get(0);
 
         // TODO fix HERE
-        targetClass_batches = targetClass_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+        // targetClass_batches = targetClass_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
 //        targetClass_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
         // First, grab the minimum and enough data of class 1 (number of batches to reach mastery from RQ1 basically),
         // and add batches of class1 or class2 or their mix, and train a model on it:
         int min_data_source_class_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
 
-        RecordTypeCorpus sourceClass_minimum_data = RecordTypeCorpus.mergeAllCorpora(sourceClass_batches.subList(0, min_data_source_class_index)); // This is exclusive.
+        RecordTypeCorpus sourceClass_minimum_data = RecordTypeCorpus.mergeAllCorpora(sourceClass_batches.subList(0, min_data_source_class_index)); // This operation is exclusive.
         logger.info("Class 1 minimum data size: " + sourceClass_minimum_data.size());
         // anything after it will be added as batches.
         List<RecordTypeCorpus> sourceClass_extra_batches = sourceClass_batches.subList(min_data_source_class_index + 1, sourceClass_batches.size());
-        sourceClass_extra_batches.add(0,new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+        // sourceClass_extra_batches.add(0,new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
 
         // Now based on the setting, create the "training set".
         RecordTypeCorpus cumulativeTrainingData = sourceClass_minimum_data.mergeCorpora(new RecordTypeCorpus());  // basically just class 1 minimal data so making a copy of it.
-
+        
+        // TODO Have to write the below to file.
         List<RecordTypeCorpus> trainingDataBatches = new ArrayList<>();
         switch (setting) {
             case "first": {
@@ -369,7 +370,6 @@ public class Experiments {
                 break;
             }
             case "both": {
-                // TODO Double-check this.
                 // Create batches that are half class1 and half class2
                 int numBatches = Math.min(sourceClass_extra_batches.size(), targetClass_batches.size());
                 for (int i = 0; i < numBatches; i++) {
@@ -389,7 +389,7 @@ public class Experiments {
         WordHypothesisBase previousModel = null;
 
         for (RecordTypeCorpus batch : trainingDataBatches) {
-            RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // reset for non-cumulative
+            RecordTypeCorpus nonCumulativeTrainingData = new RecordTypeCorpus(); // Resetting for non-cumulative.
             nonCumulativeTrainingData.addAll(batch);
             cumulativeTrainingData.addAll(batch); //TODO NEWLY added by AA: IT'S SIMILAR TO RQ1, but wasn't here. To be tested.
 //                    cumulativeTrainingData = cumulativeTrainingData.mergeCorpora(batch);//.getSubCorpus(0, 40));  // TODO set name as well! + maybe deal with batch size here?
@@ -401,7 +401,7 @@ public class Experiments {
             }
             cumulativeTrainingData.corpusName = "merged_" + sourceClassName + "_" + targetClassName + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
             String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;  // TODO Update to include setting here (cumulative/not + first/second/both)
-            String currentOutputPath = forgettingPath + currentFolderName + File.separator;
+            String currentOutputPath = forgettingPath + currentFolderName + File.separator; // TODO fix this.
             
             //TODO Missing dev test here. THINK IT CAN COME INTO PLAY.
             Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
