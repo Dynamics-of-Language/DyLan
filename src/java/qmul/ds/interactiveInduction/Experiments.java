@@ -241,7 +241,7 @@ public class Experiments {
      * Prepares RQ2 data.
      * Reads in class 1 and class 2 data, creates batches from each, and uses the last batch of class1 as the forgetting
      * test set and last batch of class 2 as the generalisation test set. Returns all of these.
-     * TODO add proper messages to errors in reading files here
+     * @param rootDirectory the root directory of the data
      * @param sourceClassFileName name of the first class to be used (inclusive)
      * @param targetClassFileName name of the last class to be used (inclusive)
      * @param seed the seed for reproducibility (used in shuffling)
@@ -274,44 +274,44 @@ public class Experiments {
 
         // First deal with class 1 batches
         Collections.shuffle(corpus1, new Random(seed));
-        List<RecordTypeCorpus> class1_batches;
+        List<RecordTypeCorpus> sourceClassBatches;
 
         if (USE_FIXED_BATCH_SIZE) {
-            class1_batches = BabyDSInduction.prepare_batches(corpus1, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
+            sourceClassBatches = BabyDSInduction.prepare_batches(corpus1, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
         } else {
-            class1_batches = BabyDSInduction.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);
+            sourceClassBatches = BabyDSInduction.prepare_batches(corpus1, INIT_BATCH_RATIO, INC_BATCH_RATIO);
         }
         // get the test data
-        RecordTypeCorpus forgetting_test_data = class1_batches.get(class1_batches.size()-1);
+        RecordTypeCorpus forgetting_test_data = sourceClassBatches.get(sourceClassBatches.size()-1);
         forgetting_test_data.corpusName = "forgetting_test_" + sourceClassFileName + "_" + forgetting_test_data.size() + ".txt";
         try {
-            forgetting_test_data.saveCorpus(savePath + forgetting_test_data.corpusName);  //todo is rq2path here ok?
+            forgetting_test_data.saveCorpus(savePath + forgetting_test_data.corpusName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        class1_batches.remove(class1_batches.size()-1);  // pop the last element from the list as it is used for test data.
+        sourceClassBatches.remove(sourceClassBatches.size()-1);  // pop the last element from the list as it is used for test data.
 
         // Now deal with class 2 batches
         Collections.shuffle(corpus2, new Random(seed));
-        List<RecordTypeCorpus> class2_batches;
+        List<RecordTypeCorpus> targetClassBatches;
         if (USE_FIXED_BATCH_SIZE) {
-            class2_batches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
+            targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INC_BATCH_SIZE, INC_BATCH_SIZE, RQ2_LAST_BATCH_SIZE);
         } else {
-            class2_batches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);
+            targetClassBatches = BabyDSInduction.prepare_batches(corpus2, INIT_BATCH_RATIO, INC_BATCH_RATIO);
         }
         // get the test data
-        RecordTypeCorpus generalisation_test_data = class2_batches.get(class2_batches.size()-1);
+        RecordTypeCorpus generalisation_test_data = targetClassBatches.get(targetClassBatches.size()-1);
         generalisation_test_data.corpusName = "generalisation_test_" + targetClassFileName + "_" + generalisation_test_data.size() + ".txt";
         try {
-            generalisation_test_data.saveCorpus(savePath + generalisation_test_data.corpusName); //todo is rq2path here ok?
+            generalisation_test_data.saveCorpus(savePath + generalisation_test_data.corpusName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        class2_batches.remove(class2_batches.size()-1);  // pop the last element from the list as it is used for test data.
+        targetClassBatches.remove(targetClassBatches.size()-1);  // pop the last element from the list as it is used for test data.
 
         // At the end add these to the list and return.
-        rq2Data.add(class1_batches);
-        rq2Data.add(class2_batches);
+        rq2Data.add(sourceClassBatches);
+        rq2Data.add(targetClassBatches);
         rq2Data.add(Collections.singletonList(forgetting_test_data));  //todo what is this? is it correct?
         rq2Data.add(Collections.singletonList(generalisation_test_data));
 
@@ -322,13 +322,17 @@ public class Experiments {
     /**
      * Tests a BabyDS model for forgetting and generalisation on lower and higher classes.
      * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more.
+     * @param seedModelsPath path to the seed models.
      * @param sourceClassName name of the first class to be used
      * @param targetClassName name of the last class to be used
      * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both".
      * @param withCurriculum specifies if curriculum learning is used or not (sorts data or shuffles it based on the boolean value provided).
+     * @param seed the seed for reproducibility (used in shuffling)
+     * @param topN the top N actions to use.
+     * @return a RQ2SeedResult object containing the results of the generalisation and forgetting experiments.
      */
     public RQ2SeedResult testGeneralisationForgetting(String seedModelsPath, String sourceClassName, String targetClassName, String setting, boolean withCurriculum, int seed, int topN) {
-        logger.info("Initiating forgetting experiments...");
+        logger.info("Initiating geenralisation and forgetting experiments...");
         RQ2SeedResult results = new RQ2SeedResult();
         List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(forgettingPath, sourceClassName, targetClassName, seed, forgettingPath);  //TODO Fix to proper paths
         List<RecordTypeCorpus> sourceClass_batches = rq2Data.get(0);
@@ -1002,8 +1006,8 @@ public class Experiments {
      */
     public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String seedModelsPath, String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
         WordHypothesisBase newModel = null;
-        HashMap<Integer, Integer> SEED_BATCH_PAIRS = discoverSeedBatchPairs(seedModelsPath);
-        String currentSeedModelDir = seedModelsPath + "S" + seed + "_B" + SEED_BATCH_PAIRS.get(seed) + File.separator; //todo c1_bds_trained_models_dir should be a parameter!
+        HashMap<Integer, Integer> seed_batch_pairs = discoverSeedBatchPairs(seedModelsPath);
+        String currentSeedModelDir = seedModelsPath + "S" + seed + "_B" + seed_batch_pairs.get(seed) + File.separator;
         // make foldername under modelDir and copy the computational action files there:
         String folderPath = modelDir + folderName + File.separator;
         File folder = new File(folderPath);
@@ -1303,6 +1307,7 @@ public class Experiments {
      * - seed -> 45..45+REPEAT
      */
     public void runRQ2(int repeatCount, int seed) {
+        System.out.println("Running RQ2... Make sure the experiment parameters on the top of this class are set correctly!");
         RQ2FullResults fullResults = new RQ2FullResults();  //TODO refactor to include all the info above...
         for (int i = 0; i < repeatCount; i++) {
             int currentSeed = SEEDS[i];
@@ -1316,6 +1321,7 @@ public class Experiments {
                 }
             }
         }
+        System.out.println("RQ2 experiments finished!");
     }
 
 
@@ -1327,8 +1333,8 @@ public class Experiments {
         // exp.runRQ1();
 
         // To run RQ2 (check inside for params)
-        // exp.runRQ2(REPEAT, SEED);
-        exp.discoverSeedBatchPairs(C1_BDS_TRAINED_MODELS_DIR);
+        exp.runRQ2(REPEAT, SEED);
+
 
          // To generate data in folders for RQ1:
 //        exp.generateDataFolders("c2", NTR_RQ1_CLASS2_PATH, REPEAT, SEED, INIT_BATCH_RATIO, INC_BATCH_RATIO);
