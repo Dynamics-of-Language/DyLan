@@ -34,7 +34,6 @@ public class Experiments {
     static final String rq1path = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);
     static final String RQ1CLASS1HB = "resource\\2025-babyds-RQ1\\class1HB\\".replace("\\", File.separator);
     static final String RQ1CLASS2HB = "resource\\2025-babyds-RQ1\\class2hb\\".replace("\\", File.separator);
-
     static final String rq2path = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
     static final String forgettingPath = "resource\\2025-babyds-RQ2\\first-test\\".replace("\\", File.separator);
     static final String NTR_RQ1_CLASS1_PATH = "resource\\2025-babyds-RQ1\\c1_data\\BDS-TTR\\".replace("\\", File.separator);
@@ -49,7 +48,7 @@ public class Experiments {
     public static final int SEED = 46; // Set a constant seed for reproducibility
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
     public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
-    public static final String CORPUS_NAME = "class1";
+    public static final String CORPUS_NAME = "class1-Adj";
     public static final int REPEAT = 1;  // Increments the seed for each repeat
     public static final int N = 3; // TopN actions to use.
 
@@ -822,10 +821,9 @@ public class Experiments {
      * @param corpusName: The name of the corpus file (without extension) to load for training
      * @param modelDir: The root directory path where models, batches, and results will be saved
      * @param repeatCount: The number of experimental repeats to perform with different seeds
-     * @param seed: The base random seed for reproducibility (incremented for each repeat)
      * @return A HashMap mapping repeat index to list of EvalResult objects from each training batch
      */
-    public HashMap<Integer, List<EvalResult>> rq1HB(String corpusName, String modelDir, int repeatCount, int seed) {
+    public HashMap<Integer, List<EvalResult>> rq1HB(String corpusName, String modelDir, int repeatCount) {
         BabyDSInduction ds = new BabyDSInduction();
         HashMap<Integer, List<EvalResult>> fullResults = new HashMap<>(); // Return value.
 
@@ -838,7 +836,7 @@ public class Experiments {
             }
             List<EvalResult> resultInSeed = new ArrayList<>();
             // Split the data into training batches and a development set
-            int currentSeed = seed + i;
+            int currentSeed = SEEDS[i];
             Collections.shuffle(corpus, new Random(currentSeed));
             List<RecordTypeCorpus> trainingBatches = ds.prepare_batches(corpus, INIT_BATCH_RATIO, INC_BATCH_RATIO);
             // todo put below in a separate method for tidiness.
@@ -1117,7 +1115,7 @@ public class Experiments {
         BabyDSInduction ds = new BabyDSInduction();
         System.out.println(ANSI_CYAN + "******** Batch " + batchNumber + " ********" + ANSI_RESET);
         // If the model exists and skip is true, then skip!
-        if (modelExists(folderPath)) {
+        if (modelExists(folderPath, topN)) {
             System.out.println("Model already exists in " + folderPath);
             if (SKIP_RETRAINING) {
                 System.out.println("Skipping training...");
@@ -1143,17 +1141,38 @@ public class Experiments {
     }
 
 
-    /**
-     * Checks if a model exists in the given directory.
-     * @param dir the directory to check
-     * @return true if a model exists, false otherwise
-     */
     public boolean modelExists (String dir) {
         String[] files = new File(dir).list();
         String x = dir + "lexicon.lex";
         if (files != null) {
             for (String file : files) {
                 if (file.startsWith("lexicon.lex")) {
+                    logger.info("Previously trained model found in the given directory with name: " + file);
+                    x = dir + file;
+                }
+            }
+        }
+        if (new File(x).exists()) {
+            logger.info("A trained model already exists at: " + dir);
+           return true;
+        }
+        else {
+            logger.info("No trained model found at: " + dir);
+            return false;
+        }
+    }
+
+    /**
+     * Checks if a model exists in the given directory.
+     * @param dir the directory to check
+     * @return true if a model exists, false otherwise
+     */
+    public boolean modelExists (String dir, int topN) {
+        String[] files = new File(dir).list();
+        String x = dir + "lexicon.lex-top-" + topN;
+        if (files != null) {
+            for (String file : files) {
+                if (file.startsWith("lexicon.lex-top-" + topN)) {
                     logger.info("Previously trained model found in the given directory with name: " + file);
                     x = dir + file;
                 }
@@ -1197,13 +1216,12 @@ public class Experiments {
 
     /**
      * Runs all RQ1 experiments.
-     * todo expand to all classes.
+     * @author: AA
      */
     public void runRQ1(){
-        // HashMap<Integer, List<EvalResult>> minDataResults = this.findMinimumMasteryData(CORPUS_NAME, rq1path, REPEAT, SEED);
-        HashMap<Integer, List<EvalResult>> rq1hbResults = this.rq1HB(CORPUS_NAME, RQ1CLASS1HB, REPEAT, SEED);
+        HashMap<Integer, List<EvalResult>> rq1hbResults = this.rq1HB(CORPUS_NAME, RQ2_SEED_MODELS_PATH, REPEAT);
+        System.out.println("RQ1 running finished!");
     //    this.allResultsToTSV(rq1hbResults); //todo move this under write results to file!
-        // todo average over all classes
     }
 
 
@@ -1211,6 +1229,7 @@ public class Experiments {
      * Evaluates NeuralTTR. Provides default values for the targets and predictions file names, for the method below.
      * todo make it parallel
      * @param rootFolderPath
+     * @param outputFileName
      */
     public HashMap<Integer, List<EvalResult>> evalNeuralTTR(String rootFolderPath, String outputFileName){
         return evalNeuralTTR(rootFolderPath, "_neural_targets", "_predictions", outputFileName);
