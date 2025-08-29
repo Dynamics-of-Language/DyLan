@@ -1,0 +1,29 @@
+GoldSent : putnextto a box a box
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_box(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a key a ball
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_ball(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto a ball the door
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_door(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==iota(r1.head, r1) : e|x1==epsilon(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+GoldSent : putnextto the ball a key
+Sem : [e0==state_beside : es|r1 : [x2 : e|p1==obj_key(x2) : t|head==x2 : e]|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x3==epsilon(r1.head, r1) : e|x1==iota(r0.head, r0) : e|p3==ind_obj(e0, x3) : t|p2==obj(e0, x1) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 5 is 4.
+
+// Corpus size: 4
+// Maximum length: 5
+// Minimum length: 5
+// Average length: 5.000000
+
+// ---- Word-Level Stats ----
+// Count of all words: 20
+// Count of unique tokens: 7
+// Words/Tokens count ratio: 2.857143

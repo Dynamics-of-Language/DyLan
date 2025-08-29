@@ -1,0 +1,56 @@
+GoldSent : pickup the box
+Sem : [e0==state_holding : es|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : goto the key
+Sem : [e0==state_facing : es|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : pickup a key
+Sem : [e0==state_holding : es|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : open the door
+Sem : [e0==state_opened : es|r0 : [x0 : e|p0==obj_door(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : pickup a ball
+Sem : [e0==state_holding : es|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : goto a box
+Sem : [e0==state_facing : es|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : goto the box
+Sem : [e0==state_facing : es|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : goto the ball
+Sem : [e0==state_facing : es|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : pickup the key
+Sem : [e0==state_holding : es|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : pickup a box
+Sem : [e0==state_holding : es|r0 : [x0 : e|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : pickup the ball
+Sem : [e0==state_holding : es|r0 : [x0 : e|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : open a door
+Sem : [e0==state_opened : es|r0 : [x0 : e|p0==obj_door(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+GoldSent : goto a key
+Sem : [e0==state_facing : es|r0 : [x0 : e|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p1==obj(e0, x1) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 3 is 13.
+
+// Corpus size: 13
+// Maximum length: 3
+// Minimum length: 3
+// Average length: 3.000000
+
+// ---- Word-Level Stats ----
+// Count of all words: 39
+// Count of unique tokens: 9
+// Words/Tokens count ratio: 4.333333

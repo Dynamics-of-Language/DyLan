@@ -1,0 +1,110 @@
+
+sem acc | training set name: train | testing set name: test_dev | train size: 1 | test size: 1
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           | 100.00 | 100.00 | 100.00 |  61.43 |  61.43 |  61.43 |
+| Top-2           | 100.00 | 100.00 | 100.00 |  61.43 |  61.43 |  61.43 |
+| Top-3           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |     100.00 |      100.00 |     100.00 |        0.00 |
+| Top-2           |     100.00 |      100.00 |     100.00 |        0.00 |
+| Top-3           |     100.00 |      100.00 |     100.00 |      100.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+No failed parses.
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto a door
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+goto a door
+
+
+
+--------------------------------------------------------------------
+
+
+
+sem acc | training set name: train | testing set name: test | train size: 7 | test size: 1
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  87.14 |  87.14 |  87.14 |  61.43 |  61.43 |  61.43 |
+| Top-2           |  84.17 |  84.17 |  84.17 |  61.43 |  61.43 |  61.43 |
+| Top-3           |  91.53 |  91.53 |  91.53 | 100.00 | 100.00 | 100.00 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      42.86 |       66.67 |     100.00 |        0.00 |
+| Top-2           |      85.71 |       50.00 |     100.00 |        0.00 |
+| Top-3           |     100.00 |       57.14 |     100.00 |      100.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: train | Top-1 | Failed Parses:
+pickup the box
+pickup a key
+open the door
+pickup a ball
+>>> Dataset: train | Top-2 | Failed Parses:
+open the door
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto the door
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+goto the door
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+goto the key
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+pickup the box
+goto the key
+pickup a ball
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto the key
+pickup a key
+pickup a ball
+
+
+
+--------------------------------------------------------------------
+
+

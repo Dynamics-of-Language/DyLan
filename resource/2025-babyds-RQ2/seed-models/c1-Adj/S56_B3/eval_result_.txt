@@ -1,0 +1,191 @@
+
+sem acc | training set name: train | testing set name: test_dev | train size: 9 | test size: 9
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
+| Top-2           | 100.00 | 100.00 | 100.00 |  90.56 |  95.62 |  92.94 |
+| Top-3           |  98.10 |  94.17 |  96.00 |  95.48 |  94.17 |  94.78 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      11.11 |      100.00 |      11.11 |      100.00 |
+| Top-2           |      55.56 |      100.00 |      88.89 |       50.00 |
+| Top-3           |     100.00 |       66.67 |     100.00 |       66.67 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+open the red door
+>>> Dataset: test | Top-1 | Failed Parses:
+pickup a red box
+goto a purple box
+pickup the red key
+goto a yellow key
+pickup the red box
+pickup a yellow ball
+pickup a purple key
+open the red door
+>>> Dataset: train | Top-1 | Failed Parses:
+goto a green ball
+goto the red door
+pickup the yellow key
+goto a grey key
+goto the purple door
+goto a red key
+open the blue door
+goto the yellow door
+>>> Dataset: train | Top-2 | Failed Parses:
+goto the red door
+goto the purple door
+open the blue door
+goto the yellow door
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto a purple box
+goto a yellow key
+pickup a yellow ball
+pickup a purple key
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto a purple box
+pickup a purple key
+open the red door
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto the red door
+open the blue door
+goto the yellow door
+
+
+
+--------------------------------------------------------------------
+
+
+
+sem acc | training set name: train | testing set name: test | train size: 27 | test size: 15
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           | 100.00 | 100.00 | 100.00 |  83.75 |  83.75 |  83.75 |
+| Top-2           | 100.00 | 100.00 | 100.00 |  93.06 |  94.62 |  93.79 |
+| Top-3           |  98.94 |  96.76 |  97.78 |  94.57 |  93.00 |  93.73 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      11.11 |      100.00 |      26.67 |       50.00 |
+| Top-2           |      77.78 |      100.00 |      86.67 |       61.54 |
+| Top-3           |     100.00 |       81.48 |     100.00 |       60.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+open a red door
+open the green door
+>>> Dataset: test | Top-1 | Failed Parses:
+open a red door
+pickup the blue box
+pickup a purple box
+goto the green box
+goto a yellow box
+goto a red box
+pickup the green ball
+goto a green key
+pickup the yellow box
+pickup the purple key
+open the green door
+>>> Dataset: train | Top-1 | Failed Parses:
+goto the green key
+pickup the grey key
+pickup a green key
+pickup the red ball
+open a green door
+pickup the green key
+open a grey door
+goto a blue key
+goto the green ball
+goto the grey ball
+pickup a blue key
+goto the yellow key
+pickup a blue box
+pickup the blue ball
+goto a green box
+goto the red key
+goto a green ball
+goto the red door
+pickup the yellow key
+goto a grey key
+goto the purple door
+goto a red key
+open the blue door
+goto the yellow door
+>>> Dataset: train | Top-2 | Failed Parses:
+open a green door
+open a grey door
+goto the red door
+goto the purple door
+open the blue door
+goto the yellow door
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+pickup the purple ball
+pickup a purple box
+goto a yellow box
+goto the purple ball
+pickup the purple key
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+open a red door
+pickup the purple ball
+pickup a purple box
+goto the purple ball
+pickup the purple key
+open the green door
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+pickup the purple ball
+goto the purple ball
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+open a green door
+open a grey door
+goto the red door
+open the blue door
+goto the yellow door
+
+
+
+--------------------------------------------------------------------
+
+

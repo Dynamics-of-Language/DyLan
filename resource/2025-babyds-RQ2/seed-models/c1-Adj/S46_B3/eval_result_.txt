@@ -1,0 +1,132 @@
+
+sem acc | training set name: train | testing set name: test_dev | train size: 9 | test size: 9
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  99.37 |  98.06 |  98.67 |  97.50 |  97.50 |  97.50 |
+| Top-2           |  99.37 |  98.06 |  98.67 |  97.81 |  97.81 |  97.81 |
+| Top-3           |  99.37 |  98.06 |  98.67 |  98.06 |  98.06 |  98.06 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |     100.00 |       88.89 |      77.78 |       85.71 |
+| Top-2           |     100.00 |       88.89 |      88.89 |       87.50 |
+| Top-3           |     100.00 |       88.89 |     100.00 |       88.89 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+open a yellow door
+>>> Dataset: test | Top-1 | Failed Parses:
+open a yellow door
+pickup the yellow box
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto the purple door
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto the purple door
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+goto the purple door
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+pickup a purple ball
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+pickup a purple ball
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+pickup a purple ball
+
+
+
+--------------------------------------------------------------------
+
+
+
+sem acc | training set name: train | testing set name: test | train size: 27 | test size: 15
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  98.21 |  97.31 |  97.73 |  98.54 |  98.54 |  98.54 |
+| Top-2           |  98.21 |  97.31 |  97.73 |  98.65 |  98.65 |  98.65 |
+| Top-3           |  98.93 |  98.06 |  98.46 |  98.83 |  98.83 |  98.83 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      96.30 |       84.62 |      80.00 |       91.67 |
+| Top-2           |      96.30 |       84.62 |      86.67 |       92.31 |
+| Top-3           |     100.00 |       88.89 |     100.00 |       93.33 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+pickup a yellow box
+goto a yellow key
+>>> Dataset: test | Top-1 | Failed Parses:
+pickup a yellow box
+pickup the yellow ball
+goto a yellow key
+>>> Dataset: train | Top-1 | Failed Parses:
+goto a yellow ball
+>>> Dataset: train | Top-2 | Failed Parses:
+goto a yellow ball
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto a purple key
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto a purple key
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+goto a purple key
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+open the purple door
+goto a purple ball
+pickup a purple box
+pickup a purple ball
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+open the purple door
+goto a purple ball
+pickup a purple box
+pickup a purple ball
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+open the purple door
+goto a purple ball
+pickup a purple ball
+
+
+
+--------------------------------------------------------------------
+
+

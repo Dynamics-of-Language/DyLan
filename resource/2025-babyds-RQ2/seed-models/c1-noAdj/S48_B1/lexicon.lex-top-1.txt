@@ -1,0 +1,21 @@
+[0.3333333333333332,0]
+a
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x0 : e|p0==obj_door(x0) : t|head==x0 : e])
+ELSE  abort
+
+[0.3333333333333332,0]
+door
+IF    ?Ty(cn)
+THEN  put(Ty(cn))
+      ttrput([x0 : e|p0==obj_door(x0) : t|head==x0 : e])
+ELSE  abort
+
+[0.3333333333333332,0]
+open
+IF    ?Ty(e>t)
+THEN  put(Ty(e>t))
+      ttrput(R1^(R1 ++ [e0==state_opened : es|head==e0 : es|p1==obj(e0, R1.head) : t]))
+ELSE  abort
+

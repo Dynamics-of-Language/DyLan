@@ -1,0 +1,13 @@
+TopN	ResultsOn	TrainName	TrainSize	TestName	TestSize	Precision	Recall	F1	Coverage	ExactMatch
+1	test	train	1	test_dev	1	NaN	NaN	NaN	0.0	NaN
+1	train	train	1	test_dev	1	NaN	NaN	NaN	0.0	NaN
+2	test	train	1	test_dev	1	64.28571319580078	64.28571319580078	64.28571319580078	100.0	0.0
+2	train	train	1	test_dev	1	100.0	100.0	100.0	100.0	100.0
+3	test	train	1	test_dev	1	64.28571319580078	64.28571319580078	64.28571319580078	100.0	0.0
+3	train	train	1	test_dev	1	100.0	100.0	100.0	100.0	100.0
+1	test	train	3	test	1	NaN	NaN	NaN	0.0	NaN
+1	train	train	3	test	1	NaN	NaN	NaN	0.0	NaN
+2	test	train	3	test	1	NaN	NaN	NaN	0.0	NaN
+2	train	train	3	test	1	89.64286041259766	89.64286041259766	89.64286041259766	66.66666666666666	50.0
+3	test	train	3	test	1	NaN	NaN	NaN	0.0	NaN
+3	train	train	3	test	1	94.04761505126953	94.04761505126953	94.04761505126953	100.0	66.66666666666666

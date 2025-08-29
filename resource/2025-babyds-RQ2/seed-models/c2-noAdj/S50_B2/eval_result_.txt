@@ -1,0 +1,132 @@
+
+sem acc | training set name: train | testing set name: test_dev | train size: 4 | test size: 4
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           | 100.00 | 100.00 | 100.00 |  78.85 |  78.85 |  78.85 |
+| Top-2           |  97.21 |  97.21 |  97.21 |  85.58 |  85.58 |  85.58 |
+| Top-3           |  91.63 |  91.63 |  91.63 |  85.58 |  85.58 |  85.58 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      25.00 |      100.00 |      50.00 |        0.00 |
+| Top-2           |     100.00 |       75.00 |     100.00 |       50.00 |
+| Top-3           |     100.00 |       75.00 |     100.00 |       75.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-1 | Failed Parses:
+putnextto the key the ball
+putnextto the key a ball
+>>> Dataset: train | Top-1 | Failed Parses:
+putnextto the box the ball
+putnextto the ball the door
+putnextto the ball the ball
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+putnextto the key a ball
+putnextto the box a box
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+putnextto the box a box
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+putnextto the key a box
+putnextto the box a box
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+putnextto the ball the door
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+putnextto the ball the door
+
+
+
+--------------------------------------------------------------------
+
+
+
+sem acc | training set name: train | testing set name: test | train size: 8 | test size: 4
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  86.03 |  86.03 |  86.03 |  89.87 |  89.87 |  89.87 |
+| Top-2           |  88.99 |  88.99 |  88.99 |  97.21 |  97.21 |  97.21 |
+| Top-3           |  86.20 |  86.20 |  86.20 |  91.63 |  91.63 |  91.63 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      37.50 |       33.33 |      75.00 |       33.33 |
+| Top-2           |     100.00 |       62.50 |     100.00 |       50.00 |
+| Top-3           |     100.00 |       50.00 |     100.00 |       50.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-1 | Failed Parses:
+putnextto the ball the box
+>>> Dataset: train | Top-1 | Failed Parses:
+putnextto a box a ball
+putnextto a ball a ball
+putnextto the box the ball
+putnextto the ball the door
+putnextto the ball the ball
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+putnextto a key the door
+putnextto the box the key
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+putnextto a key the door
+putnextto the box the key
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+putnextto a key the door
+putnextto the box the key
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+putnextto the key the box
+putnextto a key the key
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+putnextto a box a ball
+putnextto a ball a ball
+putnextto the ball the door
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+putnextto a box a ball
+putnextto a ball a ball
+putnextto a key the key
+putnextto the ball the door
+
+
+
+--------------------------------------------------------------------
+
+

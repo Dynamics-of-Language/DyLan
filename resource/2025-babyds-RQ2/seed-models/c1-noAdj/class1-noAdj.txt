@@ -1,0 +1,64 @@
+Sent : goto a key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 1 - Class: 1
+
+Sent : goto a ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 2 - Class: 1
+
+Sent : goto a box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 3 - Class: 1
+
+Sent : goto a door
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_door(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 4 - Class: 1
+
+Sent : pickup a key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_holding : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 5 - Class: 1
+
+Sent : pickup a ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_holding : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 6 - Class: 1
+
+Sent : pickup a box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_holding : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 7 - Class: 1
+
+Sent : open a door
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_door(x0) : t]|x1==epsilon(r0.head, r0) : e|e0==state_opened : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 8 - Class: 1
+
+Sent : goto the key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 9 - Class: 1
+
+Sent : goto the ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 10 - Class: 1
+
+Sent : goto the box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 11 - Class: 1
+
+Sent : goto the door
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_door(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_facing : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 12 - Class: 1
+
+Sent : pickup the key
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_key(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_holding : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 13 - Class: 1
+
+Sent : pickup the ball
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_ball(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_holding : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 14 - Class: 1
+
+Sent : pickup the box
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_box(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_holding : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 15 - Class: 1
+
+Sent : open the door
+Sem : [r0 : [x0 : e|head==x0 : e|p0==obj_door(x0) : t]|x1==iota(r0.head, r0) : e|e0==state_opened : es|head==e0 : es|p1==obj(e0, x1) : t]
+Num : 16 - Class: 1
+
