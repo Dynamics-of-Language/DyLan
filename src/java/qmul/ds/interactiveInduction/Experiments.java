@@ -34,7 +34,7 @@ public class Experiments {
     static final String rq1path = "resource\\2025-babyds-RQ1\\".replace("\\", File.separator);
     static final String RQ1CLASS1HB = "resource\\2025-babyds-RQ1\\class1HB\\".replace("\\", File.separator);
     static final String RQ1CLASS2HB = "resource\\2025-babyds-RQ1\\class2hb\\".replace("\\", File.separator);
-    static final String rq2path = "resource\\2025-babyds-RQ2\\".replace("\\", File.separator);
+    static final String RQ2_EXP_PATH = "resource\\2025-babyds-RQ2\\experiments\\".replace("\\", File.separator);
     static final String forgettingPath = "resource\\2025-babyds-RQ2\\first-test\\".replace("\\", File.separator);
     static final String NTR_RQ1_CLASS1_PATH = "resource\\2025-babyds-RQ1\\c1_data\\BDS-TTR\\".replace("\\", File.separator);
     static final String NTR_RQ1_CLASS2_PATH = "resource\\2025-babyds-RQ1\\c2_data\\".replace("\\", File.separator);
@@ -42,7 +42,8 @@ public class Experiments {
     static final String NTR_RQ1_PATH = "resource\\2025-babyds-RQ1\\results_NTR\\".replace("\\", File.separator);
     static final String NN_DATA_OUTPUT_FOLDER_NAME = "NTR-larger-batches-10";
     static final String C1_BDS_TRAINED_MODELS_DIR = "resource\\2025-babyds-RQ1\\class1HB\\".replace("\\", File.separator);
-
+    
+    static final String RQ2_SEED_MODELS_PATH = "resource\\2025-babyds-RQ2\\seed-models\\".replace("\\", File.separator);
 
 
     public static final int SEED = 46; // Set a constant seed for reproducibility
@@ -64,7 +65,7 @@ public class Experiments {
     public static final double EARLY_STOPPING_MIN_THRESHOLD = 99.0;  // Minimum F1 threshold that must be reached before checking delta
     public static final double EARLY_STOPPING_DELTA = 0.01;  // Minimum improvement required between consecutive runs
 
-    private static final int[] SEEDS = {46, 48, 50, 52, 56};
+    private static final int[] SEEDS = {46, 48, 50, 52, 56}; 
 
 
     /**
@@ -273,7 +274,7 @@ public class Experiments {
         }
         // get the test data
         RecordTypeCorpus forgetting_test_data = sourceClassBatches.get(sourceClassBatches.size()-1);
-        forgetting_test_data.corpusName = "forgetting_test_" + sourceClassFileName + "_" + forgetting_test_data.size() + ".txt";
+        forgetting_test_data.corpusName = "forg_test_" + sourceClassFileName + "_" + forgetting_test_data.size() + ".txt";
         try {
             forgetting_test_data.saveCorpus(savePath + forgetting_test_data.corpusName);
         } catch (IOException e) {
@@ -311,8 +312,8 @@ public class Experiments {
             generalisation_final_test_data = targetClassBatches.get(targetClassBatches.size()-1);
             
             // Set appropriate names
-            generalisation_dev_data.corpusName = "gens_dev_test" + targetClassFileName + "_" + generalisation_dev_data.size() + ".txt";
-            generalisation_final_test_data.corpusName = "genes_test_" + targetClassFileName + "_" + generalisation_final_test_data.size() + ".txt";
+            generalisation_dev_data.corpusName = "gen_dev_test" + targetClassFileName + "_" + generalisation_dev_data.size() + ".txt";
+            generalisation_final_test_data.corpusName = "gen_test_" + targetClassFileName + "_" + generalisation_final_test_data.size() + ".txt";
             
             // Remove both batches from the training batches list
             targetClassBatches.remove(targetClassBatches.size()-1);  // Remove test set
@@ -356,28 +357,38 @@ public class Experiments {
     /**
      * Tests a BabyDS model for forgetting and generalisation on lower and higher classes.
      * This method now includes dev set evaluation and early stopping based on generalisation scores.
+     * All models and results are saved in a folder created under experimentPath with the name specified by dataSetting.
      * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more.
      * 
      * The workflow includes:
-     * 1. Load source and target class data, split into batches and test sets
-     * 2. Create a dev set from the generalisation test data for early stopping evaluation
-     * 3. Train models incrementally on batches using hypothesis base from previous iterations
-     * 4. Evaluate each model on both dev set (for early stopping) and test sets (for final results)
-     * 5. Apply early stopping based on dev set generalisation performance improvement threshold
+     * 1. Create a directory under experimentPath named after dataSetting for organizing output
+     * 2. Load source and target class data, split into batches and test sets
+     * 3. Create a dev set from the generalisation test data for early stopping evaluation
+     * 4. Train models incrementally on batches using hypothesis base from previous iterations
+     * 5. Evaluate each model on both dev set (for early stopping) and test sets (for final results)
+     * 6. Apply early stopping based on dev set generalisation performance improvement threshold
      * 
-     * @param seedModelsPath path to the seed models.
+     * @param seedModelFolder local directory under RQ2_SEED_MODELS_PATH to the seed models.
+     * @param experimentFolder local directory to the experiment folder under rq2path where a subdirectory will be created.
      * @param sourceClassName name of the first class to be used
      * @param targetClassName name of the last class to be used
-     * @param setting Specifies batches from what class of data should be added. Options: "first", "second", "both".
+     * @param dataSetting Specifies batches from what class of data should be added. Options: "first", "second", "both". Also used as the folder name for saving models and results.
      * @param withCurriculum specifies if curriculum learning is used or not (sorts data or shuffles it based on the boolean value provided).
      * @param seed the seed for reproducibility (used in shuffling)
      * @param topN the top N actions to use.
      * @return a RQ2SeedResult object containing the results of the generalisation and forgetting experiments.
      */
-    public RQ2SeedResult testGeneralisationForgetting(String seedModelsPath, String sourceClassName, String targetClassName, String setting, boolean withCurriculum, int seed, int topN) {
+    public RQ2SeedResult testGeneralisationForgetting(String seedModelFolder, String experimentFolder,String sourceClassName, String targetClassName, String dataSetting, boolean withCurriculum, int seed, int topN) {
         logger.info("Initiating geenralisation and forgetting experiments...");
         RQ2SeedResult results = new RQ2SeedResult();
-        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(forgettingPath, sourceClassName, targetClassName, seed, forgettingPath, true);
+        String seedModelsPath = RQ2_SEED_MODELS_PATH + seedModelFolder + File.separator;
+        String experimentPath = RQ2_EXP_PATH + experimentFolder + File.separator;
+        // Create a directory under experimentPath with the dataSetting name for saving models and results
+        String dataSettingPath = experimentPath + dataSetting + File.separator + "top-" + topN + File.separator;
+        checkFolderExists(dataSettingPath);
+        copyComputationalActionsFile(experimentPath, dataSettingPath);
+        
+        List<List<RecordTypeCorpus>> rq2Data = getRQ2Data(experimentPath, sourceClassName, targetClassName, seed, dataSettingPath, true);
         List<RecordTypeCorpus> sourceClass_batches = rq2Data.get(0);
         List<RecordTypeCorpus> targetClass_batches = rq2Data.get(1);
         RecordTypeCorpus forgetting_test_data = rq2Data.get(2).get(0);
@@ -402,7 +413,7 @@ public class Experiments {
         
         // TODO Have to write the below to file.
         List<RecordTypeCorpus> trainingDataBatches = new ArrayList<>();
-        switch (setting) {
+        switch (dataSetting) {
             case "first": {
                 trainingDataBatches = sourceClass_extra_batches;
                 logger.debug("source class extra batches size: " + sourceClass_extra_batches.size());
@@ -429,7 +440,7 @@ public class Experiments {
         }
 
         int currentMergedBatchIndex = min_data_source_class_index; // TODO double-check
-        System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | setting: " + setting + "********" + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | data: " + dataSetting + " | topN: " + topN + " | Experiment: " + experimentFolder + " ********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
         
         // Early stopping variables for dev set evaluation
@@ -448,21 +459,21 @@ public class Experiments {
                 Collections.shuffle(cumulativeTrainingData, new Random(seed));
             }
             cumulativeTrainingData.corpusName = "merged_" + sourceClassName + "_" + targetClassName + "_" + batch.corpusName;  // todo maybe add and use a setName method? //todo fix + include batch number in the name
-            String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;  // TODO Update to include setting here (cumulative/not + first/second/both)
-            String currentOutputPath = forgettingPath + currentFolderName + File.separator; // TODO fix this.
+            String currentFolderName = "S" + seed + "_B" + currentMergedBatchIndex;
+            String currentOutputPath = dataSettingPath + currentFolderName + File.separator;
             
             // Evaluate on dev set (for early stopping) using non-cumulative training data
-            Pair<EvalResult, WordHypothesisBase> devOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, nonCumulativeTrainingData, generalisation_dev_data, currentMergedBatchIndex, "_dev", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            Pair<EvalResult, WordHypothesisBase> devOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, dataSettingPath, nonCumulativeTrainingData, generalisation_dev_data, currentMergedBatchIndex, "_dev", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult devResult = devOutput.first;
             previousModel = devOutput.second;
             
             logger.warn("Cumulative training set will overwrite the non-cumulative one in this process below, but no problem.");
 
             // Evaluate on final test sets using cumulative training data and the same trained model
-            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            Pair<EvalResult, WordHypothesisBase> generalisationOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, dataSettingPath, cumulativeTrainingData, generalisation_test_data, currentMergedBatchIndex, "_gens", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult generalisationResult = generalisationOutput.first;
 
-            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, forgettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
+            Pair<EvalResult, WordHypothesisBase> forgettingOutput = trainTestBatchHBSeeded(seedModelsPath, currentFolderName, dataSettingPath, cumulativeTrainingData, forgetting_test_data, currentMergedBatchIndex, "_forg", previousModel, SEED_GRAMMAR_PATH_RQ2, topN, currentOutputPath, seed);
             EvalResult forgettingResult = forgettingOutput.first;
             
             // Get dev set F1 score and coverage for early stopping check (based on top-1 actions)
@@ -1079,24 +1090,9 @@ public class Experiments {
         // make foldername under modelDir and copy the computational action files there:
         String folderPath = modelDir + folderName + File.separator;
         File folder = new File(folderPath);
-        if (!folder.exists()) {
-            if (!folder.mkdirs()) {
-                throw new RuntimeException("Could not create directory: " + folderPath);
-            }
-        }
 
-        // Copy the comp-action file from current dir (model dir) to this folder:
-        File sourceFile = new File(modelDir + "computational-actions.txt");
-        if (!sourceFile.exists()) {
-            throw new RuntimeException("Source file does not exist: " + sourceFile.getAbsolutePath());
-        }
-
-        File destFile = new File(folder + File.separator + "computational-actions.txt");
-        try {
-            Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to copy computational-actions.txt: " + e.getMessage());
-        }
+        checkFolderExists(folder);
+        copyComputationalActionsFile(modelDir, folder + File.separator);
 
         // save training set and test set to this folder:
         try {
@@ -1141,87 +1137,15 @@ public class Experiments {
     }
 
 
-    public boolean modelExists (String dir) {
-        String[] files = new File(dir).list();
-        String x = dir + "lexicon.lex";
-        if (files != null) {
-            for (String file : files) {
-                if (file.startsWith("lexicon.lex")) {
-                    logger.info("Previously trained model found in the given directory with name: " + file);
-                    x = dir + file;
-                }
-            }
-        }
-        if (new File(x).exists()) {
-            logger.info("A trained model already exists at: " + dir);
-           return true;
-        }
-        else {
-            logger.info("No trained model found at: " + dir);
-            return false;
-        }
-    }
-
-    /**
-     * Checks if a model exists in the given directory.
-     * @param dir the directory to check
-     * @return true if a model exists, false otherwise
-     */
-    public boolean modelExists (String dir, int topN) {
-        String[] files = new File(dir).list();
-        String x = dir + "lexicon.lex-top-" + topN;
-        if (files != null) {
-            for (String file : files) {
-                if (file.startsWith("lexicon.lex-top-" + topN)) {
-                    logger.info("Previously trained model found in the given directory with name: " + file);
-                    x = dir + file;
-                }
-            }
-        }
-        if (new File(x).exists()) {
-            logger.info("A trained model already exists at: " + dir);
-           return true;
-        }
-        else {
-            logger.info("No trained model found at: " + dir);
-            return false;
-        }
-    }
-
-
-    /**
-     * Adds the results from a batch over a seed to a given TSV file.
-     * Used for real-time updating of the file (so no over-writing).
-     * @param seed training shuffle seed, as part of the data to write.
-     * @param results results over a batch.
-     * @param resultsFileName the tsv file to update.
-     */
-    public void addResultsToTSV(int seed, EvalResult results, String resultsFileName) {
-        StringBuilder modifiedLines = new StringBuilder();
-        for (String line : results.toTSVString().split("\n")) {
-            modifiedLines.append(seed).append("\t").append(line).append("\n");
-        }
-        String newResultLine = modifiedLines.toString();
-        try {
-            Files.write(
-                    new File(resultsFileName).toPath(),
-                    (newResultLine).getBytes(),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
     /**
      * Runs all RQ1 experiments.
      * @author: AA
      */
     public void runRQ1(){
+        System.out.println("RQ1 running started!");
         HashMap<Integer, List<EvalResult>> rq1hbResults = this.rq1HB(CORPUS_NAME, RQ2_SEED_MODELS_PATH, REPEAT);
         System.out.println("RQ1 running finished!");
-    //    this.allResultsToTSV(rq1hbResults); //todo move this under write results to file!
+    //    this.allResultsToTSV(rq1hbResults); //todo move this under write results to file!        
     }
 
 
@@ -1395,22 +1319,178 @@ public class Experiments {
      * - withCurriculum -> false
      * - seed -> 45..45+REPEAT
      */
-    public void runRQ2(int repeatCount, int seed) {
+    public void runRQ2(int repeatCount) {
         System.out.println("Running RQ2... Make sure the experiment parameters on the top of this class are set correctly!");
         RQ2FullResults fullResults = new RQ2FullResults();  //TODO refactor to include all the info above...
-        for (int i = 0; i < repeatCount; i++) {
-            int currentSeed = SEEDS[i];
-            for (int n = 3; n <= N; n++) { // TODO change this to 1
-                for (String setting : new String[]{"second"}) {  // Options: "first", "second", "both"
+        // A list of lists to represent: seed model path, source class, target class for a specific RQ2 experiment
+        List<List<String>> expSettings = new ArrayList<>();
+        // expSettings.add(Arrays.asList("c1-noAdj", "c1noAdj-c1Adj","class1-noAdj", "class1-Adj"));
+        expSettings.add(Arrays.asList("c1-full", "c1full-c2full", "class1", "class2"));
+    
+        for (List<String> expSetting : expSettings) {
+            for (String dataSetting : new String[]{"second"}) {  // Options: "first", "second", "both"
+            // TODO Add folders for second, both, first
+                for (int n = 3; n <= N; n++) { // TODO change this to 1
+                    // Note: topN models should be in their own separate folders rather than all in the same folder as before. This is because of the
+                    // nature of the experiment and the fact that different topN models most probably require different number of additional batches to be trained.
                     for (boolean withCurriculum : new boolean[]{false}) {  // Options: false [`true` is not an option!]
-                        RQ2SeedResult resultInSeed = testGeneralisationForgetting(C1_BDS_TRAINED_MODELS_DIR, "class1", "class2", setting, withCurriculum, currentSeed, n);  //TODO fix how N is used here...
-                        fullResults.addResult(currentSeed, withCurriculum, resultInSeed); //TODO add n to the result!
+                        for (int i = 0; i < repeatCount; i++) {
+                            int currentSeed = SEEDS[i];
+                            RQ2SeedResult resultInSeed = testGeneralisationForgetting(expSetting.get(0), expSetting.get(1),expSetting.get(2), expSetting.get(3), dataSetting, withCurriculum, currentSeed, n);  //TODO fix how N is used here...
+                            fullResults.addResult(currentSeed, withCurriculum, resultInSeed); //TODO add n to the result!
 //                        addResultsToTSV(currentSeed, batchtResult, modelDir + "fullResults.tsv");  // TODO
+                        }
                     }
                 }
             }
         }
         System.out.println("RQ2 experiments finished!");
+    }
+
+
+    // ---------------------------------------------------------------
+    // |                     Some helper methods                     |
+    // ---------------------------------------------------------------
+
+
+    /**
+     * Checks if a model exists in the given directory.
+     * @param dir the directory to check
+     * @return true if a model exists, false otherwise.
+     */
+    public boolean modelExists (String dir) {
+        String[] files = new File(dir).list();
+        String x = dir + "lexicon.lex";
+        if (files != null) {
+            for (String file : files) {
+                if (file.startsWith("lexicon.lex")) {
+                    logger.info("Previously trained model found in the given directory with name: " + file);
+                    x = dir + file;
+                }
+            }
+        }
+        if (new File(x).exists()) {
+            logger.info("A trained model already exists at: " + dir);
+           return true;
+        }
+        else {
+            logger.info("No trained model found at: " + dir);
+            return false;
+        }
+    }
+
+    
+    /**
+     * Checks if a model exists in the given directory with a given topN.
+     * @param dir the directory to check
+     * @return true if a model exists, false otherwise
+     */
+    public boolean modelExists (String dir, int topN) {
+        String[] files = new File(dir).list();
+        String x = dir + "lexicon.lex-top-" + topN;
+        if (files != null) {
+            for (String file : files) {
+                if (file.startsWith("lexicon.lex-top-" + topN)) {
+                    logger.info("Previously trained model found in the given directory with name: " + file);
+                    x = dir + file;
+                }
+            }
+        }
+        if (new File(x).exists()) {
+            logger.info("A trained model already exists at: " + dir);
+           return true;
+        }
+        else {
+            logger.info("No trained model found at: " + dir);
+            return false;
+        }
+    }
+
+
+    /**
+     * Overrride the method below to create a file object from the path.
+     * @param folderPath the path to the folder to check.
+     * @author: AA
+     */
+    public void checkFolderExists(String folderPath) {
+        File folder = new File(folderPath);
+        checkFolderExists(folder);
+    }
+
+
+    /**
+     * Checks if a folder exists and creates it if it doesn't.
+     * @param folder the file object of the folder to check.
+     * @author: AA
+     */
+    public void checkFolderExists(File folder) {
+        if (!folder.exists()) {
+            if (!folder.mkdirs()) {
+                throw new RuntimeException("Could not create directory: " + folder.getPath());
+            }
+            logger.info("Created directory: " + folder.getPath());
+        } else {
+            logger.info("Using existing directory: " + folder.getPath());
+        }
+    }
+
+
+    /**
+     * Adds the results from a batch over a seed to a given TSV file.
+     * Used for real-time updating of the file (so no over-writing).
+     * @param seed training shuffle seed, as part of the data to write.
+     * @param results results over a batch.
+     * @param resultsFileName the tsv file to update.
+     */
+    public void addResultsToTSV(int seed, EvalResult results, String resultsFileName) {
+        StringBuilder modifiedLines = new StringBuilder();
+        for (String line : results.toTSVString().split("\n")) {
+            modifiedLines.append(seed).append("\t").append(line).append("\n");
+        }
+        String newResultLine = modifiedLines.toString();
+        try {
+            Files.write(
+                    new File(resultsFileName).toPath(),
+                    (newResultLine).getBytes(),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /**
+     * Overrride the method below to create file objects from the paths.
+     * Copies the computational-actions.txt file from the source folder to the target folder.
+     * @param sourceFolder the source folder
+     * @param targetFolder the target folder
+     * @author: AA
+     */
+    public void copyComputationalActionsFile(String sourceFolder, String targetFolder) {
+        File sourceComputationalActionsFile = new File(sourceFolder + "computational-actions.txt");
+        File destComputationalActionsFile = new File(targetFolder + "computational-actions.txt");
+        copyComputationalActionsFile(sourceComputationalActionsFile, destComputationalActionsFile);
+    }
+
+
+    /**
+     * Copies the computational-actions.txt file from the source folder to the target folder.
+     * @param sourceFolder the source folder
+     * @param targetFolder the target folder
+     * @author: AA
+     */
+    public void copyComputationalActionsFile(File sourceComputationalActionsFile, File destComputationalActionsFile) {
+        if (sourceComputationalActionsFile.exists()) {
+            try {
+                Files.copy(sourceComputationalActionsFile.toPath(), destComputationalActionsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                logger.info("Copied computational-actions.txt to data setting directory: " + destComputationalActionsFile.getPath());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to copy computational-actions.txt to data setting directory: " + e.getMessage());
+            }
+        } else {
+            throw new RuntimeException("Source file does not exist: " + sourceComputationalActionsFile.getAbsolutePath());
+        }
     }
 
 
@@ -1422,7 +1502,7 @@ public class Experiments {
         // exp.runRQ1();
 
         // To run RQ2 (check inside for params)
-        exp.runRQ2(REPEAT, SEED);
+        exp.runRQ2(REPEAT);
 
 
          // To generate data in folders for RQ1:
