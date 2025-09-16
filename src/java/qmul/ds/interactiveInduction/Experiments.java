@@ -68,69 +68,6 @@ public class Experiments {
     private static final int[] SEEDS = {46, 48, 50, 52, 56}; 
 
 
-    /**
-     * Scans a directory for folders with pattern S{seed}_B{batch} and finds the maximum batch number for each seed.
-     * This method dynamically discovers seed-to-batch mappings by examining folder names in the given directory.
-     * 
-     * @param directoryPath The path to the directory containing folders with S{seed}_B{batch} pattern
-     * @return A HashMap mapping each seed (Integer) to its maximum available batch number (Integer)
-     * @throws IllegalArgumentException if the directory path is null, empty, or doesn't exist
-     */
-    public HashMap<Integer, Integer> discoverSeedBatchPairs(String directoryPath) {
-        if (directoryPath == null || directoryPath.trim().isEmpty()) {
-            throw new IllegalArgumentException("Directory path cannot be null or empty");
-        }
-        
-        File directory = new File(directoryPath);
-        if (!directory.exists() || !directory.isDirectory()) {
-            throw new IllegalArgumentException("Directory does not exist or is not a directory: " + directoryPath);
-        }
-        
-        HashMap<Integer, Integer> seedBatchMap = new HashMap<>();
-        File[] folders = directory.listFiles(File::isDirectory);
-        
-        if (folders == null) {
-            logger.warn("No folders found in directory: " + directoryPath);
-            return seedBatchMap;
-        }
-        
-        for (File folder : folders) {
-            String folderName = folder.getName();
-            
-            // Check if folder name matches pattern S{seed}_B{batch}
-            if (folderName.matches("S\\d+_B\\d+")) {
-                try {
-                    // Extract seed number (between 'S' and '_B')
-                    int seedStartIndex = folderName.indexOf('S') + 1;
-                    int batchStartIndex = folderName.indexOf("_B");
-                    int seed = Integer.parseInt(folderName.substring(seedStartIndex, batchStartIndex));
-                    
-                    // Extract batch number (after '_B')
-                    int batch = Integer.parseInt(folderName.substring(batchStartIndex + 2));
-                    
-                    // Update the maximum batch for this seed
-                    seedBatchMap.put(seed, Math.max(seedBatchMap.getOrDefault(seed, 0), batch));
-                    
-                    logger.debug("Found folder: " + folderName + " -> Seed: " + seed + ", Batch: " + batch);
-                    
-                } catch (NumberFormatException e) {
-                    logger.warn("Failed to parse seed or batch number from folder name: " + folderName);
-                } catch (StringIndexOutOfBoundsException e) {
-                    logger.warn("Invalid folder name format: " + folderName);
-                }
-            } else {
-                logger.trace("Folder name doesn't match S{seed}_B{batch} pattern: " + folderName);
-            }
-        }
-        
-        logger.info("Discovered " + seedBatchMap.size() + " seed-batch pairs from directory: " + directoryPath);
-        for (Map.Entry<Integer, Integer> entry : seedBatchMap.entrySet()) {
-            logger.info("Seed " + entry.getKey() + " -> Max Batch: " + entry.getValue());
-        }
-        
-        return seedBatchMap;
-    }
-
 
     /**
      * Checks if early stopping condition is met based on F1 score and coverage criteria.
@@ -193,39 +130,6 @@ public class Experiments {
     }
 
 
-    /** Used in the mergeFiles method below.
-     * @param file The file to read from.
-     * @param writer The writer to write to.
-     * @throws IOException If an I/O error occurs.
-     */
-    private static void writeContent(File file, BufferedWriter writer) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                writer.write(line);
-                writer.newLine(); // Ensure lines are properly separated
-            }
-        }
-    }
-
-
-    /** Used where I need to merge two datasets and create a RT corpus from them.
-     * Merges two files into one and saves it.
-     * @param file1 The first file to merge.
-     * @param file2 The second file to merge.
-     * @param outputFile The output file to save the merged content.
-     * @throws IOException If an I/O error occurs.
-     */
-   public static void mergeFiles(File file1, File file2, File outputFile) throws IOException {
-       try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
-           // Read the first file and write to output
-           writeContent(file1, writer);
-           // Read the second file and write to output
-           writeContent(file2, writer);
-       }
-   }
-
-   
     /**
      * Prepares RQ2 data.
      * Reads in class 1 and class 2 data, creates batches from each, and uses the last batch of class1 as the forgetting
@@ -440,7 +344,7 @@ public class Experiments {
             default: logger.error("Invalid setting provided. Please use 'first', 'second' or 'both'.");
         }
 
-        int currentMergedBatchIndex = min_data_source_class_index; // TODO double-check
+        int currentMergedBatchIndex = MINIMUM_CLASS1_BATCHES; // TODO double-check
         System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | data: " + dataSetting + " | topN: " + topN + " | Experiment: " + experimentFolder + " ********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
         
@@ -1492,6 +1396,102 @@ public class Experiments {
             throw new RuntimeException("Source file does not exist: " + sourceFolder.getAbsolutePath());
         }
     }
+
+
+    /**
+     * Scans a directory for folders with pattern S{seed}_B{batch} and finds the maximum batch number for each seed.
+     * This method dynamically discovers seed-to-batch mappings by examining folder names in the given directory.
+     *
+     * @param directoryPath The path to the directory containing folders with S{seed}_B{batch} pattern
+     * @return A HashMap mapping each seed (Integer) to its maximum available batch number (Integer)
+     * @throws IllegalArgumentException if the directory path is null, empty, or doesn't exist
+     */
+    public HashMap<Integer, Integer> discoverSeedBatchPairs(String directoryPath) {
+        if (directoryPath == null || directoryPath.trim().isEmpty()) {
+            throw new IllegalArgumentException("Directory path cannot be null or empty");
+        }
+
+        File directory = new File(directoryPath);
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IllegalArgumentException("Directory does not exist or is not a directory: " + directoryPath);
+        }
+
+        HashMap<Integer, Integer> seedBatchMap = new HashMap<>();
+        File[] folders = directory.listFiles(File::isDirectory);
+
+        if (folders == null) {
+            logger.warn("No folders found in directory: " + directoryPath);
+            return seedBatchMap;
+        }
+
+        for (File folder : folders) {
+            String folderName = folder.getName();
+
+            // Check if folder name matches pattern S{seed}_B{batch}
+            if (folderName.matches("S\\d+_B\\d+")) {
+                try {
+                    // Extract seed number (between 'S' and '_B')
+                    int seedStartIndex = folderName.indexOf('S') + 1;
+                    int batchStartIndex = folderName.indexOf("_B");
+                    int seed = Integer.parseInt(folderName.substring(seedStartIndex, batchStartIndex));
+
+                    // Extract batch number (after '_B')
+                    int batch = Integer.parseInt(folderName.substring(batchStartIndex + 2));
+
+                    // Update the maximum batch for this seed
+                    seedBatchMap.put(seed, Math.max(seedBatchMap.getOrDefault(seed, 0), batch));
+
+                    logger.debug("Found folder: " + folderName + " -> Seed: " + seed + ", Batch: " + batch);
+
+                } catch (NumberFormatException e) {
+                    logger.warn("Failed to parse seed or batch number from folder name: " + folderName);
+                } catch (StringIndexOutOfBoundsException e) {
+                    logger.warn("Invalid folder name format: " + folderName);
+                }
+            } else {
+                logger.trace("Folder name doesn't match S{seed}_B{batch} pattern: " + folderName);
+            }
+        }
+
+        logger.info("Discovered " + seedBatchMap.size() + " seed-batch pairs from directory: " + directoryPath);
+        for (Map.Entry<Integer, Integer> entry : seedBatchMap.entrySet()) {
+            logger.info("Seed " + entry.getKey() + " -> Max Batch: " + entry.getValue());
+        }
+        return seedBatchMap;
+    }
+
+
+    /** Used in the mergeFiles method below.
+     * @param file The file to read from.
+     * @param writer The writer to write to.
+     * @throws IOException If an I/O error occurs.
+     */
+    private static void writeContent(File file, BufferedWriter writer) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine(); // Ensure lines are properly separated
+            }
+        }
+    }
+
+
+    /** Used where I need to merge two datasets and create a RT corpus from them.
+     * Merges two files into one and saves it.
+     * @param file1 The first file to merge.
+     * @param file2 The second file to merge.
+     * @param outputFile The output file to save the merged content.
+     * @throws IOException If an I/O error occurs.
+     */
+   public static void mergeFiles(File file1, File file2, File outputFile) throws IOException {
+       try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
+           // Read the first file and write to output
+           writeContent(file1, writer);
+           // Read the second file and write to output
+           writeContent(file2, writer);
+       }
+   }
 
 
     public static void main(String[] args) {
