@@ -96,7 +96,7 @@ public abstract class WordLearner<T> {
 	 * The subclass is responsible for proper hypothesiser initialization.
 	 */
 	protected WordLearner(boolean skipInitialization) {
-		System.out.println("Using protected constructor - hypothesiser will be initialized by subclass");
+		System.out.println("Using protected constructor - hypothesiser will be initialised by subclass.");
 		corpus = null;
 	}
 
