@@ -358,7 +358,8 @@ public class Experiments {
      * Tests a BabyDS model for forgetting and generalisation on lower and higher classes.
      * This method now includes dev set evaluation and early stopping based on generalisation scores.
      * All models and results are saved in a folder created under experimentPath with the name specified by dataSetting.
-     * ATTENTION at this moment, this works on class 1 to 2 (imagine start class = 1, and end class = 2). Should be extended to support more.
+     * ATTENTION at this moment, this works with data with no intermediate classes (imagine start class = 1, and end class = 2, and not 1 to 3 for example). So
+     * it should be extended to support more combinations of classes.
      * 
      * The workflow includes:
      * 1. Create a directory under experimentPath named after dataSetting for organizing output
@@ -379,7 +380,7 @@ public class Experiments {
      * @return a RQ2SeedResult object containing the results of the generalisation and forgetting experiments.
      */
     public RQ2SeedResult testGeneralisationForgetting(String seedModelFolder, String experimentFolder,String sourceClassName, String targetClassName, String dataSetting, boolean withCurriculum, int seed, int topN) {
-        logger.info("Initiating geenralisation and forgetting experiments...");
+        logger.info("Initiating a generalisation and forgetting experiment...");
         RQ2SeedResult results = new RQ2SeedResult();
         String seedModelsPath = RQ2_SEED_MODELS_PATH + seedModelFolder + File.separator;
         String experimentPath = RQ2_EXP_PATH + experimentFolder + File.separator;
@@ -397,7 +398,7 @@ public class Experiments {
 
         // TODO fix HERE
         // targetClass_batches = targetClass_batches.subList(0, 1);  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
-//        targetClass_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
+        // targetClass_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
         // First, grab the minimum and enough data of class 1 (number of batches to reach mastery from RQ1 basically),
         // and add batches of class1 or class2 or their mix, and train a model on it:
         int min_data_source_class_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
@@ -1321,7 +1322,7 @@ public class Experiments {
      */
     public void runRQ2(int repeatCount) {
         System.out.println("Running RQ2... Make sure the experiment parameters on the top of this class are set correctly!");
-        RQ2FullResults fullResults = new RQ2FullResults();  //TODO refactor to include all the info above...
+        RQ2FullResults fullResults = new RQ2FullResults();
         // A list of lists to represent: seed model path, source class, target class for a specific RQ2 experiment
         List<List<String>> expSettings = new ArrayList<>();
         // expSettings.add(Arrays.asList("c1-noAdj", "c1noAdj-c1Adj","class1-noAdj", "class1-Adj"));
@@ -1329,7 +1330,6 @@ public class Experiments {
     
         for (List<String> expSetting : expSettings) {
             for (String dataSetting : new String[]{"second"}) {  // Options: "first", "second", "both"
-            // TODO Add folders for second, both, first
                 for (int n = 3; n <= N; n++) { // TODO change this to 1
                     // Note: topN models should be in their own separate folders rather than all in the same folder as before. This is because of the
                     // nature of the experiment and the fact that different topN models most probably require different number of additional batches to be trained.
@@ -1477,19 +1477,19 @@ public class Experiments {
     /**
      * Copies the computational-actions.txt file from the source folder to the target folder.
      * @param sourceFolder the source folder
-     * @param targetFolder the target folder
+     * @param destFolder the target folder
      * @author: AA
      */
-    public void copyComputationalActionsFile(File sourceComputationalActionsFile, File destComputationalActionsFile) {
-        if (sourceComputationalActionsFile.exists()) {
+    public void copyComputationalActionsFile(File sourceFolder, File destFolder) {
+        if (sourceFolder.exists()) {
             try {
-                Files.copy(sourceComputationalActionsFile.toPath(), destComputationalActionsFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                logger.info("Copied computational-actions.txt to data setting directory: " + destComputationalActionsFile.getPath());
+                Files.copy(sourceFolder.toPath(), destFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                logger.info("Copied computational-actions.txt to data setting directory: " + destFolder.getPath());
             } catch (IOException e) {
                 throw new RuntimeException("Failed to copy computational-actions.txt to data setting directory: " + e.getMessage());
             }
         } else {
-            throw new RuntimeException("Source file does not exist: " + sourceComputationalActionsFile.getAbsolutePath());
+            throw new RuntimeException("Source file does not exist: " + sourceFolder.getAbsolutePath());
         }
     }
 
