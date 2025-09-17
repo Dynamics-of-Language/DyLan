@@ -50,7 +50,7 @@ public class Experiments {
     public static final double TRAIN_TEST_RATIO = 0.85;  // Train-Test split ratio (Meaning the x ratio is for train, 1-x is for test)
     public static final boolean SAVE_TO_FILE = true;  // Save the training and testing sets to file
     public static final String CORPUS_NAME = "class1-Adj";
-    public static final int REPEAT = 1;  // Increments the seed for each repeat
+    public static final int REPEAT = 5;  // Increments the seed for each repeat
     public static final int N = 3; // TopN actions to use.
 
     // Info: BATCH_RATIO for class2: 0.02 | class1: 0.1
@@ -985,14 +985,14 @@ public class Experiments {
 
     /**
      * TODO trainingBatch should be renamed to just trainingData. Batch should be used in the upper method!
-     * TODO Add documnetation.
+     * TODO Add documentation.
      * TODO many of the stuff being done below better be in one other method so it's tidier (loading data, and paths and copying files)
      */
     public Pair<EvalResult, WordHypothesisBase> trainTestBatchHBSeeded(String seedModelsPath, String folderName, String modelDir, RecordTypeCorpus trainingBatch, RecordTypeCorpus testingData, int batchNumber, String testSetSuffix, WordHypothesisBase previousModel, String seedGrammarPath, int topN, String outputModelDir, int seed) {
         WordHypothesisBase newModel = null;
         HashMap<Integer, Integer> seed_batch_pairs = discoverSeedBatchPairs(seedModelsPath);
         String currentSeedModelDir = seedModelsPath + "S" + seed + "_B" + seed_batch_pairs.get(seed) + File.separator;
-        // make foldername under modelDir and copy the computational action files there:
+        // make folderName under modelDir and copy the computational action files there:
         String folderPath = modelDir + folderName + File.separator;
         File folder = new File(folderPath);
 
@@ -1225,7 +1225,7 @@ public class Experiments {
      * - seed -> 45..45+REPEAT
      */
     public void runRQ2(int repeatCount) {
-        System.out.println("Running RQ2... Make sure the experiment parameters on the top of this class are set correctly!");
+        System.out.println("Running RQ2... Make sure the experiment parameters on the top of this class are set correctly!"); //TODO Print these instead so the user knows what's being used.
         RQ2FullResults fullResults = new RQ2FullResults();
         // A list of lists to represent: seed model path, source class, target class for a specific RQ2 experiment
         List<List<String>> expSettings = new ArrayList<>();
@@ -1454,8 +1454,9 @@ public class Experiments {
         }
 
         logger.info("Discovered " + seedBatchMap.size() + " seed-batch pairs from directory: " + directoryPath);
+        System.out.println("Seed-batch map is: ");
         for (Map.Entry<Integer, Integer> entry : seedBatchMap.entrySet()) {
-            logger.info("Seed " + entry.getKey() + " -> Max Batch: " + entry.getValue());
+            System.out.println("Seed " + entry.getKey() + " -> Max Batch: " + entry.getValue());
         }
         return seedBatchMap;
     }
