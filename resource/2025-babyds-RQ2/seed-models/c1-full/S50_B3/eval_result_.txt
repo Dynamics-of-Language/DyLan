@@ -1,0 +1,161 @@
+
+sem acc | train size: 33 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           | 100.00 | 100.00 | 100.00 |    NaN |    NaN |    NaN |
+| Top-2           |  85.63 |  85.63 |  85.63 |  95.63 |  95.63 |  95.63 |
+| Top-3           |  90.70 |  86.58 |  88.50 |  94.48 |  90.56 |  92.39 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |       3.03 |      100.00 |       0.00 |         NaN |
+| Top-2           |      27.27 |       44.44 |      30.77 |       75.00 |
+| Top-3           |      75.76 |       40.00 |      69.23 |       55.56 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+goto a red key
+goto a red ball
+pickup the yellow key
+goto a purple door
+pickup a red key
+goto a purple key
+open a purple door
+open a blue door
+pickup a red ball
+>>> Dataset: test | Top-3 | Failed Parses:
+goto a red key
+pickup the yellow key
+pickup a red key
+goto a purple key
+>>> Dataset: test | Top-1 | Failed Parses:
+goto a red key
+goto a red ball
+pickup the yellow key
+goto a purple door
+pickup a red key
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+open a blue door
+goto the purple ball
+pickup a red ball
+>>> Dataset: train | Top-1 | Failed Parses:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto the green key
+goto a yellow door
+open a yellow door
+goto the green ball
+open a grey door
+pickup a yellow key
+open the yellow door
+goto the red ball
+goto the blue key
+pickup a purple box
+pickup the key
+pickup a red box
+pickup the blue key
+pickup the purple box
+goto a grey key
+goto a blue door
+pickup the yellow ball
+open the purple door
+goto a grey door
+pickup a purple ball
+open the red door
+open the blue door
+pickup the ball
+goto a purple ball
+goto the purple key
+pickup a green ball
+pickup the red key
+>>> Dataset: train | Top-2 | Failed Parses:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto a yellow door
+open a yellow door
+open a grey door
+pickup a yellow key
+open the yellow door
+pickup the key
+pickup the blue key
+goto a grey key
+goto a blue door
+pickup the yellow ball
+open the purple door
+goto a grey door
+pickup a purple ball
+open the red door
+open the blue door
+pickup the ball
+goto a purple ball
+pickup a green ball
+pickup the red key
+>>> Dataset: train | Top-3 | Failed Parses:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow key
+pickup the blue key
+goto a grey key
+pickup the yellow ball
+pickup the red key
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+goto the purple ball
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto a purple door
+open a purple door
+open a blue door
+goto the purple ball
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+goto the green key
+goto the green ball
+goto the red ball
+goto the blue key
+goto the purple key
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto the green key
+goto a yellow door
+open a yellow door
+goto the green ball
+open a grey door
+open the yellow door
+goto the red ball
+goto the blue key
+goto a blue door
+open the purple door
+goto a grey door
+open the red door
+open the blue door
+pickup the ball
+goto the purple key

@@ -1,0 +1,117 @@
+
+sem acc | train size: 11 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  84.69 |  84.69 |  84.69 |    NaN |    NaN |    NaN |
+| Top-2           |  72.27 |  69.88 |  70.99 |  69.38 |  69.38 |  69.38 |
+| Top-3           |  76.46 |  71.59 |  73.86 |  92.86 |  81.25 |  86.67 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      18.18 |       50.00 |       0.00 |         NaN |
+| Top-2           |      90.91 |        0.00 |       7.69 |        0.00 |
+| Top-3           |     100.00 |        0.00 |       7.69 |        0.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+goto a red key
+goto a red ball
+goto a purple door
+pickup a red key
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+open a blue door
+goto the purple ball
+pickup a red ball
+>>> Dataset: test | Top-3 | Failed Parses:
+goto a red key
+goto a red ball
+goto a purple door
+pickup a red key
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+open a blue door
+goto the purple ball
+pickup a red ball
+>>> Dataset: test | Top-1 | Failed Parses:
+goto a red key
+goto a red ball
+pickup the yellow key
+goto a purple door
+pickup a red key
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+open a blue door
+goto the purple ball
+pickup a red ball
+>>> Dataset: train | Top-1 | Failed Parses:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto the green key
+goto a yellow door
+goto the green ball
+pickup a yellow key
+>>> Dataset: train | Top-2 | Failed Parses:
+pickup the green key
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+pickup the yellow key
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+pickup the yellow key
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+open a grey door
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+goto a green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto the green key
+goto a yellow door
+open a yellow door
+goto the green ball
+open a grey door
+pickup a yellow key
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto the green key
+goto a yellow door
+open a yellow door
+goto the green ball
+open a grey door
+pickup a yellow key

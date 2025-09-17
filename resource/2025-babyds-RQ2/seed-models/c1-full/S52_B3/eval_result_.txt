@@ -1,0 +1,55 @@
+
+sem acc | train size: 33 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
+| Top-2           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
+| Top-3           | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      84.85 |      100.00 |      84.62 |      100.00 |
+| Top-2           |      84.85 |      100.00 |      84.62 |      100.00 |
+| Top-3           |     100.00 |      100.00 |     100.00 |      100.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+goto a blue box
+pickup a blue ball
+>>> Dataset: test | Top-1 | Failed Parses:
+goto a blue box
+pickup a blue ball
+>>> Dataset: train | Top-1 | Failed Parses:
+pickup the blue key
+goto the blue ball
+pickup the blue box
+open the blue door
+goto the blue box
+>>> Dataset: train | Top-2 | Failed Parses:
+pickup the blue key
+goto the blue ball
+pickup the blue box
+open the blue door
+goto the blue box
+
+***** Failed Exact Matches *****
+No failed exact matches.

@@ -1,0 +1,50 @@
+GoldSent : pickup the purple ball
+Sem : [e0==state_holding : es|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : open a grey door
+Sem : [e0==state_opened : es|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_door(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto a purple door
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_door(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : pickup a green ball
+Sem : [e0==state_holding : es|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto the red door
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_door(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto the grey box
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_grey(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto a red key
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_key(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto the green door
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_door(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : pickup a red box
+Sem : [e0==state_holding : es|r0 : [x0 : e|p1==col_red(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==epsilon(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto the green ball
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_green(x0) : t|p0==obj_ball(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+GoldSent : goto the purple box
+Sem : [e0==state_facing : es|r0 : [x0 : e|p1==col_purple(x0) : t|p0==obj_box(x0) : t|head==x0 : e]|head==e0 : es|x1==iota(r0.head, r0) : e|p2==obj(e0, x1) : t]
+
+
+
+
+// ====== DATASET STATS ======
+
+// ---- Sentence-Level Stats ----
+// Count of sentences with length 4 is 11.
+
+// Corpus size: 11
+// Maximum length: 4
+// Minimum length: 4
+// Average length: 4.000000
+
+// ---- Word-Level Stats ----
+// Count of all words: 44
+// Count of unique tokens: 13
+// Words/Tokens count ratio: 3.384615

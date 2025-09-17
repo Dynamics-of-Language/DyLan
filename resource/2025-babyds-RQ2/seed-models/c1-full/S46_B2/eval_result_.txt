@@ -1,0 +1,63 @@
+
+sem acc | train size: 22 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  97.37 |  97.37 |  97.37 |  95.00 |  95.00 |  95.00 |
+| Top-2           |  95.88 |  95.34 |  95.59 |  97.31 |  97.31 |  97.31 |
+| Top-3           |  97.35 |  96.82 |  97.07 |  97.31 |  97.31 |  97.31 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |      86.36 |       89.47 |     100.00 |       84.62 |
+| Top-2           |     100.00 |       77.27 |     100.00 |       84.62 |
+| Top-3           |     100.00 |       81.82 |     100.00 |       84.62 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: train | Top-1 | Failed Parses:
+pickup the green ball
+pickup a green key
+goto a green box
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+open the blue door
+goto the blue door
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+open the blue door
+goto the blue door
+>>> Dataset: test | Top-1 | Failed Exact Matches:
+open the blue door
+goto the blue door
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+goto a blue ball
+goto the blue key
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+goto a blue ball
+pickup the green ball
+pickup a green key
+goto the blue key
+goto a green box
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto a blue ball
+pickup the green ball
+pickup a green key
+goto the blue key

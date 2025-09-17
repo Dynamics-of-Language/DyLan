@@ -1,0 +1,145 @@
+
+sem acc | train size: 22 | test size: 13
+
+====================| Semantic Accuracy Results |====================
+
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |   P    |    R   |   F1   |   P    |    R   |   F1   |
++-----------------+--------+--------+--------+--------+--------+--------+
+| Top-1           |  69.38 |  69.38 |  69.38 |    NaN |    NaN |    NaN |
+| Top-2           |  88.97 |  87.73 |  88.31 |  68.44 |  68.44 |  68.44 |
+| Top-3           |  75.34 |  71.16 |  73.11 |  65.37 |  61.19 |  63.14 |
++-----------------+--------+--------+--------+--------+--------+--------+
+
+
+
+====================| Parsing Coverage Results |====================
+coverage
++-----------------+--------------------------+--------------------------+
+| Actions \ Data  |           Train          |          Test            |
+|                 +--------------------------+--------------------------+
+|                 |  Coverage  | Exact Match |  Coverage  | Exact Match | 
++-----------------+------------+-------------+------------+-------------+
+| Top-1           |       4.55 |        0.00 |       0.00 |         NaN |
+| Top-2           |      36.36 |       50.00 |      15.38 |        0.00 |
+| Top-3           |     100.00 |        9.09 |      84.62 |        0.00 |
++-----------------+------------+-------------+------------+-------------+
+
+
+
+ =====================| Diagnostics |=====================
+
+***** Failed Parses *****
+>>> Dataset: test | Top-2 | Failed Parses:
+goto a red key
+goto a red ball
+pickup the yellow key
+goto a purple door
+pickup a red key
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+pickup a red ball
+>>> Dataset: test | Top-3 | Failed Parses:
+pickup a red key
+pickup a red ball
+>>> Dataset: test | Top-1 | Failed Parses:
+goto a red key
+goto a red ball
+pickup the yellow key
+goto a purple door
+pickup a red key
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+open a blue door
+goto the purple ball
+pickup a red ball
+>>> Dataset: train | Top-1 | Failed Parses:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto the green key
+goto a yellow door
+open a yellow door
+goto the green ball
+open a grey door
+pickup a yellow key
+goto the red ball
+goto the blue key
+pickup a purple box
+pickup the key
+pickup a red box
+pickup the blue key
+pickup the purple box
+goto a grey key
+goto a blue door
+pickup the yellow ball
+>>> Dataset: train | Top-2 | Failed Parses:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto a yellow door
+pickup a yellow key
+goto the red ball
+pickup a purple box
+pickup the blue key
+pickup the purple box
+goto a grey key
+goto a blue door
+pickup the yellow ball
+
+***** Failed Exact Matches *****
+>>> Dataset: test | Top-2 | Failed Exact Matches:
+open a blue door
+goto the purple ball
+>>> Dataset: test | Top-3 | Failed Exact Matches:
+goto a red key
+goto a red ball
+pickup the yellow key
+goto a purple door
+goto a blue box
+goto a purple key
+goto a purple box
+open a purple door
+goto the purple box
+open a blue door
+goto the purple ball
+>>> Dataset: train | Top-1 | Failed Exact Matches:
+open the yellow door
+>>> Dataset: train | Top-2 | Failed Exact Matches:
+goto the green key
+goto the green ball
+open a grey door
+open the yellow door
+>>> Dataset: train | Top-3 | Failed Exact Matches:
+goto a green key
+pickup the green key
+pickup the grey key
+pickup a yellow ball
+goto a yellow ball
+goto the green key
+goto a yellow door
+open a yellow door
+goto the green ball
+open a grey door
+pickup a yellow key
+open the yellow door
+goto the red ball
+goto the blue key
+pickup a purple box
+pickup the blue key
+pickup the purple box
+goto a grey key
+goto a blue door
+pickup the yellow ball
