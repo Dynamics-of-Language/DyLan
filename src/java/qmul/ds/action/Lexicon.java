@@ -209,7 +209,7 @@ public class Lexicon extends HashMap<String, Collection<LexicalAction>> implemen
                 }
                 readWords(reader);
             } else {
-                System.out.println("Trying to load top-" + topN + " learned actions' files from " + dirNameOrURL);
+                System.out.println("Loading top-" + topN + " learned actions as seed lexicon from " + dirNameOrURL);
                 loadLearntLexiconTxt(dirNameOrURL, topN);
             }
 
