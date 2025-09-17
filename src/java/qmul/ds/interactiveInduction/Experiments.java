@@ -305,8 +305,8 @@ public class Experiments {
         // targetClass_batches.add(0, new RecordTypeCorpus());  // This is so that we can have the first extra batch being empty, and then start with min data below (in the cumulativeTrainingData).
         // First, grab the minimum and enough data of class 1 (number of batches to reach mastery from RQ1 basically),
         // and add batches of class1 or class2 or their mix, and train a model on it:
-        int min_data_source_class_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
-
+//        int min_data_source_class_index = MINIMUM_CLASS1_BATCHES;  // TODO is it ok that this is from the visuals we got (6 was good enough)?
+        int min_data_source_class_index = discoverSeedBatchPairs(seedModelsPath).get(seed);
         RecordTypeCorpus sourceClass_minimum_data = RecordTypeCorpus.mergeAllCorpora(sourceClass_batches.subList(0, min_data_source_class_index)); // This operation is exclusive.
         logger.info("Class 1 minimum data size: " + sourceClass_minimum_data.size());
         // anything after it will be added as batches.
@@ -344,7 +344,7 @@ public class Experiments {
             default: logger.error("Invalid setting provided. Please use 'first', 'second' or 'both'.");
         }
 
-        int currentMergedBatchIndex = MINIMUM_CLASS1_BATCHES; // TODO double-check
+        int currentMergedBatchIndex = min_data_source_class_index; // TODO double-check
         System.out.println(ANSI_GREEN + "******** Seed: " + seed + " | currentMergedBatch: " + currentMergedBatchIndex + " | data: " + dataSetting + " | topN: " + topN + " | Experiment: " + experimentFolder + " ********" + ANSI_RESET);
         WordHypothesisBase previousModel = null;
         
