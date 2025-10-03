@@ -1507,6 +1507,7 @@ public class Experiments {
 
 
          // To generate data in folders for RQ1:
+         
 //        exp.generateDataFolders("c2", NTR_RQ1_CLASS2_PATH, REPEAT, SEED, INIT_BATCH_RATIO, INC_BATCH_RATIO);
         // To convert current corpora to NeuralTTR format:
 //        exp.convertCurrentCorporaToNN(NTR_RQ1_CLASS2_PATH);
